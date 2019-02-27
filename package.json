@@ -1,0 +1,35 @@
+{
+  "name": "comunidades-unidas-internal",
+  "description": "the code for comunidades unidas internal website",
+  "repository": "git@github.com:JustUtahCoders/comunidades-unidas-internal.git",
+  "author": "Joel Denning",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack-dev-server",
+    "build": "webpack --config webpack.config.js",
+    "typescript": "tsc"
+  },
+  "husky": {
+    "pre-commit": "yarn typescript"
+  },
+  "dependencies": {
+    "@reach/router": "^1.2.1",
+    "@types/reach__router": "^1.2.3",
+    "@types/react": "^16.8.5",
+    "@types/react-dom": "^16.8.2",
+    "kremling": "^1.2.2",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.3.3",
+    "babel-loader": "^8.0.5",
+    "husky": "^1.3.1",
+    "typescript": "^3.3.3333",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.2.1"
+  }
+}
