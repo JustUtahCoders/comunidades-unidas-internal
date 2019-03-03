@@ -8,7 +8,7 @@ import Home from './home/home.component'
 export default function Root() {
   return (
     <Styleguide>
-      <Router>
+      <Router basepath={window.location.origin.includes('github.io') ? '/comunidades-unidas-internal' : '/'}>
         <Navbars path="/">
           <Home path="/" exact />
           <AddClient path="/add-client" />
