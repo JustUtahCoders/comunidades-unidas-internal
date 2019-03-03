@@ -59,7 +59,7 @@ export default function Services(props: StepComponentProps) {
                 <span>Groceries</span>
               </label>
               <label>
-                <input type="checkbox" name="services" value="cookingClasses" checked={services.cookingClass} onChange={handleChange} />
+                <input type="checkbox" name="services" value="cookingClass" checked={services.cookingClass} onChange={handleChange} />
                 <span>Cooking classes</span>
               </label>
               <label>

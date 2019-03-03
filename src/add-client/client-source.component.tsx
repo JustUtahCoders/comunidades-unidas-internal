@@ -14,7 +14,7 @@ export default function ClientSource(props: StepComponentProps) {
           <img src={targetIconUrl} className="hint-icon" />
         </div>
         <div className="instruction">
-          Let's track how this client heard of us.
+          Let's track how this client heard about Comunidades Unidas.
         </div>
       </div>
       <form onSubmit={handleSubmit}>
