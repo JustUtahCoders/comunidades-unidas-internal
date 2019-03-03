@@ -9,7 +9,7 @@ export default function Sidebar() {
     <nav {...scope} className="box-shadow-1">
       <ul>
         <li>
-          <Link to="/" className="nav-link logo-link" getProps={maybeActiveLink}>
+          <Link to="" className="nav-link logo-link" getProps={maybeActiveLink}>
             <div className="logo-row">
               <img
                 className="logo"
@@ -20,7 +20,7 @@ export default function Sidebar() {
           </Link>
         </li>
         <li>
-          <Link to="/add-client" className="nav-link" getProps={maybeActiveLink}>
+          <Link to="add-client" className="nav-link" getProps={maybeActiveLink}>
             Add a client
           </Link>
         </li>

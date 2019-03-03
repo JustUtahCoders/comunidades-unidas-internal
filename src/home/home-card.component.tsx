@@ -7,7 +7,7 @@ export default function HomeCard(props: HomeCardProps) {
   const scope = useCss(css)
 
   return (
-    <Link {...scope} className="home-card unstyled" to="/add-client">
+    <Link {...scope} className="home-card unstyled" to="add-client">
       <img src={props.iconUrl} className="icon" />
       <div className="title">
         {props.title}
