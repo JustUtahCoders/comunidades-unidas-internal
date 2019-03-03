@@ -10,4 +10,7 @@
   "include": [
     "src/**/*"
   ],
+  "files": [
+    "src/custom.d.ts"
+  ]
 }

@@ -1649,6 +1649,14 @@ figgy-pudding@^3.5.1:
   resolved "https://registry.yarnpkg.com/figgy-pudding/-/figgy-pudding-3.5.1.tgz#862470112901c727a0e495a80744bd5baa1d6790"
   integrity sha512-vNKxJHTEKNThjfrdJwHc7brvM6eVevuO5nTj6ez8ZQ1qbXTvGthucRF7S4vf2cr71QVnT70V34v0S1DyQsti0w==
 
+file-loader@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/file-loader/-/file-loader-3.0.1.tgz#f8e0ba0b599918b51adfe45d66d1e771ad560faa"
+  integrity sha512-4sNIOXgtH/9WZq4NvlfU3Opn5ynUsqBwSLyM+I7UOwdGigTBYfVVQEwe/msZNX/j4pCJTIM14Fsw66Svo1oVrw==
+  dependencies:
+    loader-utils "^1.0.2"
+    schema-utils "^1.0.0"
+
 fill-range@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/fill-range/-/fill-range-4.0.0.tgz#d544811d428f98eb06a63dc402d2403c328c38f7"
@@ -2471,10 +2479,10 @@ kind-of@^6.0.0, kind-of@^6.0.2:
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.2.tgz#01146b36a6218e64e58f3a8d66de5d7fc6f6d051"
   integrity sha512-s5kLOcnH0XqDO+FvuaLX8DDjZ18CGFk7VygH40QoKPUQhW4e2rvM0rwUq0t8IQDOwYSeLK01U90OjzBTme2QqA==
 
-kremling@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/kremling/-/kremling-1.2.2.tgz#2721059b9521856b298bab09db831d3a89d6aef9"
-  integrity sha512-hxuPltEJhqKBCARMBplcQ3i6UTEHeciEwlXK9g0ck+RTwWDAjorP62Ds9J91KD/4MAwRVnE6A9R1cECKnFyhiA==
+kremling@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/kremling/-/kremling-1.2.3.tgz#e97d6580dd034b24a8e8738ce7f2857686fa5041"
+  integrity sha512-s+561A0X5SdUseizfMewCu4oc6xCPWRic8jYHXv1WVyKx59r7NqVy6S41879lBTX6LeguWMTCRaTijSJhmgHSg==
 
 lcid@^2.0.0:
   version "2.0.0"
