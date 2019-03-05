@@ -53,11 +53,12 @@ const css = `
 
 & .form-with-hints {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
 }
 
 & .hints-and-instructions {
-  width: 50%;
+  width: 300rem;
+  max-width: 50%;
   display: flex;
   flex-direction: column;
   justify-content: center;

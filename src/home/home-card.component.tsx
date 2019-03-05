@@ -19,8 +19,8 @@ export default function HomeCard(props: HomeCardProps) {
 const css = `
 & .home-card.unstyled {
   border-radius: 3rem;
-  width: 180rem;
-  height: 180rem;
+  width: 200rem;
+  height: 200rem;
   background-color: white;
   padding: 32rem;
   display: flex;
@@ -35,8 +35,8 @@ const css = `
 }
 
 & .icon {
-  height: 56rem;
-  width: 56rem;
+  height: 64rem;
+  width: 64rem;
   margin-bottom: 16rem;
 }
 
