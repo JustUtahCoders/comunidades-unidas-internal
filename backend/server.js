@@ -8,7 +8,7 @@ const pool = mysql.createPool({
   connectionLimit: 20,
   host     : process.env.RDS_HOSTNAME || 'localhost',
   user     : process.env.RDS_USERNAME || 'root',
-  password : process.env.RDS_PASSWORD || 'example',
+  password : process.env.RDS_PASSWORD || 'password',
   database : process.env.RDS_DB_NAME || 'ebdb',
   port     : process.env.RDS_PORT || '3306',
 });
@@ -16,12 +16,6 @@ const pool = mysql.createPool({
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs')
 app.use(express.static('static'))
-
-app.get('', (req, res) => {
-  res.render('index', {
-    frontendBaseUrl: 'http://localhost:9018',
-  })
-})
 
 app.get('/api/users', (req, res) => {
   pool.getConnection((err, connection) => {
@@ -40,6 +34,14 @@ app.get('/api/users', (req, res) => {
     })
   })
 })
+
+app.use(indexHtml)
+
+function indexHtml(req, res) {
+  res.render('index', {
+    frontendBaseUrl: process.env.RUNNING_LOCALLY ? 'http://localhost:9018' : '',
+  })
+}
 
 app.listen(port, () => {
   console.log('Node Express server listening on port', port)

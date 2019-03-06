@@ -5,15 +5,14 @@
   "author": "Joel Denning",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon server/server.js",
     "fix-everything": "docker-compose down && docker-compose pull && yarn install",
-    "develop": "concurrently -n w: yarn:develop-*",
-    "develop-frontend": "PUBLIC_PATH='http://localhost:9018/' webpack-dev-server",
-    "develop-backend": "nodemon backend/server.js --watch backend",
-    "develop-database": "docker-compose up",
-    "build": "rimraf dist concurrently -n w: yarn:build-*",
-    "build-frontend": "webpack --config webpack.config.js && copyfiles index.html dist",
-    "build-backend": "ncc build backend/server.js -o dist",
+    "start": "concurrently -n w: yarn:start-*",
+    "start-frontend": "PUBLIC_PATH='http://localhost:9018/' webpack-dev-server",
+    "start-backend": "RUNNING_LOCALLY='true' nodemon backend/server.js --watch backend",
+    "start-database": "docker-compose up",
+    "build": "rimraf dist && concurrently -n w: yarn:build-* && zip -r dist/ComunidadesUnidasApp.zip dist",
+    "build-frontend": "webpack --config webpack.config.js",
+    "build-backend": "ncc build backend/server.js -o dist && mv dist/index.js dist/server.js",
     "typescript": "tsc"
   },
   "husky": {
