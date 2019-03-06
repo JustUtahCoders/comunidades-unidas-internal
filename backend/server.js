@@ -39,7 +39,7 @@ app.use(indexHtml)
 
 function indexHtml(req, res) {
   res.render('index', {
-    frontendBaseUrl: process.env.RUNNING_LOCALLY ? 'http://localhost:9018' : '',
+    frontendBaseUrl: process.env.RUNNING_LOCALLY ? 'http://localhost:9018' : '/static',
   })
 }
 
