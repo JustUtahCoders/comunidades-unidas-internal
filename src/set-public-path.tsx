@@ -1,1 +1,0 @@
-__webpack_public_path__ = window.location.origin.includes('github.io') ? '/comunidades-unidas-internal/' : '/'
