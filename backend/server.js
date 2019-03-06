@@ -15,7 +15,7 @@ const pool = mysql.createPool({
 
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs')
-app.use(express.static('static'))
+app.use('dist', express.static('dist'))
 
 app.get('/api/users', (req, res) => {
   pool.getConnection((err, connection) => {

@@ -3,7 +3,7 @@ module.exports = {
   entry: './frontend/comunidades-unidas-internal.tsx',
   output: {
     filename: 'comunidades-unidas-internal.js',
-    path: __dirname + '/dist/static',
+    path: __dirname + '/static',
     publicPath: process.env.PUBLIC_PATH || '/static/',
   },
   devtool: 'sourcemap',
