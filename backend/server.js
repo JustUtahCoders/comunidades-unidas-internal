@@ -15,7 +15,7 @@ const pool = mysql.createPool({
 
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs')
-app.use(express.static('static'))
+app.use('/static', express.static(path.join(__dirname, '../static')))
 
 app.get('/api/users', (req, res) => {
   pool.getConnection((err, connection) => {
@@ -39,7 +39,7 @@ app.use(indexHtml)
 
 function indexHtml(req, res) {
   res.render('index', {
-    frontendBaseUrl: process.env.RUNNING_LOCALLY ? 'http://localhost:9018' : '/static',
+    frontendBaseUrl: process.env.RUNNING_LOCALLY && false ? 'http://localhost:9018' : '/static',
   })
 }
 
