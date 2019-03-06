@@ -61,6 +61,7 @@ typings/
 .next
 
 dist
+static
 .DS_Store
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
