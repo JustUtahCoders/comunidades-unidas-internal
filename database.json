@@ -8,5 +8,19 @@
     "multipleStatements": true
   },
   "prod": {
+    "driver": "mysql",
+    "host": {
+      "ENV": "RDS_HOSTNAME"
+    },
+    "user": {
+      "ENV": "RDS_USERNAME"
+    },
+    "password": {
+      "ENV": "RDS_PASSWORD"
+    },
+    "database": {
+      "ENV": "RDS_DB_NAME"
+    },
+    "multipleStatements": true
   }
 }
