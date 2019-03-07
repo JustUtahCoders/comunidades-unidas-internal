@@ -40,3 +40,8 @@ the down file should drop tables and unmodify columns.
 
 After creating a migration, you'll have to run `npx db-migrate up` to run it against your local database. Alternatively, you can restart your local
 environment (Ctrl + C and then `yarn start`). The migration will automatically run on the production database during the deployment in Travis CI. 
+
+## Diagnosing problems / outages
+If the production environment is having issues, you'll need access to Comunidades Unidas' AWS account to diagnose. Once you have access,
+you'll need to install [Python3](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html) and
+[ebcli](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html).

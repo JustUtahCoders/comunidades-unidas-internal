@@ -1,3 +1,5 @@
+// Database migrations are run through `.ebextensions` in elastic beanstalk.
+// But locally we run them this way
 if (process.env.RUNNING_LOCALLY) {
   const dbm = require('db-migrate').getInstance({
     env: 'dev',

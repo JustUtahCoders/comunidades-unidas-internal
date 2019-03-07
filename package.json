@@ -14,7 +14,7 @@
     "build": "rimraf static && concurrently -n w: yarn:build-*",
     "build-frontend": "webpack --config webpack.config.js",
     "nuke-database": "docker-compose down -v",
-    "db-migrate-prod": "db-migrate --env prod",
+    "db-migrate-prod": "db-migrate up --env prod",
     "typescript": "tsc"
   },
   "husky": {
