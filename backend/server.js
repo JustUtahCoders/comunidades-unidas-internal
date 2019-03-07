@@ -31,7 +31,7 @@ app.get('/api/users', (req, res) => {
         return databaseError(req, res, err)
       }
     
-      res.send('The solution is: ' + JSON.stringify(rows))
+      res.send('The solution is: ' + JSON.stringify(rows) + ' through Travis CI!')
     })
   })
 })
