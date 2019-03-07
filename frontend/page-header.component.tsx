@@ -10,7 +10,7 @@ export default function PageHeader(props: PageHeaderProps) {
   })
 
   return (
-    <div {...scope} className={always('page-header box-shadow-1').maybe(props.className || '', Boolean(props.className)).toString()} style={{backgroundColor: props.backgroundColor}}>
+    <div {...scope} className={always('page-header box-shadow-1').maybe(props.className || '', Boolean(props.className))} style={{backgroundColor: props.backgroundColor}}>
       <h1>
         {props.title}
       </h1>

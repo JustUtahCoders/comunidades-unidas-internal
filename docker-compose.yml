@@ -9,6 +9,7 @@ services:
       - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: local_db
 
   adminer:
     image: adminer

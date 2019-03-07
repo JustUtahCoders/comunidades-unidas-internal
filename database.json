@@ -1,0 +1,12 @@
+{
+  "dev": {
+    "driver": "mysql",
+    "host": "localhost",
+    "user": "root",
+    "password": "password",
+    "database": "local_db",
+    "multipleStatements": true
+  },
+  "prod": {
+  }
+}
