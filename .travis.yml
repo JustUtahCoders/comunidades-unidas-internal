@@ -4,7 +4,7 @@ node_js:
 script: yarn build
 before_deploy: 
   - ls -al
-  - pip install awsebcli
+  - pip install awsebcli --user
 deploy:
   AWS_ACCESS_KEY_ID: "$AWS_ACCESS_KEY_ID"
   AWS_SECRET_ACCESS_KEY: "$AWS_SECRET_ACCESS_KEY"
