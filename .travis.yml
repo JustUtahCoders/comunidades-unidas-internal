@@ -6,6 +6,7 @@ before_deploy:
   - pip install awsebcli --user
   - ls -al
   - git status
+  - git checkout master
 deploy:
   provider: script
   script:
