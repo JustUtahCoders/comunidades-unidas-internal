@@ -4,14 +4,10 @@ node_js:
 script: yarn build
 before_deploy: ls -al
 deploy:
-  provider: elasticbeanstalk
-  access_key_id: 
-    secure: "$AWS_ACCESS_KEY_ID"
-  secret_access_key:
-    secure: "$AWS_ACCESS_KEY"
-  region: "$AWS_EB_REGION"  
-  app: "$AWS_EB_APP"
-  env: "$AWS_EB_ENV"
-  bucket_name: "$AWS_S3_EB_BUCKET"
+  AWS_ACCESS_KEY_ID: "$AWS_ACCESS_KEY_ID"
+  AWS_SECRET_ACCESS_KEY: "$AWS_SECRET_ACCESS_KEY"
+  script:
+    - pip install awsebcli
+    - ebcli 
   on:
     branch: master
