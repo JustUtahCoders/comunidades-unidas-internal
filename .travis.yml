@@ -3,11 +3,12 @@ node_js:
   - "node"
 script: yarn build
 before_deploy: 
-  - ls -al
   - pip install awsebcli --user
+  - ls -al
+  - git status
 deploy:
   provider: script
   script:
-    - ebcli deploy
+    - ebcli deploy --staged
   on:
     branch: master
