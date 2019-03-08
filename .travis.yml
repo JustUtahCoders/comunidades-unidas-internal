@@ -1,13 +1,12 @@
 language: node_js
 node_js:
   - "node"
-python:
-  - "3.7"
 script: yarn build
 before_deploy: 
   - ls -al
   - pip install awsebcli --user
 deploy:
+  provider: script
   script:
     - ebcli deploy
   on:
