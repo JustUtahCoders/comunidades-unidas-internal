@@ -1,3 +1,5 @@
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+
 module.exports = {
   mode: 'development',
   entry: './frontend/comunidades-unidas-internal.tsx',
@@ -30,4 +32,7 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.jsx', '.js'],
   },
+  plugins: [
+    new CleanWebpackPlugin(),
+  ],
 }
