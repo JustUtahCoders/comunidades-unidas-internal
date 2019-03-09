@@ -11,9 +11,9 @@ export default function ReportIssueSuccess(props: ReportIssueSuccessProps) {
       <PageHeader title="Report an issue" />
       <div className="card issue-success" {...scope}>
         <img src={successIconUrl} className="success-icon" />
-        <div>
+        <div className="explanation">
           Thanks! We'll email you about this, and you can check for updates at any time
-          on <a href={`https://github.com/JustUtahCoders/comunidades-unidas-internal/issues/${props.issueId}`} target="_blank">Github Issue #{props.issueId}</a>.
+          at <a href={`https://github.com/JustUtahCoders/comunidades-unidas-internal/issues/${props.issueId}`} target="_blank">Github Issue #{props.issueId}</a>.
         </div>
       </div>
     </>
@@ -33,6 +33,10 @@ const css = `
   width: 80rem;
   height: 80rem;
   margin-bottom: 16rem;
+}
+
+& .explanation {
+  max-width: 350rem;
 }
 `
 
