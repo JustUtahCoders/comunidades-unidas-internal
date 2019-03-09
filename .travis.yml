@@ -9,7 +9,7 @@ before_deploy:
 deploy:
   provider: script
   before_script:
-  script: echo "Deploying with ebcli" && ebcli deploy --staged
+  script: echo "Deploying with ebcli" && eb deploy
   on:
     branch: master
   skip_cleanup: true
