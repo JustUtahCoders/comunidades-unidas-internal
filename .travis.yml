@@ -5,11 +5,11 @@ script: yarn build
 before_deploy: 
   - pip install awsebcli --user
 deploy:
-  skip_cleanup: true
   provider: script
-  script:
+  before_script:
     - git status
     - ls -al
-    - ebcli deploy --staged
+  script: ebcli deploy --staged
   on:
     branch: master
+  skip_cleanup: true
