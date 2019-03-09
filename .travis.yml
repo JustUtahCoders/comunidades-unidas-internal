@@ -4,12 +4,12 @@ node_js:
 script: yarn build
 before_deploy: 
   - pip install awsebcli --user
+  - git status
+  - ls -al
 deploy:
   provider: script
   before_script:
-    - git status
-    - ls -al
-  script: ebcli deploy --staged
+  script: echo "Deploying with ebcli" && ebcli deploy --staged
   on:
     branch: master
   skip_cleanup: true
