@@ -24,6 +24,11 @@ export default function Sidebar() {
             Add a client
           </Link>
         </li>
+        <li>
+          <Link to="report-issue" className="nav-link" getProps={maybeActiveLink}>
+            Report an issue
+          </Link>
+        </li>
       </ul>
     </nav>
   )

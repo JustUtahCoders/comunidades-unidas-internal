@@ -18,7 +18,7 @@ app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs')
 app.use('/static', express.static(path.join(__dirname, '../static')))
 
-app.get('/api/users', (req, res) => {
+app.get('/api/users', (req, res, next) => {
   pool.getConnection((err, connection) => {
     if (err) {
       return databaseError(req, res, err)
@@ -32,16 +32,26 @@ app.get('/api/users', (req, res) => {
       }
     
       res.send('The solution is: ' + JSON.stringify(rows) + ' through Travis CI!')
+      next()
     })
   })
 })
 
+app.get('/api/github-key', (req, res, next) => {
+  if (process.env.GUEST_GITHUB_KEY) {
+    res.send({'github-key': process.env.GUEST_GITHUB_KEY})
+  } else {
+    res.status(500).send({'github-key': "The server does not have a github key configured"})
+  }
+})
+
 app.use(indexHtml)
 
-function indexHtml(req, res) {
+function indexHtml(req, res, next) {
   res.render('index', {
     frontendBaseUrl: process.env.RUNNING_LOCALLY ? 'http://localhost:9018' : '/static',
   })
+  next()
 }
 
 function databaseError(req, res, err) {

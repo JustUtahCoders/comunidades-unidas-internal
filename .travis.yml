@@ -9,8 +9,6 @@ deploy:
   provider: script
   script:
     - git status
-    - git checkout master
-    - git status
     - ls -al
     - ebcli deploy --staged
   on:

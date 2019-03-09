@@ -7,7 +7,7 @@ export default function HomeCard(props: HomeCardProps) {
   const scope = useCss(css)
 
   return (
-    <Link {...scope} className="home-card unstyled" to="add-client">
+    <Link {...scope} className="home-card unstyled" to={props.link}>
       <img src={props.iconUrl} className="icon" />
       <div className="title">
         {props.title}
@@ -28,6 +28,11 @@ const css = `
   justify-content: center;
   align-items: center;
   box-shadow: ${boxShadow1};
+  margin-left: 24rem;
+}
+
+& .home-card.unstyled:first-child {
+  margin-left: 0;
 }
 
 & .home-card:hover {
@@ -48,4 +53,5 @@ const css = `
 type HomeCardProps = {
   title: string,
   iconUrl: string,
+  link: string,
 }

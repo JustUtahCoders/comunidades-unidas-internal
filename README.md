@@ -1,7 +1,7 @@
 # comunidades-unidas-internal
 The code for comunidades unidas internal website
 
-This project uses Node + Express to interact with a MySQL Database and provide JSON APIS. The frontend is a React SPA that uses Typescript, babel, and webpack.
+This project uses Node + Express to interact with a MySQL Database and provide JSON APIs. The frontend is a React SPA that uses Typescript, babel, and webpack.
 
 ## Setup
 Here are instructions to boot up this project locally so that you can change the code.
@@ -22,7 +22,7 @@ yarn fix-everything
 yarn develop
 ```
 
-This should open up a browser tab with the app running. If it doesn't, try going to http://localhost:9018 directly.
+Now go to http://localhost:8080 in a browser.
 
 ## Deployments
 This project is hosted by [AWS Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/). To deploy the code,
@@ -39,9 +39,10 @@ This will create a directory in the `migrations` folder that has an "up" and a "
 the down file should drop tables and unmodify columns.
 
 After creating a migration, you'll have to run `npx db-migrate up` to run it against your local database. Alternatively, you can restart your local
-environment (Ctrl + C and then `yarn start`). The migration will automatically run on the production database during the deployment in Travis CI. 
+environment (Ctrl + C and then `yarn develop`). The migration will automatically run on the production database during the deployment in Travis CI. 
 
 ## Diagnosing problems / outages
 If the production environment is having issues, you'll need access to Comunidades Unidas' AWS account to diagnose. Once you have access,
 you'll need to install [Python3](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html) and
-[ebcli](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html).
+[ebcli](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html). Then run `eb status`, `eb logs`, and other commands
+to try to diagnose.

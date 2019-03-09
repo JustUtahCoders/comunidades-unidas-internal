@@ -8,7 +8,7 @@
     "fix-everything": "docker-compose down && docker-compose pull && yarn install",
     "start": "node backend/server.js",
     "develop": "concurrently -n w: yarn:develop-*",
-    "develop-frontend": "PUBLIC_PATH='http://localhost:9018/' webpack-dev-server --open",
+    "develop-frontend": "PUBLIC_PATH='http://localhost:9018/' webpack-dev-server",
     "develop-backend": "RUNNING_LOCALLY='true' nodemon backend/server.js --watch backend",
     "develop-database": "docker-compose up",
     "build": "webpack --config webpack.config.js",
