@@ -5,6 +5,7 @@ script: yarn build
 before_deploy: 
   - pip install awsebcli --user
 deploy:
+  skip_cleanup: true
   provider: script
   script:
     - git status
