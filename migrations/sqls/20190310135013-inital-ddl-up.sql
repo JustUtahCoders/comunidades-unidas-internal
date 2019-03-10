@@ -3,7 +3,7 @@
 
 /*TraPO - Data defintion language */
 
-USE dev_trapo;
+--USE dev_trapo;
 
 /*Create person.person table */
 CREATE TABLE IF NOT EXISTS person (
