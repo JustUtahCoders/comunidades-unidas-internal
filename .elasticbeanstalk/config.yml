@@ -1,11 +1,10 @@
 branch-defaults:
   master:
-    environment: test-env
+    environment: comunidades-unidas-internal-prod
     group_suffix: null
 global:
   application_name: comunidades-unidas-internal
   branch: null
-  default_ec2_keyname: comunidades-unidas-demo-eb
   default_platform: Node.js
   default_region: us-west-2
   include_git_submodules: true
