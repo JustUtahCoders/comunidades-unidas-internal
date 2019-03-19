@@ -13,7 +13,7 @@ if (process.env.RUNNING_LOCALLY) {
       console.log('Finished running database migrations')
     })
     .catch(err => {
-      console.log('waiting for database')
+      console.log('waiting for database', err)
     })
   }, 4000)
 }

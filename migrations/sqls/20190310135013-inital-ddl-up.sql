@@ -3,8 +3,6 @@
 
 /*TraPO - Data defintion language */
 
---USE dev_trapo;
-
 /*Create person.person table */
 CREATE TABLE IF NOT EXISTS person (
   personid int NOT NULL AUTO_INCREMENT PRIMARY KEY,
