@@ -92,15 +92,7 @@ export default function ReportIssue(props: ReportIssueProps) {
             </button>
           </div>
         </form>
-        <label>
-          Joel's Beard
-        </label>
-        <button>
-          Leave a comment about Joel's beard
-        </button>
-        <textarea name="" id="" cols="30" rows="10"> </textarea>
       </div>
-    
     )
   }
 
