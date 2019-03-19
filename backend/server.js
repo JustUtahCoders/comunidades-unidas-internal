@@ -56,7 +56,7 @@ function indexHtml(req, res, next) {
 
 function databaseError(req, res, err) {
   const msg = process.env.RUNNING_LOCALLY ? `Database Error for backend endpoint '${req.url}'. ${err}` : `Database error. Run 'eb logs' for more detail`
-  console.error(msg)
+  console.error(err)
   res.status(500).send({error: msg})
 }
 
