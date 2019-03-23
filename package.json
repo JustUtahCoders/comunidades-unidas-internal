@@ -13,7 +13,7 @@
     "develop-database": "docker-compose up",
     "build": "webpack --config webpack.config.js",
     "nuke-database": "docker-compose down -v",
-    "db-migrate-prod": "db-migrate down --env prod -c 5 && db-migrate up --env prod",
+    "db-migrate-prod": "db-migrate up --env prod",
     "typescript": "tsc"
   },
   "husky": {
