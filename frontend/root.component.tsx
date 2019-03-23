@@ -10,7 +10,7 @@ import ReportIssueSuccess from './report-issue/report-issue-success.component'
 export default function Root() {
   return (
     <Styleguide>
-      <Router basepath={window.location.origin.includes('github.io') ? '/comunidades-unidas-internal' : '/'}>
+      <Router basepath="/">
         <Navbars path="/">
           <Home path="/" exact />
           <AddClient path="/add-client" />
