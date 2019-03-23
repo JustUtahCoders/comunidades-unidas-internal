@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT || 8080
 const mysql = require('mysql')
+const bodyParser = require('body-parser')
 require('./run-database-migrations')
 
 const pool = mysql.createPool({
@@ -17,22 +18,23 @@ const pool = mysql.createPool({
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs')
 app.use('/static', express.static(path.join(__dirname, '../static')))
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json());
 
-app.get('/api/users', (req, res, next) => {
+app.post('/api/users', (req, res, next) => {
   pool.getConnection((err, connection) => {
     if (err) {
       return databaseError(req, res, err)
     }
 
-    connection.query('SELECT COUNT(*) FROM Dummy', function (err, rows, fields) {
+    connection.query(mysql.format(`SELECT * FROM Dummy WHERE name=?`, [req.body.name]), function (err, rows, fields) {
       connection.release()
 
       if (err) {
         return databaseError(req, res, err)
       }
     
-      res.send('The solution is: ' + JSON.stringify(rows) + ' through Travis CI!')
-      next()
+      res.send(rows[0])
     })
   })
 })
@@ -45,7 +47,7 @@ app.get('/api/github-key', (req, res, next) => {
   }
 })
 
-app.use(indexHtml)
+app.use('*', indexHtml)
 
 function indexHtml(req, res, next) {
   res.render('index', {

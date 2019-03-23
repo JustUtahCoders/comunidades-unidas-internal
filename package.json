@@ -13,7 +13,7 @@
     "develop-database": "docker-compose up",
     "build": "webpack --config webpack.config.js",
     "nuke-database": "docker-compose down -v",
-    "db-migrate-prod": "db-migrate up --env prod",
+    "db-migrate-prod": "db-migrate down --env prod && db-migrate up --env prod",
     "typescript": "tsc"
   },
   "husky": {
@@ -37,6 +37,7 @@
     "@babel/preset-typescript": "^7.3.3",
     "@zeit/ncc": "^0.15.2",
     "babel-loader": "^8.0.5",
+    "body-parser": "^1.18.3",
     "clean-webpack-plugin": "^2.0.0",
     "concurrently": "^4.1.0",
     "copyfiles": "^2.1.0",

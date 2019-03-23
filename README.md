@@ -43,6 +43,36 @@ the down file should drop tables and unmodify columns.
 After creating a migration, you'll have to run `npx db-migrate up` to run it against your local database. Alternatively, you can restart your local
 environment (Ctrl + C and then `yarn develop`). The migration will automatically run on the production database during the deployment in Travis CI. 
 
+## Connecting to the database
+#### Local development
+From a terminal in the comunidades-unidas-internal directory, run the following commands:
+```sh
+docker-compose exec db bash
+mysql -u root -ppassword # yep, it has two p's. The first is for password, the second is for the word password which is the password
+
+# Now you'll be in the mysql shell
+use local_db;
+show tables;
+SELECT * FROM Dummy;
+# etc etc
+```
+
+#### Production database
+Run the following commands in a terminal. Replace `$HOSTNAME`, `$USERNAME`, and `$PASSWORD` with the correct values.
+```sh
+mysql -h$HOSTNAME -u$USERNAME -p$PASSWORD
+# OR, if you don't have `mysql` installed on your computer
+docker run -it --rm mysql mysql -h$HOSTNAME -u$USERNAME -p$PASSWORD
+
+# Now you'll be in the mysql shell
+use ebdb;
+show tables;
+```
+
+## SSH access
+Install [ebcli](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html). Then run `eb ssh`. Our code is
+inside of the `/var/app/current/` directory.
+
 ## Diagnosing problems / outages
 If the production environment is having issues, you'll need access to Comunidades Unidas' AWS account to diagnose. Once you have access,
 you'll need to install [Python3](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html) and
