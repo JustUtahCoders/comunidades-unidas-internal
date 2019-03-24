@@ -1,23 +1,4 @@
 /* Replace with your SQL commands */
-/*dev_trap DDL */
-/*SQL run by root level access to creae tables and grant permisions */
-/*create user for application TraPO*/
-CREATE DATABASE dev_trapo;
-CREATE USER 'trapo_admin'@'%' IDENTIFIED BY '3076temp#0193';
-GRANT ALL PRIVILEGES ON dev_trapo.* to 'trapo_admin'@'localhost';
-FLUSH PRIVILEGES;
-
-SELECT * 
-FROM  mysql.user
-WHERE user = 'trapo_admin';
-
-
-/*TraPO - Data defintion language */
-SHOW databases;
-USE dev_trapo;
-/*
-Create a table to allow users to register and log in
-*/
 
 /*Create person.person table */
 CREATE TABLE IF NOT EXISTS person (
