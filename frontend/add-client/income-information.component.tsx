@@ -45,7 +45,7 @@ export default function IncomeInformation(props: StepComponentProps) {
                 <span>
                   Pay period
                 </span>
-                <select required value={payPeriod} onChange={evt => setPayPeriod(evt.target.value)}>
+                <select required value={payPeriod} onChange={evt => setPayPeriod(PayPeriod[evt.target.value])}>
                   <option value="weekly">
                     Weekly
                   </option>
@@ -86,7 +86,7 @@ export default function IncomeInformation(props: StepComponentProps) {
                   <span>
                     # of dependents younger than 18
                   </span>
-                  <input type="number" value={numMinorDependents} onChange={evt => setNumMinorDependents(evt.target.value)} required />
+                  <input type="number" value={numMinorDependents} onChange={evt => setNumMinorDependents(Number(evt.target.value))} required />
                 </label>
               </div>
             }

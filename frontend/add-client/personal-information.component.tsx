@@ -87,7 +87,7 @@ export default function PersonalInformation(props: StepComponentProps) {
             <span>
               Civil status
             </span>
-            <select value={civilStatus} name="civilStatus" onChange={evt => setCivilStatus(evt.target.value)} required>
+            <select value={civilStatus} name="civilStatus" onChange={evt => setCivilStatus(CivilStatus[evt.target.value])} required>
               <option value="single">
                 Single
               </option>
@@ -177,7 +177,7 @@ export default function PersonalInformation(props: StepComponentProps) {
   function handleSubmit(evt) {
     evt.preventDefault()
     props.nextStep(Step.GLOBAL_BACKGROUND, {
-      gender,
+      gender: Gender[gender],
       genderExplanation: gender === 'other' ? genderExplanation : null,
       civilStatus,
       phone,

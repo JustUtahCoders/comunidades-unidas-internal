@@ -86,7 +86,7 @@ export default function GlobalBackground(props: StepComponentProps) {
             <span>
               English level
             </span>
-            <select required value={englishLevel} onChange={evt => setEnglishLevel(evt.target.value)}>
+            <select required value={englishLevel} onChange={evt => setEnglishLevel(EnglishLevel[evt.target.value])}>
               <option value="beginner">
                 Beginner
               </option>

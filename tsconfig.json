@@ -8,9 +8,9 @@
     "noEmit": true
   },
   "include": [
-    "src/**/*"
+    "frontend/**/*"
   ],
   "files": [
-    "src/custom.d.ts"
+    "frontend/custom.d.ts"
   ]
 }
