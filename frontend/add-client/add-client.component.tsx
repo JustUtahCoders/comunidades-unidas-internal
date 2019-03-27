@@ -1,19 +1,23 @@
-import React, {useState} from 'react'
-import {useCss} from 'kremling'
-import PageHeader from '../page-header.component'
-import CheckDuplicate from './check-duplicate.component'
-import PersonalInformation, {CivilStatus, Gender} from './personal-information.component'
-import GlobalBackground, {EnglishLevel} from './global-background.component'
-import IncomeInformation, {PayPeriod} from './income-information.component'
-import ClientSource from './client-source.component'
-import Services from './services.component'
-import Finished from './finished.component'
+import React, { useState } from "react";
+import { useCss } from "kremling";
+import PageHeader from "../page-header.component";
+import CheckDuplicate from "./check-duplicate.component";
+import PersonalInformation, {
+  CivilStatus,
+  Gender
+} from "./personal-information.component";
+import GlobalBackground, { EnglishLevel } from "./global-background.component";
+import IncomeInformation, { PayPeriod } from "./income-information.component";
+import ClientSource from "./client-source.component";
+import Services from "./services.component";
+import Finished from "./finished.component";
+import ListDuplicates from "./list-duplicate.component";
 
 export default function AddClient(props: AddClientProps) {
-  const scope = useCss(css)
-  const [step, setStep] = useState<Step>(Step.CHECK_DUPLICATE)
-  const [clientState, setClientState] = useState<ClientState>({})
-  const StepComponent = stepComponents[step]
+  const scope = useCss(css);
+  const [step, setStep] = useState<Step>(Step.CHECK_DUPLICATE);
+  const [clientState, setClientState] = useState<ClientState>({});
+  const StepComponent = stepComponents[step];
 
   return (
     <div {...scope}>
@@ -29,20 +33,20 @@ export default function AddClient(props: AddClientProps) {
         </div>
       </div>
     </div>
-  )
+  );
 
   function nextStep(stepName: Step, newState: ClientState) {
-    setClientState({...clientState, ...newState})
-    setStep(stepName)
+    setClientState({ ...clientState, ...newState });
+    setStep(stepName);
   }
 
   function goBack(step: Step) {
-    setStep(step)
+    setStep(step);
   }
 
   function reset() {
-    setClientState({})
-    setStep(Step.CHECK_DUPLICATE)
+    setClientState({});
+    setStep(Step.CHECK_DUPLICATE);
   }
 }
 
@@ -97,63 +101,66 @@ const css = `
 & .vertical-options {
   display: block;
 }
-`
+`;
 
 export enum Step {
   CHECK_DUPLICATE = "CHECK_DUPLICATE",
+  LIST_DUPLICATES = "LIST_DUPLICATES",
   PERSONAL_INFORMATION = "PERSONAL_INFORMATION",
   GLOBAL_BACKGROUND = "GLOBAL_BACKGROUND",
   INCOME_INFORMATION = "INCOME_INFORMATION",
   CLIENT_SOURCE = "CLIENT_SOURCE",
   SERVICES = "SERVICES",
-  FINISHED = "FINISHED",
+  FINISHED = "FINISHED"
 }
 
 const stepComponents = {
   [Step.CHECK_DUPLICATE]: CheckDuplicate,
+  [Step.LIST_DUPLICATES]: ListDuplicates,
   [Step.PERSONAL_INFORMATION]: PersonalInformation,
   [Step.GLOBAL_BACKGROUND]: GlobalBackground,
   [Step.INCOME_INFORMATION]: IncomeInformation,
   [Step.CLIENT_SOURCE]: ClientSource,
   [Step.SERVICES]: Services,
-  [Step.FINISHED]: Finished,
-}
+  [Step.FINISHED]: Finished
+};
 
 type AddClientProps = {
-  path: string,
-}
+  path: string;
+};
 
 type ClientState = {
-  firstName?: string,
-  lastName?: string,
-  birthday?: string,
-  gender?: Gender,
-  genderExplanation?: string,
-  civilStatus?: CivilStatus,
-  country?: string,
-  phone?: string,
-  smsConsent?: boolean,
-  streetAddress?: string,
-  city?: string,
-  state?: string,
-  zip?: string,
-  email?: string,
-  countryOfOrigin?: string,
-  numYearsInUSA?: number,
-  primaryLanguage?: string,
-  englishLevel?: EnglishLevel,
-  currentlyEmployed?: boolean,
-  profession?: string,
-  payPeriod?: PayPeriod,
-  yearlyIncome?: number,
-  clientSource?: string,
-  couldVolunteer?: boolean,
-  registeredToVote?: boolean,
-}
+  firstName?: string;
+  lastName?: string;
+  birthday?: string;
+  duplicates?: string;
+  gender?: Gender;
+  genderExplanation?: string;
+  civilStatus?: CivilStatus;
+  country?: string;
+  phone?: string;
+  smsConsent?: boolean;
+  streetAddress?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  email?: string;
+  countryOfOrigin?: string;
+  numYearsInUSA?: number;
+  primaryLanguage?: string;
+  englishLevel?: EnglishLevel;
+  currentlyEmployed?: boolean;
+  profession?: string;
+  payPeriod?: PayPeriod;
+  yearlyIncome?: number;
+  clientSource?: string;
+  couldVolunteer?: boolean;
+  registeredToVote?: boolean;
+};
 
 export type StepComponentProps = {
-  nextStep: (stepName: string, newClientState: ClientState) => void,
-  clientState: ClientState,
-  goBack(Step): void,
-  reset(): void,
-}
+  nextStep: (stepName: string, newClientState: ClientState) => void;
+  clientState: ClientState;
+  goBack(Step): void;
+  reset(): void;
+};
