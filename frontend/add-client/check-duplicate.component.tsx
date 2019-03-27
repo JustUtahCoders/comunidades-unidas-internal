@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import user2Url from "../../icons/148705-essential-collection/svg/user-2.svg";
 import { StepComponentProps, Step } from "./add-client.component";
+import { setConstantValue } from "typescript";
 
 export default function CheckDuplicate(props: StepComponentProps) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [birthday, setBirthday] = useState("1990-01-01");
-  const [duplicates, setDuplicates] = useState("");
 
   return (
     <>
@@ -64,7 +64,7 @@ export default function CheckDuplicate(props: StepComponentProps) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    //Fetch duplicates
+    /*I added this fetch to query data for potential duplicates, if there is result then the the LIST_DUPLICATES component is next.. I am not sure if this is the right way to do it however.  */
     fetch("/api/duplicate-check/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -80,16 +80,12 @@ export default function CheckDuplicate(props: StepComponentProps) {
         }
         return response.json();
       })
-      .then(function(data) {
-        //console.log(data);
-        if (data.length > 0) {
-          //console.log("duplicates found", data);
-          setDuplicates(JSON.stringify(data));
+      .then(function(duplicates) {
+        if (duplicates.length > 0) {
           props.nextStep(Step.LIST_DUPLICATES, {
             firstName,
             lastName,
-            birthday,
-            duplicates
+            birthday
           });
         } else {
           props.nextStep(Step.PERSONAL_INFORMATION, {

@@ -22,6 +22,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.post("/api/duplicate-check/", (req, res, next) => {
+  /*Tried to add this route in the routes directory but dont know how to carry to mysql query connection over to that... Is this the right way? */
   pool.getConnection((err, connection) => {
     if (err) {
       return databaseError(req, res, err);

@@ -133,7 +133,6 @@ type ClientState = {
   firstName?: string;
   lastName?: string;
   birthday?: string;
-  duplicates?: string;
   gender?: Gender;
   genderExplanation?: string;
   civilStatus?: CivilStatus;

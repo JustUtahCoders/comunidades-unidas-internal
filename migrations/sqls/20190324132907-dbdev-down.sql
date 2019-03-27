@@ -1,13 +1,15 @@
 /* Replace with your SQL commands */
-DROP TABLE contact;
-DROP TABLE demographics;
-DROP TABLE address;
-DROP TABLE users;
-DROP TABLE lead;
-DROP TABLE programsL
-DROP TABLE servcies;
-DROP TABLE leadServicesNeeded;
-DROP TABLE leadToClient;
-DROP TABLE intakeData;
-DROP TABLE PersonServicesNeded;
-DROP TABLE person;
+SET FOREIGN_KEY_CHECKS=0;
+DROP TABLE IF EXISTS contact;
+DROP TABLE IF EXISTS demographics;
+DROP TABLE IF EXISTS address;
+DROP TABLE IF EXISTS programs;
+DROP TABLE IF EXISTS services;
+DROP TABLE IF EXISTS leadServicesNeeded;
+DROP TABLE IF EXISTS leadToClient;
+DROP TABLE IF EXISTS intakeData;
+DROP TABLE IF EXISTS PersonServicesNeded;
+DROP TABLE IF EXISTS lead;
+DROP TABLE IF EXISTS person;
+DROP TABLE IF EXISTS users;
+SET FOREIGN_KEY_CHECKS=1;

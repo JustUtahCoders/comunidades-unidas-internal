@@ -1,4 +1,17 @@
 /* Replace with your SQL commands */
+/*
+Create users tables: I figured that later on, this application can be scaled to mainain, volunteers, board members, and maybe even donors and staff (HR management) 
+*/
+CREATE TABLE IF NOT EXISTS users (
+  userId int AUTO_INCREMENT PRIMARY KEY,
+  firstName varchar(64) NOT NULL,
+  lastName varchar(64) NOT NULL,
+  accessLevel ENUM('Administrator','Manager','Staff'), 
+  userName nvarchar(64) NOT NULL,
+  password nvarchar(64) NOT NULL
+);
+INSERT INTO users(firstName,lastName,accessLevel,userName,password)
+VALUES('Leonel','Nieto','Administrator','leonelnieto','password');
 
 /*Create person.person table */
 CREATE TABLE IF NOT EXISTS person (
@@ -6,29 +19,32 @@ CREATE TABLE IF NOT EXISTS person (
   firstName nvarchar(255) NOT NULL,
   lastName nvarchar(255) NOT NULL,
   dob date,
-  gender nvarchar(32) ENUM('Male','Female','Non-Binary','Other'),  /*Gender constraint at front end */
+  gender ENUM('Male','Female','Non-Binary','Other'),  /*Gender constraint at front end */
   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
   dateModified DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   addedBy int NOT NULL /*Self Reference to Person ID*/,
   modifiedBy int NOT NULL /*Self Reference to Person ID*/,
   FOREIGN KEY (addedBy) REFERENCES person(personId),
-  FOREIGN KEY (modifiedBy) REFERENCES person(personId)
+  FOREIGN KEY (modifiedBy) REFERENCES users(userId)
 );
-/*drop recreate command*/
-#DROP TABLE person;
+/*Insert test data into person table*/
+INSERT INTO person(firstname,lastname,dob,gender,addedby,modifiedby) VALUES (
+  'Leonel','Nieto','1984-02-28','Male',1,1),('Jonh','Doe','1985-08-01','Male',1,1),(
+  'Jane','Doe','1983-01-15','Female',1,1),('Fulano','Detal','1981-05-30','Non-Binary',1,1);
+
 /*Crate person Contanct table-Contact M:1 Person*/
 CREATE TABLE IF NOT EXISTS contact (
   personId int NOT NULL, /*Foreign key reference to person table */
   contactId int AUTO_INCREMENT PRIMARY KEY,
   primaryPhone varchar(32),
   primaryCarrier varchar(32),
-  textMessages varchar(5) ENUM('Yes','No'), /*Would client like to recieve text messages from CU*/
+  textMessages ENUM('Yes','No'), /*Would client like to recieve text messages from CU*/
   emergencyContact varchar(32),
   email varchar(128),
   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
   addedBy int NOT NULL, /*Foreign key reference to person table */
   FOREIGN KEY (personId) REFERENCES person(personId),
-  FOREIGN KEY (addedBy) REFERENCES person(personId)
+  FOREIGN KEY (addedBy) REFERENCES users(userId)
 );
 /*Create Demographics Table M:1 Person*/
 CREATE TABLE IF NOT EXISTS demographics (
@@ -38,7 +54,7 @@ CREATE TABLE IF NOT EXISTS demographics (
   languageHome varchar(32), /* Primary language spoken at home */
   englishProficiency varchar(32), /*English Proficiency of Person*/
   dateUSArrival date, /*date of us arrival, day can be and estimation if client does not remember*/
-  employed varchar(32) ENUM('Yes', 'No','Not Applicable','Unknown'), /*employed, not applicable for age < 16*/
+  employed ENUM('Yes', 'No','Not Applicable','Unknown'), /*employed, not applicable for age < 16*/
   weeklyAvgHoursWorked tinyint, /*Can be null if not employed*/
   emplopymentSector varchar(128), /*Can be null if not employed*/
   householdSize tinyint, 
@@ -49,7 +65,7 @@ CREATE TABLE IF NOT EXISTS demographics (
   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
   addedBy int NOT NULL,
   FOREIGN KEY (personId) REFERENCES person(personId),
-  FOREIGN KEY (addedBy) REFERENCES person(personId)
+  FOREIGN KEY (addedBy) REFERENCES users(userId)
 );
 /*Create Address table M:1 with people*/
 CREATE TABLE IF NOT EXISTS address (
@@ -57,26 +73,14 @@ CREATE TABLE IF NOT EXISTS address (
   addressId int AUTO_INCREMENT PRIMARY KEY,
   address1 varchar(128),
   address2 varchar(128),
-  owned varchar(10) ENUM('Rent','Own','Other'), /*Dweling ownership type, rent or owned(Y/N)*/
+  owned ENUM('Rent','Own','Other'), /*Dweling ownership type, rent or owned(Y/N)*/
   city varchar(64),
   zip varchar(5),
   state varchar(2),
   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
   addedBy int NOT NULL,
   FOREIGN KEY (personId) REFERENCES person(personId),
-  FOREIGN KEY (addedBy) REFERENCES person(personId)
-);
-
-/*
-Create users tables: I figured that later on, this application can be scaled to mainain, volunteers, board members, and maybe even donors and staff (HR management) 
-*/
-CREATE TABLE IF NOT EXISTS users (
-  userId int AUTO_INCREMENT PRIMARY KEY,
-  firstName varchar(64) NOT NULL,
-  lastName varchar(64) NOT NULL,
-  accessLevel nvarchar(32) NOT NULL, 
-  userName nvarchar(64) NOT NULL,
-  password nvarchar(64) NOT NULL
+  FOREIGN KEY (addedBy) REFERENCES users(userId)
 );
 
 /*
@@ -94,7 +98,7 @@ CREATE TABLE IF NOT EXISTS lead (
   gender varchar(32),
   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
   addedBy int NOT NULL,
-  FOREIGN KEY (addedBy) REFERENCES person(personId)
+  FOREIGN KEY (addedBy) REFERENCES users(userId)
 );
 /*
 Create Programs: CU you can define its programs and programs managers in this table.
@@ -160,7 +164,7 @@ CREATE TABLE IF NOT EXISTS intakeData (
   registeredVoter varchar(5), /*Y N*/
   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
   addedBy int NOT NULL,
-  FOREIGN KEY (addedby) REFERENCES person(personId),
+  FOREIGN KEY (addedby) REFERENCES users(userId),
   FOREIGN KEY (personId) REFERENCES person(personId)
 );
 /*
@@ -173,6 +177,8 @@ CREATE TABLE IF NOT EXISTS PersonServicesNeded (
   serviceId int NOT NULL,
   comments varchar(5000),
   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
+  addedBy int NOT NULL,
+  FOREIGN KEY (addedby) REFERENCES users(userId),
   FOREIGN KEY (intakeDataId) REFERENCES IntakeData(intakeDataId),
   FOREIGN KEY (personId) REFERENCES person(personId),
   FOREIGN KEY (serviceId) REFERENCES services(serviceId)
