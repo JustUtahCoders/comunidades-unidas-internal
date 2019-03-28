@@ -63,7 +63,7 @@ export default function GlobalBackground(props: StepComponentProps) {
                 English
               </option>
               <option value="bothSpanishAndEnglish">
-                Both
+                English and Spanish
               </option>
               <option value="other">
                 Other
