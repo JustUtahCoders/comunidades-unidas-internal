@@ -1,7 +1,6 @@
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
-  mode: 'development',
   entry: './frontend/comunidades-unidas-internal.tsx',
   output: {
     filename: 'comunidades-unidas-internal.js',
@@ -35,4 +34,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
   ],
+  optimization: {
+    namedChunks: true,
+  },
 }
