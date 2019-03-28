@@ -11,7 +11,7 @@ import Finished from './finished.component'
 
 export default function AddClient(props: AddClientProps) {
   const scope = useCss(css)
-  const [step, setStep] = useState<Step>(Step.CHECK_DUPLICATE)
+  const [step, setStep] = useState<Step>(Step.SERVICES)
   const [clientState, setClientState] = useState<ClientState>({})
   const StepComponent = stepComponents[step]
 
@@ -96,6 +96,10 @@ const css = `
 
 & .vertical-options {
   display: block;
+}
+
+& .vertical-options > * {
+  padding: 8rem 0;
 }
 `
 
