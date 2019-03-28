@@ -85,7 +85,8 @@ export default function CheckDuplicate(props: StepComponentProps) {
           props.nextStep(Step.LIST_DUPLICATES, {
             firstName,
             lastName,
-            birthday
+            birthday,
+            duplicates
           });
         } else {
           props.nextStep(Step.PERSONAL_INFORMATION, {
