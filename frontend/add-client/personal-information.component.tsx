@@ -32,7 +32,7 @@ export default function PersonalInformation(props: StepComponentProps) {
             <span>
               First Name
             </span>
-            <input type="text" value={props.clientState.firstName} required disabled />
+            <input type="text" value={props.clientState.firstName} required disabled autoFocus />
           </label>
         </div>
         <div>
@@ -163,11 +163,11 @@ export default function PersonalInformation(props: StepComponentProps) {
           </label>
         </div>
         <div className="actions">
-          <button type="submit" className="primary">
-            Next step
-          </button>
           <button type="button" className="secondary" onClick={() => props.goBack(Step.CHECK_DUPLICATE)}>
             Go back
+          </button>
+          <button type="submit" className="primary">
+            Next step
           </button>
         </div>
       </form>
