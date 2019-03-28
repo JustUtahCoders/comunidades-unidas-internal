@@ -3,6 +3,7 @@ import {StepComponentProps, Step} from './add-client.component'
 import successIconUrl from '../../icons/148705-essential-collection/svg/success.svg'
 import PhoneInput from '../util/phone-input.component'
 import StateSelect from '../util/state-select.component'
+import CityInput from '../util/city-input.component'
 
 export default function PersonalInformation(props: StepComponentProps) {
   const [gender, setGender] = useState('female')
@@ -26,7 +27,7 @@ export default function PersonalInformation(props: StepComponentProps) {
           Great! This person is not yet in the system. Let's add their personal information.
         </div>
       </div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} autoComplete="off">
         <div>
           <label>
             <span>
@@ -133,17 +134,17 @@ export default function PersonalInformation(props: StepComponentProps) {
         <div>
           <label>
             <span>
-              City
+              State
             </span>
-            <input type="text" value={city} onChange={evt => setCity(evt.target.value)} required />
+            <StateSelect state={state} setState={setState} />
           </label>
         </div>
         <div>
           <label>
             <span>
-              State
+              City
             </span>
-            <StateSelect state={state} setState={setState} />
+            <CityInput state={state} city={city} setCity={setCity} />
           </label>
         </div>
         <div>

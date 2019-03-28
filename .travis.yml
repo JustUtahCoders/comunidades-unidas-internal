@@ -10,7 +10,7 @@ before_deploy:
 deploy:
   provider: script
   before_script:
-  script: echo "Deploying with ebcli" && eb deploy comunidades-unidas-internal-prod -v
+  script: echo "Deploying with ebcli" && eb deploy comunidades-unidas-internal-prod
   on:
     branch: master
   skip_cleanup: true
