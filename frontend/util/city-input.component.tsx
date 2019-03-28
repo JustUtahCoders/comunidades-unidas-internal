@@ -39,7 +39,7 @@ export default function CityInput(props) {
             <button type="button" className="unstyled" onClick={() => {
               props.setCity(possibleCity.city)
               inputRef.current.blur()
-            }}>
+            }} tabIndex={-1}>
               {possibleCity.city}
             </button>
           </li>
