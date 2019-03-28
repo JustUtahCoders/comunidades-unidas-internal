@@ -125,6 +125,16 @@ body {
 & button.primary:hover, & a.button.primary:hover {
   background-color: #507b97;
 }
+
+& button.secondary, & a.secondary {
+  background-color: #e9e9e9;
+  color: black;
+  transition: background-color .2s;
+}
+
+& button.secondary:hover, & a.secondary:hover {
+  background-color: #afafaf;
+}
 `
 
 type Color = string

@@ -82,11 +82,11 @@ export default function ClientSource(props: StepComponentProps) {
           </label>
         </div>
         <div className="actions">
-          <button type="submit" className="primary">
-            Next step
-          </button>
           <button type="button" className="secondary" onClick={() => props.goBack(Step.INCOME_INFORMATION)}>
             Go back
+          </button>
+          <button type="submit" className="primary">
+            Next step
           </button>
         </div>
       </form>
