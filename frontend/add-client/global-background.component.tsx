@@ -63,7 +63,7 @@ export default function GlobalBackground(props: StepComponentProps) {
                 English
               </option>
               <option value="bothSpanishAndEnglish">
-                Both
+                English and Spanish
               </option>
               <option value="other">
                 Other
@@ -100,11 +100,11 @@ export default function GlobalBackground(props: StepComponentProps) {
           </label>
         </div>
         <div className="actions">
-          <button type="submit" className="primary">
-            Next step
-          </button>
           <button type="button" className="secondary" onClick={() => props.goBack(Step.PERSONAL_INFORMATION)}>
             Go back
+          </button>
+          <button type="submit" className="primary">
+            Next step
           </button>
         </div>
       </form>

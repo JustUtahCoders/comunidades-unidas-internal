@@ -125,6 +125,39 @@ body {
 & button.primary:hover, & a.button.primary:hover {
   background-color: #507b97;
 }
+
+& button.secondary, & a.secondary {
+  background-color: #e9e9e9;
+  color: black;
+  transition: background-color .2s;
+}
+
+& button.secondary:hover, & a.secondary:hover {
+  background-color: #afafaf;
+}
+
+& .popup {
+  position: absolute;
+  box-shadow: ${boxShadow2};
+  background-color: white;
+  border-radius: 3rem;
+  border: 1px solid #e9e9e9;
+  min-width: 150rem;
+}
+
+& .popup ul li {
+  padding: 4rem 8rem;
+}
+
+& .popup ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+& .popup ul li:hover {
+  background-color: #e9e9e9;
+}
 `
 
 type Color = string

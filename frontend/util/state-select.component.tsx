@@ -1,59 +1,14 @@
 import React from 'react'
+import {toPairs} from 'lodash-es'
 
 export default function StateSelect(props: StateSelectProps) {
   return (
     <select value={props.state} onChange={evt => props.setState(evt.target.value)}>
-      <option value="AL">Alabama</option>
-      <option value="AK">Alaska</option>
-      <option value="AZ">Arizona</option>
-      <option value="AR">Arkansas</option>
-      <option value="CA">California</option>
-      <option value="CO">Colorado</option>
-      <option value="CT">Connecticut</option>
-      <option value="DE">Delaware</option>
-      <option value="DC">District Of Columbia</option>
-      <option value="FL">Florida</option>
-      <option value="GA">Georgia</option>
-      <option value="HI">Hawaii</option>
-      <option value="ID">Idaho</option>
-      <option value="IL">Illinois</option>
-      <option value="IN">Indiana</option>
-      <option value="IA">Iowa</option>
-      <option value="KS">Kansas</option>
-      <option value="KY">Kentucky</option>
-      <option value="LA">Louisiana</option>
-      <option value="ME">Maine</option>
-      <option value="MD">Maryland</option>
-      <option value="MA">Massachusetts</option>
-      <option value="MI">Michigan</option>
-      <option value="MN">Minnesota</option>
-      <option value="MS">Mississippi</option>
-      <option value="MO">Missouri</option>
-      <option value="MT">Montana</option>
-      <option value="NE">Nebraska</option>
-      <option value="NV">Nevada</option>
-      <option value="NH">New Hampshire</option>
-      <option value="NJ">New Jersey</option>
-      <option value="NM">New Mexico</option>
-      <option value="NY">New York</option>
-      <option value="NC">North Carolina</option>
-      <option value="ND">North Dakota</option>
-      <option value="OH">Ohio</option>
-      <option value="OK">Oklahoma</option>
-      <option value="OR">Oregon</option>
-      <option value="PA">Pennsylvania</option>
-      <option value="RI">Rhode Island</option>
-      <option value="SC">South Carolina</option>
-      <option value="SD">South Dakota</option>
-      <option value="TN">Tennessee</option>
-      <option value="TX">Texas</option>
-      <option value="UT">Utah</option>
-      <option value="VT">Vermont</option>
-      <option value="VA">Virginia</option>
-      <option value="WA">Washington</option>
-      <option value="WV">West Virginia</option>
-      <option value="WI">Wisconsin</option>
-      <option value="WY">Wyoming</option>
+      {statesArray.map(state => (
+        <option key={state.key} value={state.key}>
+          {state.label}
+        </option>
+      ))}
     </select>
   )
 }
@@ -62,3 +17,61 @@ type StateSelectProps = {
   state: string,
   setState(state: string): void,
 }
+
+export const stateNameToAbbreviation = {
+  "Alabama": "AL",
+  "Alaska": "AK",
+  "Arizona": "AZ",
+  "Arkansas": "AR",
+  "California": "CA",
+  "Colorado": "CO",
+  "Connecticut": "CT",
+  "Delaware": "DE",
+  "District Of Columbia": "DC",
+  "Florida": "FL",
+  "Georgia": "GA",
+  "Hawaii": "HI",
+  "Idaho": "ID",
+  "Illinois": "IL",
+  "Indiana": "IN",
+  "Iowa": "IA",
+  "Kansas": "KS",
+  "Kentucky": "KY",
+  "Louisiana": "LA",
+  "Maine": "ME",
+  "Maryland": "MD",
+  "Massachusetts": "MA",
+  "Michigan": "MI",
+  "Minnesota": "MN",
+  "Mississippi": "MS",
+  "Missouri": "MO",
+  "Montana": "MT",
+  "Nebraska": "NE",
+  "Nevada": "NV",
+  "New Hampshire": "NH",
+  "New Jersey": "NJ",
+  "New Mexico": "NM",
+  "New York": "NY",
+  "North Carolina": "NC",
+  "North Dakota": "ND",
+  "Ohio": "OH",
+  "Oklahoma": "OK",
+  "Oregon": "OR",
+  "Pennsylvania": "PA",
+  "Rhode Island": "RI",
+  "South Carolina": "SC",
+  "South Dakota": "SD",
+  "Tennessee": "TN",
+  "Texas": "TX",
+  "Utah": "UT",
+  "Vermont": "VT",
+  "Virginia": "VA",
+  "Washington": "WA",
+  "West Virginia": "WV",
+  "Wisconsin": "WI",
+  "Wyoming": "WY",
+}
+
+const statesArray = toPairs(stateNameToAbbreviation)
+  .map(val => ({key: val[1], label: val[0]}))
+  .sort((first, second) => first.label > second.label)

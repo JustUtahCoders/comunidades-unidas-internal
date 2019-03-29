@@ -93,11 +93,11 @@ export default function IncomeInformation(props: StepComponentProps) {
           </>
         }
         <div className="actions">
-          <button type="submit" className="primary">
-            Next step
-          </button>
           <button type="button" className="secondary" onClick={() => props.goBack(Step.GLOBAL_BACKGROUND)}>
             Go back
+          </button>
+          <button type="submit" className="primary">
+            Next step
           </button>
         </div>
       </form>

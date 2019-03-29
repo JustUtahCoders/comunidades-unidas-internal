@@ -97,6 +97,10 @@ const css = `
 & .vertical-options {
   display: block;
 }
+
+& .vertical-options > * {
+  padding: 8rem 0;
+}
 `
 
 export enum Step {
