@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react'
-import {useCss, always, maybe} from 'kremling'
+import {useCss} from 'kremling'
 import FuzzySearch from 'fuzzy-search'
 
 export default function CityInput(props) {
@@ -32,14 +32,14 @@ export default function CityInput(props) {
     const possibleCities = fuzzySearcher.search(props.city).slice(0, 8)
 
     return (
-      <div className={always("popup").maybe('hidden', possibleCities.length === 0)}>
+      <div className="popup">
         <ul>
         {possibleCities.map(possibleCity => (
           <li key={possibleCity.city}>
-            <button type="button" className="unstyled" onClick={() => {
+            <button type="button" className="unstyled city-button" onClick={() => {
               props.setCity(possibleCity.city)
               inputRef.current.blur()
-            }} tabIndex={-1}>
+            }} tabIndex={-1} title={possibleCity.city}>
               {possibleCity.city}
             </button>
           </li>
@@ -59,5 +59,12 @@ export default function CityInput(props) {
 const css = `
 & .city-input-container {
   position: relative;
+}
+
+& .city-button {
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 `

@@ -6,6 +6,15 @@ export default function CountrySelect(props: CountrySelectProps) {
       <optgroup label="Most common countries">
         <option value="US">United States</option>
         <option value="MX">Mexico</option>
+        <option value="PE">Peru</option>
+        <option value="CL">Chile</option>
+        <option value="GT">Guatemala</option>
+        <option value="SV">El Salvador</option>
+        <option value="HN">Honduras</option>
+        <option value="NI">Nicaragua</option>
+        <option value="BO">Bolivia, Plurinational State of</option>
+        <option value="VE">Venezuela, Bolivarian Republic of</option>
+        <option value="CO">Colombia</option>
       </optgroup>
       <optgroup label="All countries">
         <option value="AF">Afghanistan</option>
@@ -34,7 +43,6 @@ export default function CountrySelect(props: CountrySelectProps) {
         <option value="BJ">Benin</option>
         <option value="BM">Bermuda</option>
         <option value="BT">Bhutan</option>
-        <option value="BO">Bolivia, Plurinational State of</option>
         <option value="BQ">Bonaire, Sint Eustatius and Saba</option>
         <option value="BA">Bosnia and Herzegovina</option>
         <option value="BW">Botswana</option>
@@ -52,11 +60,9 @@ export default function CountrySelect(props: CountrySelectProps) {
         <option value="KY">Cayman Islands</option>
         <option value="CF">Central African Republic</option>
         <option value="TD">Chad</option>
-        <option value="CL">Chile</option>
         <option value="CN">China</option>
         <option value="CX">Christmas Island</option>
         <option value="CC">Cocos (Keeling) Islands</option>
-        <option value="CO">Colombia</option>
         <option value="KM">Comoros</option>
         <option value="CG">Congo</option>
         <option value="CD">Congo, the Democratic Republic of the</option>
@@ -74,7 +80,6 @@ export default function CountrySelect(props: CountrySelectProps) {
         <option value="DO">Dominican Republic</option>
         <option value="EC">Ecuador</option>
         <option value="EG">Egypt</option>
-        <option value="SV">El Salvador</option>
         <option value="GQ">Equatorial Guinea</option>
         <option value="ER">Eritrea</option>
         <option value="EE">Estonia</option>
@@ -98,7 +103,6 @@ export default function CountrySelect(props: CountrySelectProps) {
         <option value="GD">Grenada</option>
         <option value="GP">Guadeloupe</option>
         <option value="GU">Guam</option>
-        <option value="GT">Guatemala</option>
         <option value="GG">Guernsey</option>
         <option value="GN">Guinea</option>
         <option value="GW">Guinea-Bissau</option>
@@ -106,7 +110,6 @@ export default function CountrySelect(props: CountrySelectProps) {
         <option value="HT">Haiti</option>
         <option value="HM">Heard Island and McDonald Islands</option>
         <option value="VA">Holy See (Vatican City State)</option>
-        <option value="HN">Honduras</option>
         <option value="HK">Hong Kong</option>
         <option value="HU">Hungary</option>
         <option value="IS">Iceland</option>
@@ -166,7 +169,6 @@ export default function CountrySelect(props: CountrySelectProps) {
         <option value="NL">Netherlands</option>
         <option value="NC">New Caledonia</option>
         <option value="NZ">New Zealand</option>
-        <option value="NI">Nicaragua</option>
         <option value="NE">Niger</option>
         <option value="NG">Nigeria</option>
         <option value="NU">Niue</option>
@@ -180,7 +182,6 @@ export default function CountrySelect(props: CountrySelectProps) {
         <option value="PA">Panama</option>
         <option value="PG">Papua New Guinea</option>
         <option value="PY">Paraguay</option>
-        <option value="PE">Peru</option>
         <option value="PH">Philippines</option>
         <option value="PN">Pitcairn</option>
         <option value="PL">Poland</option>
@@ -246,7 +247,6 @@ export default function CountrySelect(props: CountrySelectProps) {
         <option value="UY">Uruguay</option>
         <option value="UZ">Uzbekistan</option>
         <option value="VU">Vanuatu</option>
-        <option value="VE">Venezuela, Bolivarian Republic of</option>
         <option value="VN">Viet Nam</option>
         <option value="VG">Virgin Islands, British</option>
         <option value="VI">Virgin Islands, U.S.</option>
