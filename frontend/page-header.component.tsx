@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 import {useCss, always, maybe} from 'kremling'
-import {brandColor} from './styleguide.component'
+import {brandColor, mediaDesktop} from './styleguide.component'
 
 export default function PageHeader(props: PageHeaderProps) {
   const scope = useCss(css)
@@ -19,7 +19,7 @@ export default function PageHeader(props: PageHeaderProps) {
 }
 
 PageHeader.defaultProps = {
-  title: 'Client Tracker',
+  title: 'Database',
   backgroundColor: brandColor,
 }
 
@@ -31,11 +31,17 @@ type PageHeaderProps = {
 
 const css = `
 & .page-header {
-  height: 180rem;
+  height: 102rem;
   padding: 32rem;
   display: flex;
   align-items: flex-end;
-  margin-bottom: 32rem;
+}
+
+${mediaDesktop} {
+  & .page-header {
+    margin-bottom: 32rem;
+    height: 180rem;
+  }
 }
 
 & .page-header h1 {

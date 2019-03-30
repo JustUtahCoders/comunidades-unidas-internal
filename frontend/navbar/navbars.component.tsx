@@ -1,6 +1,8 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import Sidebar from './sidebar.component'
 import {useCss} from 'kremling'
+import {mediaDesktop, mediaMobile} from '../styleguide.component'
+import Topnav from './topnav.component'
 
 type NavbarsProps = {
   path: string,
@@ -9,11 +11,22 @@ type NavbarsProps = {
 
 export default function Navbars(props: NavbarsProps) {
   const scope = useCss(css)
+  const [forceSidebar, setForceSidebar] = useState(false)
+
+  useEffect(() => {
+    window.addEventListener('popstate', hideSidebar)
+    return () => window.removeEventListener('popstate', hideSidebar)
+
+    function hideSidebar() {
+      setForceSidebar(false)
+    }
+  }, [])
 
   return (
     <>
-      <Sidebar />
-      <div className="left-of-sidebar" {...scope}>
+      <Topnav showSidebar={() => setForceSidebar(true)} />
+      <Sidebar forceShow={forceSidebar} hideSidebar={() => setForceSidebar(false)} />
+      <div className="navbar-margin" {...scope}>
         <div className="main-content">
           {props.children}
         </div>
@@ -25,10 +38,22 @@ export default function Navbars(props: NavbarsProps) {
 const css = `
 & .main-content {
   margin: 0 auto;
-  width: 75%;
+  max-width: 800rem;
 }
 
-& .left-of-sidebar {
-  margin-left: 236rem;
+${mediaDesktop} {
+  & .main-content {
+    width: 75%;
+  }
+
+  & .navbar-margin {
+    margin-left: 236rem;
+  }
+}
+
+${mediaMobile} {
+  & .navbar-margin {
+    margin-top: 56rem;
+  }
 }
 `

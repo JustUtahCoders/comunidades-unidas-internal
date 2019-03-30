@@ -4,13 +4,14 @@ import HomeCard from './home-card.component'
 import addClientIconUrl from '../../icons/148705-essential-collection/svg/add-1.svg'
 import reportIssueUrl from '../../icons/148705-essential-collection/svg/info.svg'
 import {useCss} from 'kremling'
+import { mediaMobile } from '../styleguide.component';
 
 export default function Home(props: HomeProps) {
   const scope = useCss(css)
 
   return (
     <div {...scope}>
-      <PageHeader title="Client Tracker" />
+      <PageHeader title="Database" />
       <div className="home-cards">
         <HomeCard
           iconUrl={addClientIconUrl}
@@ -30,6 +31,10 @@ export default function Home(props: HomeProps) {
 const css = `
 & .home-cards {
   display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 24rem;
+  margin-left: 24rem;
 }
 `
 

@@ -18,6 +18,8 @@ export default function Styleguide(props: StyleguideProps) {
 export const brandColor: Color = `rgba(184, 17, 17, 1)`
 export const boxShadow1: BoxShadow = `0 10px 30px -24px #4b4e53` 
 export const boxShadow2: BoxShadow = `0 10px 40px -24px #393b3f`
+export const mediaMobile: String = `@media screen and (max-width: 800px) and (min-width: 1px)`
+export const mediaDesktop: String = `@media screen and (min-width: 800px)`
 
 const css = `
 :root {

@@ -17,7 +17,9 @@
     "typescript": "tsc"
   },
   "husky": {
-    "pre-commit": "yarn typescript"
+    "hooks": {
+      "pre-commit": "yarn typescript"
+    }
   },
   "dependencies": {
     "@reach/router": "^1.2.1",
