@@ -14,7 +14,7 @@ export default function CheckDuplicate(props: StepComponentProps) {
           <img src={user2Url} className="hint-icon" />
         </div>
         <div className="instruction">
-          Let's first check if this person already exists in Tracker.
+          Let's first check if this person already exists in the database.
         </div>
       </div>
       <form onSubmit={handleSubmit}>

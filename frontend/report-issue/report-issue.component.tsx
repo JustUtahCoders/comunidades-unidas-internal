@@ -51,7 +51,7 @@ export default function ReportIssue(props: ReportIssueProps) {
     return (
       <div className="card" {...scope}>
         <h4>
-          Have an issue, idea, or question about the Tracker software? Submit it here and we'll get back to you.
+          Have an issue, idea, or question about this website? Submit it here and we'll get back to you.
         </h4>
         <form onSubmit={handleSubmit} className="report-issue-form">
           <div>
