@@ -1,10 +1,12 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useContext} from 'react'
 import {Link} from '@reach/router'
 import {useCss, always, maybe} from 'kremling'
 import {mediaMobile} from '../styleguide.component'
+import {UserContext} from '../util/user.context'
 
 export default function Sidebar(props: SidebarProps) {
   const scope = useCss(css)
+  const user = useContext(UserContext)
 
   useEffect(() => {
     if (props.forceShow) {
@@ -15,28 +17,62 @@ export default function Sidebar(props: SidebarProps) {
 
   return (
     <nav {...scope} className={always("box-shadow-2 sidebar").maybe('force-show', props.forceShow)} onClick={evt => evt.stopPropagation()}>
-      <ul>
-        <li>
-          <Link to="" className="nav-link logo-link" onClick={maybeHideSidebar} getProps={maybeActiveLink}>
-            <div className="logo-row">
-              <img
-                className="logo"
-                src="https://static.wixstatic.com/media/738269_e2e22398263d4de8b795dfc67035a1f8~mv2.png/v1/fill/w_254,h_254,al_c,q_80,usm_0.66_1.00_0.01/Comunidades-Unidas-Logo.webp" alt="Comunidades Unidas Logo"
-              />
-              <div className="product-name">Comunidades</div>
-            </div>
-          </Link>
-        </li>
-        <li>
-          <Link to="add-client" className="nav-link" onClick={maybeHideSidebar} getProps={maybeActiveLink}>
-            Add a client
-          </Link>
-        </li>
-        <li>
-          <Link to="report-issue" className="nav-link" onClick={maybeHideSidebar} getProps={maybeActiveLink}>
-            Report an issue
-          </Link>
-        </li>
+      <ul className="navbar-links">
+        <div>
+          <li>
+            <Link to="" className="nav-link logo-link" onClick={maybeHideSidebar} getProps={maybeActiveLink}>
+              <div className="logo-row">
+                <img
+                  className="logo"
+                  src="https://static.wixstatic.com/media/738269_e2e22398263d4de8b795dfc67035a1f8~mv2.png/v1/fill/w_254,h_254,al_c,q_80,usm_0.66_1.00_0.01/Comunidades-Unidas-Logo.webp" alt="Comunidades Unidas Logo"
+                />
+                <div className="product-name">Comunidades</div>
+              </div>
+            </Link>
+          </li>
+          <li>
+            <Link to="add-client" className="nav-link" onClick={maybeHideSidebar} getProps={maybeActiveLink}>
+              <div>
+                Add a client
+              </div>
+            </Link>
+          </li>
+          <li>
+            <Link to="record-client-visit" className="nav-link" onClick={maybeHideSidebar} getProps={maybeActiveLink}>
+              <div>
+                Record client visit
+              </div>
+            </Link>
+          </li>
+          <li>
+            <Link to="client-list" className="nav-link" onClick={maybeHideSidebar} getProps={maybeActiveLink}>
+              <div>
+                View clients
+              </div>
+            </Link>
+          </li>
+          <li>
+            <Link to="report-issue" className="nav-link" onClick={maybeHideSidebar} getProps={maybeActiveLink}>
+              <div>
+                Report an issue
+              </div>
+            </Link>
+          </li>
+        </div>
+        <div>
+          <li>
+            <a href="/logout" className="nav-link">
+              <div className="switch-account">
+                <div>
+                  Switch account
+                </div>
+                <div>
+                  ({user.fullName})
+                </div>
+              </div>
+            </a>
+          </li>
+        </div>
       </ul>
     </nav>
   )
@@ -69,11 +105,18 @@ ${mediaMobile} {
   transition: left 0.2s ease-in-out;
 }
 
+& .navbar-links {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
 & .logo-row {
   display: flex;
   align-items: center;
   font-weight: bold;
-  font-size: 22rem;
+  font-size: 21rem;
 }
 
 & .logo {
@@ -109,6 +152,19 @@ ${mediaMobile} {
   align-items: center;
   min-height: 56rem;
   padding: 8rem 16rem;
+}
+
+& .nav-link > div {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+}
+
+& .switch-account {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 `
 

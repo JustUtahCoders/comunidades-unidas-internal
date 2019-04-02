@@ -12,7 +12,7 @@ export default function Home(props: HomeProps) {
 
   return (
     <div {...scope}>
-      <PageHeader title="Database" />
+      <PageHeader title="Comunidades Unidas Database" />
       <div className="home-cards">
         <HomeCard
           iconUrl={addClientIconUrl}
