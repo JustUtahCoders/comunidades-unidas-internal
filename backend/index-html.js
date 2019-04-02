@@ -9,7 +9,9 @@ app.use('*', (req, res) => {
       givenName: req.session.passport.user.profile.name.givenName,
       familyName: req.session.passport.user.profile.name.familyName,
       email: req.session.passport.user.profile.emails[0].value,
-    })))
+    })), {
+      secure: process.env.RUNNING_LOCALLY ? false : true,
+    })
     res.render('index', {
       frontendBaseUrl: process.env.RUNNING_LOCALLY ? 'http://localhost:9018' : '/static',
     })
