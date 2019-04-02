@@ -37,6 +37,7 @@
     "keygrip": "^1.0.3",
     "kremling": "^1.2.4",
     "lodash-es": "^4.17.11",
+    "morgan": "^1.9.1",
     "mysql": "^2.16.0",
     "passport": "^0.4.0",
     "passport-google-oauth20": "^2.0.0",

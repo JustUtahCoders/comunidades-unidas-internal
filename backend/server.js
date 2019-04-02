@@ -9,6 +9,7 @@ const port = process.env.PORT || 8080
 const mysql = require('mysql')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+const morgan = require('morgan')
 
 require('./run-database-migrations')
 
@@ -28,6 +29,7 @@ exports.databaseError = function databaseError(req, res, err) {
 
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs')
+app.use(morgan('combined'))
 app.use('/static', express.static(path.join(__dirname, '../static')))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
