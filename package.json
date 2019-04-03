@@ -28,7 +28,7 @@
     "@types/react-dom": "^16.8.2",
     "btoa": "^1.2.1",
     "cookie-parser": "^1.4.4",
-    "cookie-session": "^1.3.3",
+    "cookie-session": "https://github.com/joeldenning/cookie-session.git#secure-fix",
     "dotenv": "^7.0.0",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
