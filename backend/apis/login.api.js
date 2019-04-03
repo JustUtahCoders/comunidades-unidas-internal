@@ -52,6 +52,9 @@ app.get('/api/auth/google/callback',
   (req, res) => {
     req.session.token = req.user.token
     res.redirect('/')
+    res.on('finish', () => {
+      console.log('headers', res.getHeaders())
+    })
   }
 );
 
