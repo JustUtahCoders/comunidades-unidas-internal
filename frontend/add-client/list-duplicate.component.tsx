@@ -70,7 +70,7 @@ export default function ListDuplicates(props: StepComponentProps) {
     confirm(
       `Adding duplicates can cause poor data quality. Are you sure ${firstName} ${lastName} is not a duplicate?`
     );
-    props.nextStep(Step.PERSONAL_INFORMATION, {
+    props.nextStep(Step.ADD_CONTACT, {
       firstName,
       lastName,
       birthday

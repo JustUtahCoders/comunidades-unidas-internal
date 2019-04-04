@@ -160,7 +160,7 @@ type ClientState = {
   dateUSArrival?: string;
   primaryLanguage?: string;
   englishLevel?: EnglishLevel;
-  currentlyEmployed?: boolean;
+  currentlyEmployed?: string;
   employmentSector?: string;
   payInterval?: PayInterval;
   hoursWorked?: number;

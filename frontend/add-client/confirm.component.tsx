@@ -46,8 +46,8 @@ export default function Finished(props: StepComponentProps) {
         return response.json();
       })
       .then(function(data) {
-        console.log(data);
         if (data.affectedRows >= 1) {
+          alert("Client has been added to database!");
           addAnother();
         }
       })

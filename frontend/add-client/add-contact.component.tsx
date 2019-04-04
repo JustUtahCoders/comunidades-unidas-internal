@@ -57,6 +57,7 @@ export default function ContactInformation(props: StepComponentProps) {
                 onChange={evt => setPhoneCarrier(evt.target.value)}
                 required
               >
+                <option>Select one</option>
                 <option value="Att">Att</option>
                 <option value="TMobile">T-Mobile</option>
                 <option value="Verizon">Verizon</option>
@@ -131,6 +132,7 @@ export default function ContactInformation(props: StepComponentProps) {
               onChange={evt => setOwned(evt.target.value)}
               required
             >
+              <option>Select one</option>
               <option value="Rent">Rent</option>
               <option value="Own">Own</option>
               <option value="Other">Other</option>
