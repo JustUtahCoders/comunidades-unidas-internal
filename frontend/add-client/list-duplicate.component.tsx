@@ -3,11 +3,10 @@ import usersUrl from "../../icons/148705-essential-collection/svg/users-1.svg";
 import { StepComponentProps, Step } from "./add-client.component";
 
 export default function ListDuplicates(props: StepComponentProps) {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [birthday, setBirthday] = useState("1990-01-01");
-
   const duplicates = props.clientState.duplicates;
+  const firstName = props.clientState.firstName;
+  const lastName = props.clientState.lastName;
+  const birthday = props.clientState.birthday;
   /*Here, do we have to send a request to API for duplicates again using matching first and last name or is there a way to carry over the duplicate array/result from last state?*/
   return (
     <>

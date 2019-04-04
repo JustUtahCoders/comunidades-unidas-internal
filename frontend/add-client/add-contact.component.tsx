@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { StepComponentProps, Step } from "./add-client.component";
-import successIconUrl from "../../icons/148705-essential-collection/svg/success.svg";
+import contactIconUrl from "../../icons/148705-essential-collection/svg/id-card-5.svg";
 import PhoneInput from "../util/phone-input.component";
 import StateSelect from "../util/state-select.component";
 
-export default function PersonalInformation(props: StepComponentProps) {
-  const [gender, setGender] = useState("female");
-  const [genderExplanation, setGenderExplanation] = useState("");
-  const [civilStatus, setCivilStatus] = useState(CivilStatus.SINGLE);
+export default function ContactInformation(props: StepComponentProps) {
   const [phone, setPhone] = useState("");
   const [phoneCarrier, setPhoneCarrier] = useState("");
   const [smsConsent, setSmsConsent] = useState(false);
@@ -15,100 +12,24 @@ export default function PersonalInformation(props: StepComponentProps) {
   const [city, setCity] = useState("");
   const [state, setState] = useState("UT");
   const [zip, setZip] = useState("");
-  const [owned, setOwned] = useState(true);
+  const [owned, setOwned] = useState("");
   const [email, setEmail] = useState("");
 
   return (
     <>
       <div className="hints-and-instructions">
         <div>
-          <img src={successIconUrl} className="hint-icon" />
+          <img src={contactIconUrl} className="hint-icon" />
         </div>
         <div className="instruction">
-          Great! Let's add their personal information.
+          Ok. Now, lets add a contact and addres for{" "}
+          <strong>
+            {props.clientState.firstName} {props.clientState.lastName}
+          </strong>
+          .
         </div>
       </div>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>
-            <span>First Name</span>
-            <input
-              type="text"
-              value={props.clientState.firstName}
-              required
-              disabled
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            <span>Last Name</span>
-            <input
-              type="text"
-              value={props.clientState.lastName}
-              required
-              disabled
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            <span>Birthday</span>
-            <input
-              type="date"
-              value={props.clientState.birthday}
-              required
-              disabled
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            <span>Gender</span>
-            <select
-              value={gender}
-              onChange={evt => setGender(evt.target.value)}
-              required
-              autoFocus
-            >
-              <option value="female">Female</option>
-              <option value="male">Male</option>
-              <option value="transgender">Transgender</option>
-              <option value="other">Other (please explain)</option>
-            </select>
-          </label>
-        </div>
-        {gender === "other" && (
-          <div>
-            <label>
-              <span>Explanation</span>
-              <textarea
-                value={genderExplanation}
-                onChange={evt => setGenderExplanation(evt.target.value)}
-                required
-              />
-            </label>
-          </div>
-        )}
-        <div>
-          <label>
-            <span>Civil status</span>
-            <select
-              value={civilStatus}
-              name="civilStatus"
-              onChange={evt => setCivilStatus(evt.target.value)}
-              required
-            >
-              <option value="single">Single</option>
-              <option value="married">Married</option>
-              <option value="commonLawMarriage">
-                Common law marriage (unión libre)
-              </option>
-              <option value="divorced">Divorced</option>
-              <option value="widowed">Widowed</option>
-            </select>
-          </label>
-        </div>
         <div>
           <label>
             <span>Phone number</span>
@@ -150,6 +71,17 @@ export default function PersonalInformation(props: StepComponentProps) {
             </label>
           </div>
         )}
+        <div>
+          <label>
+            <span>Email</span>
+            <input
+              type="email"
+              value={email}
+              onChange={evt => setEmail(evt.target.value)}
+              required
+            />
+          </label>
+        </div>
         <div>
           <label>
             <span>Street Address</span>
@@ -205,17 +137,6 @@ export default function PersonalInformation(props: StepComponentProps) {
             </select>
           </label>
         </div>
-        <div>
-          <label>
-            <span>Email</span>
-            <input
-              type="email"
-              value={email}
-              onChange={evt => setEmail(evt.target.value)}
-              required
-            />
-          </label>
-        </div>
         <div className="actions">
           <button type="submit" className="primary">
             Next step
@@ -231,15 +152,11 @@ export default function PersonalInformation(props: StepComponentProps) {
       </form>
     </>
   );
-
   function handleSubmit(evt) {
     evt.preventDefault();
-    props.nextStep(Step.GLOBAL_BACKGROUND, {
-      gender,
-      genderExplanation: gender === "other" ? genderExplanation : null,
-      civilStatus,
+    props.nextStep(Step.ADD_DEMOGRAPHICS, {
       phone,
-      smsConsent,
+      smsConsent: smsConsent ? "Yes" : "No",
       phoneCarrier,
       streetAddress,
       city,
@@ -249,19 +166,4 @@ export default function PersonalInformation(props: StepComponentProps) {
       email
     });
   }
-}
-
-export enum Gender {
-  FEMALE = "female",
-  MALE = "male",
-  TRANSGENDER = "transgender",
-  OTHER = "other"
-}
-
-export enum CivilStatus {
-  SINGLE = "single",
-  MARRIED = "married",
-  COMMON_LAW_MARRIAGE = "commonLawMarriage",
-  DIVORCED = "divorced",
-  WIDOWED = "widowed"
 }

@@ -2,16 +2,18 @@ import React, { useState } from "react";
 import { useCss } from "kremling";
 import PageHeader from "../page-header.component";
 import CheckDuplicate from "./check-duplicate.component";
-import PersonalInformation, {
-  CivilStatus,
-  Gender
-} from "./personal-information.component";
-import GlobalBackground, { EnglishLevel } from "./global-background.component";
-import IncomeInformation, { PayPeriod } from "./income-information.component";
-import ClientSource from "./client-source.component";
-import Services from "./services.component";
-import Finished from "./finished.component";
+// import PersonalInformation, {
+//   CivilStatus,
+//   Gender
+// } from "./personal-information.component";
+//import GlobalBackground, { EnglishLevel } from "./global-background.component";
+//import IncomeInformation, { PayInterval } from "./income-information.component";
+//import ClientSource from "./client-source.component";
+//import Services from "./services.component";
 import ListDuplicates from "./list-duplicate.component";
+import AddContact from "./add-contact.component";
+import AddDemographics from "./add-demographic.component";
+import Confirm from "./confirm.component";
 
 export default function AddClient(props: AddClientProps) {
   const scope = useCss(css);
@@ -106,23 +108,29 @@ const css = `
 export enum Step {
   CHECK_DUPLICATE = "CHECK_DUPLICATE",
   LIST_DUPLICATES = "LIST_DUPLICATES",
-  PERSONAL_INFORMATION = "PERSONAL_INFORMATION",
-  GLOBAL_BACKGROUND = "GLOBAL_BACKGROUND",
-  INCOME_INFORMATION = "INCOME_INFORMATION",
-  CLIENT_SOURCE = "CLIENT_SOURCE",
-  SERVICES = "SERVICES",
-  FINISHED = "FINISHED"
+  ADD_CONTACT = "ADD_CONTACT",
+  ADD_DEMOGRAPHICS = "ADD_DEMOGRAPHIC",
+  //PERSONAL_INFORMATION = "PERSONAL_INFORMATION",
+  //GLOBAL_BACKGROUND = "GLOBAL_BACKGROUND",
+  //INCOME_INFORMATION = "INCOME_INFORMATION",
+  //CLIENT_SOURCE = "CLIENT_SOURCE",
+  //SERVICES = "SERVICES",
+  //FINISHED = "FINISHED"
+  CONFIRM = "CONFIRM"
 }
 
 const stepComponents = {
   [Step.CHECK_DUPLICATE]: CheckDuplicate,
   [Step.LIST_DUPLICATES]: ListDuplicates,
-  [Step.PERSONAL_INFORMATION]: PersonalInformation,
-  [Step.GLOBAL_BACKGROUND]: GlobalBackground,
-  [Step.INCOME_INFORMATION]: IncomeInformation,
-  [Step.CLIENT_SOURCE]: ClientSource,
-  [Step.SERVICES]: Services,
-  [Step.FINISHED]: Finished
+  [Step.ADD_CONTACT]: AddContact,
+  [Step.ADD_DEMOGRAPHICS]: AddDemographics,
+  //[Step.PERSONAL_INFORMATION]: PersonalInformation,
+  //[Step.GLOBAL_BACKGROUND]: GlobalBackground,
+  //[Step.INCOME_INFORMATION]: IncomeInformation,
+  //[Step.CLIENT_SOURCE]: ClientSource,
+  //[Step.SERVICES]: Services,
+  //[Step.FINISHED]: Finished
+  [Step.CONFIRM]: Confirm
 };
 
 type AddClientProps = {
@@ -133,29 +141,32 @@ type ClientState = {
   firstName?: string;
   lastName?: string;
   birthday?: string;
-  duplicates?: [];
   gender?: Gender;
   genderExplanation?: string;
-  civilStatus?: CivilStatus;
-  country?: string;
+  duplicates?: [];
+  //Contacts
   phone?: string;
-  smsConsent?: boolean;
+  smsConsent?: string;
+  phoneCarrier?: string;
   streetAddress?: string;
   city?: string;
   state?: string;
   zip?: string;
+  owned?: string;
   email?: string;
+  //Demographics
+  civilStatus?: CivilStatus;
   countryOfOrigin?: string;
-  numYearsInUSA?: number;
+  dateUSArrival?: string;
   primaryLanguage?: string;
   englishLevel?: EnglishLevel;
   currentlyEmployed?: boolean;
-  profession?: string;
-  payPeriod?: PayPeriod;
-  yearlyIncome?: number;
-  clientSource?: string;
-  couldVolunteer?: boolean;
-  registeredToVote?: boolean;
+  employmentSector?: string;
+  payInterval?: PayInterval;
+  hoursWorked?: number;
+  annualIncome?: number;
+  houseHoldSize?: number;
+  dependents?: number;
 };
 
 export type StepComponentProps = {

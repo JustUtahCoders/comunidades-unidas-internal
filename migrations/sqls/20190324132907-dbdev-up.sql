@@ -10,8 +10,6 @@ CREATE TABLE IF NOT EXISTS users (
   userName nvarchar(64) NOT NULL,
   password nvarchar(64) NOT NULL
 );
-INSERT INTO users(firstName,lastName,accessLevel,userName,password)
-VALUES('Leonel','Nieto','Administrator','leonelnieto','password');
 
 /*Create person.person table */
 CREATE TABLE IF NOT EXISTS person (
@@ -19,18 +17,16 @@ CREATE TABLE IF NOT EXISTS person (
   firstName nvarchar(255) NOT NULL,
   lastName nvarchar(255) NOT NULL,
   dob date,
-  gender ENUM('Male','Female','Non-Binary','Other'),  /*Gender constraint at front end */
+  gender ENUM('Male','Female','Transgender','Other'),  /*Gender constraint at front end */
+  genderComment varchar(128),   /*Other explain optional */
   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
   dateModified DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  addedBy int NOT NULL /*Self Reference to Person ID*/,
-  modifiedBy int NOT NULL /*Self Reference to Person ID*/,
-  FOREIGN KEY (addedBy) REFERENCES person(personId),
+  addedBy int NOT NULL /*Self Reference to User ID*/,
+  modifiedBy int NOT NULL /*Self Reference to User ID*/,
+  FOREIGN KEY (addedBy) REFERENCES users(userId),
   FOREIGN KEY (modifiedBy) REFERENCES users(userId)
 );
 /*Insert test data into person table*/
-INSERT INTO person(firstname,lastname,dob,gender,addedby,modifiedby) VALUES (
-  'Leonel','Nieto','1984-02-28','Male',1,1),('Jonh','Doe','1985-08-01','Male',1,1),(
-  'Jane','Doe','1983-01-15','Female',1,1),('Fulano','Detal','1981-05-30','Non-Binary',1,1);
 
 /*Crate person Contanct table-Contact M:1 Person*/
 CREATE TABLE IF NOT EXISTS contact (
@@ -39,8 +35,12 @@ CREATE TABLE IF NOT EXISTS contact (
   primaryPhone varchar(32),
   primaryCarrier varchar(32),
   textMessages ENUM('Yes','No'), /*Would client like to recieve text messages from CU*/
-  emergencyContact varchar(32),
   email varchar(128),
+  address varchar(128),
+  owned ENUM('Rent','Own','Other'), /*Dweling ownership type, rent or owned(Y/N)*/
+  city varchar(64),
+  zip varchar(32),
+  state varchar(2),
   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
   addedBy int NOT NULL, /*Foreign key reference to person table */
   FOREIGN KEY (personId) REFERENCES person(personId),
@@ -55,28 +55,13 @@ CREATE TABLE IF NOT EXISTS demographics (
   englishProficiency varchar(32), /*English Proficiency of Person*/
   dateUSArrival date, /*date of us arrival, day can be and estimation if client does not remember*/
   employed ENUM('Yes', 'No','Not Applicable','Unknown'), /*employed, not applicable for age < 16*/
-  weeklyAvgHoursWorked tinyint, /*Can be null if not employed*/
-  emplopymentSector varchar(128), /*Can be null if not employed*/
+  employmentSector varchar(128), /*Can be null if not employed*/
+  payInterval varchar(64),
+  weeklyAvgHoursWorked tinyint, /*Can be null if not employed*/  
   householdSize tinyint, 
   dependents tinyint, /*Replace people under 18 in house hold question*/
   maritalStatus varchar(128), /*Not applicable for children age < 17*/
   householdIncome int, /*Annual income estimate for household*/
-  ethnicity varchar(32),
-  dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
-  addedBy int NOT NULL,
-  FOREIGN KEY (personId) REFERENCES person(personId),
-  FOREIGN KEY (addedBy) REFERENCES users(userId)
-);
-/*Create Address table M:1 with people*/
-CREATE TABLE IF NOT EXISTS address (
-  personId int NOT NULL, /*Foreign key reference to person table*/
-  addressId int AUTO_INCREMENT PRIMARY KEY,
-  address1 varchar(128),
-  address2 varchar(128),
-  owned ENUM('Rent','Own','Other'), /*Dweling ownership type, rent or owned(Y/N)*/
-  city varchar(64),
-  zip varchar(5),
-  state varchar(2),
   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
   addedBy int NOT NULL,
   FOREIGN KEY (personId) REFERENCES person(personId),
@@ -117,7 +102,7 @@ Create Services Table: Services are in turn adminstered by a program. Pogram 1:M
 */
 CREATE TABLE IF NOT EXISTS services (
 	serviceId int AUTO_INCREMENT PRIMARY KEY,
-  programId INT NOT NULL,
+  programId int NOT NULL,
   serviceName varchar(64),
   serviceDesc varchar(128),
   FOREIGN KEY (programId) REFERENCES programs(programId)
@@ -162,24 +147,19 @@ CREATE TABLE IF NOT EXISTS intakeData (
   dateOfIntake date NOT NULL, /*Not time stap because it maybe different*/
   caseNotes varchar(5000),
   registeredVoter varchar(5), /*Y N*/
+  servicesInterest int NOT NULL, /*1:1:M intakeData:intakeServices:Services*/
   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
   addedBy int NOT NULL,
   FOREIGN KEY (addedby) REFERENCES users(userId),
   FOREIGN KEY (personId) REFERENCES person(personId)
 );
-/*
-Create Services Needed Table: all services correspond to a program and a person may require more than on service.
-*/
-CREATE TABLE IF NOT EXISTS PersonServicesNeded (
-  personServicesNeededId int AUTO_INCREMENT PRIMARY KEY,
+/*Services interested on during intake*/
+CREATE TABLE IF NOT EXISTS intakeServices (
+  intakeServicesId int AUTO_INCREMENT PRIMARY KEY,
   intakeDataId int NOT NULL,
   personId int NOT NULL,
   serviceId int NOT NULL,
-  comments varchar(5000),
-  dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
-  addedBy int NOT NULL,
-  FOREIGN KEY (addedby) REFERENCES users(userId),
-  FOREIGN KEY (intakeDataId) REFERENCES IntakeData(intakeDataId),
+  FOREIGN KEY (intakeDataId) REFERENCES intakeData(intakeDataId),
   FOREIGN KEY (personId) REFERENCES person(personId),
   FOREIGN KEY (serviceId) REFERENCES services(serviceId)
-);
+)

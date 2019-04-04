@@ -31,16 +31,9 @@ app.post("/api/duplicate-check/", (req, res, next) => {
     let year = d.getUTCFullYear();
     let month = d.getUTCMonth() + 1;
     let day = d.getUTCDate();
-    let inserts = [
-      "person",
-      req.body.firstname,
-      req.body.lastname,
-      year,
-      month,
-      day
-    ];
+    let inserts = [req.body.firstname, req.body.lastname, year, month, day];
     let qryString =
-      "SELECT personid,firstname,lastname,date_format(dob,'%m/%d/%Y')as birthDate,gender FROM ?? WHERE ";
+      "SELECT personid,firstname,lastname,date_format(dob,'%m/%d/%Y')as birthDate,gender FROM person WHERE ";
     qryString +=
       "((firstname = ? OR lastname = ?) AND (year(dob) = ? OR month(dob) = ? OR day(dob) = ?))";
     let query = mysql.format(qryString, inserts);
@@ -52,6 +45,90 @@ app.post("/api/duplicate-check/", (req, res, next) => {
     });
   });
 });
+app.post("/api/add-client/", (req, res, next) => {
+  pool.getConnection((err, connection) => {
+    var body = req.body.clientState;
+    var personQry =
+      "INSERT INTO person(firstName,lastName,dob,gender,addedBy,modifiedBy) VALUES(?,?,?,?,2,2)";
+    var personInserts = [
+      body.firstName,
+      body.lastName,
+      body.birthday,
+      body.gender
+    ];
+    var contactQry =
+      "INSERT INTO contact(personId,primaryPhone,primaryCarrier,textMessages,email,address,owned,city,zip,state,addedby) VALUES(?,?,?,?,?,?,?,?,?,?,2);";
+    var demoQry =
+      "INSERT INTO demographics(personId,originCountry,languageHome,englishProficiency,dateUSArrival,employed,employmentSector,payInterval,weeklyAvgHoursWorked,householdSize,dependents,maritalStatus,householdIncome,addedby) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,2);";
+    var qry = mysql.format(personQry, personInserts);
+    connection.beginTransaction(function(err) {
+      if (err) {
+        throw err;
+      }
+      connection.query(qry, function(error, results, fields) {
+        if (error) {
+          return connection.rollback(function() {
+            throw error;
+          });
+        }
+        var personId = results.insertId;
+        var contactInserts = [
+          personId,
+          body.phone,
+          body.phoneCarrier,
+          body.smsConsent,
+          body.email,
+          body.streetAddress,
+          body.owned,
+          body.city,
+          body.zip,
+          body.state
+        ];
+
+        qry = mysql.format(contactQry, contactInserts);
+        connection.query(qry, function(error, results, fields) {
+          if (error) {
+            return connection.rollback(function() {
+              throw error;
+            });
+          }
+          var demoInserts = [
+            personId,
+            body.countryOfOrigin,
+            body.primaryLanguage,
+            body.englishLevel,
+            body.dateUSArrival,
+            body.currentlyEmployed,
+            body.employmentSector,
+            body.payInterval,
+            body.hoursWorked,
+            body.houseHoldSize,
+            body.dependents,
+            body.civilStatus,
+            body.annualIncome
+          ];
+          qry = mysql.format(demoQry, demoInserts);
+          connection.query(qry, function(error, results, fields) {
+            if (error) {
+              return connection.rollback(function() {
+                throw error;
+              });
+            }
+            connection.commit(function(err) {
+              if (err) {
+                return connection.rollback(function() {
+                  throw err;
+                });
+              }
+              res.send(results);
+            });
+          });
+        });
+      });
+    });
+  });
+});
+
 app.post("/api/users", (req, res, next) => {
   pool.getConnection((err, connection) => {
     if (err) {

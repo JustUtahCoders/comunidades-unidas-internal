@@ -7,6 +7,8 @@ export default function CheckDuplicate(props: StepComponentProps) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [birthday, setBirthday] = useState("1990-01-01");
+  const [gender, setGender] = useState("female");
+  const [genderExplanation, setGenderExplanation] = useState("");
 
   return (
     <>
@@ -53,6 +55,34 @@ export default function CheckDuplicate(props: StepComponentProps) {
             />
           </label>
         </div>
+        <div>
+          <label>
+            <span>Gender</span>
+            <select
+              value={gender}
+              onChange={evt => setGender(evt.target.value)}
+              required
+              autoFocus
+            >
+              <option value="female">Female</option>
+              <option value="male">Male</option>
+              <option value="transgender">Transgender</option>
+              <option value="other">Other (please explain)</option>
+            </select>
+          </label>
+        </div>
+        {gender === "other" && (
+          <div>
+            <label>
+              <span>Explanation</span>
+              <textarea
+                value={genderExplanation}
+                onChange={evt => setGenderExplanation(evt.target.value)}
+                required
+              />
+            </label>
+          </div>
+        )}
         <div className="actions">
           <button type="submit" className="primary">
             <span>Check client</span>
@@ -86,12 +116,16 @@ export default function CheckDuplicate(props: StepComponentProps) {
             firstName,
             lastName,
             birthday,
+            gender,
+            genderExplanation,
             duplicates
           });
         } else {
-          props.nextStep(Step.PERSONAL_INFORMATION, {
+          props.nextStep(Step.ADD_CONTACT, {
             firstName,
             lastName,
+            gender,
+            genderExplanation,
             birthday
           });
         }
@@ -100,4 +134,10 @@ export default function CheckDuplicate(props: StepComponentProps) {
         console.log(err);
       });
   }
+}
+export enum Gender {
+  FEMALE = "female",
+  MALE = "male",
+  TRANSGENDER = "transgender",
+  OTHER = "other"
 }
