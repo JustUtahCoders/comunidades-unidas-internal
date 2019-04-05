@@ -14,6 +14,7 @@ import ListDuplicates from "./list-duplicate.component";
 import AddContact from "./add-contact.component";
 import AddDemographics from "./add-demographic.component";
 import Confirm from "./confirm.component";
+import { mediaMobile, mediaDesktop } from "../styleguide.component";
 
 export default function AddClient(props: AddClientProps) {
   const scope = useCss(css);
@@ -182,7 +183,6 @@ type ClientState = {
   //Contacts
   phone?: string;
   smsConsent?: string;
-  phoneCarrier?: string;
   streetAddress?: string;
   city?: string;
   state?: string;
@@ -197,8 +197,9 @@ type ClientState = {
   englishLevel?: EnglishLevel;
   currentlyEmployed?: string;
   employmentSector?: string;
+  empSectorExplain?: string;
   payInterval?: PayInterval;
-  hoursWorked?: number;
+  hoursWorked?: string;
   annualIncome?: number;
   houseHoldSize?: number;
   dependents?: number;

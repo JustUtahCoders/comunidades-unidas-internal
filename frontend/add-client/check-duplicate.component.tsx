@@ -116,16 +116,14 @@ export default function CheckDuplicate(props: StepComponentProps) {
             firstName,
             lastName,
             birthday,
-            gender,
-            genderExplanation,
+            gender: gender === "other" ? genderExplanation : gender,
             duplicates
           });
         } else {
           props.nextStep(Step.ADD_CONTACT, {
             firstName,
             lastName,
-            gender,
-            genderExplanation,
+            gender: gender === "other" ? genderExplanation : gender,
             birthday
           });
         }

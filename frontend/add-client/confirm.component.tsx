@@ -48,7 +48,7 @@ export default function Finished(props: StepComponentProps) {
       .then(function(data) {
         if (data.affectedRows >= 1) {
           alert("Client has been added to database!");
-          addAnother();
+          addAnother(); // Route to add intake data after its built
         }
       })
       .catch(function(err) {

@@ -5,16 +5,15 @@ app.post("/api/add-client/", (req, res, next) => {
   pool.getConnection((err, connection) => {
     var body = req.body.clientState;
     var personQry =
-      "INSERT INTO person(firstName,lastName,dob,gender,genderComment,addedBy,modifiedBy) VALUES(?,?,?,?,?,1,1)";
+      "INSERT INTO person(firstName,lastName,dob,gender,addedBy,modifiedBy) VALUES(?,?,?,?,1,1)";
     var personInserts = [
       body.firstName,
       body.lastName,
       body.birthday,
-      body.gender,
-      body.genderExplanation
+      body.gender
     ];
     var contactQry =
-      "INSERT INTO contact(personId,primaryPhone,primaryCarrier,textMessages,email,address,owned,city,zip,state,addedby) VALUES(?,?,?,?,?,?,?,?,?,?,1);";
+      "INSERT INTO contact(personId,primaryPhone,textMessages,email,address,owned,city,zip,state,addedby) VALUES(?,?,?,?,?,?,?,?,?,1);";
     var demoQry =
       "INSERT INTO demographics(personId,originCountry,languageHome,englishProficiency,dateUSArrival,employed,employmentSector,payInterval,weeklyAvgHoursWorked,householdSize,dependents,maritalStatus,householdIncome,addedby) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,1);";
     var qry = mysql.format(personQry, personInserts);
@@ -32,7 +31,6 @@ app.post("/api/add-client/", (req, res, next) => {
         var contactInserts = [
           personId,
           body.phone,
-          body.phoneCarrier,
           body.smsConsent,
           body.email,
           body.streetAddress,

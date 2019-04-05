@@ -11,6 +11,7 @@ export default function DemographicInformation(props: StepComponentProps) {
   const [currentlyEmployed, setCurrentlyEmployed] = useState("");
   const [hoursWorked, setHoursWorked] = useState();
   const [employmentSector, setEmploymentSector] = useState("");
+  const [empSectorExplain, setEmpSectorExplain] = useState("");
   const [payInterval, setPayInterval] = useState(PayInterval.BIWEEKLY);
   const [countryOfOrigin, setCountryOfOrigin] = useState("US");
   const [dateUSArrival, setdateUSArrival] = useState("");
@@ -112,14 +113,40 @@ export default function DemographicInformation(props: StepComponentProps) {
             <div>
               <label>
                 <span>Employment sector</span>
-                <input
-                  type="text"
+                <select
                   value={employmentSector}
+                  name="cmploymentSector"
                   onChange={evt => setEmploymentSector(evt.target.value)}
                   required
-                />
+                >
+                  <option>Select one</option>
+                  <option value="Landscaping">Landscaping/Gardening</option>
+                  <option value="Construction">Construction</option>
+                  <option value="Services">
+                    Services (Restaurants, Hotels)
+                  </option>
+                  <option value="Day Laborer">Day Worker/Laborer</option>
+                  <option value="Domestic Worker">Domestic Worker</option>
+                  <option value="Industrial/Warehouse">
+                    Industrial/Warehouse
+                  </option>
+                  <option value="Agriculture">Agriculture</option>
+                  <option value="Other">Other (Explain)</option>
+                </select>
               </label>
             </div>
+            {employmentSector == "Other" && (
+              <div>
+                <label>
+                  <span>If other, please describe</span>
+                  <input
+                    type="text"
+                    onChange={evt => setEmpSectorExplain(evt.target.value)}
+                    required
+                  />
+                </label>
+              </div>
+            )}
             <div>
               <label>
                 <span>Pay interval</span>
@@ -128,24 +155,27 @@ export default function DemographicInformation(props: StepComponentProps) {
                   value={payInterval}
                   onChange={evt => setPayInterval(evt.target.value)}
                 >
-                  <option value="weekly">Weekly</option>
-                  <option value="biweekly">Every two weeks</option>
-                  <option value="monthly">Monthly</option>
-                  <option value="quarterly">Quarterly (3 months)</option>
-                  <option value="annually">Annually (1 year)</option>
+                  <option value="Weekly">Weekly</option>
+                  <option value="Biweekly">Every two weeks</option>
+                  <option value="Monthly">Monthly</option>
+                  <option value="Quarterly">Quarterly (3 months)</option>
+                  <option value="Annually">Annually (1 year)</option>
                 </select>
               </label>
             </div>
             <div>
               <label>
                 <span>Average weekly hours worked</span>
-                <input
-                  type="number"
-                  onChange={evt => setHoursWorked(Number(evt.target.value))}
+                <select
                   required
-                  min="1"
-                  max="168"
-                />
+                  onChange={evt => setHoursWorked(evt.target.value)}
+                >
+                  <option>Select one</option>
+                  <option value="20 or less">20 or less</option>
+                  <option value="21 to 35">21 to 35</option>
+                  <option value="36 to 40">36 to 40</option>
+                  <option value="41 or more">41 or more</option>
+                </select>
               </label>
             </div>
           </>
@@ -182,14 +212,14 @@ export default function DemographicInformation(props: StepComponentProps) {
               value={primaryLanguage}
               onChange={evt => setPrimaryLanguage(evt.target.value)}
             >
-              <option value="spanish">Spanish</option>
-              <option value="english">English</option>
-              <option value="bothSpanishAndEnglish">Both</option>
-              <option value="other">Other</option>
+              <option value="Spanish">Spanish</option>
+              <option value="English">English</option>
+              <option value="Spanish and English">Both</option>
+              <option value="Other">Other</option>
             </select>
           </label>
         </div>
-        {primaryLanguage === "other" && (
+        {primaryLanguage === "Other" && (
           <div>
             <label>
               <span>Other language</span>
@@ -210,9 +240,9 @@ export default function DemographicInformation(props: StepComponentProps) {
               value={englishLevel}
               onChange={evt => setEnglishLevel(evt.target.value)}
             >
-              <option value="beginner">Beginner</option>
-              <option value="intermediate">Intermediate</option>
-              <option value="advanced">Advanced</option>
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
             </select>
           </label>
         </div>
@@ -241,7 +271,8 @@ export default function DemographicInformation(props: StepComponentProps) {
         primaryLanguage === "other" ? otherLanguage : primaryLanguage,
       englishLevel,
       currentlyEmployed,
-      employmentSector,
+      employmentSector:
+        employmentSector === "Other" ? empSectorExplain : employmentSector,
       payInterval,
       hoursWorked,
       annualIncome,

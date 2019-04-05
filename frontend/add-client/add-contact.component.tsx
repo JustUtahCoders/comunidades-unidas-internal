@@ -3,10 +3,10 @@ import { StepComponentProps, Step } from "./add-client.component";
 import contactIconUrl from "../../icons/148705-essential-collection/svg/id-card-5.svg";
 import PhoneInput from "../util/phone-input.component";
 import StateSelect from "../util/state-select.component";
+import CityInput from "../util/city-input.component";
 
 export default function ContactInformation(props: StepComponentProps) {
   const [phone, setPhone] = useState("");
-  const [phoneCarrier, setPhoneCarrier] = useState("");
   const [smsConsent, setSmsConsent] = useState(false);
   const [streetAddress, setStreetAddress] = useState("");
   const [city, setCity] = useState("");
@@ -47,31 +47,6 @@ export default function ContactInformation(props: StepComponentProps) {
             />
           </label>
         </div>
-        {smsConsent === true && (
-          <div>
-            <label>
-              <span>Mobile Carrier</span>
-              <select
-                value={phoneCarrier}
-                name="phoneCarrier"
-                onChange={evt => setPhoneCarrier(evt.target.value)}
-                required
-              >
-                <option>Select one</option>
-                <option value="Att">Att</option>
-                <option value="TMobile">T-Mobile</option>
-                <option value="Verizon">Verizon</option>
-                <option value="Virgin">Virgin Mobile</option>
-                <option value="Metro">Metro PCS</option>
-                <option value="Cricket">Cricket</option>
-                <option value="Boost">Boost Mobile</option>
-                <option value="Sprint">Sprint</option>
-                <option value="Tracfone">Tracfone</option>
-                <option value="other">Other</option>
-              </select>
-            </label>
-          </div>
-        )}
         <div>
           <label>
             <span>Email</span>
@@ -98,12 +73,7 @@ export default function ContactInformation(props: StepComponentProps) {
         <div>
           <label>
             <span>City</span>
-            <input
-              type="text"
-              value={city}
-              onChange={evt => setCity(evt.target.value)}
-              required
-            />
+            <CityInput state={state} city={city} setCity={setCity} />
           </label>
         </div>
         <div>
@@ -133,9 +103,11 @@ export default function ContactInformation(props: StepComponentProps) {
               required
             >
               <option>Select one</option>
-              <option value="Rent">Rent</option>
-              <option value="Own">Own</option>
-              <option value="Other">Other</option>
+              <option value="Renter">Renter</option>
+              <option value="Homeowner">Homeowner</option>
+              <option value="Live with family/friends">
+                Live with family/friends
+              </option>
             </select>
           </label>
         </div>
@@ -159,7 +131,6 @@ export default function ContactInformation(props: StepComponentProps) {
     props.nextStep(Step.ADD_DEMOGRAPHICS, {
       phone,
       smsConsent: smsConsent ? "Yes" : "No",
-      phoneCarrier,
       streetAddress,
       city,
       state,
