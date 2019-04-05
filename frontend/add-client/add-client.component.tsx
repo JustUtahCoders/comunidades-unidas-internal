@@ -134,15 +134,11 @@ ${mediaDesktop} {
 & .vertical-options {
   display: block;
 }
-<<<<<<< HEAD
-`;
-=======
 
 & .vertical-options > * {
   padding: 8rem 0;
 }
-`
->>>>>>> master
+`;
 
 export enum Step {
   CHECK_DUPLICATE = "CHECK_DUPLICATE",

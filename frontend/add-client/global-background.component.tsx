@@ -46,38 +46,39 @@ export default function GlobalBackground(props: StepComponentProps) {
         )}
         <div>
           <label>
-            <span>
-              Years in U.S.A.
-            </span>
-            <input required type="number" value={numYearsInUSA} onChange={evt => setNumYearsInUSA(Number(evt.target.value))} />
+            <span>Years in U.S.A.</span>
+            <input
+              required
+              type="number"
+              value={numYearsInUSA}
+              onChange={evt => setNumYearsInUSA(Number(evt.target.value))}
+            />
           </label>
         </div>
         <div>
           <label>
-            <span>
-              Registered to vote?
-            </span>
-            <input type="checkbox" name="registeredToVote" checked={registeredToVote} onChange={evt => setRegisteredToVote(Boolean(evt.target.checked))} />
+            <span>Registered to vote?</span>
+            <input
+              type="checkbox"
+              name="registeredToVote"
+              checked={registeredToVote}
+              onChange={evt => setRegisteredToVote(Boolean(evt.target.checked))}
+            />
           </label>
         </div>
         <div>
           <label>
-            <span>
-              Primary language at home
-            </span>
-            <select required name="primaryLanguage" value={primaryLanguage} onChange={evt => setPrimaryLanguage(evt.target.value)}>
-              <option value="spanish">
-                Spanish
-              </option>
-              <option value="english">
-                English
-              </option>
-              <option value="bothSpanishAndEnglish">
-                English and Spanish
-              </option>
-              <option value="other">
-                Other
-              </option>
+            <span>Primary language at home</span>
+            <select
+              required
+              name="primaryLanguage"
+              value={primaryLanguage}
+              onChange={evt => setPrimaryLanguage(evt.target.value)}
+            >
+              <option value="spanish">Spanish</option>
+              <option value="english">English</option>
+              <option value="bothSpanishAndEnglish">English and Spanish</option>
+              <option value="other">Other</option>
             </select>
           </label>
         </div>
@@ -96,47 +97,24 @@ export default function GlobalBackground(props: StepComponentProps) {
         )}
         <div>
           <label>
-<<<<<<< HEAD
             <span>English level</span>
             <select
               required
               value={englishLevel}
-              onChange={evt => setEnglishLevel(evt.target.value)}
+              onChange={evt => setEnglishLevel(EnglishLevel[evt.target.value])}
             >
               <option value="beginner">Beginner</option>
               <option value="intermediate">Intermediate</option>
               <option value="advanced">Advanced</option>
-=======
-            <span>
-              English level
-            </span>
-            <select required value={englishLevel} onChange={evt => setEnglishLevel(EnglishLevel[evt.target.value])}>
-              <option value="beginner">
-                Beginner
-              </option>
-              <option value="intermediate">
-                Intermediate
-              </option>
-              <option value="advanced">
-                Advanced
-              </option>
->>>>>>> master
             </select>
           </label>
         </div>
         <div className="actions">
-<<<<<<< HEAD
-          <button type="submit" className="primary">
-            Next step
-          </button>
           <button
             type="button"
             className="secondary"
             onClick={() => props.goBack(Step.PERSONAL_INFORMATION)}
           >
-=======
-          <button type="button" className="secondary" onClick={() => props.goBack(Step.PERSONAL_INFORMATION)}>
->>>>>>> master
             Go back
           </button>
           <button type="submit" className="primary">
