@@ -21,6 +21,19 @@ git clone git@github.com:JustUtahCoders/comunidades-unidas-internal.git
 cd comunidades-unidas-internal
 yarn install
 yarn fix-everything
+```
+
+Now create a file inside of the comunidades-unidas-internal directory called `.env`. Ask Joel or Leonel for the values to use.
+```sh
+GOOGLE_CLIENT_ID=<insert_id_here>
+GOOGLE_CLIENT_SECRET=<insert_client_secret_here>
+GOOGLE_CALLBACK_URL=http://localhost:8080/api/auth/google/callback
+KEYGRIP_SECRET=123
+```
+
+Now run the following command:
+
+```sh
 yarn develop
 ```
 

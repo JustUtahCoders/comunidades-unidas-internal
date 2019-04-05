@@ -1,16 +1,23 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "module": "es2015",
+    "module": "esnext",
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
     "moduleResolution": "node",
+    "lib": [
+      "dom",
+      "es5",
+      "scripthost",
+      "es2015",
+      "es2015.promise"
+    ],
     "noEmit": true
   },
   "include": [
-    "src/**/*"
+    "frontend/**/*"
   ],
   "files": [
-    "src/custom.d.ts"
+    "frontend/custom.d.ts"
   ]
 }

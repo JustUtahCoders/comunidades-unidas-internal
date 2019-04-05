@@ -59,12 +59,43 @@ const css = `
 
 & .form-with-hints {
   display: flex;
-  justify-content: flex-start;
+  flex-direction: column;
+  justify-content: center;
 }
 
 & .hints-and-instructions {
-  width: 300rem;
-  max-width: 50%;
+  margin-bottom: 32rem;
+}
+
+& .form-with-hints form {
+  align-self: center;
+}
+
+& .form-with-hints form input[type="checkbox"] {
+  min-width: inherit;
+  width: inherit;
+  margin-right: 8rem;
+}
+
+${mediaMobile} {
+  & .form-with-hints form input, & .form-with-hints form select {
+    width: 170rem;
+  }
+
+  & .form-with-hints form {
+    width: 350rem;
+  }
+}
+
+${mediaDesktop} {
+  & .form-with-hints form input, & .form-with-hints form select {
+    min-width: 200rem;
+    max-width: 300rem;
+  }
+}
+
+
+& .hints-and-instructions {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -103,7 +134,15 @@ const css = `
 & .vertical-options {
   display: block;
 }
+<<<<<<< HEAD
 `;
+=======
+
+& .vertical-options > * {
+  padding: 8rem 0;
+}
+`
+>>>>>>> master
 
 export enum Step {
   CHECK_DUPLICATE = "CHECK_DUPLICATE",

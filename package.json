@@ -8,31 +8,44 @@
     "fix-everything": "docker-compose down && docker-compose pull && yarn install",
     "start": "node backend/server.js",
     "develop": "concurrently -n w: yarn:develop-*",
-    "develop-frontend": "cross-env PUBLIC_PATH='http://localhost:9018/' webpack-dev-server",
+    "develop-frontend": "cross-env PUBLIC_PATH='http://localhost:9018/' webpack-dev-server --mode=development",
     "develop-backend": "cross-env RUNNING_LOCALLY='true' nodemon backend/server.js --watch backend",
     "develop-database": "docker-compose up",
-    "build": "webpack --config webpack.config.js",
+    "build": "webpack --config webpack.config.js --mode=production",
     "nuke-database": "docker-compose down -v",
     "db-migrate-prod": "db-migrate up --env prod",
     "typescript": "tsc"
   },
   "husky": {
-    "pre-commit": "yarn typescript"
+    "hooks": {
+      "pre-commit": "yarn typescript"
+    }
   },
   "dependencies": {
     "@reach/router": "^1.2.1",
     "@types/reach__router": "^1.2.3",
     "@types/react": "^16.8.5",
     "@types/react-dom": "^16.8.2",
+    "btoa": "^1.2.1",
+    "cookie-parser": "^1.4.4",
+    "cookie-session": "https://github.com/joeldenning/cookie-session.git#secure-fix",
+    "dotenv": "^7.0.0",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
+    "fuzzy-search": "^3.0.1",
+    "js-cookie": "^2.2.0",
+    "keygrip": "^1.0.3",
     "kremling": "^1.2.4",
+    "lodash-es": "^4.17.11",
     "mysql": "^2.16.0",
+    "passport": "^0.4.0",
+    "passport-google-oauth20": "^2.0.0",
     "react": "^16.8.3",
     "react-dom": "^16.8.3"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
     "@zeit/ncc": "^0.15.2",

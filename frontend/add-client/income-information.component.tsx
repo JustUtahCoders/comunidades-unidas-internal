@@ -50,17 +50,25 @@ export default function IncomeInformation(props: StepComponentProps) {
             </div>
             <div>
               <label>
-                <span>Pay interval</span>
-                <select
-                  required
-                  value={payInterval}
-                  onChange={evt => setPayInterval(evt.target.value)}
-                >
-                  <option value="weekly">Weekly</option>
-                  <option value="biweekly">Every two weeks</option>
-                  <option value="monthly">Monthly</option>
-                  <option value="quarterly">Quarterly (3 months)</option>
-                  <option value="annually">Annually (1 year)</option>
+                <span>
+                  Pay period
+                </span>
+                <select required value={payPeriod} onChange={evt => setPayPeriod(PayPeriod[evt.target.value])}>
+                  <option value="weekly">
+                    Weekly
+                  </option>
+                  <option value="biweekly">
+                    Every two weeks
+                  </option>
+                  <option value="monthly">
+                    Monthly
+                  </option>
+                  <option value="quarterly">
+                    Quarterly (3 months)
+                  </option>
+                  <option value="annually">
+                    Annually (1 year)
+                  </option>
                 </select>
               </label>
             </div>
@@ -95,6 +103,7 @@ export default function IncomeInformation(props: StepComponentProps) {
             {houseHoldSize > 0 && (
               <div>
                 <label>
+<<<<<<< HEAD
                   <span># of dependents</span>
                   <input
                     type="number"
@@ -102,12 +111,19 @@ export default function IncomeInformation(props: StepComponentProps) {
                     onChange={evt => setDependents(evt.target.value)}
                     required
                   />
+=======
+                  <span>
+                    # of dependents younger than 18
+                  </span>
+                  <input type="number" value={numMinorDependents} onChange={evt => setNumMinorDependents(Number(evt.target.value))} required />
+>>>>>>> master
                 </label>
               </div>
             )}
           </>
         )}
         <div className="actions">
+<<<<<<< HEAD
           <button type="submit" className="primary">
             Next step
           </button>
@@ -116,7 +132,13 @@ export default function IncomeInformation(props: StepComponentProps) {
             className="secondary"
             onClick={() => props.goBack(Step.GLOBAL_BACKGROUND)}
           >
+=======
+          <button type="button" className="secondary" onClick={() => props.goBack(Step.GLOBAL_BACKGROUND)}>
+>>>>>>> master
             Go back
+          </button>
+          <button type="submit" className="primary">
+            Next step
           </button>
         </div>
       </form>

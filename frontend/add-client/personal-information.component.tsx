@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { StepComponentProps, Step } from "./add-client.component";
-import successIconUrl from "../../icons/148705-essential-collection/svg/success.svg";
-import PhoneInput from "../util/phone-input.component";
-import StateSelect from "../util/state-select.component";
+import React, {useState} from 'react'
+import {StepComponentProps, Step} from './add-client.component'
+import successIconUrl from '../../icons/148705-essential-collection/svg/success.svg'
+import PhoneInput from '../util/phone-input.component'
+import StateSelect from '../util/state-select.component'
+import CityInput from '../util/city-input.component'
 
 export default function PersonalInformation(props: StepComponentProps) {
   const [gender, setGender] = useState("female");
@@ -28,16 +29,13 @@ export default function PersonalInformation(props: StepComponentProps) {
           Great! Let's add their personal information.
         </div>
       </div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} autoComplete="off">
         <div>
           <label>
-            <span>First Name</span>
-            <input
-              type="text"
-              value={props.clientState.firstName}
-              required
-              disabled
-            />
+            <span>
+              First Name
+            </span>
+            <input type="text" value={props.clientState.firstName} required disabled autoFocus />
           </label>
         </div>
         <div>
@@ -92,6 +90,7 @@ export default function PersonalInformation(props: StepComponentProps) {
         )}
         <div>
           <label>
+<<<<<<< HEAD
             <span>Civil status</span>
             <select
               value={civilStatus}
@@ -101,6 +100,18 @@ export default function PersonalInformation(props: StepComponentProps) {
             >
               <option value="single">Single</option>
               <option value="married">Married</option>
+=======
+            <span>
+              Civil status
+            </span>
+            <select value={civilStatus} name="civilStatus" onChange={evt => setCivilStatus(CivilStatus[evt.target.value])} required>
+              <option value="single">
+                Single
+              </option>
+              <option value="married">
+                Married
+              </option>
+>>>>>>> master
               <option value="commonLawMarriage">
                 Common law marriage (unión libre)
               </option>
@@ -164,6 +175,7 @@ export default function PersonalInformation(props: StepComponentProps) {
         </div>
         <div>
           <label>
+<<<<<<< HEAD
             <span>City</span>
             <input
               type="text"
@@ -171,12 +183,25 @@ export default function PersonalInformation(props: StepComponentProps) {
               onChange={evt => setCity(evt.target.value)}
               required
             />
+=======
+            <span>
+              State
+            </span>
+            <StateSelect state={state} setState={setState} />
+>>>>>>> master
           </label>
         </div>
         <div>
           <label>
+<<<<<<< HEAD
             <span>State</span>
             <StateSelect state={state} setState={setState} />
+=======
+            <span>
+              City
+            </span>
+            <CityInput state={state} city={city} setCity={setCity} />
+>>>>>>> master
           </label>
         </div>
         <div>
@@ -217,6 +242,7 @@ export default function PersonalInformation(props: StepComponentProps) {
           </label>
         </div>
         <div className="actions">
+<<<<<<< HEAD
           <button type="submit" className="primary">
             Next step
           </button>
@@ -225,7 +251,13 @@ export default function PersonalInformation(props: StepComponentProps) {
             className="secondary"
             onClick={() => props.goBack(Step.CHECK_DUPLICATE)}
           >
+=======
+          <button type="button" className="secondary" onClick={() => props.goBack(Step.CHECK_DUPLICATE)}>
+>>>>>>> master
             Go back
+          </button>
+          <button type="submit" className="primary">
+            Next step
           </button>
         </div>
       </form>
@@ -235,8 +267,13 @@ export default function PersonalInformation(props: StepComponentProps) {
   function handleSubmit(evt) {
     evt.preventDefault();
     props.nextStep(Step.GLOBAL_BACKGROUND, {
+<<<<<<< HEAD
       gender,
       genderExplanation: gender === "other" ? genderExplanation : null,
+=======
+      gender: Gender[gender],
+      genderExplanation: gender === 'other' ? genderExplanation : null,
+>>>>>>> master
       civilStatus,
       phone,
       smsConsent,
