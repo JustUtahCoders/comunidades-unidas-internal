@@ -1,10 +1,10 @@
-import React from 'react'
-import successIconUrl from '../../icons/148705-essential-collection/svg/success.svg'
-import {useCss} from 'kremling'
-import PageHeader from '../page-header.component';
+import React from "react";
+import successIconUrl from "../../icons/148705-essential-collection/svg/success.svg";
+import { useCss } from "kremling";
+import PageHeader from "../page-header.component";
 
 export default function ReportIssueSuccess(props: ReportIssueSuccessProps) {
-  const scope = useCss(css)
+  const scope = useCss(css);
 
   return (
     <>
@@ -12,12 +12,21 @@ export default function ReportIssueSuccess(props: ReportIssueSuccessProps) {
       <div className="card issue-success" {...scope}>
         <img src={successIconUrl} className="success-icon" />
         <div className="explanation">
-          Thanks! We'll email you about this, and you can check for updates at any time
-          at <a href={`https://github.com/JustUtahCoders/comunidades-unidas-internal/issues/${props.issueId}`} target="_blank">Github Issue #{props.issueId}</a>.
+          Thanks! We'll email you about this, and you can check for updates at
+          any time at{" "}
+          <a
+            href={`https://github.com/JustUtahCoders/comunidades-unidas-internal/issues/${
+              props.issueId
+            }`}
+            target="_blank"
+          >
+            Github Issue #{props.issueId}
+          </a>
+          .
         </div>
       </div>
     </>
-  )
+  );
 }
 
 const css = `
@@ -38,9 +47,9 @@ const css = `
 & .explanation {
   max-width: 350rem;
 }
-`
+`;
 
 type ReportIssueSuccessProps = {
-  issueId?: string,
-  path: string,
-}
+  issueId?: string;
+  path: string;
+};

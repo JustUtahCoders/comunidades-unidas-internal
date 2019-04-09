@@ -4,6 +4,7 @@ node_js:
 script:
   - yarn build
   - yarn typescript
+  - yarn check-format
 before_deploy: 
   - pip install awsebcli --user
   - ls -al

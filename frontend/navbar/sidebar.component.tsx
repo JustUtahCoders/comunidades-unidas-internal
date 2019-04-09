@@ -1,61 +1,86 @@
-import React, {useEffect, useContext} from 'react'
-import {Link} from '@reach/router'
-import {useCss, always, maybe} from 'kremling'
-import {mediaMobile} from '../styleguide.component'
-import {UserContext} from '../util/user.context'
+import React, { useEffect, useContext } from "react";
+import { Link } from "@reach/router";
+import { useCss, always, maybe } from "kremling";
+import { mediaMobile } from "../styleguide.component";
+import { UserContext } from "../util/user.context";
 
 export default function Sidebar(props: SidebarProps) {
-  const scope = useCss(css)
-  const user = useContext(UserContext)
+  const scope = useCss(css);
+  const user = useContext(UserContext);
 
   useEffect(() => {
     if (props.forceShow) {
-      window.addEventListener('click', props.hideSidebar)
-      return () => window.removeEventListener('click', props.hideSidebar)
+      window.addEventListener("click", props.hideSidebar);
+      return () => window.removeEventListener("click", props.hideSidebar);
     }
-  }, [props.forceShow])
+  }, [props.forceShow]);
 
   return (
-    <nav {...scope} className={always("box-shadow-2 sidebar").maybe('force-show', props.forceShow)} onClick={evt => evt.stopPropagation()}>
+    <nav
+      {...scope}
+      className={always("box-shadow-2 sidebar").maybe(
+        "force-show",
+        props.forceShow
+      )}
+      onClick={evt => evt.stopPropagation()}
+    >
       <ul className="navbar-links">
         <div>
           <li>
-            <Link to="" className="nav-link logo-link" onClick={maybeHideSidebar} getProps={maybeActiveLink}>
+            <Link
+              to=""
+              className="nav-link logo-link"
+              onClick={maybeHideSidebar}
+              getProps={maybeActiveLink}
+            >
               <div className="logo-row">
                 <img
                   className="logo"
-                  src="https://static.wixstatic.com/media/738269_e2e22398263d4de8b795dfc67035a1f8~mv2.png/v1/fill/w_254,h_254,al_c,q_80,usm_0.66_1.00_0.01/Comunidades-Unidas-Logo.webp" alt="Comunidades Unidas Logo"
+                  src="https://static.wixstatic.com/media/738269_e2e22398263d4de8b795dfc67035a1f8~mv2.png/v1/fill/w_254,h_254,al_c,q_80,usm_0.66_1.00_0.01/Comunidades-Unidas-Logo.webp"
+                  alt="Comunidades Unidas Logo"
                 />
                 <div className="product-name">Comunidades</div>
               </div>
             </Link>
           </li>
           <li>
-            <Link to="add-client" className="nav-link" onClick={maybeHideSidebar} getProps={maybeActiveLink}>
-              <div>
-                Add a client
-              </div>
+            <Link
+              to="add-client"
+              className="nav-link"
+              onClick={maybeHideSidebar}
+              getProps={maybeActiveLink}
+            >
+              <div>Add a client</div>
             </Link>
           </li>
           <li>
-            <Link to="record-client-visit" className="nav-link" onClick={maybeHideSidebar} getProps={maybeActiveLink}>
-              <div>
-                Record client visit
-              </div>
+            <Link
+              to="record-client-visit"
+              className="nav-link"
+              onClick={maybeHideSidebar}
+              getProps={maybeActiveLink}
+            >
+              <div>Record client visit</div>
             </Link>
           </li>
           <li>
-            <Link to="client-list" className="nav-link" onClick={maybeHideSidebar} getProps={maybeActiveLink}>
-              <div>
-                View clients
-              </div>
+            <Link
+              to="client-list"
+              className="nav-link"
+              onClick={maybeHideSidebar}
+              getProps={maybeActiveLink}
+            >
+              <div>View clients</div>
             </Link>
           </li>
           <li>
-            <Link to="report-issue" className="nav-link" onClick={maybeHideSidebar} getProps={maybeActiveLink}>
-              <div>
-                Report an issue
-              </div>
+            <Link
+              to="report-issue"
+              className="nav-link"
+              onClick={maybeHideSidebar}
+              getProps={maybeActiveLink}
+            >
+              <div>Report an issue</div>
             </Link>
           </li>
         </div>
@@ -63,27 +88,23 @@ export default function Sidebar(props: SidebarProps) {
           <li>
             <a href="/logout" className="nav-link">
               <div className="switch-account">
-                <div>
-                  Switch account
-                </div>
-                <div>
-                  ({user.fullName})
-                </div>
+                <div>Switch account</div>
+                <div>({user.fullName})</div>
               </div>
             </a>
           </li>
         </div>
       </ul>
     </nav>
-  )
+  );
 
-  function maybeActiveLink({isCurrent}) {
-    return isCurrent ? {style: {backgroundColor: '#f3f3f3'}} : null
+  function maybeActiveLink({ isCurrent }) {
+    return isCurrent ? { style: { backgroundColor: "#f3f3f3" } } : null;
   }
 
   function maybeHideSidebar() {
     if (props.forceShow) {
-      props.hideSidebar()
+      props.hideSidebar();
     }
   }
 }
@@ -166,9 +187,9 @@ ${mediaMobile} {
   flex-direction: column;
   align-items: center;
 }
-`
+`;
 
 type SidebarProps = {
-  forceShow: boolean,
-  hideSidebar: () => any,
-}
+  forceShow: boolean;
+  hideSidebar: () => any;
+};

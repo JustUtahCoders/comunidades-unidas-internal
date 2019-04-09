@@ -10,7 +10,8 @@ export default function Finished(props: StepComponentProps) {
           <img src={successIconUrl} className="hint-icon" />
         </div>
         <div className="instruction">
-          Ok. Ready to save {props.clientState.firstName} {props.clientState.lastName} to database.
+          Ok. Ready to save {props.clientState.firstName}{" "}
+          {props.clientState.lastName} to database.
         </div>
       </div>
       <div>
@@ -31,7 +32,7 @@ export default function Finished(props: StepComponentProps) {
   );
 
   function handleSubmit(evt) {
-    if (localStorage.getItem('store-in-database-for-reals')) {
+    if (localStorage.getItem("store-in-database-for-reals")) {
       fetch("/api/add-client/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -55,7 +56,7 @@ export default function Finished(props: StepComponentProps) {
           console.log(err);
         });
     } else {
-      props.nextStep(Step.FINISHED, {})
+      props.nextStep(Step.FINISHED, {});
     }
   }
   function addAnother() {

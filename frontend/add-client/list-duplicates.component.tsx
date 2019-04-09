@@ -3,10 +3,10 @@ import usersUrl from "../../icons/148705-essential-collection/svg/users-1.svg";
 import { Step, DuplicateWarning, ClientState } from "./add-client.component";
 
 type ListDuplicatesProps = {
-  duplicateWarning: DuplicateWarning,
-  goBack(): void,
-  continueAnyway(clientState: ClientState): void,
-}
+  duplicateWarning: DuplicateWarning;
+  goBack(): void;
+  continueAnyway(clientState: ClientState): void;
+};
 
 export default function ListDuplicates(props: ListDuplicatesProps) {
   const duplicates = props.duplicateWarning.duplicates;
@@ -21,7 +21,8 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
           <img src={usersUrl} className="hint-icon" />
         </div>
         <div className="instruction">
-          The database has records matching {props.duplicateWarning.firstName}&nbsp;
+          The database has records matching {props.duplicateWarning.firstName}
+          &nbsp;
           {props.duplicateWarning.lastName}
         </div>
       </div>
@@ -54,11 +55,7 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
             </tbody>
           </table>
           <div className="actions">
-            <button
-              type="button"
-              className="secondary"
-              onClick={props.goBack}
-            >
+            <button type="button" className="secondary" onClick={props.goBack}>
               Go back
             </button>
             <button type="submit" className="primary">

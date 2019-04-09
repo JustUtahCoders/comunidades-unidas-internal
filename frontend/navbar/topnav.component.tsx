@@ -1,14 +1,18 @@
-import React from 'react'
-import {useCss} from 'kremling'
-import {mediaDesktop} from '../styleguide.component';
-import {Link} from '@reach/router'
+import React from "react";
+import { useCss } from "kremling";
+import { mediaDesktop } from "../styleguide.component";
+import { Link } from "@reach/router";
 
 export default function Topnav(props: TopnavProps) {
-  const scope = useCss(css)
+  const scope = useCss(css);
 
   return (
     <div className="topnav" {...scope}>
-      <div role="button" className="hamburger" onClick={() => props.showSidebar(true)}>
+      <div
+        role="button"
+        className="hamburger"
+        onClick={() => props.showSidebar(true)}
+      >
         <div />
         <div />
         <div />
@@ -17,7 +21,7 @@ export default function Topnav(props: TopnavProps) {
         Comunidades Unidas
       </Link>
     </div>
-  )
+  );
 }
 
 const css = `
@@ -73,8 +77,8 @@ ${mediaDesktop} {
     display: none;
   }
 }
-`
+`;
 
 type TopnavProps = {
-  showSidebar: (newValue: boolean) => void,
-}
+  showSidebar: (newValue: boolean) => void;
+};

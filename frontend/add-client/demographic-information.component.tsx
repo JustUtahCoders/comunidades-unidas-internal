@@ -58,10 +58,7 @@ export default function DemographicInformation(props: StepComponentProps) {
         <div>
           <label>
             <span>Approximate annual income</span>
-            <CurrencyInput
-              setDollars={setAnnualIncome}
-              required
-            />
+            <CurrencyInput setDollars={setAnnualIncome} required />
           </label>
         </div>
         <div>
@@ -150,7 +147,9 @@ export default function DemographicInformation(props: StepComponentProps) {
                 <select
                   required
                   value={payInterval}
-                  onChange={evt => setPayInterval(PayInterval[evt.target.value])}
+                  onChange={evt =>
+                    setPayInterval(PayInterval[evt.target.value])
+                  }
                 >
                   <option value="Weekly">Weekly</option>
                   <option value="Biweekly">Every two weeks</option>
@@ -264,11 +263,11 @@ export default function DemographicInformation(props: StepComponentProps) {
       countryOfOrigin,
       dateUSArrival,
       primaryLanguage:
-      primaryLanguage === "other" ? otherLanguage : primaryLanguage,
+        primaryLanguage === "other" ? otherLanguage : primaryLanguage,
       englishLevel,
       currentlyEmployed,
       employmentSector:
-      employmentSector === "Other" ? empSectorExplain : employmentSector,
+        employmentSector === "Other" ? empSectorExplain : employmentSector,
       payInterval,
       hoursWorked,
       annualIncome,

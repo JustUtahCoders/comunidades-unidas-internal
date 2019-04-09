@@ -1,7 +1,7 @@
-import React, {useState} from 'react'
+import React, { useState } from "react";
 
 export default function CurrencyInput(props: CurrencyInputProps) {
-  const [unmaskedValue, setUnmaskedValue] = useState('')
+  const [unmaskedValue, setUnmaskedValue] = useState("");
   return (
     <input
       type="text"
@@ -11,23 +11,23 @@ export default function CurrencyInput(props: CurrencyInputProps) {
       required={props.required}
       placeholder={props.placeholder}
     />
-  )
+  );
 
   function handleChange(evt) {
-    setUnmaskedValue(evt.target.value)
+    setUnmaskedValue(evt.target.value);
     if (evt.target.validity.valid) {
-      props.setDollars(Number(evt.target.value.replace(/[\$\w\,]/g, '')))
+      props.setDollars(Number(evt.target.value.replace(/[\$\w\,]/g, "")));
     }
   }
 }
 
 CurrencyInput.defaultProps = {
   required: true,
-  placeholder: '40000',
-}
+  placeholder: "40000"
+};
 
 type CurrencyInputProps = {
-  setDollars(dollars: number): void,
-  required?: boolean,
-  placeholder?: string,
-}
+  setDollars(dollars: number): void;
+  required?: boolean;
+  placeholder?: string;
+};

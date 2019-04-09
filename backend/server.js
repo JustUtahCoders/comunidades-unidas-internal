@@ -36,8 +36,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use((err, req, res, next) => {
-  console.log("ERRROR: ", err)
-})
+  console.log("ERRROR: ", err);
+});
 
 require("./apis/login.api");
 require("./apis/dummy.api");
@@ -46,8 +46,8 @@ require("./apis/add-client.api");
 require("./apis/duplicate.api");
 require("./index-html.js");
 
-process.on('uncaughtException', function (err) {
-  console.error('Backend error in node server code:')
+process.on("uncaughtException", function(err) {
+  console.error("Backend error in node server code:");
   console.error(err);
 });
 

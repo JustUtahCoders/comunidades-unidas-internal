@@ -1,8 +1,12 @@
-import React from 'react'
+import React from "react";
 
 export default function CountrySelect(props: CountrySelectProps) {
   return (
-    <select value={props.country} onChange={evt => props.setCountry(evt.target.value)} autoFocus={props.autoFocus}>
+    <select
+      value={props.country}
+      onChange={evt => props.setCountry(evt.target.value)}
+      autoFocus={props.autoFocus}
+    >
       <optgroup label="Most common countries">
         <option value="US">United States</option>
         <option value="MX">Mexico</option>
@@ -257,11 +261,11 @@ export default function CountrySelect(props: CountrySelectProps) {
         <option value="ZW">Zimbabwe</option>
       </optgroup>
     </select>
-  )
+  );
 }
 
 type CountrySelectProps = {
-  country: string,
-  setCountry(country: string): void,
-  autoFocus?: boolean,
-}
+  country: string;
+  setCountry(country: string): void;
+  autoFocus?: boolean;
+};

@@ -1,25 +1,21 @@
-import React from 'react'
-import {useCss} from 'kremling'
+import React from "react";
+import { useCss } from "kremling";
 
 type StyleguideProps = {
-  children: JSX.Element,
-}
+  children: JSX.Element;
+};
 
 export default function Styleguide(props: StyleguideProps) {
-  const scope = useCss(css)
+  const scope = useCss(css);
 
-  return (
-    <div {...scope}>
-      {props.children}
-    </div>
-  )
+  return <div {...scope}>{props.children}</div>;
 }
 
-export const brandColor: Color = `rgba(184, 17, 17, 1)`
-export const boxShadow1: BoxShadow = `0 10px 30px -24px #4b4e53` 
-export const boxShadow2: BoxShadow = `0 10px 40px -24px #393b3f`
-export const mediaMobile: String = `@media screen and (max-width: 800px) and (min-width: 1px)`
-export const mediaDesktop: String = `@media screen and (min-width: 800px)`
+export const brandColor: Color = `rgba(184, 17, 17, 1)`;
+export const boxShadow1: BoxShadow = `0 10px 30px -24px #4b4e53`;
+export const boxShadow2: BoxShadow = `0 10px 40px -24px #393b3f`;
+export const mediaMobile: String = `@media screen and (max-width: 800px) and (min-width: 1px)`;
+export const mediaDesktop: String = `@media screen and (min-width: 800px)`;
 
 const css = `
 :root {
@@ -160,7 +156,7 @@ body {
 & .popup ul li:hover {
   background-color: #e9e9e9;
 }
-`
+`;
 
-type Color = string
-type BoxShadow = string
+type Color = string;
+type BoxShadow = string;

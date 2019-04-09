@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {useCss} from 'kremling';
+import { useCss } from "kremling";
 import { StepComponentProps, Step } from "./add-client.component";
 import homeUrl from "../../icons/148705-essential-collection/svg/home.svg";
 import PhoneInput from "../util/phone-input.component";
@@ -15,7 +15,7 @@ export default function ContactInformation(props: StepComponentProps) {
   const [zip, setZip] = useState("");
   const [owned, setOwned] = useState("");
   const [email, setEmail] = useState("");
-  const scope = useCss(css)
+  const scope = useCss(css);
 
   return (
     <>
@@ -24,8 +24,11 @@ export default function ContactInformation(props: StepComponentProps) {
           <img src={homeUrl} className="hint-icon" />
         </div>
         <div className="instruction">
-          Ok. Now, lets add a contact and address
-          for <span className="client-name">{props.clientState.firstName} {props.clientState.lastName}</span>.
+          Ok. Now, lets add a contact and address for{" "}
+          <span className="client-name">
+            {props.clientState.firstName} {props.clientState.lastName}
+          </span>
+          .
         </div>
       </div>
       <form onSubmit={handleSubmit} autoComplete="off">
@@ -146,4 +149,4 @@ const css = `
 & .client-name {
   font-weight: bold;
 }
-`
+`;

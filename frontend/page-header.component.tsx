@@ -1,33 +1,38 @@
-import React, {useEffect} from 'react'
-import {useCss, always, maybe} from 'kremling'
-import {brandColor, mediaDesktop} from './styleguide.component'
+import React, { useEffect } from "react";
+import { useCss, always, maybe } from "kremling";
+import { brandColor, mediaDesktop } from "./styleguide.component";
 
 export default function PageHeader(props: PageHeaderProps) {
-  const scope = useCss(css)
+  const scope = useCss(css);
 
   useEffect(() => {
-    document.title = props.title + ' - Comunidades Unidas'
-  })
+    document.title = props.title + " - Comunidades Unidas";
+  });
 
   return (
-    <div {...scope} className={always('page-header box-shadow-1').maybe(props.className || '', Boolean(props.className))} style={{backgroundColor: props.backgroundColor}}>
-      <h1>
-        {props.title}
-      </h1>
+    <div
+      {...scope}
+      className={always("page-header box-shadow-1").maybe(
+        props.className || "",
+        Boolean(props.className)
+      )}
+      style={{ backgroundColor: props.backgroundColor }}
+    >
+      <h1>{props.title}</h1>
     </div>
-  )
+  );
 }
 
 PageHeader.defaultProps = {
-  title: 'Database',
-  backgroundColor: brandColor,
-}
+  title: "Database",
+  backgroundColor: brandColor
+};
 
 type PageHeaderProps = {
-  title?: string,
-  backgroundColor?: string,
-  className?: string,
-}
+  title?: string;
+  backgroundColor?: string;
+  className?: string;
+};
 
 const css = `
 & .page-header {
@@ -51,4 +56,4 @@ ${mediaDesktop} {
   margin: 0;
   padding: 0;
 }
-`
+`;

@@ -6,9 +6,13 @@ import CheckDuplicate from "./check-duplicate.component";
 import ListDuplicates from "./list-duplicates.component";
 import ContactInformation from "./contact-information.component";
 import Confirm from "./confirm.component";
-import DemographicInformation, { PayInterval, EnglishLevel, CivilStatus } from "./demographic-information.component";
-import Services from './services.component'
-import Finished from './finished.component'
+import DemographicInformation, {
+  PayInterval,
+  EnglishLevel,
+  CivilStatus
+} from "./demographic-information.component";
+import Services from "./services.component";
+import Finished from "./finished.component";
 
 import { mediaMobile, mediaDesktop } from "../styleguide.component";
 
@@ -16,29 +20,31 @@ export default function AddClient(props: AddClientProps) {
   const scope = useCss(css);
   const [step, setStep] = useState<Step>(Step.CHECK_DUPLICATE);
   const [clientState, setClientState] = useState<ClientState>({});
-  const [duplicateWarning, setDuplicateWarning] = useState<DuplicateWarning>(null)
+  const [duplicateWarning, setDuplicateWarning] = useState<DuplicateWarning>(
+    null
+  );
   const StepComponent = stepComponents[step];
 
   return (
-    <div {...scope}> <PageHeader title="Add a new client" />
+    <div {...scope}>
+      <PageHeader title="Add a new client" />
       <div className="card">
         <div className="form-with-hints">
-          {duplicateWarning
-            ?
-              <ListDuplicates
-                duplicateWarning={duplicateWarning}
-                continueAnyway={continueAnyway}
-                goBack={reset}
-              />
-            :
-              <StepComponent
-                nextStep={nextStep}
-                clientState={clientState}
-                goBack={goBack}
-                reset={reset}
-                showDuplicateWarning={showDuplicateWarning}
-              />
-          }
+          {duplicateWarning ? (
+            <ListDuplicates
+              duplicateWarning={duplicateWarning}
+              continueAnyway={continueAnyway}
+              goBack={reset}
+            />
+          ) : (
+            <StepComponent
+              nextStep={nextStep}
+              clientState={clientState}
+              goBack={goBack}
+              reset={reset}
+              showDuplicateWarning={showDuplicateWarning}
+            />
+          )}
         </div>
       </div>
     </div>
@@ -60,13 +66,13 @@ export default function AddClient(props: AddClientProps) {
   }
 
   function showDuplicateWarning(duplicateWarning) {
-    setDuplicateWarning(duplicateWarning)
+    setDuplicateWarning(duplicateWarning);
   }
 
   function continueAnyway(clientState) {
-    setStep(Step.CONTACT_INFORMATION)
-    setDuplicateWarning(null)
-    setClientState(clientState)
+    setStep(Step.CONTACT_INFORMATION);
+    setDuplicateWarning(null);
+    setClientState(clientState);
   }
 }
 
@@ -77,7 +83,7 @@ export enum Step {
   DEMOGRAPHICS_INFORMATION = "DEMOGRAPHICS_INFORMATION",
   SERVICES = "SERVICES",
   CONFIRM = "CONFIRM",
-  FINISHED = "FINISHED",
+  FINISHED = "FINISHED"
 }
 
 const stepComponents = {
@@ -86,7 +92,7 @@ const stepComponents = {
   [Step.DEMOGRAPHICS_INFORMATION]: DemographicInformation,
   [Step.SERVICES]: Services,
   [Step.CONFIRM]: Confirm,
-  [Step.FINISHED]: Finished,
+  [Step.FINISHED]: Finished
 };
 
 type AddClientProps = {
@@ -134,21 +140,21 @@ export type StepComponentProps = {
 };
 
 export type DuplicateWarning = {
-  personId: string,
-  firstName: string,
-  lastName: string,
-  birthDate: string,
-  gender: string,
-  duplicates: Duplicate[],
-}
+  personId: string;
+  firstName: string;
+  lastName: string;
+  birthDate: string;
+  gender: string;
+  duplicates: Duplicate[];
+};
 
 type Duplicate = {
-  personId: string,
-  firstName: string,
-  lastName: string,
-  birthDate: string,
-  gender: string,
-}
+  personId: string;
+  firstName: string;
+  lastName: string;
+  birthDate: string;
+  gender: string;
+};
 
 const css = `
 & form > div {

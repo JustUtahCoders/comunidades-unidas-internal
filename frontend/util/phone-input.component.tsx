@@ -1,7 +1,7 @@
-import React, {useState} from 'react'
+import React, { useState } from "react";
 
 export default function PhoneInput(props: PhoneInputProps) {
-  const [unmaskedPhone, setUnmaskedPhone] = useState(props.phone)
+  const [unmaskedPhone, setUnmaskedPhone] = useState(props.phone);
 
   return (
     <input
@@ -14,18 +14,18 @@ export default function PhoneInput(props: PhoneInputProps) {
       autoFocus={props.autoFocus}
       autoComplete="off"
     />
-  )
+  );
 
   function handleChange(evt) {
-    setUnmaskedPhone(evt.target.value)
+    setUnmaskedPhone(evt.target.value);
     if (evt.target.validity.valid) {
-      props.setPhone(evt.target.value.replace(/[\-\(\) ]/g, ''))
+      props.setPhone(evt.target.value.replace(/[\-\(\) ]/g, ""));
     }
   }
 }
 
 type PhoneInputProps = {
-  phone: string,
-  setPhone(phone: string): void,
-  autoFocus: boolean,
-}
+  phone: string;
+  setPhone(phone: string): void;
+  autoFocus: boolean;
+};

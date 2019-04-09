@@ -1,21 +1,24 @@
-import React from 'react'
-import {useCss} from 'kremling'
-import {boxShadow1, boxShadow2, mediaDesktop, mediaMobile} from '../styleguide.component'
-import {Link} from '@reach/router'
+import React from "react";
+import { useCss } from "kremling";
+import {
+  boxShadow1,
+  boxShadow2,
+  mediaDesktop,
+  mediaMobile
+} from "../styleguide.component";
+import { Link } from "@reach/router";
 
 export default function HomeCard(props: HomeCardProps) {
-  const scope = useCss(css)
+  const scope = useCss(css);
 
   return (
     <div className="card-container" {...scope}>
       <Link className="home-card unstyled" to={props.link}>
         <img src={props.iconUrl} className="icon" />
-        <div className="title">
-          {props.title}
-        </div>
+        <div className="title">{props.title}</div>
       </Link>
     </div>
-  )
+  );
 }
 
 const css = `
@@ -78,10 +81,10 @@ ${mediaDesktop} {
 & .title {
   text-align: center;
 }
-`
+`;
 
 type HomeCardProps = {
-  title: string,
-  iconUrl: string,
-  link: string,
-}
+  title: string;
+  iconUrl: string;
+  link: string;
+};
