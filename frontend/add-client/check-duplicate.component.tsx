@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import user2Url from "../../icons/148705-essential-collection/svg/user-2.svg";
 import { StepComponentProps, Step } from "./add-client.component";
-import { setConstantValue } from "typescript";
 
 export default function CheckDuplicate(props: StepComponentProps) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [birthday, setBirthday] = useState("1990-01-01");
   const [gender, setGender] = useState("female");
-  const [genderExplanation, setGenderExplanation] = useState("");
+  const [otherGender, setOtherGender] = useState("");
 
   return (
     <>
@@ -20,7 +19,7 @@ export default function CheckDuplicate(props: StepComponentProps) {
           Let's first check if this person already exists in the database.
         </div>
       </div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} autoComplete="off">
         <div>
           <label>
             <span>First Name</span>
@@ -29,6 +28,7 @@ export default function CheckDuplicate(props: StepComponentProps) {
               value={firstName}
               onChange={evt => setFirstName(evt.target.value)}
               required
+              autoComplete="off"
               autoFocus
             />
           </label>
@@ -40,6 +40,7 @@ export default function CheckDuplicate(props: StepComponentProps) {
               type="text"
               value={lastName}
               onChange={evt => setLastName(evt.target.value)}
+              autoComplete="off"
               required
             />
           </label>
@@ -61,23 +62,24 @@ export default function CheckDuplicate(props: StepComponentProps) {
             <select
               value={gender}
               onChange={evt => setGender(evt.target.value)}
+              autoComplete="off"
               required
-              autoFocus
             >
               <option value="female">Female</option>
               <option value="male">Male</option>
-              <option value="transgender">Transgender</option>
-              <option value="other">Other (please explain)</option>
+              <option value="nonbinary">Non-binary</option>
+              <option value="other">Other</option>
             </select>
           </label>
         </div>
         {gender === "other" && (
           <div>
             <label>
-              <span>Explanation</span>
-              <textarea
-                value={genderExplanation}
-                onChange={evt => setGenderExplanation(evt.target.value)}
+              <span>Other gender</span>
+              <input
+                type="text"
+                value={otherGender}
+                onChange={evt => setOtherGender(evt.target.value)}
                 required
               />
             </label>
@@ -112,19 +114,19 @@ export default function CheckDuplicate(props: StepComponentProps) {
       })
       .then(function(duplicates) {
         if (duplicates.length > 0) {
-          props.nextStep(Step.LIST_DUPLICATES, {
+          props.showDuplicateWarning({
             firstName,
             lastName,
             birthday,
-            gender: gender === "other" ? genderExplanation : gender,
-            duplicates
+            gender: gender === "other" ? otherGender : gender,
+            duplicates,
           });
         } else {
-          props.nextStep(Step.ADD_CONTACT, {
+          props.nextStep(Step.CONTACT_INFORMATION, {
             firstName,
             lastName,
-            gender: gender === "other" ? genderExplanation : gender,
-            birthday
+            gender: gender === "other" ? otherGender : gender,
+            birthday,
           });
         }
       })
@@ -132,10 +134,4 @@ export default function CheckDuplicate(props: StepComponentProps) {
         console.log(err);
       });
   }
-}
-export enum Gender {
-  FEMALE = "female",
-  MALE = "male",
-  TRANSGENDER = "transgender",
-  OTHER = "other"
 }

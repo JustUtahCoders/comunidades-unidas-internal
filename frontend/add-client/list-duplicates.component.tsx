@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import usersUrl from "../../icons/148705-essential-collection/svg/users-1.svg";
-import { StepComponentProps, Step } from "./add-client.component";
+import { Step, DuplicateWarning, ClientState } from "./add-client.component";
 
-export default function ListDuplicates(props: StepComponentProps) {
-  const duplicates = props.clientState.duplicates;
-  const firstName = props.clientState.firstName;
-  const lastName = props.clientState.lastName;
-  const birthday = props.clientState.birthday;
-  /*Here, do we have to send a request to API for duplicates again using matching first and last name or is there a way to carry over the duplicate array/result from last state?*/
+type ListDuplicatesProps = {
+  duplicateWarning: DuplicateWarning,
+  goBack(): void,
+  continueAnyway(clientState: ClientState): void,
+}
+
+export default function ListDuplicates(props: ListDuplicatesProps) {
+  const duplicates = props.duplicateWarning.duplicates;
+  const firstName = props.duplicateWarning.firstName;
+  const lastName = props.duplicateWarning.lastName;
+  const birthday = props.duplicateWarning.birthDate;
+
   return (
     <>
       <div className="hints-and-instructions">
@@ -15,12 +21,12 @@ export default function ListDuplicates(props: StepComponentProps) {
           <img src={usersUrl} className="hint-icon" />
         </div>
         <div className="instruction">
-          The database has records matching {props.clientState.firstName}&nbsp;
-          {props.clientState.lastName}
+          The database has records matching {props.duplicateWarning.firstName}&nbsp;
+          {props.duplicateWarning.lastName}
         </div>
       </div>
       <div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="off">
           <table>
             <thead>
               <tr>
@@ -33,9 +39,9 @@ export default function ListDuplicates(props: StepComponentProps) {
             </thead>
             <tbody>
               {duplicates.map(duplicate => (
-                <tr key={duplicate.personid}>
-                  <td>{duplicate.firstname} </td>
-                  <td>{duplicate.lastname}</td>
+                <tr key={duplicate.personId}>
+                  <td>{duplicate.firstName} </td>
+                  <td>{duplicate.lastName}</td>
                   <td>{duplicate.birthDate}</td>
                   <td>{duplicate.gender}</td>
                   <td>
@@ -51,7 +57,7 @@ export default function ListDuplicates(props: StepComponentProps) {
             <button
               type="button"
               className="secondary"
-              onClick={() => props.goBack(Step.CHECK_DUPLICATE)}
+              onClick={props.goBack}
             >
               Go back
             </button>
@@ -63,14 +69,11 @@ export default function ListDuplicates(props: StepComponentProps) {
       </div>
     </>
   );
-  //Select a duplicate and edit, start over or continue with client
+
   function handleSubmit(evt) {
     evt.preventDefault();
-    //I am not a huge fan of browser confirm. Update this later?
-    confirm(
-      `Adding duplicates can cause poor data quality. Are you sure ${firstName} ${lastName} is not a duplicate?`
-    );
-    props.nextStep(Step.ADD_CONTACT, {
+
+    props.continueAnyway({
       firstName,
       lastName,
       birthday

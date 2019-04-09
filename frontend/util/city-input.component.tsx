@@ -19,7 +19,7 @@ export default function CityInput(props) {
 
   return (
     <div className="city-input-container" {...scope} onFocus={() => setFocused(true)} onBlur={handleBlur}>
-      <input type="text" value={props.city} onChange={evt => props.setCity(evt.target.value)} required ref={inputRef} />
+      <input type="text" value={props.city} onChange={evt => props.setCity(evt.target.value)} required ref={inputRef} autoComplete="off" />
       {renderPopup()}
     </div>
   )

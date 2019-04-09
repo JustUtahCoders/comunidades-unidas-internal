@@ -85,7 +85,7 @@ export default function Services(props: StepComponentProps) {
           </div>
         </div>
         <div className="actions">
-          <button type="button" className="secondary" onClick={() => props.goBack(Step.CLIENT_SOURCE)}>
+          <button type="button" className="secondary" onClick={() => props.goBack(Step.DEMOGRAPHICS_INFORMATION)}>
             Go back
           </button>
           <button type="submit" className="primary">
@@ -102,7 +102,7 @@ export default function Services(props: StepComponentProps) {
 
   function handleSubmit(evt) {
     evt.preventDefault()
-    props.nextStep(Step.FINISHED, {})
+    props.nextStep(Step.CONFIRM, {})
   }
 }
 

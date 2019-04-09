@@ -35,6 +35,9 @@ app.use("/static", express.static(path.join(__dirname, "../static")));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use((err, req, res, next) => {
+  console.log("ERRROR: ", err)
+})
 
 require("./apis/login.api");
 require("./apis/dummy.api");
@@ -42,6 +45,11 @@ require("./apis/github-key.api");
 require("./apis/add-client.api");
 require("./apis/duplicate.api");
 require("./index-html.js");
+
+process.on('uncaughtException', function (err) {
+  console.error('Backend error in node server code:')
+  console.error(err);
+});
 
 app.listen(port, () => {
   console.log("Node Express server listening on port", port);

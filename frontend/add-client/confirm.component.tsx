@@ -10,21 +10,20 @@ export default function Finished(props: StepComponentProps) {
           <img src={successIconUrl} className="hint-icon" />
         </div>
         <div className="instruction">
-          Ok. Ready to save {props.clientState.firstName}{" "}
-          {props.clientState.lastName} to database.
+          Ok. Ready to save {props.clientState.firstName} {props.clientState.lastName} to database.
         </div>
       </div>
       <div>
         <div className="actions">
-          <button type="submit" className="primary" onClick={handleSubmit}>
-            Confirm
-          </button>
           <button
             type="button"
             className="secondary"
-            onClick={() => props.goBack(Step.ADD_DEMOGRAPHICS)}
+            onClick={() => props.goBack(Step.DEMOGRAPHICS_INFORMATION)}
           >
             Go back
+          </button>
+          <button type="submit" className="primary" onClick={handleSubmit}>
+            Confirm
           </button>
         </div>
       </div>
@@ -32,28 +31,32 @@ export default function Finished(props: StepComponentProps) {
   );
 
   function handleSubmit(evt) {
-    fetch("/api/add-client/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        clientState: props.clientState
+    if (localStorage.getItem('store-in-database-for-reals')) {
+      fetch("/api/add-client/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          clientState: props.clientState
+        })
       })
-    })
-      .then(function(response) {
-        if (response.status >= 400) {
-          throw new Error("Bad response from server");
-        }
-        return response.json();
-      })
-      .then(function(data) {
-        if (data.affectedRows >= 1) {
-          alert("Client has been added to database!");
-          addAnother(); // Route to add intake data after its built
-        }
-      })
-      .catch(function(err) {
-        console.log(err);
-      });
+        .then(function(response) {
+          if (response.status >= 400) {
+            throw new Error("Bad response from server");
+          }
+          return response.json();
+        })
+        .then(function(data) {
+          if (data.affectedRows >= 1) {
+            alert("Client has been added to database!");
+            addAnother(); // Route to add intake data after its built
+          }
+        })
+        .catch(function(err) {
+          console.log(err);
+        });
+    } else {
+      props.nextStep(Step.FINISHED, {})
+    }
   }
   function addAnother() {
     props.reset();

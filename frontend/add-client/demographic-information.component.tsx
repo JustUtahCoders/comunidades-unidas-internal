@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { StepComponentProps, Step } from "./add-client.component";
 import demographicIconUrl from "../../icons/148705-essential-collection/svg/resume.svg";
 import CountrySelect from "../util/country-select.component";
+import CurrencyInput from "../util/currency-input.component";
 
 export default function DemographicInformation(props: StepComponentProps) {
   const [civilStatus, setCivilStatus] = useState(CivilStatus.SINGLE);
@@ -33,15 +34,16 @@ export default function DemographicInformation(props: StepComponentProps) {
           .
         </div>
       </div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} autoComplete="off">
         <div>
           <label>
             <span>Civil status</span>
             <select
               value={civilStatus}
               name="civilStatus"
-              onChange={evt => setCivilStatus(evt.target.value)}
+              onChange={evt => setCivilStatus(CivilStatus[evt.target.value])}
               required
+              autoFocus
             >
               <option value="single">Single</option>
               <option value="married">Married</option>
@@ -56,12 +58,9 @@ export default function DemographicInformation(props: StepComponentProps) {
         <div>
           <label>
             <span>Approximate annual income</span>
-            <input
-              type="number"
-              onChange={evt => setAnnualIncome(Number(evt.target.value))}
+            <CurrencyInput
+              setDollars={setAnnualIncome}
               required
-              min="6000"
-              max="100000"
             />
           </label>
         </div>
@@ -73,24 +72,22 @@ export default function DemographicInformation(props: StepComponentProps) {
               onChange={evt => setHouseHoldSize(Number(evt.target.value))}
               required
               min="1"
+              max="30"
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            <span># of dependents</span>
+            <input
+              type="number"
+              onChange={evt => setDependents(Number(evt.target.value))}
+              required
+              min="1"
               max="20"
             />
           </label>
         </div>
-        {houseHoldSize > 0 && (
-          <div>
-            <label>
-              <span># of dependents</span>
-              <input
-                type="number"
-                onChange={evt => setDependents(Number(evt.target.value))}
-                required
-                min="1"
-                max="20"
-              />
-            </label>
-          </div>
-        )}
         <div>
           <label>
             <span>Currently employed?</span>
@@ -153,7 +150,7 @@ export default function DemographicInformation(props: StepComponentProps) {
                 <select
                   required
                   value={payInterval}
-                  onChange={evt => setPayInterval(evt.target.value)}
+                  onChange={evt => setPayInterval(PayInterval[evt.target.value])}
                 >
                   <option value="Weekly">Weekly</option>
                   <option value="Biweekly">Every two weeks</option>
@@ -186,7 +183,6 @@ export default function DemographicInformation(props: StepComponentProps) {
             <CountrySelect
               country={countryOfOrigin}
               setCountry={setCountryOfOrigin}
-              autoFocus
             />
           </label>
         </div>
@@ -212,10 +208,10 @@ export default function DemographicInformation(props: StepComponentProps) {
               value={primaryLanguage}
               onChange={evt => setPrimaryLanguage(evt.target.value)}
             >
-              <option value="Spanish">Spanish</option>
-              <option value="English">English</option>
-              <option value="Spanish and English">Both</option>
-              <option value="Other">Other</option>
+              <option value="spanish">Spanish</option>
+              <option value="english">English</option>
+              <option value="english-and-spanish">English and Spanish</option>
+              <option value="other">Other</option>
             </select>
           </label>
         </div>
@@ -238,7 +234,7 @@ export default function DemographicInformation(props: StepComponentProps) {
             <select
               required
               value={englishLevel}
-              onChange={evt => setEnglishLevel(evt.target.value)}
+              onChange={evt => setEnglishLevel(EnglishLevel[evt.target.value])}
             >
               <option value="Beginner">Beginner</option>
               <option value="Intermediate">Intermediate</option>
@@ -247,15 +243,15 @@ export default function DemographicInformation(props: StepComponentProps) {
           </label>
         </div>
         <div className="actions">
-          <button type="submit" className="primary">
-            Next step
-          </button>
           <button
             type="button"
             className="secondary"
-            onClick={() => props.goBack(Step.ADD_CONTACT)}
+            onClick={() => props.goBack(Step.CONTACT_INFORMATION)}
           >
             Go back
+          </button>
+          <button type="submit" className="primary">
+            Next step
           </button>
         </div>
       </form>
@@ -263,16 +259,16 @@ export default function DemographicInformation(props: StepComponentProps) {
   );
   function handleSubmit(evt) {
     evt.preventDefault();
-    props.nextStep(Step.CONFIRM, {
+    props.nextStep(Step.SERVICES, {
       civilStatus,
       countryOfOrigin,
       dateUSArrival,
       primaryLanguage:
-        primaryLanguage === "other" ? otherLanguage : primaryLanguage,
+      primaryLanguage === "other" ? otherLanguage : primaryLanguage,
       englishLevel,
       currentlyEmployed,
       employmentSector:
-        employmentSector === "Other" ? empSectorExplain : employmentSector,
+      employmentSector === "Other" ? empSectorExplain : employmentSector,
       payInterval,
       hoursWorked,
       annualIncome,
