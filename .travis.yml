@@ -2,9 +2,10 @@ language: node_js
 node_js:
   - "node"
 script:
-  - yarn build
   - yarn typescript
   - yarn check-format
+  - yarn lint
+  - yarn build
 before_deploy: 
   - pip install awsebcli --user
   - ls -al
