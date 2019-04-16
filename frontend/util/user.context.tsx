@@ -15,7 +15,7 @@ export default function UserContextComponent(props) {
 
 type LoggedInUser = {
   fullName: string;
-  givenName: string;
-  familyName: string;
+  firstName: string;
+  lastName: string;
   email: string;
 };
