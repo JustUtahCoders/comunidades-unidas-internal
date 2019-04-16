@@ -9,7 +9,6 @@ const port = process.env.PORT || 8080;
 const mysql = require("mysql");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const passport = require("passport");
 
 require("./run-database-migrations");
 
