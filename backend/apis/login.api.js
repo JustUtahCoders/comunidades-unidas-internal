@@ -1,7 +1,13 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const { app } = require("../server");
+const {
+  app,
+  pool,
+  databaseError,
+  authenticatedEndpoint
+} = require("../server");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
+const mysql = require("mysql");
 
 passport.serializeUser((user, done) => {
   done(null, user);
@@ -21,6 +27,10 @@ passport.use(
     (token, refreshToken, profile, done) => {
       return done(null, {
         profile: profile,
+        fullName: profile.displayName,
+        firstName: profile.name.givenName,
+        lastName: profile.name.familyName,
+        email: profile.emails[0].value,
         token: token
       });
     }
@@ -63,11 +73,37 @@ app.get(
     failureRedirect: "/"
   }),
   (req, res) => {
-    req.session.token = req.user.token;
-    console.log("session token", req.session.token, req.user);
-    res.redirect("/");
-    res.on("finish", () => {
-      console.log("headers", res.getHeaders());
+    pool.getConnection((err, connection) => {
+      if (err) {
+        return databaseError(req, res, err);
+      }
+
+      connection.query(
+        mysql.format(
+          `
+          INSERT IGNORE INTO
+          users (googleId, firstName, lastName, accessLevel)
+          VALUES(?, ?, ?, ?)
+        `,
+          [
+            req.user.profile.id,
+            req.user.firstName,
+            req.user.lastName,
+            "Staff" // Start them off as staff, upgrade their access level later
+          ]
+        ),
+        function(err, rows, fields) {
+          connection.release();
+
+          if (err) {
+            console.error(err);
+            return databaseError(req, res, err);
+          }
+
+          req.session.token = req.user.token;
+          res.redirect("/");
+        }
+      );
     });
   }
 );
@@ -77,14 +113,4 @@ app.get("/logout", (req, res) => {
   req.session = null;
   res.cookie("user", "", { maxAge: 1 });
   res.redirect("/login/select-account");
-});
-
-app.use("/api/*", (req, res, next) => {
-  if (req.session.token) {
-    next();
-  } else {
-    res.status(401).send({
-      error: "Please login to call this api"
-    });
-  }
 });

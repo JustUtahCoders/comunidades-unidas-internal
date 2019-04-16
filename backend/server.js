@@ -28,6 +28,15 @@ exports.databaseError = function databaseError(req, res, err) {
   console.error(err);
   res.status(500).send({ error: msg });
 };
+exports.authenticatedEndpoint = function(req, res, next) {
+  if (req.session.passport && req.session.passport.user.firstName) {
+    return next();
+  } else if (req.url.includes("/api")) {
+    res.status(401).send({ error: "You must be logged in to call this API" });
+  } else {
+    return res.redirect("/login");
+  }
+};
 
 app.set("views", path.join(__dirname, "/views"));
 app.set("view engine", "ejs");
@@ -36,7 +45,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use((err, req, res, next) => {
-  console.log("ERRROR: ", err);
+  console.error("ERROR: ", err);
 });
 
 require("./apis/login.api");
