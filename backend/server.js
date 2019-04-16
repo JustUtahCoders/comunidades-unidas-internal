@@ -49,7 +49,6 @@ app.use((err, req, res, next) => {
 });
 
 require("./apis/login.api");
-require("./apis/dummy.api");
 require("./apis/github-key.api");
 require("./apis/add-client.api");
 require("./apis/duplicate.api");
