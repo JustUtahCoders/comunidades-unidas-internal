@@ -1,26 +1,32 @@
 const { app, databaseError, pool } = require("../server");
 const mysql = require("mysql");
 
-app.post("/api/duplicate-check/", (req, res, next) => {
+app.get("/api/people-duplicates", (req, res, next) => {
   pool.getConnection((err, connection) => {
     if (err) {
       return databaseError(req, res, err);
     }
-    let d = new Date(req.body.birthday);
-    let year = d.getUTCFullYear();
-    let month = d.getUTCMonth() + 1;
-    let day = d.getUTCDate();
-    let inserts = [req.body.firstname, req.body.lastname, year, month, day];
-    let qryString =
-      "SELECT personid,firstname,lastname,date_format(dob,'%m/%d/%Y')as birthDate,gender FROM person WHERE ";
-    qryString +=
-      "((firstname = ? OR lastname = ?) AND (year(dob) = ? OR month(dob) = ? OR day(dob) = ?))";
-    let query = mysql.format(qryString, inserts);
+    const birthDate = new Date(req.body.birthday);
+    const year = birthDate.getUTCFullYear();
+    const month = birthDate.getUTCMonth() + 1;
+    const day = birthDate.getUTCDate();
+    const query = mysql.format(
+      `
+      SELECT id, firstName, lastName, date_format(dob,'%m/%d/%Y') as birthDate ,gender
+      FROM person
+      WHERE 
+      firstName = ? AND lastName = ? AND YEAR(birthDate) = ? AND MONTH(birthDate) = ? AND day(birthDate) = ?
+    `,
+      [req.body.firstName, req.body.lastName, year, month, day]
+    );
+
     connection.query(query, function(err, rows, fields) {
       if (err) {
         return databaseError(req, res, err);
       }
-      res.send(rows);
+      res.send({
+        duplicates: rows
+      });
     });
   });
 });
