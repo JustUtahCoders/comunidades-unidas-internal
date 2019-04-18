@@ -97,7 +97,7 @@ export default function CheckDuplicate(props: StepComponentProps) {
   function handleSubmit(evt) {
     evt.preventDefault();
     /*I added this fetch to query data for potential duplicates, if there is result then the the LIST_DUPLICATES component is next.. I am not sure if this is the right way to do it however.  */
-    fetch("/api/duplicate-check/", {
+    fetch("/api/people-duplicates", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
