@@ -1,17 +1,13 @@
-/* Replace with your SQL commands */
-/*
-Create users tables: I figured that later on, this application can be scaled to mainain, volunteers, board members, and maybe even donors and staff (HR management) 
-*/
+-- /* Replace with your SQL commands */
 -- CREATE TABLE IF NOT EXISTS users (
 --   userId int AUTO_INCREMENT PRIMARY KEY,
+--   googleId varchar(64) NOT NULL UNIQUE,
 --   firstName varchar(64) NOT NULL,
 --   lastName varchar(64) NOT NULL,
---   accessLevel ENUM('Administrator','Manager','Staff'), 
---   userName nvarchar(64) NOT NULL,
---   password nvarchar(64) NOT NULL
+--   accessLevel ENUM('Administrator','Manager','Staff') NOT NULL
 -- );
 
-/*Create person.person table */
+-- /*Create person.person table */
 -- CREATE TABLE IF NOT EXISTS person (
 --   personId int AUTO_INCREMENT PRIMARY KEY,
 --   firstName nvarchar(255) NOT NULL,
@@ -25,9 +21,9 @@ Create users tables: I figured that later on, this application can be scaled to 
 --   FOREIGN KEY (addedBy) REFERENCES users(userId),
 --   FOREIGN KEY (modifiedBy) REFERENCES users(userId)
 -- );
-/*Insert test data into person table*/
+-- /*Insert test data into person table*/
 
-/*Create person Contanct table-Contact M:1 Person*/
+-- /*Create person Contanct table-Contact M:1 Person*/
 -- CREATE TABLE IF NOT EXISTS contact (
 --   personId int NOT NULL, /*Foreign key reference to person table */
 --   contactId int AUTO_INCREMENT PRIMARY KEY,
@@ -44,7 +40,7 @@ Create users tables: I figured that later on, this application can be scaled to 
 --   FOREIGN KEY (personId) REFERENCES person(personId),
 --   FOREIGN KEY (addedBy) REFERENCES users(userId)
 -- );
-/*Create Demographics Table M:1 Person*/
+-- /*Create Demographics Table M:1 Person*/
 -- CREATE TABLE IF NOT EXISTS demographics (
 --   personId int NOT NULL, /*Foreign key reference to person table*/
 --   demographicId int AUTO_INCREMENT PRIMARY KEY,
@@ -66,9 +62,9 @@ Create users tables: I figured that later on, this application can be scaled to 
 --   FOREIGN KEY (addedBy) REFERENCES users(userId)
 -- );
 
-/*
-Create Programs: We will create initial list of programs based on intake form pages 2 to 3
-*/
+-- /*
+-- Create Programs: We will create initial list of programs based on intake form pages 2 to 3
+-- */
 -- CREATE TABLE IF NOT EXISTS programs (
 --   programId int AUTO_INCREMENT PRIMARY KEY,
 --   programName varchar(32) NOT NULL,
@@ -78,9 +74,9 @@ Create Programs: We will create initial list of programs based on intake form pa
 --   programStatus varchar(32),
 --   FOREIGN KEY (programManager) REFERENCES users(userId)
 -- );
-/*
-Create Services Table: Services are in turn adminstered by a program. Pogram 1:M Services
-*/
+-- /*
+-- Create Services Table: Services are in turn adminstered by a program. Pogram 1:M Services
+-- */
 -- CREATE TABLE IF NOT EXISTS services (
 --   serviceId int AUTO_INCREMENT PRIMARY KEY,
 --   programId int NOT NULL,
@@ -89,8 +85,8 @@ Create Services Table: Services are in turn adminstered by a program. Pogram 1:M
 --   FOREIGN KEY (programId) REFERENCES programs(programId)
 -- );
 
-/*
-Create IntakeData Table: Intake data is collected on client inital visits along with person, contact and demographic data*/
+-- /*
+-- Create IntakeData Table: Intake data is collected on client inital visits along with person, contact and demographic data*/
 -- CREATE TABLE IF NOT EXISTS intakeData (
 --   intakeDataId int AUTO_INCREMENT PRIMARY KEY,
 --   personId int NOT NULL,
@@ -107,7 +103,7 @@ Create IntakeData Table: Intake data is collected on client inital visits along 
 --   FOREIGN KEY (personId) REFERENCES person(personId)
 -- );
 
-/*Intake Services is a 1:M intakeData:IntakeServices*/
+-- /*Intake Services is a 1:M intakeData:IntakeServices*/
 -- CREATE TABLE IF NOT EXISTS intakeServices (
 --   intakeServicesId int AUTO_INCREMENT PRIMARY KEY,
 --   intakeDataId int NOT NULL,

@@ -1,7 +1,7 @@
 const { app, databaseError, pool } = require("../server");
 const mysql = require("mysql");
 
-app.get("/api/people-duplicates", (req, res, next) => {
+app.post("/api/people-duplicates", (req, res, next) => {
   pool.getConnection((err, connection) => {
     if (err) {
       return databaseError(req, res, err);
@@ -12,10 +12,10 @@ app.get("/api/people-duplicates", (req, res, next) => {
     const day = birthDate.getUTCDate();
     const query = mysql.format(
       `
-      SELECT id, firstName, lastName, date_format(dob,'%m/%d/%Y') as birthDate ,gender
+      SELECT personid, firstName, lastName, date_format(dob,'%m/%d/%Y') as birthDate ,gender
       FROM person
       WHERE 
-      firstName = ? AND lastName = ? AND YEAR(birthDate) = ? AND MONTH(birthDate) = ? AND day(birthDate) = ?
+      firstName = ? AND lastName = ? AND YEAR(dob) = ? AND MONTH(dob) = ? AND day(dob) = ?
     `,
       [req.body.firstName, req.body.lastName, year, month, day]
     );
