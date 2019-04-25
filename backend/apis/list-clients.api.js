@@ -1,20 +1,21 @@
 const { app, databaseError, pool } = require("../server");
 const mysql = require("mysql");
 
-app.get("/api/client-list", (req, res, next) => {
-  poool.getConnection((err, connection) => {
+app.post("/api/people-list/", (req, res, next) => {
+  pool.getConnection((err, connection) => {
     if (err) {
       return databaseError(req, res, err);
     }
-    const query = mysql.format("foo ?", [bar]);
-
-    connection.query(query, function(err, rows) {
+    const query = mysql.format(
+      "SELECT firstName,Lastname,dob,zip,primaryPhone FROM personlistview WHERE firstName LIKE ? AND lastName LIKE ?",
+      [req.body.firstName + "%", req.body.lastName + "%"]
+    );
+    connection.query(query, function(err, rows, fields) {
       if (err) {
         return databaseError(req, res, err);
       }
-      res.send({
-        clientList: rows
-      });
+      console.log(query + rows);
+      res.send({ rows });
     });
   });
 });

@@ -34,7 +34,7 @@
 --   city varchar(64),
 --   zip varchar(32),
 --   state varchar(2),
---   dwellingType ENUM('Renter','Homeowner','WithFamilyOrFriends'), /*Dwelling ownership type, rent or owned(Y/N)*/
+--   owned ENUM('Renter','Homeowner','WithFamilyOrFriends'), /*Dwelling ownership type, rent or owned(Y/N)*/
 --   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
 --   addedBy int NOT NULL, /*Foreign key reference to person table */
 --   FOREIGN KEY (personId) REFERENCES person(personId),
@@ -111,3 +111,11 @@
 --   FOREIGN KEY (intakeDataId) REFERENCES intakeData(intakeDataId),
 --   FOREIGN KEY (serviceId) REFERENCES services(serviceId)
 -- )
+/*VIEWS*/
+-- create view  personListView as
+-- select p.FirstName
+--   ,p.LastName
+--   ,p.dob
+--   ,c.zip
+--   ,c.PrimaryPhone
+-- from person p join contact c on p.personid = c.personid;
