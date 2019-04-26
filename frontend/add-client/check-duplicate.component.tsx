@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import user2Url from "../../icons/148705-essential-collection/svg/user-2.svg";
 import { StepComponentProps, Step } from "./add-client.component";
+import easyFetch from '../util/easy-fetch'
 
 export default function CheckDuplicate(props: StepComponentProps) {
   const [firstName, setFirstName] = useState("");
@@ -97,29 +98,15 @@ export default function CheckDuplicate(props: StepComponentProps) {
   function handleSubmit(evt) {
     evt.preventDefault();
     /*I added this fetch to query data for potential duplicates, if there is result then the the LIST_DUPLICATES component is next.. I am not sure if this is the right way to do it however.  */
-    fetch("/api/people-duplicates", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        firstname: firstName,
-        lastname: lastName,
-        birthday: birthday
-      })
-    })
-      .then(function(response) {
-        if (response.status >= 400) {
-          throw new Error("Bad Response from server");
-        }
-        return response.json();
-      })
-      .then(function(duplicates) {
-        if (duplicates.length > 0) {
+    easyFetch(`/api/client-duplicates?firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}&gender=${encodeURIComponent(gender)}&dob=${encodeURIComponent(birthday)}`)
+      .then(function(data) {
+        if (data.clientDuplicates.length > 0) {
           props.showDuplicateWarning({
             firstName,
             lastName,
             birthday,
             gender: gender === "other" ? otherGender : gender,
-            duplicates
+            duplicates: data.clientDuplicates,
           });
         } else {
           props.nextStep(Step.CONTACT_INFORMATION, {
