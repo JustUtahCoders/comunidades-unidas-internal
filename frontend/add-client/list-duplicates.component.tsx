@@ -1,6 +1,8 @@
 import React from "react";
 import usersUrl from "../../icons/148705-essential-collection/svg/users-1.svg";
-import { Step, DuplicateWarning, ClientState } from "./add-client.component";
+import { DuplicateWarning, ClientState } from "./add-client.component";
+import { useCss } from "kremling";
+import dateformat from "dateformat";
 
 type ListDuplicatesProps = {
   duplicateWarning: DuplicateWarning;
@@ -13,9 +15,10 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
   const firstName = props.duplicateWarning.firstName;
   const lastName = props.duplicateWarning.lastName;
   const birthday = props.duplicateWarning.birthDate;
+  const scope = useCss(css);
 
   return (
-    <>
+    <div className="list-duplicates" {...scope}>
       <div className="hints-and-instructions">
         <div>
           <img src={usersUrl} className="hint-icon" />
@@ -40,10 +43,10 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
             </thead>
             <tbody>
               {duplicates.map(duplicate => (
-                <tr key={duplicate.personId}>
+                <tr key={duplicate.id}>
                   <td>{duplicate.firstName} </td>
                   <td>{duplicate.lastName}</td>
-                  <td>{duplicate.birthDate}</td>
+                  <td>{dateformat(new Date(duplicate.dob), "mm-dd-yyyy")}</td>
                   <td>{duplicate.gender}</td>
                   <td>
                     <button type="button" className="primary">
@@ -64,7 +67,7 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
           </div>
         </form>
       </div>
-    </>
+    </div>
   );
 
   function handleSubmit(evt) {
@@ -77,3 +80,19 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
     });
   }
 }
+
+const css = `
+& .list-duplicates {
+  margin: 0 auto;
+}
+
+& table th {
+  padding: 8rem;
+}
+
+& table td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 8rem;
+}
+`;
