@@ -1,8 +1,8 @@
 import React from "react";
 import usersUrl from "../../icons/148705-essential-collection/svg/users-1.svg";
 import { DuplicateWarning, ClientState } from "./add-client.component";
-import {useCss} from 'kremling'
-import dateformat from 'dateformat'
+import { useCss } from "kremling";
+import dateformat from "dateformat";
 
 type ListDuplicatesProps = {
   duplicateWarning: DuplicateWarning;
@@ -15,7 +15,7 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
   const firstName = props.duplicateWarning.firstName;
   const lastName = props.duplicateWarning.lastName;
   const birthday = props.duplicateWarning.birthDate;
-  const scope = useCss(css)
+  const scope = useCss(css);
 
   return (
     <div className="list-duplicates" {...scope}>
@@ -46,7 +46,7 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
                 <tr key={duplicate.id}>
                   <td>{duplicate.firstName} </td>
                   <td>{duplicate.lastName}</td>
-                  <td>{dateformat(new Date(duplicate.dob), 'mm-dd-yyyy')}</td>
+                  <td>{dateformat(new Date(duplicate.dob), "mm-dd-yyyy")}</td>
                   <td>{duplicate.gender}</td>
                   <td>
                     <button type="button" className="primary">
@@ -95,4 +95,4 @@ const css = `
   vertical-align: middle;
   padding: 8rem;
 }
-`
+`;
