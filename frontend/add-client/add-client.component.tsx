@@ -140,7 +140,7 @@ export type StepComponentProps = {
 };
 
 export type DuplicateWarning = {
-  personId: string;
+  id: number;
   firstName: string;
   lastName: string;
   birthDate: string;
@@ -149,10 +149,10 @@ export type DuplicateWarning = {
 };
 
 type Duplicate = {
-  personId: string;
+  id: string;
   firstName: string;
   lastName: string;
-  birthDate: string;
+  dob: string;
   gender: string;
 };
 
