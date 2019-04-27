@@ -19,13 +19,13 @@ app.post("/api/people-duplicates", (req, res, next) => {
     `,
       [req.body.firstName, req.body.lastName, year, month, day]
     );
-
+    console.log(query);
     connection.query(query, function(err, rows, fields) {
       if (err) {
         return databaseError(req, res, err);
       }
       res.send({
-        duplicates: rows
+        rows
       });
     });
   });
