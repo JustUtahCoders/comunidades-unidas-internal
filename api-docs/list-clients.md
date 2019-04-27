@@ -1,17 +1,16 @@
-#list-clients API
-#POST Request
-#URL /api/list-clients/
-#Parameters: {firstName, LastName}
-Return a list of people's first name, last name, date of birth, zip code, phone number added by and added date.
+#Request
+GET /clietns?firstName=Mario&lastName=Luigi&zip=84119&page=1
 
-#Result: An array of results
-The result object returns
--First Name: The first name matching the request
--Last Name: Last Name matching request
--dob: date of birth
--zip: conatct zip code
--PrimaryPhone: contact phone number
--addedby: person who added the record to database
--dateadded: datetime when the record was added to database.
+Notes:
+-Result is limited to 100 rows
+-Values for the query parameters should be URL encoded
+-The `page` query parameter defaults to 1
+-The `fistName` and `lastName` can be partial -- the backend algorithm applies a "starts with" check
 
-#Result size: the number of people who match a first and last name sent with request.
+Example Result:
+[0:{
+FirstName: "Mario"
+LastName: "Luigi"
+PrimaryPhone: "1115555555"
+dob: "1985-10-13T07:00:00.000Z"
+zip: "11111"}]
