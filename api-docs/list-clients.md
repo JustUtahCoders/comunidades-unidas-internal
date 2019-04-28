@@ -9,8 +9,12 @@ Notes:
 
 Example Result:
 [0:{
-FirstName: "Mario"
-LastName: "Luigi"
-PrimaryPhone: "1115555555"
-dob: "1985-10-13T07:00:00.000Z"
-zip: "11111"}]
+PrimaryPhone: "8016742989"
+addedBy: "Developers CU"
+addedById: 1
+dateAdded: "04/28/2019"
+dob: "02/28/1984"
+firstName: "Leonel"
+id: 5
+lastName: "Nieto"
+zip: "84119"}]
