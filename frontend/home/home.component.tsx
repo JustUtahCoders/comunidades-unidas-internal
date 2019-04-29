@@ -27,7 +27,7 @@ export default function Home(props: HomeProps) {
         <HomeCard
           iconUrl={clientListUrl}
           title="View clients"
-          link="list-clients"
+          link="view-clients"
         />
         <HomeCard
           iconUrl={reportIssueUrl}

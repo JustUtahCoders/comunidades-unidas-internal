@@ -2,25 +2,64 @@ import React, { useState } from "react";
 import { useCss } from "kremling";
 import PageHeader from "../page-header.component";
 import SearchClient from "./search-client.component";
-
+import SearchResult from "./search-result.component";
 import { mediaMobile, mediaDesktop } from "../styleguide.component";
 
-export default function ListClients(props: SearchClientProps) {
+export default function ViewClients(props: SearchClientProps) {
   const scope = useCss(css);
+  const [step, setStep] = useState<Step>(Step.SEARCH_CLIENT);
+  const [clientState, setClientState] = useState<ClientState>({});
+  const StepComponent = stepComponents[step];
+
   return (
     <div {...scope}>
-      <PageHeader title="List Clients" />
+      <PageHeader title="Clients" />
       <div className="card">
         <div className="form-with-hints">
-          <SearchClient />
+          <StepComponent
+            nextStep={nextStep}
+            clientState={clientState}
+            reset={reset}
+          />
         </div>
       </div>
     </div>
   );
+  function nextStep(stepName: Step, newState: ClientState) {
+    setClientState({ ...clientState, ...newState });
+    setStep(stepName);
+  }
+
+  function reset() {
+    setClientState({});
+    setStep(Step.SEARCH_CLIENT);
+  }
 }
 
 type SearchClientProps = {
   path: string;
+};
+
+export enum Step {
+  SEARCH_CLIENT = "SEARCH_CLIENT",
+  SEARCH_RESULT = "SEARCH_RESULT"
+}
+const stepComponents = {
+  [Step.SEARCH_CLIENT]: SearchClient,
+  [Step.SEARCH_RESULT]: SearchResult
+};
+
+export type ClientState = {
+  firstName?: string;
+  lastName?: string;
+  zip?: string;
+  searchResult?: [];
+};
+
+export type StepComponentProps = {
+  nextStep: (stepName: string, newClientState: ClientState) => void;
+  clientState: ClientState;
+  reset(): void;
 };
 
 const css = `
