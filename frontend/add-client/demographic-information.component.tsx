@@ -80,8 +80,8 @@ export default function DemographicInformation(props: StepComponentProps) {
               type="number"
               onChange={evt => setDependents(Number(evt.target.value))}
               required
-              min="1"
-              max="20"
+              min={0}
+              max={20}
             />
           </label>
         </div>
