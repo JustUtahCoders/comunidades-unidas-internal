@@ -65,7 +65,7 @@ export default function Sidebar(props: SidebarProps) {
           </li>
           <li>
             <Link
-              to="list-clients"
+              to="view-clients"
               className="nav-link"
               onClick={maybeHideSidebar}
               getProps={maybeActiveLink}
