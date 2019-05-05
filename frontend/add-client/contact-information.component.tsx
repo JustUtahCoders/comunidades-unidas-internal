@@ -15,6 +15,7 @@ export default function ContactInformation(props: StepComponentProps) {
   const [zip, setZip] = useState("");
   const [owned, setOwned] = useState("");
   const [email, setEmail] = useState("");
+  const [dateOfIntake, setDateOfIntake] = useState(getTodayAsString);
   const scope = useCss(css);
 
   return (
@@ -32,6 +33,17 @@ export default function ContactInformation(props: StepComponentProps) {
         </div>
       </div>
       <form onSubmit={handleSubmit} autoComplete="off">
+        <div>
+          <label>
+            <span>Date of Intake</span>
+            <input
+              type="date"
+              name="dateOfIntake"
+              value={dateOfIntake}
+              onChange={evt => setDateOfIntake(evt.target.value)}
+            />
+          </label>
+        </div>
         <div>
           <label>
             <span>Phone number</span>
@@ -140,9 +152,15 @@ export default function ContactInformation(props: StepComponentProps) {
       state,
       zip,
       owned,
-      email
+      email,
+      dateOfIntake
     });
   }
+}
+
+function getTodayAsString() {
+  const date = new Date().toISOString();
+  return date.slice(0, date.indexOf("T"));
 }
 
 const css = `

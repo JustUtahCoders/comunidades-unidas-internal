@@ -1,18 +1,24 @@
 import React, { useState } from "react";
 import { StepComponentProps, Step } from "./add-client.component";
 import agendaIconUrl from "../../icons/148705-essential-collection/svg/agenda.svg";
+import { useCss } from "kremling";
 
 export default function Services(props: StepComponentProps) {
   const [services, setServices] = useState(defaultServices);
+  const scope = useCss(css);
 
   return (
-    <>
+    <div {...scope}>
       <div className="hints-and-instructions">
         <div>
           <img src={agendaIconUrl} className="hint-icon" />
         </div>
         <div className="instruction">
-          What can Comunidades Unidas do for this person?
+          What services are they interested in?
+          <div className="warning">
+            This is not what Comunidades Unidas did for them in their first
+            visit, but the services they might want in the future.
+          </div>
         </div>
       </div>
       <form onSubmit={handleSubmit}>
@@ -63,6 +69,16 @@ export default function Services(props: StepComponentProps) {
               <input
                 type="checkbox"
                 name="services"
+                value="youthGroup"
+                checked={services.youthGroup}
+                onChange={handleChange}
+              />
+              <span>Youth group</span>
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                name="services"
                 value="leadershipClasses"
                 checked={services.leadershipClasses}
                 onChange={handleChange}
@@ -73,11 +89,11 @@ export default function Services(props: StepComponentProps) {
               <input
                 type="checkbox"
                 name="services"
-                value="foodStamps"
-                checked={services.foodStamps}
+                value="SNAP"
+                checked={services.SNAP}
                 onChange={handleChange}
               />
-              <span>Food stamps</span>
+              <span>SNAP</span>
             </label>
             <label>
               <input
@@ -194,7 +210,7 @@ export default function Services(props: StepComponentProps) {
           </button>
         </div>
       </form>
-    </>
+    </div>
   );
 
   function handleChange(evt) {
@@ -212,8 +228,9 @@ const defaultServices = {
   familyPetition: false,
   workersRightsAndSafety: false,
   DACA: false,
+  youthGroup: false,
   leadershipClasses: false,
-  foodStamps: false,
+  SNAP: false,
   chronicDiseaseTesting: false,
   nutrition: false,
   groceryTour: false,
@@ -225,3 +242,11 @@ const defaultServices = {
   VITA: false,
   voterRegistration: false
 };
+
+const css = `
+& .warning {
+  font-weight: bold;
+  font-style: italic;
+  margin-top: 8rem;
+}
+`;

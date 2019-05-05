@@ -5,6 +5,7 @@ import PageHeader from "../page-header.component";
 import CheckDuplicate from "./check-duplicate.component";
 import ListDuplicates from "./list-duplicates.component";
 import ContactInformation from "./contact-information.component";
+import ClientSource from "./client-source.component";
 import Confirm from "./confirm.component";
 import DemographicInformation, {
   PayInterval,
@@ -81,6 +82,7 @@ export enum Step {
   LIST_DUPLICATES = "LIST_DUPLICATES",
   CONTACT_INFORMATION = "CONTACT_INFORMATION",
   DEMOGRAPHICS_INFORMATION = "DEMOGRAPHICS_INFORMATION",
+  CLIENT_SOURCE = "CLIENT_SOURCE",
   SERVICES = "SERVICES",
   CONFIRM = "CONFIRM",
   FINISHED = "FINISHED"
@@ -90,6 +92,7 @@ const stepComponents = {
   [Step.CHECK_DUPLICATE]: CheckDuplicate,
   [Step.CONTACT_INFORMATION]: ContactInformation,
   [Step.DEMOGRAPHICS_INFORMATION]: DemographicInformation,
+  [Step.CLIENT_SOURCE]: ClientSource,
   [Step.SERVICES]: Services,
   [Step.CONFIRM]: Confirm,
   [Step.FINISHED]: Finished
@@ -107,6 +110,7 @@ export type ClientState = {
   genderExplanation?: string;
   duplicates?: [];
   //Contacts
+  dateOfIntake?: string;
   phone?: string;
   smsConsent?: string;
   streetAddress?: string;
@@ -128,7 +132,11 @@ export type ClientState = {
   hoursWorked?: string;
   annualIncome?: number;
   houseHoldSize?: number;
-  dependents?: number;
+  isStudent?: boolean;
+  eligibleToVote?: boolean;
+  // Client source
+  clientSource?: ClientSources | string;
+  couldVolunteer?: boolean;
 };
 
 export type StepComponentProps = {
@@ -147,6 +155,20 @@ export type DuplicateWarning = {
   gender: string;
   duplicates: Duplicate[];
 };
+
+export enum ClientSources {
+  facebook = "facebook",
+  instagram = "instagram",
+  website = "website",
+  promotionalMaterial = "promotionalMaterial",
+  consulate = "consulate",
+  friend = "friend",
+  previousClient = "previousClient",
+  employee = "employee",
+  sms = "sms",
+  radio = "radio",
+  tv = "tv"
+}
 
 type Duplicate = {
   id: string;
@@ -182,7 +204,7 @@ const css = `
 }
 
 ${mediaMobile} {
-  & .form-with-hints form input, & .form-with-hints form select {
+  & .form-with-hints form input:not([type="radio"]), & .form-with-hints form select {
     width: 170rem;
   }
 
@@ -192,7 +214,7 @@ ${mediaMobile} {
 }
 
 ${mediaDesktop} {
-  & .form-with-hints form input, & .form-with-hints form select {
+  & .form-with-hints form input:not([type="radio"]), & .form-with-hints form select {
     min-width: 200rem;
     max-width: 300rem;
   }
@@ -227,6 +249,12 @@ ${mediaDesktop} {
   width: 140rem;
   text-align: right;
   margin-right: 24rem;
+}
+
+& form .radio-options {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 & .actions {
