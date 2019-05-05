@@ -53,7 +53,19 @@ export type ClientState = {
   firstName?: string;
   lastName?: string;
   zip?: string;
-  searchResult?: [];
+  searchResult?: searchResult[];
+};
+
+export type searchResult = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  primaryPhone: string;
+  dob: string;
+  zip: string;
+  dateAdded: string;
+  addedBy: string;
+  addedById: string;
 };
 
 export type StepComponentProps = {

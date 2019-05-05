@@ -1,13 +1,14 @@
 const { app, databaseError, pool } = require("../server");
 const mysql = require("mysql");
 
-app.post("/api/clients/", (req, res, next) => {
+app.get("/api/clients/", (req, res, next) => {
   pool.getConnection((err, connection) => {
     if (err) {
       return databaseError(req, res, err);
     }
+
     var queryString =
-      "SELECT id,firstName,lastName,dob,zip,primaryPhone,addedBy,addedById,dateAdded FROM clients_view WHERE (firstName LIKE ? AND lastName LIKE ?) OR zip = ? ORDER BY firstName DESC LIMIT 100";
+      "SELECT id,firstName,lastName,dob,zip,PrimaryPhone,addedBy,addedById,dateAdded FROM clients_view WHERE (firstName LIKE ? AND lastName LIKE ?) OR zip = ? ORDER BY firstName DESC LIMIT 100";
     if (req.query.page) {
       var offset = parseInt(req.query.page) * 100;
       queryString += "," + offset;
@@ -21,7 +22,20 @@ app.post("/api/clients/", (req, res, next) => {
       if (err) {
         return databaseError(req, res, err);
       }
-      res.send({ rows });
+      res.send({
+        numClients: rows.length,
+        clients: rows.map(row => ({
+          id: row.id,
+          firstName: row.firstName,
+          lastName: row.lastName,
+          primaryPhone: row.primaryPhone,
+          dob: row.dob,
+          zip: row.zip,
+          dateAdded: row.dateAdded,
+          addedBy: row.addedBy,
+          addedById: row.addedById
+        }))
+      });
     });
   });
 });

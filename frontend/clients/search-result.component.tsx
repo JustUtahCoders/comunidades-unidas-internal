@@ -5,6 +5,11 @@ import { StepComponentProps, Step } from "./view-clients.component";
 import dateformat from "dateformat";
 
 export default function SearchResult(props: StepComponentProps) {
+  const clients = props.clientState.searchResult;
+  const firstName = props.clientState.firstName;
+  const lastName = props.clientState.lastName;
+  const zip = props.clientState.zip;
+
   const scope = useCss(css);
   return (
     <>
@@ -13,10 +18,13 @@ export default function SearchResult(props: StepComponentProps) {
           <div>
             <img src={searchResultUrl} className="hint-icon" />
           </div>
-          <div className="instruction">
-            Search results for {props.clientState.firstName}{" "}
-            {props.clientState.lastName} {props.clientState.zip}
-          </div>
+          {firstName === "" && lastName === "" && zip === "" ? (
+            <div className="instruction">Blank Search Results</div>
+          ) : (
+            <div className="instruction">
+              Search results for {firstName} {lastName} {zip}
+            </div>
+          )}
         </div>
         <div>
           <form onSubmit={handleSubmit} autoComplete="off">
@@ -31,6 +39,22 @@ export default function SearchResult(props: StepComponentProps) {
                   <th>Added Date</th>
                 </tr>
               </thead>
+              <tbody>
+                {clients.map(client => (
+                  <tr key={client.id}>
+                    <td>
+                      {client.firstName} {client.lastName}
+                    </td>
+                    <td>{dateformat(new Date(client.dob), "mm-dd-yyyy")}</td>
+                    <td>{client.zip}</td>
+                    <td>{client.primaryPhone}</td>
+                    <td>{client.addedBy}</td>
+                    <td>
+                      {dateformat(new Date(client.dateAdded), "mm-dd-yyyy")}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
             <div className="actions">
               <button type="button" className="secondary" onClick={props.reset}>

@@ -118,7 +118,7 @@ SELECT
   ,CONCAT(cl.firstName,' ',cl.lastName) as client
   ,date_format(cl.dob,'%m/%d/%Y')as dob
   ,ct.zip
-  ,ct.PrimaryPhone
+  ,ct.primaryPhone
   ,CONCAT(us.firstName,' ', us.lastname) AS addedBy
   ,cl.addedBy AS addedById
   ,cl.dateAdded
