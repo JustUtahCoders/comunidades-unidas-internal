@@ -8,7 +8,6 @@ export default function DemographicInformation(props: StepComponentProps) {
   const [civilStatus, setCivilStatus] = useState(CivilStatus.SINGLE);
   const [annualIncome, setAnnualIncome] = useState();
   const [houseHoldSize, setHouseHoldSize] = useState();
-  const [dependents, setDependents] = useState();
   const [currentlyEmployed, setCurrentlyEmployed] = useState("");
   const [hoursWorked, setHoursWorked] = useState();
   const [employmentSector, setEmploymentSector] = useState("");
@@ -18,7 +17,9 @@ export default function DemographicInformation(props: StepComponentProps) {
   const [dateUSArrival, setdateUSArrival] = useState("");
   const [primaryLanguage, setPrimaryLanguage] = useState("Spanish");
   const [otherLanguage, setOtherLanguage] = useState("");
+  const [isStudent, setIsStudent] = useState(false);
   const [englishLevel, setEnglishLevel] = useState(EnglishLevel.INTERMEDIATE);
+  const [eligibleToVote, setEligibleToVote] = useState(false);
 
   return (
     <>
@@ -57,7 +58,7 @@ export default function DemographicInformation(props: StepComponentProps) {
         </div>
         <div>
           <label>
-            <span>Approximate annual income</span>
+            <span>Approximate annual income (including spouse)</span>
             <CurrencyInput setDollars={setAnnualIncome} required />
           </label>
         </div>
@@ -75,14 +76,64 @@ export default function DemographicInformation(props: StepComponentProps) {
         </div>
         <div>
           <label>
-            <span># of dependents</span>
-            <input
-              type="number"
-              onChange={evt => setDependents(Number(evt.target.value))}
-              required
-              min={0}
-              max={20}
-            />
+            <span>Are they a eligible to vote?</span>
+            <div className="radio-options">
+              <div>
+                <label>
+                  <input
+                    type="radio"
+                    name="eligible-to-vote"
+                    value="true"
+                    onChange={() => setEligibleToVote(true)}
+                    checked={eligibleToVote}
+                  />
+                  Eligible to vote
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input
+                    type="radio"
+                    name="eligible-to-vote"
+                    value="false"
+                    onChange={() => setEligibleToVote(false)}
+                    checked={!eligibleToVote}
+                  />
+                  Not eligible to vote
+                </label>
+              </div>
+            </div>
+          </label>
+        </div>
+        <div>
+          <label>
+            <span>Are they a student?</span>
+            <div className="radio-options">
+              <div>
+                <label>
+                  <input
+                    type="radio"
+                    name="student"
+                    value="true"
+                    onChange={() => setIsStudent(true)}
+                    checked={isStudent}
+                  />
+                  Student
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input
+                    type="radio"
+                    name="student"
+                    value="false"
+                    onChange={() => setIsStudent(false)}
+                    checked={!isStudent}
+                  />
+                  Not student
+                </label>
+              </div>
+            </div>
           </label>
         </div>
         <div>
@@ -258,7 +309,7 @@ export default function DemographicInformation(props: StepComponentProps) {
   );
   function handleSubmit(evt) {
     evt.preventDefault();
-    props.nextStep(Step.SERVICES, {
+    props.nextStep(Step.CLIENT_SOURCE, {
       civilStatus,
       countryOfOrigin,
       dateUSArrival,
@@ -272,7 +323,8 @@ export default function DemographicInformation(props: StepComponentProps) {
       hoursWorked,
       annualIncome,
       houseHoldSize,
-      dependents
+      isStudent,
+      eligibleToVote
     });
   }
 }
