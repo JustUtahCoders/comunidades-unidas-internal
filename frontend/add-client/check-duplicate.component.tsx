@@ -4,11 +4,13 @@ import { StepComponentProps, Step } from "./add-client.component";
 import easyFetch from "../util/easy-fetch";
 
 export default function CheckDuplicate(props: StepComponentProps) {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [birthday, setBirthday] = useState("1990-01-01");
-  const [gender, setGender] = useState("female");
-  const [otherGender, setOtherGender] = useState("");
+  const [firstName, setFirstName] = useState(props.clientState.firstName || "");
+  const [lastName, setLastName] = useState(props.clientState.lastName || "");
+  const [birthday, setBirthday] = useState(
+    props.clientState.birthday || "1990-01-01"
+  );
+  const [gender, setGender] = useState(getInitialGender);
+  const [otherGender, setOtherGender] = useState(getInitialOtherGender);
 
   return (
     <>
@@ -97,7 +99,6 @@ export default function CheckDuplicate(props: StepComponentProps) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    /*I added this fetch to query data for potential duplicates, if there is result then the the LIST_DUPLICATES component is next.. I am not sure if this is the right way to do it however.  */
     easyFetch(
       `/api/client-duplicates?firstName=${encodeURIComponent(
         firstName
@@ -126,5 +127,28 @@ export default function CheckDuplicate(props: StepComponentProps) {
       .catch(function(err) {
         console.log(err);
       });
+  }
+}
+
+const genderOptions = {
+  female: "Female",
+  male: "Male",
+  nonbinary: "Nonbinary",
+  other: "Other"
+};
+
+function getInitialGender(val) {
+  if (val) {
+    return Object.keys(genderOptions).includes(val) ? val : "other";
+  } else {
+    return "female";
+  }
+}
+
+function getInitialOtherGender(val) {
+  if (val) {
+    return Object.keys(genderOptions).includes(val) ? "" : val;
+  } else {
+    return "";
   }
 }

@@ -6,7 +6,9 @@ const {
   requestPhone
 } = require("../utils/transform-utils");
 const {
+  nullableValidDate,
   checkValid,
+  nullableNonEmptyString,
   nonEmptyString,
   validDate,
   validPhone,
@@ -14,6 +16,7 @@ const {
   validState,
   validZip,
   validEmail,
+  nullableValidEnum,
   validEnum,
   validCountry,
   validInteger
@@ -48,10 +51,25 @@ app.post("/api/clients", (req, res, next) => {
         "widowed"
       ),
       validCountry("countryOfOrigin"),
-      validDate("dateOfUSArrival"),
+      nullableValidDate("dateOfUSArrival"),
       nonEmptyString("primaryLanguage"),
-      validBoolean("currentlyEmployed"),
-      nonEmptyString("employmentSector"),
+      validEnum("currentlyEmployed", "yes", "no", "n/a", "unknown"),
+      nullableNonEmptyString("employmentSector"),
+      nullableValidEnum(
+        "payInterval",
+        "every-week",
+        "every-two-weeks",
+        "every-month",
+        "every-quarter",
+        "every-year"
+      ),
+      nullableValidEnum(
+        "weeklyEmployedHours",
+        "0-20",
+        "21-30",
+        "31-40",
+        "41-more"
+      ),
       validInteger("annualIncome"),
       validInteger("householdSize"),
       validBoolean("isStudent"),
@@ -99,6 +117,8 @@ app.post("/api/clients", (req, res, next) => {
       requestEnum(req.body.primaryLanguage),
       req.body.currentlyEmployed,
       requestEnum(req.body.employmentSector),
+      requestEnum(req.body.payInterval),
+      requestEnum(req.body.weeklyEmployedHours),
       req.body.annualIncome,
       req.body.householdSize,
       req.body.isStudent,
@@ -131,6 +151,8 @@ app.post("/api/clients", (req, res, next) => {
       primaryLanguage,
       currentlyEmployed,
       employmentSector,
+      payInterval,
+      weeklyEmployedHours,
       annualIncome,
       householdSize,
       isStudent,
@@ -140,7 +162,7 @@ app.post("/api/clients", (req, res, next) => {
       addedBy,
       modifiedBy
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
       insertValues
     );

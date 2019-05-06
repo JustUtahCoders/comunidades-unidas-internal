@@ -21,7 +21,7 @@ Notes:
       "id": 123,
       "firstName": "Juan",
       "lastName": "Rodriguez",
-      "birthDate": "1990-01-30",
+      "birthday": "1990-01-30",
       "gender": "male"
     }
   ]

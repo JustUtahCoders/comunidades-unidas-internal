@@ -1,8 +1,9 @@
 import React from "react";
 import { Step, StepComponentProps } from "./add-client.component";
 import successIconUrl from "../../icons/148705-essential-collection/svg/success.svg";
+import easyFetch from "../util/easy-fetch";
 
-export default function Finished(props: StepComponentProps) {
+export default function Confirm(props: StepComponentProps) {
   return (
     <>
       <div className="hints-and-instructions">
@@ -14,51 +15,69 @@ export default function Finished(props: StepComponentProps) {
           {props.clientState.lastName} to database.
         </div>
       </div>
-      <div>
+      <form onSubmit={handleSubmit}>
         <div className="actions">
           <button
             type="button"
             className="secondary"
-            onClick={() => props.goBack(Step.DEMOGRAPHICS_INFORMATION)}
+            onClick={() => props.goBack(Step.CLIENT_SOURCE)}
           >
             Go back
           </button>
-          <button type="submit" className="primary" onClick={handleSubmit}>
+          <button type="submit" className="primary">
             Confirm
           </button>
         </div>
-      </div>
+      </form>
     </>
   );
 
   function handleSubmit(evt) {
-    if (localStorage.getItem("store-in-database-for-reals")) {
-      fetch("/api/add-client/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          clientState: props.clientState
-        })
+    evt.preventDefault();
+
+    const d = props.clientState;
+
+    easyFetch("/api/clients", {
+      method: "POST",
+      body: {
+        dateOfIntake: d.dateOfIntake,
+        firstName: d.firstName,
+        lastName: d.lastName,
+        birthday: d.birthday,
+        gender: d.gender,
+        phone: d.phone,
+        smsConsent: d.smsConsent,
+        homeAddress: {
+          street: d.streetAddress,
+          city: d.city,
+          state: d.state,
+          zip: d.zip
+        },
+        email: d.email,
+        civilStatus: d.civilStatus,
+        countryOfOrigin: d.countryOfOrigin,
+        dateOfUSArrival: d.dateOfUSArrival || null,
+        primaryLanguage: d.primaryLanguage,
+        currentlyEmployed: d.currentlyEmployed,
+        employmentSector: d.employmentSector,
+        payInterval: d.payInterval,
+        weeklyEmployedHours: d.weeklyEmployedHours,
+        annualIncome: d.annualIncome,
+        householdSize: d.householdSize,
+        isStudent: d.isStudent,
+        eligibleToVote: d.eligibleToVote,
+        clientSource: d.clientSource,
+        couldVolunteer: d.couldVolunteer
+      }
+    })
+      .then(function(data) {
+        props.nextStep(Step.FINISHED, {});
       })
-        .then(function(response) {
-          if (response.status >= 400) {
-            throw new Error("Bad response from server");
-          }
-          return response.json();
-        })
-        .then(function(data) {
-          if (data.affectedRows >= 1) {
-            alert("Client has been added to database!");
-            addAnother(); // Route to add intake data after its built
-          }
-        })
-        .catch(function(err) {
-          console.log(err);
-        });
-    } else {
-      props.nextStep(Step.FINISHED, {});
-    }
+      .catch(function(err) {
+        console.error(err);
+      });
   }
+
   function addAnother() {
     props.reset();
   }

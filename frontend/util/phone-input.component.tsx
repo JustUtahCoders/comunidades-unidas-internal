@@ -27,5 +27,5 @@ export default function PhoneInput(props: PhoneInputProps) {
 type PhoneInputProps = {
   phone: string;
   setPhone(phone: string): void;
-  autoFocus: boolean;
+  autoFocus?: boolean;
 };

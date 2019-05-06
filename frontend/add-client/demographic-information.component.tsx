@@ -6,20 +6,48 @@ import CurrencyInput from "../util/currency-input.component";
 
 export default function DemographicInformation(props: StepComponentProps) {
   const [civilStatus, setCivilStatus] = useState(CivilStatus.SINGLE);
-  const [annualIncome, setAnnualIncome] = useState();
-  const [householdSize, setHouseholdSize] = useState();
-  const [currentlyEmployed, setCurrentlyEmployed] = useState("");
-  const [weeklyEmployedHours, setWeeklyEmployedHours] = useState();
-  const [employmentSector, setEmploymentSector] = useState("");
-  const [empSectorExplain, setEmpSectorExplain] = useState("");
-  const [payInterval, setPayInterval] = useState(PayInterval.BIWEEKLY);
-  const [countryOfOrigin, setCountryOfOrigin] = useState("US");
-  const [dateUSArrival, setdateUSArrival] = useState("");
-  const [primaryLanguage, setPrimaryLanguage] = useState("Spanish");
-  const [otherLanguage, setOtherLanguage] = useState("");
-  const [isStudent, setIsStudent] = useState(false);
-  const [englishLevel, setEnglishLevel] = useState(EnglishLevel.INTERMEDIATE);
-  const [eligibleToVote, setEligibleToVote] = useState(false);
+  const [annualIncome, setAnnualIncome] = useState(
+    props.clientState.annualIncome
+  );
+  const [householdSize, setHouseholdSize] = useState(
+    props.clientState.householdSize || 1
+  );
+  const [currentlyEmployed, setCurrentlyEmployed] = useState(
+    props.clientState.currentlyEmployed || "no"
+  );
+  const [weeklyEmployedHours, setWeeklyEmployedHours] = useState(
+    props.clientState.weeklyEmployedHours || ""
+  );
+  const [employmentSector, setEmploymentSector] = useState(
+    getInitialEmploymentSector(props.clientState.employmentSector)
+  );
+  const [empSectorExplain, setEmpSectorExplain] = useState(
+    getInitialOtherEmploymentSector(props.clientState.employmentSector)
+  );
+  const [payInterval, setPayInterval] = useState(
+    props.clientState.payInterval || PayInterval["every-two-weeks"]
+  );
+  const [countryOfOrigin, setCountryOfOrigin] = useState(
+    props.clientState.countryOfOrigin || "US"
+  );
+  const [dateOfUSArrival, setDateOfUSArrival] = useState(
+    props.clientState.dateOfUSArrival || ""
+  );
+  const [primaryLanguage, setPrimaryLanguage] = useState(
+    getInitialPrimaryLanguage(props.clientState.primaryLanguage)
+  );
+  const [otherLanguage, setOtherLanguage] = useState(
+    getInitialOtherPrimaryLanguage(props.clientState.primaryLanguage)
+  );
+  const [isStudent, setIsStudent] = useState(
+    props.clientState.isStudent || false
+  );
+  const [englishLevel, setEnglishLevel] = useState(
+    props.clientState.englishLevel || EnglishLevel.INTERMEDIATE
+  );
+  const [eligibleToVote, setEligibleToVote] = useState(
+    props.clientState.eligibleToVote || false
+  );
 
   return (
     <>
@@ -59,7 +87,11 @@ export default function DemographicInformation(props: StepComponentProps) {
         <div>
           <label>
             <span>Approximate annual income (including spouse)</span>
-            <CurrencyInput setDollars={setAnnualIncome} required />
+            <CurrencyInput
+              setDollars={setAnnualIncome}
+              initialValue={annualIncome}
+              required
+            />
           </label>
         </div>
         <div>
@@ -67,6 +99,7 @@ export default function DemographicInformation(props: StepComponentProps) {
             <span>Household size</span>
             <input
               type="number"
+              value={householdSize}
               onChange={evt => setHouseholdSize(Number(evt.target.value))}
               required
               min="1"
@@ -145,15 +178,14 @@ export default function DemographicInformation(props: StepComponentProps) {
               onChange={evt => setCurrentlyEmployed(evt.target.value)}
               required
             >
-              <option>Select One</option>
-              <option value="Yes">Yes</option>
-              <option value="No">No</option>
-              <option value="Not Applicable">Not Applicable</option>
-              <option value="Unknown">Unknown</option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+              <option value="n/a">Not Applicable</option>
+              <option value="unknown">Unknown</option>
             </select>
           </label>
         </div>
-        {currentlyEmployed == "Yes" && (
+        {currentlyEmployed == "yes" && (
           <>
             <div>
               <label>
@@ -164,26 +196,21 @@ export default function DemographicInformation(props: StepComponentProps) {
                   onChange={evt => setEmploymentSector(evt.target.value)}
                   required
                 >
-                  <option>Select one</option>
-                  <option value="landscaping">Landscaping/Gardening</option>
-                  <option value="construction">Construction</option>
-                  <option value="services">
-                    Services (Restaurants, Hotels)
-                  </option>
-                  <option value="dayLaborer">Day Worker/Laborer</option>
-                  <option value="domesticWorker">Domestic Worker</option>
-                  <option value="industrial">Industrial/Warehouse</option>
-                  <option value="agriculture">Agriculture</option>
-                  <option value="other">Other (Explain)</option>
+                  {Object.keys(employmentSectors).map(sectorValue => (
+                    <option key={sectorValue} value={sectorValue}>
+                      {employmentSectors[sectorValue]}
+                    </option>
+                  ))}
                 </select>
               </label>
             </div>
-            {employmentSector == "other" && (
+            {employmentSector === "other" && (
               <div>
                 <label>
                   <span>If other, please describe</span>
                   <input
                     type="text"
+                    value={empSectorExplain}
                     onChange={evt => setEmpSectorExplain(evt.target.value)}
                     required
                   />
@@ -200,11 +227,11 @@ export default function DemographicInformation(props: StepComponentProps) {
                     setPayInterval(PayInterval[evt.target.value])
                   }
                 >
-                  <option value="Weekly">Weekly</option>
-                  <option value="Biweekly">Every two weeks</option>
-                  <option value="Monthly">Monthly</option>
-                  <option value="Quarterly">Quarterly (3 months)</option>
-                  <option value="Annually">Annually (1 year)</option>
+                  <option value="every-week">Weekly</option>
+                  <option value="every-two-weeks">Every two weeks</option>
+                  <option value="every-month">Monthly</option>
+                  <option value="every-quarter">Quarterly (3 months)</option>
+                  <option value="every-year">Annually (1 year)</option>
                 </select>
               </label>
             </div>
@@ -216,11 +243,10 @@ export default function DemographicInformation(props: StepComponentProps) {
                   onChange={evt => setWeeklyEmployedHours(evt.target.value)}
                   value={weeklyEmployedHours}
                 >
-                  <option>Select one</option>
-                  <option value="20 or less">20 or less</option>
-                  <option value="21 to 35">21 to 35</option>
-                  <option value="36 to 40">36 to 40</option>
-                  <option value="41 or more">41 or more</option>
+                  <option value="0-20">20 or less</option>
+                  <option value="21-30">21 to 35</option>
+                  <option value="31-40">36 to 40</option>
+                  <option value="41-more">41 or more</option>
                 </select>
               </label>
             </div>
@@ -242,8 +268,8 @@ export default function DemographicInformation(props: StepComponentProps) {
               <input
                 required
                 type="date"
-                value={dateUSArrival}
-                onChange={evt => setdateUSArrival(evt.target.value)}
+                value={dateOfUSArrival}
+                onChange={evt => setDateOfUSArrival(evt.target.value)}
               />
             </label>
           </div>
@@ -257,14 +283,15 @@ export default function DemographicInformation(props: StepComponentProps) {
               value={primaryLanguage}
               onChange={evt => setPrimaryLanguage(evt.target.value)}
             >
-              <option value="spanish">Spanish</option>
-              <option value="english">English</option>
-              <option value="english-and-spanish">English and Spanish</option>
-              <option value="other">Other</option>
+              {Object.keys(languageOptions).map(value => (
+                <option key={value} value={value}>
+                  {languageOptions[value]}
+                </option>
+              ))}
             </select>
           </label>
         </div>
-        {primaryLanguage === "Other" && (
+        {primaryLanguage === "other" && (
           <div>
             <label>
               <span>Other language</span>
@@ -311,13 +338,15 @@ export default function DemographicInformation(props: StepComponentProps) {
     props.nextStep(Step.CLIENT_SOURCE, {
       civilStatus,
       countryOfOrigin,
-      dateUSArrival,
+      dateOfUSArrival,
       primaryLanguage:
         primaryLanguage === "other" ? otherLanguage : primaryLanguage,
       englishLevel,
       currentlyEmployed,
       employmentSector:
-        employmentSector === "Other" ? empSectorExplain : employmentSector,
+        employmentSector === "other"
+          ? empSectorExplain
+          : employmentSector || null,
       payInterval,
       weeklyEmployedHours,
       annualIncome,
@@ -327,6 +356,56 @@ export default function DemographicInformation(props: StepComponentProps) {
     });
   }
 }
+
+function getInitialEmploymentSector(val) {
+  if (val) {
+    return Object.keys(employmentSectors).includes(val) ? val : "other";
+  } else {
+    return employmentSectors.construction;
+  }
+}
+
+function getInitialOtherEmploymentSector(val) {
+  if (val) {
+    return Object.keys(employmentSectors).includes(val) ? "" : val;
+  } else {
+    return "";
+  }
+}
+
+function getInitialPrimaryLanguage(val) {
+  if (val) {
+    return Object.keys(languageOptions).includes(val) ? val : "other";
+  } else {
+    return languageOptions.spanish;
+  }
+}
+
+function getInitialOtherPrimaryLanguage(val) {
+  if (val) {
+    return Object.keys(languageOptions).includes(val) ? "" : val;
+  } else {
+    return "";
+  }
+}
+
+const employmentSectors = {
+  landscaping: "Landscaping/Gardening",
+  construction: "Construction",
+  services: "Services (Restaurants, Hotels)",
+  dayLaborer: "Day Worker/Laborer",
+  domesticWorker: "Domestic Worker",
+  industrial: "Industrial/Warehouse",
+  agriculture: "Agriculture",
+  other: "Other (Explain)"
+};
+
+const languageOptions = {
+  english: "English",
+  spanish: "Spanish",
+  englishAndSpanish: "English And Spanish",
+  other: "Other"
+};
 
 export enum CivilStatus {
   SINGLE = "single",
@@ -340,10 +419,11 @@ export enum EnglishLevel {
   INTERMEDIATE = "intermediate",
   ADVANCED = "advanced"
 }
+
 export enum PayInterval {
-  WEEKLY = "weekly",
-  BIWEEKLY = "biweekly",
-  MONTHLY = "monthly",
-  QUARTERLY = "quarterly",
-  ANNUALLY = "annually"
+  "every-week" = "every-week",
+  "every-two-weeks" = "every-two-weeks",
+  "every-month" = "every-month",
+  "every-quarter" = "every-quarter",
+  "every-year" = "every-year"
 }

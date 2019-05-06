@@ -15,9 +15,20 @@ export default function easyFetch(url, opts = {}) {
     if (response.ok) {
       return response.json();
     } else {
-      throw Error(
-        `Api request to '${url}' failed with HTTP status ${response.status}`
-      );
+      return response
+        .json()
+        .then(json => {
+          const err = Error(
+            `Api request to '${url}' failed with HTTP status ${response.status}`
+          );
+          err.body = json;
+          throw err;
+        })
+        .catch(err => {
+          throw Error(
+            `Api request to '${url}' failed with HTTP status ${response.status}`
+          );
+        });
     }
   });
 }

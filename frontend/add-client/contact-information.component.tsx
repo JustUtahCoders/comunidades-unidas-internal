@@ -41,13 +41,14 @@ export default function ContactInformation(props: StepComponentProps) {
               name="dateOfIntake"
               value={dateOfIntake}
               onChange={evt => setDateOfIntake(evt.target.value)}
+              autoFocus
             />
           </label>
         </div>
         <div>
           <label>
             <span>Phone number</span>
-            <PhoneInput phone={phone} setPhone={setPhone} autoFocus />
+            <PhoneInput phone={phone} setPhone={setPhone} />
           </label>
         </div>
         <div>
@@ -118,7 +119,6 @@ export default function ContactInformation(props: StepComponentProps) {
               onChange={evt => setHousing(evt.target.value)}
               required
             >
-              <option>Select one</option>
               <option value="renter">Renter</option>
               <option value="homeOwner">Homeowner</option>
               <option value="stayWithFamilyFriends">
@@ -146,7 +146,7 @@ export default function ContactInformation(props: StepComponentProps) {
     evt.preventDefault();
     props.nextStep(Step.DEMOGRAPHICS_INFORMATION, {
       phone,
-      smsConsent: smsConsent ? "Yes" : "No",
+      smsConsent,
       streetAddress,
       city,
       state,

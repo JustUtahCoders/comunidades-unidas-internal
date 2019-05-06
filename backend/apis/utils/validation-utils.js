@@ -1,28 +1,35 @@
-const { get } = require("lodash");
+const { get, isDefined } = require("lodash");
 const emailValidator = require("email-validator");
 
 exports.checkValid = function(obj, ...rules) {
-  return rules.map(rule => rule(obj)).filter(err => err !== null);
+  const result = rules.map(rule => rule(obj)).filter(err => err !== null);
+  return result;
 };
 
-const checkDefined = cbk => (propertyName, ...args) => obj =>
-  typeof get(obj, propertyName) !== "undefined"
+const checkDefined = cbk => (propertyName, ...args) => obj => {
+  if (propertyName === "dateOfUSArrival") {
+    throw Error("hi");
+  }
+
+  return typeof get(obj, propertyName) !== "undefined" &&
+    get(obj, propertyName) !== null
     ? cbk(propertyName, ...args)(get(obj, propertyName))
     : `Property ${propertyName} must be provided. Got '${get(
         obj,
         propertyName
       )}'`;
+};
 
-exports.nonEmptyString = checkDefined(propertyName => val =>
-  typeof val === "string" && val.trim().length > 0
+const nullable = cbk => (propertyName, ...args) => obj =>
+  get(obj, propertyName) === null ||
+  typeof get(obj, propertyName) === "undefined"
     ? null
-    : `Property ${propertyName} must be a non-whitespace, non-empty string. Received '${val}'`
-);
-exports.validDate = checkDefined(propertyName => val =>
-  /^[0-9]{4}-[01][0-9]-[0123][0-9]$/.test(val) && !isNaN(new Date(val))
-    ? null
-    : `Property ${propertyName} must be a string date of format YYYY-MM-DD. Received '${val}'`
-);
+    : cbk(propertyName, ...args)(get(obj, propertyName));
+
+exports.nullableNonEmptyString = nullable(_nonEmptyString);
+exports.nonEmptyString = checkDefined(_nonEmptyString);
+exports.nullableValidDate = nullable(_validDate);
+exports.validDate = checkDefined(_validDate);
 exports.validPhone = checkDefined(propertyName => val =>
   /^[0-9\-\(\) x]+$/.test(val)
     ? null
@@ -48,13 +55,10 @@ exports.validEmail = checkDefined(propertyName => val =>
     ? null
     : `Property ${propertyName} must be a valid email address. Received '${val}'`
 );
-exports.validEnum = checkDefined((propertyName, ...possibleValues) => val =>
-  possibleValues.includes(val)
-    ? null
-    : `Property ${propertyName} must be one of the following: ${possibleValues.join(
-        ", "
-      )}. Received '${val}'`
-);
+
+exports.nullableValidEnum = nullable(_validEnum);
+exports.validEnum = checkDefined(_validEnum);
+
 exports.validCountry = checkDefined(propertyName => val =>
   typeof val === "string" && /^[A-Z]{2}$/.test(val)
     ? null
@@ -66,3 +70,26 @@ exports.validInteger = checkDefined(propertyName => val =>
     : `Property ${propertyName} must be an integer. Received '${val}'`
 );
 exports.isDefined = checkDefined(propertyName => val => null);
+
+function _validDate(propertyName) {
+  return val =>
+    /^[0-9]{4}-[01][0-9]-[0123][0-9]$/.test(val) && !isNaN(new Date(val))
+      ? null
+      : `Property ${propertyName} must be a string date of format YYYY-MM-DD. Received '${val}'`;
+}
+
+function _nonEmptyString(propertyName) {
+  return val =>
+    typeof val === "string" && val.trim().length > 0
+      ? null
+      : `Property ${propertyName} must be a non-whitespace, non-empty string. Received '${val}'`;
+}
+
+function _validEnum(propertyName, ...possibleValues) {
+  return val =>
+    possibleValues.includes(val)
+      ? null
+      : `Property ${propertyName} must be one of the following: ${possibleValues.join(
+          ", "
+        )}. Received '${val}'`;
+}

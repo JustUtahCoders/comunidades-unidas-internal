@@ -14,7 +14,8 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
   const duplicates = props.duplicateWarning.duplicates;
   const firstName = props.duplicateWarning.firstName;
   const lastName = props.duplicateWarning.lastName;
-  const birthday = props.duplicateWarning.birthDate;
+  const birthday = props.duplicateWarning.birthday;
+  const gender = props.duplicateWarning.gender;
   const scope = useCss(css);
 
   return (
@@ -78,7 +79,8 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
     props.continueAnyway({
       firstName,
       lastName,
-      birthday
+      birthday,
+      gender
     });
   }
 }

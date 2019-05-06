@@ -21,11 +21,15 @@ exports.pool = mysql.createPool({
   database: process.env.RDS_DB_NAME || "local_db",
   port: process.env.RDS_PORT || "3306"
 });
+
 exports.invalidRequest = function invalidRequest(res, msg) {
   res.status(400).send({ error: msg });
 };
+
 exports.databaseError = function databaseError(req, res, err, connection) {
-  connection.release();
+  if (connection) {
+    connection.release();
+  }
   const msg = process.env.RUNNING_LOCALLY
     ? `Database Error for backend endpoint '${req.url}'. ${err}`
     : `Database error. Run 'eb logs' for more detail`;

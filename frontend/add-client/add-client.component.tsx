@@ -111,7 +111,7 @@ export type ClientState = {
   //Contacts
   dateOfIntake?: string;
   phone?: string;
-  smsConsent?: string;
+  smsConsent?: boolean;
   streetAddress?: string;
   city?: string;
   state?: string;
@@ -121,7 +121,7 @@ export type ClientState = {
   //Demographics
   civilStatus?: CivilStatus;
   countryOfOrigin?: string;
-  dateUSArrival?: string;
+  dateOfUSArrival?: string;
   primaryLanguage?: string;
   englishLevel?: EnglishLevel;
   currentlyEmployed?: string;
@@ -149,7 +149,7 @@ export type DuplicateWarning = {
   id: number;
   firstName: string;
   lastName: string;
-  birthDate: string;
+  birthday: string;
   gender: string;
   duplicates: Duplicate[];
 };
@@ -202,7 +202,7 @@ const css = `
 }
 
 ${mediaMobile} {
-  & .form-with-hints form input:not([type="radio"]), & .form-with-hints form select {
+  & .form-with-hints form input:not([type="radio"]):not([type="checkbox"]), & .form-with-hints form select {
     width: 170rem;
   }
 
@@ -212,7 +212,7 @@ ${mediaMobile} {
 }
 
 ${mediaDesktop} {
-  & .form-with-hints form input:not([type="radio"]), & .form-with-hints form select {
+  & .form-with-hints form input:not([type="radio"]):not([type="checkbox"]), & .form-with-hints form select {
     min-width: 200rem;
     max-width: 300rem;
   }

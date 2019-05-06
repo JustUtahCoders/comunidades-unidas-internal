@@ -10,14 +10,11 @@
       "es5",
       "scripthost",
       "es2015",
-      "es2015.promise"
+      "es2015.promise",
+      "es2016.array.include"
     ],
     "noEmit": true
   },
-  "include": [
-    "frontend/**/*"
-  ],
-  "files": [
-    "frontend/custom.d.ts"
-  ]
+  "include": ["frontend/**/*"],
+  "files": ["frontend/custom.d.ts"]
 }
