@@ -1,6 +1,10 @@
 const { app, databaseError, pool } = require("../../server");
 const mysql = require("mysql");
-const { dateWithoutTime } = require("../utils/transform-utils");
+const {
+  responseDateWithoutTime,
+  requestEnum,
+  requestPhone
+} = require("../utils/transform-utils");
 const {
   checkValid,
   nonEmptyString,
@@ -80,26 +84,26 @@ app.post("/api/clients", (req, res, next) => {
       req.body.firstName,
       req.body.lastName,
       req.body.birthday,
-      req.body.gender,
+      requestEnum(req.body.gender),
       req.body.dateOfIntake,
-      req.body.phone,
+      requestPhone(req.body.phone),
       req.body.smsConsent,
       req.body.homeAddress.street,
       req.body.homeAddress.city,
       req.body.homeAddress.state,
       req.body.homeAddress.zip,
       req.body.email,
-      req.body.civilStatus,
+      requestEnum(req.body.civilStatus),
       req.body.countryOfOrigin,
       req.body.dateOfUSArrival,
-      req.body.primaryLanguage,
+      requestEnum(req.body.primaryLanguage),
       req.body.currentlyEmployed,
-      req.body.employmentSector,
+      requestEnum(req.body.employmentSector),
       req.body.annualIncome,
       req.body.householdSize,
       req.body.isStudent,
       req.body.eligibleToVote,
-      req.body.clientSource,
+      requestEnum(req.body.clientSource),
       req.body.couldVolunteer,
       req.session.passport.user.id,
       req.session.passport.user.id
@@ -197,10 +201,10 @@ app.post("/api/clients", (req, res, next) => {
               (row.createdByLastName || ""),
             timestamp: row.dateModified
           },
-          dateOfIntake: dateWithoutTime(row.dateOfIntake),
+          dateOfIntake: responseDateWithoutTime(row.dateOfIntake),
           firstName: row.firstName,
           lastName: row.lastName,
-          birthday: dateWithoutTime(row.birthday),
+          birthday: responseDateWithoutTime(row.birthday),
           gender: row.gender,
           phone: row.phone,
           smsConsent: Boolean(row.smsConsent),
@@ -213,7 +217,7 @@ app.post("/api/clients", (req, res, next) => {
           email: row.email,
           civilStatus: row.civilStatus,
           countryOfOrigin: row.countryOfOrigin,
-          dateOfUSArrival: dateWithoutTime(row.dateOfUSArrival),
+          dateOfUSArrival: responseDateWithoutTime(row.dateOfUSArrival),
           primaryLanguage: row.primaryLanguage,
           currentlyEmployed: Boolean(row.currentlyEmployed),
           employmentSector: row.employmentSector,

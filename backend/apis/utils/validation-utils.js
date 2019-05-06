@@ -19,12 +19,12 @@ exports.nonEmptyString = checkDefined(propertyName => val =>
     : `Property ${propertyName} must be a non-whitespace, non-empty string. Received '${val}'`
 );
 exports.validDate = checkDefined(propertyName => val =>
-  !isNaN(new Date(val))
+  /^[0-9]{4}-[01][0-9]-[0123][0-9]$/.test(val) && !isNaN(new Date(val))
     ? null
-    : `Property ${propertyName} must be a string that can be parsed into a Date. Received '${val}'`
+    : `Property ${propertyName} must be a string date of format YYYY-MM-DD. Received '${val}'`
 );
 exports.validPhone = checkDefined(propertyName => val =>
-  /^[0-9\-\(\)]+$/.test(val)
+  /^[0-9\-\(\) x]+$/.test(val)
     ? null
     : `Property ${propertyName} must be a valid phone number. Received '${val}'`
 );
