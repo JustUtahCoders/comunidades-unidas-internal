@@ -1,10 +1,5 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const {
-  app,
-  pool,
-  databaseError,
-  authenticatedEndpoint
-} = require("../server");
+const { app, pool } = require("../server");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
 const mysql = require("mysql");
@@ -25,13 +20,57 @@ passport.use(
       callbackURL: process.env.GOOGLE_CALLBACK_URL
     },
     (token, refreshToken, profile, done) => {
-      return done(null, {
-        profile: profile,
-        fullName: profile.displayName,
-        firstName: profile.name.givenName,
-        lastName: profile.name.familyName,
-        email: profile.emails[0].value,
-        token: token
+      pool.getConnection((err, connection) => {
+        if (err) {
+          done(err);
+        } else {
+          connection.query(
+            mysql.format(
+              `
+            INSERT IGNORE INTO users (googleId, firstName, lastName, email, accessLevel)
+            VALUES(?, ?, ?, ?, ?)
+          `,
+              [
+                profile.id,
+                profile.name.givenName,
+                profile.name.familyName,
+                profile.emails[0].value,
+                "Staff" // Start them off as staff, upgrade their access level later
+              ]
+            ),
+            (err, result) => {
+              if (err) {
+                connection.release();
+                done(err);
+              } else {
+                const getUserQuery = mysql.format(
+                  `
+                SELECT * FROM users WHERE googleId = ?
+              `,
+                  [profile.id]
+                );
+
+                connection.query(getUserQuery, (err, rows) => {
+                  connection.release();
+
+                  if (err) {
+                    done(err);
+                  } else {
+                    done(null, {
+                      id: rows[0].id,
+                      googleProfile: profile,
+                      fullName: rows[0].firstName + " " + rows[0].lastName,
+                      firstName: rows[0].firstName,
+                      lastName: rows[0].lastName,
+                      email: rows[0].email,
+                      token: token
+                    });
+                  }
+                });
+              }
+            }
+          );
+        }
       });
     }
   )
@@ -73,38 +112,8 @@ app.get(
     failureRedirect: "/"
   }),
   (req, res) => {
-    pool.getConnection((err, connection) => {
-      if (err) {
-        return databaseError(req, res, err);
-      }
-
-      connection.query(
-        mysql.format(
-          `
-          INSERT IGNORE INTO
-          users (googleId, firstName, lastName, accessLevel)
-          VALUES(?, ?, ?, ?)
-        `,
-          [
-            req.user.profile.id,
-            req.user.firstName,
-            req.user.lastName,
-            "Staff" // Start them off as staff, upgrade their access level later
-          ]
-        ),
-        function(err, rows, fields) {
-          connection.release();
-
-          if (err) {
-            console.error(err);
-            return databaseError(req, res, err);
-          }
-
-          req.session.token = req.user.token;
-          res.redirect("/");
-        }
-      );
-    });
+    req.session.token = req.user.token;
+    res.redirect("/");
   }
 );
 

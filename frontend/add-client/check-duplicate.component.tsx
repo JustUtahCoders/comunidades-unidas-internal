@@ -103,7 +103,7 @@ export default function CheckDuplicate(props: StepComponentProps) {
         firstName
       )}&lastName=${encodeURIComponent(lastName)}&gender=${encodeURIComponent(
         gender
-      )}&dob=${encodeURIComponent(birthday)}`
+      )}&birthday=${encodeURIComponent(birthday)}`
     )
       .then(function(data) {
         if (data.clientDuplicates.length > 0) {

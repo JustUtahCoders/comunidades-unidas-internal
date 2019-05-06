@@ -13,7 +13,7 @@ export default function ContactInformation(props: StepComponentProps) {
   const [city, setCity] = useState("");
   const [state, setState] = useState("UT");
   const [zip, setZip] = useState("");
-  const [owned, setOwned] = useState("");
+  const [housing, setHousing] = useState("");
   const [email, setEmail] = useState("");
   const [dateOfIntake, setDateOfIntake] = useState(getTodayAsString);
   const scope = useCss(css);
@@ -113,15 +113,15 @@ export default function ContactInformation(props: StepComponentProps) {
           <label>
             <span>Rent or Own:</span>
             <select
-              value={owned}
-              name="owned"
-              onChange={evt => setOwned(evt.target.value)}
+              value={housing}
+              name="housing"
+              onChange={evt => setHousing(evt.target.value)}
               required
             >
               <option>Select one</option>
-              <option value="Renter">Renter</option>
-              <option value="Homeowner">Homeowner</option>
-              <option value="Live with family/friends">
+              <option value="renter">Renter</option>
+              <option value="homeOwner">Homeowner</option>
+              <option value="stayWithFamilyFriends">
                 Live with family/friends
               </option>
             </select>
@@ -151,7 +151,7 @@ export default function ContactInformation(props: StepComponentProps) {
       city,
       state,
       zip,
-      owned,
+      housing,
       email,
       dateOfIntake
     });
