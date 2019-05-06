@@ -1,10 +1,10 @@
-const { app, databaseError, pool, invalidRequest } = require("../server");
+const { app, databaseError, pool, invalidRequest } = require("../../server");
 const mysql = require("mysql");
 
 app.get("/api/client-duplicates", (req, res, next) => {
   pool.getConnection((err, connection) => {
     if (err) {
-      return databaseError(req, res, err);
+      return databaseError(req, res, err, connection);
     }
 
     if (!req.query.firstName) {
@@ -15,24 +15,24 @@ app.get("/api/client-duplicates", (req, res, next) => {
       return invalidRequest(res, `queryParam 'firstName' is required`);
     }
 
-    if (!req.query.dob) {
-      return invalidRequest(res, `queryParam 'dob' is required`);
+    if (!req.query.birthday) {
+      return invalidRequest(res, `queryParam 'birthday' is required`);
     }
 
     let birthDate;
     try {
-      birthDate = new Date(req.query.dob);
+      birthDate = new Date(req.query.birthday);
     } catch (err) {
       return invalidRequest(
         res,
-        `queryParam 'dob' must be a valid date. Use YYYY-MM-DD format`
+        `queryParam 'birthday' must be a valid date. Use YYYY-MM-DD format`
       );
     }
 
     if (isNaN(birthDate)) {
       return invalidRequest(
         res,
-        `queryParam 'dob' must be a valid date. Use YYYY-MM-DD format`
+        `queryParam 'birthday' must be a valid date. Use YYYY-MM-DD format`
       );
     }
 
@@ -45,12 +45,12 @@ app.get("/api/client-duplicates", (req, res, next) => {
     const month = birthDate.getUTCMonth() + 1;
     const query = mysql.format(
       `
-      SELECT id, firstName, lastName, date_format(dob,'%Y/%m/%d') as birthDate, gender
+      SELECT id, firstName, lastName, date_format(birthday,'%Y/%m/%d') as birthday, gender
       FROM clients
       WHERE 
       (firstName LIKE ? OR lastName LIKE ?)
       AND
-      (YEAR(dob) >= ? AND YEAR(dob) <= ? AND MONTH(dob) >= ? AND MONTH(dob) <= ?)
+      (YEAR(birthday) >= ? AND YEAR(birthday) <= ? AND MONTH(birthday) >= ? AND MONTH(birthday) <= ?)
     `,
       [
         req.query.firstName,
@@ -64,7 +64,7 @@ app.get("/api/client-duplicates", (req, res, next) => {
 
     connection.query(query, function(err, rows, fields) {
       if (err) {
-        return databaseError(req, res, err);
+        return databaseError(req, res, err, connection);
       }
       res.send({
         numDuplicates: rows.length,
@@ -72,7 +72,7 @@ app.get("/api/client-duplicates", (req, res, next) => {
           id: row.id,
           firstName: row.firstName,
           lastName: row.lastName,
-          dob: row.birthDate,
+          birthday: row.birthday,
           gender: row.gender
         }))
       });

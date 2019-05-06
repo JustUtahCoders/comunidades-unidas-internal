@@ -107,7 +107,6 @@ export type ClientState = {
   lastName?: string;
   birthday?: string;
   gender?: string;
-  genderExplanation?: string;
   duplicates?: [];
   //Contacts
   dateOfIntake?: string;
@@ -117,7 +116,7 @@ export type ClientState = {
   city?: string;
   state?: string;
   zip?: string;
-  owned?: string;
+  housing?: string;
   email?: string;
   //Demographics
   civilStatus?: CivilStatus;
@@ -127,11 +126,10 @@ export type ClientState = {
   englishLevel?: EnglishLevel;
   currentlyEmployed?: string;
   employmentSector?: string;
-  empSectorExplain?: string;
   payInterval?: PayInterval;
-  hoursWorked?: string;
+  weeklyEmployedHours?: string;
   annualIncome?: number;
-  houseHoldSize?: number;
+  householdSize?: number;
   isStudent?: boolean;
   eligibleToVote?: boolean;
   // Client source
@@ -174,7 +172,7 @@ type Duplicate = {
   id: string;
   firstName: string;
   lastName: string;
-  dob: string;
+  birthday: string;
   gender: string;
 };
 

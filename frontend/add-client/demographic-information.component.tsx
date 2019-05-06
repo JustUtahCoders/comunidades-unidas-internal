@@ -7,9 +7,9 @@ import CurrencyInput from "../util/currency-input.component";
 export default function DemographicInformation(props: StepComponentProps) {
   const [civilStatus, setCivilStatus] = useState(CivilStatus.SINGLE);
   const [annualIncome, setAnnualIncome] = useState();
-  const [houseHoldSize, setHouseHoldSize] = useState();
+  const [householdSize, setHouseholdSize] = useState();
   const [currentlyEmployed, setCurrentlyEmployed] = useState("");
-  const [hoursWorked, setHoursWorked] = useState();
+  const [weeklyEmployedHours, setWeeklyEmployedHours] = useState();
   const [employmentSector, setEmploymentSector] = useState("");
   const [empSectorExplain, setEmpSectorExplain] = useState("");
   const [payInterval, setPayInterval] = useState(PayInterval.BIWEEKLY);
@@ -67,7 +67,7 @@ export default function DemographicInformation(props: StepComponentProps) {
             <span>Household size</span>
             <input
               type="number"
-              onChange={evt => setHouseHoldSize(Number(evt.target.value))}
+              onChange={evt => setHouseholdSize(Number(evt.target.value))}
               required
               min="1"
               max="30"
@@ -160,27 +160,25 @@ export default function DemographicInformation(props: StepComponentProps) {
                 <span>Employment sector</span>
                 <select
                   value={employmentSector}
-                  name="cmploymentSector"
+                  name="employmentSector"
                   onChange={evt => setEmploymentSector(evt.target.value)}
                   required
                 >
                   <option>Select one</option>
-                  <option value="Landscaping">Landscaping/Gardening</option>
-                  <option value="Construction">Construction</option>
-                  <option value="Services">
+                  <option value="landscaping">Landscaping/Gardening</option>
+                  <option value="construction">Construction</option>
+                  <option value="services">
                     Services (Restaurants, Hotels)
                   </option>
-                  <option value="Day Laborer">Day Worker/Laborer</option>
-                  <option value="Domestic Worker">Domestic Worker</option>
-                  <option value="Industrial/Warehouse">
-                    Industrial/Warehouse
-                  </option>
-                  <option value="Agriculture">Agriculture</option>
-                  <option value="Other">Other (Explain)</option>
+                  <option value="dayLaborer">Day Worker/Laborer</option>
+                  <option value="domesticWorker">Domestic Worker</option>
+                  <option value="industrial">Industrial/Warehouse</option>
+                  <option value="agriculture">Agriculture</option>
+                  <option value="other">Other (Explain)</option>
                 </select>
               </label>
             </div>
-            {employmentSector == "Other" && (
+            {employmentSector == "other" && (
               <div>
                 <label>
                   <span>If other, please describe</span>
@@ -215,7 +213,8 @@ export default function DemographicInformation(props: StepComponentProps) {
                 <span>Average weekly hours worked</span>
                 <select
                   required
-                  onChange={evt => setHoursWorked(evt.target.value)}
+                  onChange={evt => setWeeklyEmployedHours(evt.target.value)}
+                  value={weeklyEmployedHours}
                 >
                   <option>Select one</option>
                   <option value="20 or less">20 or less</option>
@@ -320,9 +319,9 @@ export default function DemographicInformation(props: StepComponentProps) {
       employmentSector:
         employmentSector === "Other" ? empSectorExplain : employmentSector,
       payInterval,
-      hoursWorked,
+      weeklyEmployedHours,
       annualIncome,
-      houseHoldSize,
+      householdSize,
       isStudent,
       eligibleToVote
     });

@@ -46,7 +46,9 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
                 <tr key={duplicate.id}>
                   <td>{duplicate.firstName} </td>
                   <td>{duplicate.lastName}</td>
-                  <td>{dateformat(new Date(duplicate.dob), "mm-dd-yyyy")}</td>
+                  <td>
+                    {dateformat(new Date(duplicate.birthday), "mm-dd-yyyy")}
+                  </td>
                   <td>{duplicate.gender}</td>
                   <td>
                     <button type="button" className="primary">

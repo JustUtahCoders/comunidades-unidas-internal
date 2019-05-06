@@ -24,21 +24,13 @@ exports.pool = mysql.createPool({
 exports.invalidRequest = function invalidRequest(res, msg) {
   res.status(400).send({ error: msg });
 };
-exports.databaseError = function databaseError(req, res, err) {
+exports.databaseError = function databaseError(req, res, err, connection) {
+  connection.release();
   const msg = process.env.RUNNING_LOCALLY
     ? `Database Error for backend endpoint '${req.url}'. ${err}`
     : `Database error. Run 'eb logs' for more detail`;
   console.error(err);
   res.status(500).send({ error: msg });
-};
-exports.authenticatedEndpoint = function(req, res, next) {
-  if (req.session.passport && req.session.passport.user.firstName) {
-    return next();
-  } else if (req.url.includes("/api")) {
-    res.status(401).send({ error: "You must be logged in to call this API" });
-  } else {
-    return res.redirect("/login");
-  }
 };
 
 app.set("views", path.join(__dirname, "/views"));
@@ -53,8 +45,8 @@ app.use((err, req, res, next) => {
 
 require("./apis/login.api");
 require("./apis/github-key.api");
-require("./apis/add-client.api");
-require("./apis/client-duplicates.api");
+require("./apis/clients/add-client.api");
+require("./apis/clients/client-duplicates.api");
 require("./index-html.js");
 
 process.on("uncaughtException", function(err) {
