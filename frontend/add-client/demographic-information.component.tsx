@@ -109,7 +109,7 @@ export default function DemographicInformation(props: StepComponentProps) {
         </div>
         <div>
           <label>
-            <span>Are they a eligible to vote?</span>
+            <span>Are they eligible to vote?</span>
             <div className="radio-options">
               <div>
                 <label>
