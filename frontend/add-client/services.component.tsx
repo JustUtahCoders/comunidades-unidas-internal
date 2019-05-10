@@ -14,7 +14,7 @@ export default function Services(props: StepComponentProps) {
           <img src={agendaIconUrl} className="hint-icon" />
         </div>
         <div className="instruction">
-          What services are they interested in?
+          What services are they interested in today?
           <div className="warning">
             This is not what Comunidades Unidas did for them in their first
             visit, but the services they might want in the future.
@@ -43,7 +43,7 @@ export default function Services(props: StepComponentProps) {
                 checked={services.familyPetition}
                 onChange={handleChange}
               />
-              <span>Family Petition</span>
+              <span>Family petition</span>
             </label>
             <label>
               <input
@@ -53,7 +53,7 @@ export default function Services(props: StepComponentProps) {
                 checked={services.workersRightsAndSafety}
                 onChange={handleChange}
               />
-              <span>Workers' Rights and Safety</span>
+              <span>Workers' rights and safety</span>
             </label>
             <label>
               <input
@@ -83,7 +83,7 @@ export default function Services(props: StepComponentProps) {
                 checked={services.leadershipClasses}
                 onChange={handleChange}
               />
-              <span>Leadership classes</span>
+              <span>Promoters / leadership classes</span>
             </label>
             <label>
               <input
@@ -93,7 +93,7 @@ export default function Services(props: StepComponentProps) {
                 checked={services.SNAP}
                 onChange={handleChange}
               />
-              <span>SNAP</span>
+              <span>SNAP / food stamps</span>
             </label>
             <label>
               <input
@@ -103,7 +103,7 @@ export default function Services(props: StepComponentProps) {
                 checked={services.chronicDiseaseTesting}
                 onChange={handleChange}
               />
-              <span>Chronic disease testing</span>
+              <span>Evidence of chronic diseases</span>
             </label>
             <label>
               <input
@@ -123,7 +123,7 @@ export default function Services(props: StepComponentProps) {
                 checked={services.groceryTour}
                 onChange={handleChange}
               />
-              <span>Grocery store tour</span>
+              <span>Visit to the supermarket</span>
             </label>
             <label>
               <input
@@ -133,9 +133,9 @@ export default function Services(props: StepComponentProps) {
                 checked={services.cookingClass}
                 onChange={handleChange}
               />
-              <span>Cooking classes</span>
+              <span>Food demonstration</span>
             </label>
-            <label>
+            {/* <label>
               <input
                 type="checkbox"
                 name="services"
@@ -144,7 +144,7 @@ export default function Services(props: StepComponentProps) {
                 onChange={handleChange}
               />
               <span>PrEP clinic referral</span>
-            </label>
+            </label> */}
             <label>
               <input
                 type="checkbox"
