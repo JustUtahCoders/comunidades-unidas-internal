@@ -64,6 +64,18 @@ export default function ContactInformation(props: StepComponentProps) {
         </div>
         <div>
           <label>
+            <span>Email</span>
+            <input
+              type="email"
+              value={email}
+              onChange={evt => setEmail(evt.target.value)}
+              required
+              autoComplete="off"
+            />
+          </label>
+        </div>
+        <div>
+          <label>
             <span>Street Address</span>
             <input
               type="text"
@@ -95,18 +107,6 @@ export default function ContactInformation(props: StepComponentProps) {
               value={zip}
               onChange={evt => setZip(evt.target.value)}
               required
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            <span>Email</span>
-            <input
-              type="email"
-              value={email}
-              onChange={evt => setEmail(evt.target.value)}
-              required
-              autoComplete="off"
             />
           </label>
         </div>

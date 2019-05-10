@@ -12,6 +12,9 @@ export default function DemographicInformation(props: StepComponentProps) {
   const [householdSize, setHouseholdSize] = useState(
     props.clientState.householdSize || 1
   );
+  const [householdSizeChildren, setHouseholdSizeChildren] = useState(
+    props.clientState.householdSizeChildren || 0
+  );
   const [currentlyEmployed, setCurrentlyEmployed] = useState(
     props.clientState.currentlyEmployed || "no"
   );
@@ -47,6 +50,9 @@ export default function DemographicInformation(props: StepComponentProps) {
   );
   const [eligibleToVote, setEligibleToVote] = useState(
     props.clientState.eligibleToVote || false
+  );
+  const [registerToVote, setRegisterToVote] = useState(
+    props.clientState.registerToVote || false
   );
 
   return (
@@ -86,7 +92,7 @@ export default function DemographicInformation(props: StepComponentProps) {
         </div>
         <div>
           <label>
-            <span>Approximate annual income (including spouse)</span>
+            <span>Approximate annual income</span>
             <CurrencyInput
               setDollars={setAnnualIncome}
               initialValue={annualIncome}
@@ -96,7 +102,7 @@ export default function DemographicInformation(props: StepComponentProps) {
         </div>
         <div>
           <label>
-            <span>Household size</span>
+            <span>Household size dependent on listed income</span>
             <input
               type="number"
               value={householdSize}
@@ -109,7 +115,22 @@ export default function DemographicInformation(props: StepComponentProps) {
         </div>
         <div>
           <label>
-            <span>Are they eligible to vote?</span>
+            <span>Number household dependents under age 18</span>
+            <input
+              type="number"
+              value={householdSizeChildren}
+              onChange={evt =>
+                setHouseholdSizeChildren(Number(evt.target.value))
+              }
+              required
+              min="0"
+              max="30"
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            <span>Is the client eligible to vote?</span>
             <div className="radio-options">
               <div>
                 <label>
@@ -133,6 +154,38 @@ export default function DemographicInformation(props: StepComponentProps) {
                     checked={!eligibleToVote}
                   />
                   Not eligible to vote
+                </label>
+              </div>
+            </div>
+          </label>
+        </div>
+        {/* FIXME - add toggle to hide register to vote question if not eligible to vote */}
+        <div>
+          <label>
+            <span>Would they like to register to vote?</span>
+            <div className="radio-options">
+              <div>
+                <label>
+                  <input
+                    type="radio"
+                    name="register-to-vote"
+                    value="true"
+                    onChange={() => setRegisterToVote(true)}
+                    checked={registerToVote}
+                  />
+                  Wants to register to vote
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input
+                    type="radio"
+                    name="do-not-register-to-vote"
+                    value="false"
+                    onChange={() => setRegisterToVote(false)}
+                    checked={!registerToVote}
+                  />
+                  Does not want to register to vote
                 </label>
               </div>
             </div>
@@ -189,7 +242,7 @@ export default function DemographicInformation(props: StepComponentProps) {
           <>
             <div>
               <label>
-                <span>Employment sector</span>
+                <span>Type of employment</span>
                 <select
                   value={employmentSector}
                   name="employmentSector"
@@ -219,7 +272,7 @@ export default function DemographicInformation(props: StepComponentProps) {
             )}
             <div>
               <label>
-                <span>Pay interval</span>
+                <span>Pay interval frequency</span>
                 <select
                   required
                   value={payInterval}
@@ -264,7 +317,7 @@ export default function DemographicInformation(props: StepComponentProps) {
         {countryOfOrigin !== "US" && (
           <div>
             <label>
-              <span>Date of U.S. Arrival</span>
+              <span>Approximate date of U.S. arrival</span>
               <input
                 required
                 type="date"
@@ -276,7 +329,7 @@ export default function DemographicInformation(props: StepComponentProps) {
         )}
         <div>
           <label>
-            <span>Primary language at home</span>
+            <span>Primary language in home</span>
             <select
               required
               name="primaryLanguage"
@@ -306,7 +359,7 @@ export default function DemographicInformation(props: StepComponentProps) {
         )}
         <div>
           <label>
-            <span>English level</span>
+            <span>English skill level</span>
             <select
               required
               value={englishLevel}

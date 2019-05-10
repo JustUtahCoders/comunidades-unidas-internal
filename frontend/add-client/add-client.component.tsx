@@ -130,8 +130,10 @@ export type ClientState = {
   weeklyEmployedHours?: string;
   annualIncome?: number;
   householdSize?: number;
+  householdSizeChildren?: number;
   isStudent?: boolean;
   eligibleToVote?: boolean;
+  registerToVote?: boolean;
   // Client source
   clientSource?: ClientSources | string;
   couldVolunteer?: boolean;
