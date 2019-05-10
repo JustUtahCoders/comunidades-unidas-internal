@@ -159,38 +159,41 @@ export default function DemographicInformation(props: StepComponentProps) {
             </div>
           </label>
         </div>
-        {/* FIXME - add toggle to hide register to vote question if not eligible to vote */}
-        <div>
-          <label>
-            <span>Would they like to register to vote?</span>
-            <div className="radio-options">
-              <div>
-                <label>
-                  <input
-                    type="radio"
-                    name="register-to-vote"
-                    value="true"
-                    onChange={() => setRegisterToVote(true)}
-                    checked={registerToVote}
-                  />
-                  Wants to register to vote
-                </label>
+        {eligibleToVote ? (
+          <div>
+            <label>
+              <span>Would they like to register to vote?</span>
+              <div className="radio-options">
+                <div>
+                  <label>
+                    <input
+                      type="radio"
+                      name="register-to-vote"
+                      value="true"
+                      onChange={() => setRegisterToVote(true)}
+                      checked={registerToVote}
+                    />
+                    Wants to register to vote
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <input
+                      type="radio"
+                      name="do-not-register-to-vote"
+                      value="false"
+                      onChange={() => setRegisterToVote(false)}
+                      checked={!registerToVote}
+                    />
+                    Does not want to register to vote
+                  </label>
+                </div>
               </div>
-              <div>
-                <label>
-                  <input
-                    type="radio"
-                    name="do-not-register-to-vote"
-                    value="false"
-                    onChange={() => setRegisterToVote(false)}
-                    checked={!registerToVote}
-                  />
-                  Does not want to register to vote
-                </label>
-              </div>
-            </div>
-          </label>
-        </div>
+            </label>
+          </div>
+        ) : (
+          <div />
+        )}
         <div>
           <label>
             <span>Are they a student?</span>
