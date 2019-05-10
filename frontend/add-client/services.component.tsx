@@ -43,7 +43,7 @@ export default function Services(props: StepComponentProps) {
                 checked={services.familyPetition}
                 onChange={handleChange}
               />
-              <span>Family petition</span>
+              <span>Family Petition</span>
             </label>
             <label>
               <input
@@ -53,7 +53,7 @@ export default function Services(props: StepComponentProps) {
                 checked={services.workersRightsAndSafety}
                 onChange={handleChange}
               />
-              <span>Workers' rights and safety</span>
+              <span>Workers' rights / safety</span>
             </label>
             <label>
               <input
@@ -83,7 +83,7 @@ export default function Services(props: StepComponentProps) {
                 checked={services.leadershipClasses}
                 onChange={handleChange}
               />
-              <span>Promoters / leadership classes</span>
+              <span>Promoters / Leadership classes</span>
             </label>
             <label>
               <input
@@ -93,7 +93,7 @@ export default function Services(props: StepComponentProps) {
                 checked={services.SNAP}
                 onChange={handleChange}
               />
-              <span>SNAP / food stamps</span>
+              <span>SNAP / Food Stamps</span>
             </label>
             <label>
               <input
@@ -133,18 +133,8 @@ export default function Services(props: StepComponentProps) {
                 checked={services.cookingClass}
                 onChange={handleChange}
               />
-              <span>Food demonstration</span>
+              <span>Food Demonstration</span>
             </label>
-            {/* <label>
-              <input
-                type="checkbox"
-                name="services"
-                value="PrEPClinic"
-                checked={services.PrEPClinic}
-                onChange={handleChange}
-              />
-              <span>PrEP clinic referral</span>
-            </label> */}
             <label>
               <input
                 type="checkbox"
@@ -153,7 +143,17 @@ export default function Services(props: StepComponentProps) {
                 checked={services.communityEngagement}
                 onChange={handleChange}
               />
-              <span>Community engagement and organizing</span>
+              <span>Community Organization / Advocacy</span>
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                name="services"
+                value="financialEducation"
+                checked={services.financialEducation}
+                onChange={handleChange}
+              />
+              <span>Education / Financial Advising</span>
             </label>
             <label>
               <input
@@ -163,37 +163,39 @@ export default function Services(props: StepComponentProps) {
                 checked={services.financialCoaching}
                 onChange={handleChange}
               />
-              <span>Financial coaching</span>
+              <span>Finacial Coaching</span>
             </label>
             <label>
               <input
                 type="checkbox"
                 name="services"
-                value="itinRenewal"
-                checked={services.itinRenewal}
+                value="reference"
+                checked={services.reference}
                 onChange={handleChange}
               />
-              <span>ITIN Renewal</span>
+              <input
+                type="text"
+                name="services"
+                value={services.referenceDescription}
+                onChange={handleChange}
+              />
+              <span>Reference</span>
             </label>
             <label>
               <input
                 type="checkbox"
                 name="services"
-                value="VITA"
-                checked={services.VITA}
+                value="other"
+                checked={services.other}
                 onChange={handleChange}
               />
-              <span>VITA Tax help</span>
-            </label>
-            <label>
               <input
-                type="checkbox"
+                type="text"
                 name="services"
-                value="voterRegistration"
-                checked={services.voterRegistration}
+                value={services.otherDescription}
                 onChange={handleChange}
               />
-              <span>Voter registration</span>
+              <span>Other</span>
             </label>
           </div>
         </div>
@@ -235,12 +237,13 @@ const defaultServices = {
   nutrition: false,
   groceryTour: false,
   cookingClass: false,
-  PrEPClinic: false,
   communityEngagement: false,
+  financialEducation: false,
   financialCoaching: false,
-  itinRenewal: false,
-  VITA: false,
-  voterRegistration: false
+  reference: false,
+  referenceDescription: "",
+  other: false,
+  otherDescription: ""
 };
 
 const css = `
