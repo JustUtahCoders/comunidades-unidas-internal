@@ -203,7 +203,7 @@ export default function Services(props: StepComponentProps) {
           <button
             type="button"
             className="secondary"
-            onClick={() => props.goBack(Step.DEMOGRAPHICS_INFORMATION)}
+            onClick={() => props.goBack(Step.CLIENT_SOURCE)}
           >
             Go back
           </button>
