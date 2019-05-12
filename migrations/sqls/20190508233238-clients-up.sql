@@ -77,7 +77,6 @@ CREATE TABLE IF NOT EXISTS services (
   id int AUTO_INCREMENT PRIMARY KEY,
   serviceName varchar(64),
   serviceDesc varchar(128),
-  FOREIGN KEY (programId) REFERENCES programs(id)
 ); 
 
 /*Intake Services is a 1:M intakeData:IntakeServices*/
