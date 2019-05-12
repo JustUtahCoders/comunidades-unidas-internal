@@ -37,7 +37,8 @@ POST /api/clients
   "isStudent": true,
   "eligibleToVote": true,
   "clientSource": "facebook",
-  "couldVolunteer": true
+  "couldVolunteer": true,
+  "intakeServices": []
 }
 ```
 
@@ -101,7 +102,8 @@ The response object is the same as if you do a `GET /api/clients/:id`
   "isStudent": true,
   "eligibleToVote": true,
   "clientSource": "facebook",
-  "couldVolunteer": true
+  "couldVolunteer": true,
+  "intakeServices": []
 }
 ```
 
