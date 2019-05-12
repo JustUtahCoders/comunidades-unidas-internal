@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS demographics (
   householdSize tinyint, 
   dependents tinyint, /*Replace people under 18 in house hold question*/
   civilStatus varchar(128), /*Not applicable for children age < 17*/
+  isStudent BOOLEAN,
   householdIncome int, /*Annual income estimate for household*/
   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
   addedBy int NOT NULL,

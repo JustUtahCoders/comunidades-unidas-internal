@@ -160,8 +160,8 @@ app.post("/api/clients", (req, res, next) => {
           clientId,
           req.body.dateOfIntake,
           requestEnum(req.body.clientSource),
-          Boolean(req.body.registeredVoter),
-          Boolean(req.body.registerToVote),
+          Boolean(req.body.eligibleToVote),
+          Boolean(req.body.registeredToVote),
           Boolean(req.body.couldVolunteer),
           req.session.passport.user.id
         ];
