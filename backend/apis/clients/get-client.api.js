@@ -23,9 +23,15 @@ app.get("/api/clients/:id", (req, res, next) => {
         return databaseError(req, res, err, connection);
       }
 
-      res.send({
-        client
-      });
+      if (client) {
+        res.send({
+          client
+        });
+      } else {
+        res.status(404).send({
+          errors: [`Could not find client with id ${req.params.id}`]
+        });
+      }
     });
   });
 });
@@ -84,6 +90,10 @@ function getClientById(connection, clientId, cbk) {
       return cbk(err, data, fields);
     }
 
+    if (data.length === 0) {
+      return cbk(err, null);
+    }
+
     const c = data[0];
 
     const client = {
@@ -113,8 +123,9 @@ function getClientById(connection, clientId, cbk) {
       householdSize: c.householdSize,
       dependents: c.dependents,
       housingStatus: c.housingStatus,
-      isStudent: c.isStudent,
-      eligibleToVote: c.registerToVote,
+      isStudent: Boolean(c.isStudent),
+      eligibleToVote: Boolean(c.registerToVote),
+      registeredToVote: Boolean(c.registeredVoter),
       clientSource: c.clientSource,
       couldVolunteer: Boolean(c.couldVolunteer),
       dateOfIntake: c.dateOfIntake,
