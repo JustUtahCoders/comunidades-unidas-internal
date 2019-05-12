@@ -120,8 +120,6 @@ app.post("/api/clients", (req, res, next) => {
         ]
       );
 
-      console.log("insertClient", insertClient);
-
       connection.query(insertClient, (insertClientErr, result, fields) => {
         if (insertClientErr) {
           connection.rollback();
@@ -195,8 +193,6 @@ app.post("/api/clients", (req, res, next) => {
           [...contactInfoValues, ...demographicsValues]
         );
 
-        console.log("otherQuery", insertOther);
-
         connection.query(insertOther, (err, result, fields) => {
           if (err) {
             connection.rollback();
@@ -210,91 +206,5 @@ app.post("/api/clients", (req, res, next) => {
         });
       });
     });
-
-    // connection.query(insertQuery, (err, insertResult) => {
-    //   if (err) {
-    //     return databaseError(req, res, err, connection);
-    //   }
-
-    //   const selectQuery = mysql.format(
-    //     `
-    //     SELECT
-    //       clients.id, clients.dateOfIntake, clients.firstName, clients.lastName, clients.birthday, clients.gender, clients.phone,
-    //       clients.smsConsent, clients.homeStreet, clients.homeCity, clients.homeState, clients.homeZip, clients.email, clients.civilStatus,
-    //       clients.countryOfOrigin, clients.dateOfUSArrival, clients.homeLanguage, clients.currentlyEmployed, clients.employmentSector,
-    //       clients.householdIncome, clients.householdSize, clients.isStudent, clients.eligibleToVote, clients.clientSource, clients.couldVolunteer,
-    //       clients.dateAdded, clients.dateModified,
-    //       created.id as createdById, created.firstName as createdByFirstName, created.lastName as createdByLastName,
-    //       updated.id as updatedById, updated.firstName as updatedByFirstName, updated.lastName as updatedByLastName
-    //     FROM
-    //       clients
-    //       JOIN
-    //         users AS created
-    //       JOIN
-    //         users AS updated
-    //     WHERE
-    //       clients.id = ? AND created.id = clients.addedBy AND updated.id = clients.modifiedBy
-    //   `,
-    //     [insertResult.insertId]
-    //   );
-
-    //   connection.query(selectQuery, (err, rows) => {
-    //     if (err) {
-    //       return databaseError(req, res, err, connection);
-    //     }
-
-    //     const row = rows[0];
-
-    //     res.send({
-    //       id: row.id,
-    //       createdBy: {
-    //         userId: row.createdById,
-    //         firstName: row.createdByFirstName,
-    //         lastName: row.createdByLastName,
-    //         fullName:
-    //           (row.createdByFirstName || "") +
-    //           " " +
-    //           (row.createdByLastName || ""),
-    //         timestamp: row.dateAdded
-    //       },
-    //       lastUpdatedBy: {
-    //         userId: row.createdById,
-    //         firstName: row.createdByFirstName,
-    //         lastName: row.createdByLastName,
-    //         fullName:
-    //           (row.createdByFirstName || "") +
-    //           " " +
-    //           (row.createdByLastName || ""),
-    //         timestamp: row.dateModified
-    //       },
-    //       dateOfIntake: responseDateWithoutTime(row.dateOfIntake),
-    //       firstName: row.firstName,
-    //       lastName: row.lastName,
-    //       birthday: responseDateWithoutTime(row.birthday),
-    //       gender: row.gender,
-    //       phone: row.phone,
-    //       smsConsent: Boolean(row.smsConsent),
-    //       homeAddress: {
-    //         street: row.homeStreet,
-    //         city: row.homeCity,
-    //         state: row.homeState,
-    //         zip: row.zip
-    //       },
-    //       email: row.email,
-    //       civilStatus: row.civilStatus,
-    //       countryOfOrigin: row.countryOfOrigin,
-    //       dateOfUSArrival: responseDateWithoutTime(row.dateOfUSArrival),
-    //       homeLanguage: row.primaryLanguage,
-    //       currentlyEmployed: Boolean(row.currentlyEmployed),
-    //       employmentSector: row.employmentSector,
-    //       householdIncome: row.householdIncome,
-    //       householdSize: row.householdSize,
-    //       isStudent: Boolean(row.isStudent),
-    //       eligibleToVote: Boolean(row.eligibleToVote),
-    //       clientSource: row.clientSource,
-    //       couldVolunteer: Boolean(row.couldVolunteer)
-    //     });
-    //   });
-    // });
   });
 });
