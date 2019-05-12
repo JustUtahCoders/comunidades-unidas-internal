@@ -38,7 +38,7 @@ POST /api/clients
   "eligibleToVote": true,
   "clientSource": "facebook",
   "couldVolunteer": true,
-  "intakeServices": []
+  "intakeServices": [1, 5, 8]
 }
 ```
 
@@ -49,6 +49,7 @@ POST /api/clients
 - `payInterval` is an enum with possible values `every-week`, `every-two-weeks`, `every-month`, `every-quarter`, `every-year`
 - `weeklyEmployedHours` is an enum with possible values `0-20`, `21-30`, `31-40`, `41+`.
 - `housingStatus` is an enum with possible values `renter`, `homeowner`, and `other`.
+- `intakeServices` is an array of integer service ids. See (/api-docs/list-services.md).
 
 ## Response
 
@@ -103,7 +104,13 @@ The response object is the same as if you do a `GET /api/clients/:id`
   "eligibleToVote": true,
   "clientSource": "facebook",
   "couldVolunteer": true,
-  "intakeServices": []
+  "intakeServices": [
+    {
+      "id": 1,
+      "serviceName": "Citizenship",
+      "serviceDescription": "Gain United States citizenship"
+    }
+  ]
 }
 ```
 

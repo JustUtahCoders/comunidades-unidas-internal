@@ -70,7 +70,8 @@ export default function Confirm(props: StepComponentProps) {
         isStudent: d.isStudent,
         eligibleToVote: d.eligibleToVote,
         clientSource: d.clientSource,
-        couldVolunteer: d.couldVolunteer
+        couldVolunteer: d.couldVolunteer,
+        intakeServices: d.intakeServices
       }
     })
       .then(function(data) {

@@ -63,7 +63,6 @@ CREATE TABLE IF NOT EXISTS intakeData (
   registeredVoter varchar(5), /*Y N*/
   registerToVote varchar(5), /*Y N, does client want to register to vote..*/
   couldVolunteer varchar(5), /*Y N*/
-  intakeServicesId int NOT NULL, /*1:1:M intakeData:intakeServices:Services*/
   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
   addedBy int NOT NULL,
   FOREIGN KEY (addedby) REFERENCES users(id),
@@ -76,7 +75,7 @@ Create Services Table: Services are in turn adminstered by a program. Pogram 1:M
 CREATE TABLE IF NOT EXISTS services (
   id int AUTO_INCREMENT PRIMARY KEY,
   serviceName varchar(64),
-  serviceDesc varchar(128),
+  serviceDesc varchar(128)
 ); 
 
 /*Intake Services is a 1:M intakeData:IntakeServices*/
