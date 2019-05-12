@@ -60,20 +60,6 @@ The response object is the same as if you do a `GET /api/clients/:id`
 ```json
 {
   "id": 123,
-  "createdBy": {
-    "userId": 1,
-    "firstName": "Joel",
-    "lastName": "Denning",
-    "fullName": "Joel Denning",
-    "timestamp": "2019-05-06T06:00:00.000Z"
-  },
-  "lastUpdatedBy": {
-    "userId": 1,
-    "firstName": "Joel",
-    "lastName": "Denning",
-    "fullName": "Joel Denning",
-    "timestamp": "2019-05-06T06:00:00.000Z"
-  },
   "dateOfIntake": "2019-05-06T06:00:00.000Z",
   "firstName": "Freddy",
   "lastName": "Mercury",
@@ -110,7 +96,21 @@ The response object is the same as if you do a `GET /api/clients/:id`
       "serviceName": "Citizenship",
       "serviceDescription": "Gain United States citizenship"
     }
-  ]
+  ],
+  "createdBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
+  "lastUpdatedBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  }
 }
 ```
 

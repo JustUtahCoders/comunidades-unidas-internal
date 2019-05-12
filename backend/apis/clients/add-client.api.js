@@ -1,10 +1,6 @@
 const { app, databaseError, pool } = require("../../server");
 const mysql = require("mysql");
-const {
-  requestEnum,
-  requestBoolean,
-  requestPhone
-} = require("../utils/transform-utils");
+const { requestEnum, requestPhone } = require("../utils/transform-utils");
 const {
   nullableValidDate,
   checkValid,
@@ -164,9 +160,9 @@ app.post("/api/clients", (req, res, next) => {
           clientId,
           req.body.dateOfIntake,
           requestEnum(req.body.clientSource),
-          requestBoolean(req.body.registeredVoter),
-          requestBoolean(req.body.registerToVote),
-          requestBoolean(req.body.couldVolunteer),
+          Boolean(req.body.registeredVoter),
+          Boolean(req.body.registerToVote),
+          Boolean(req.body.couldVolunteer),
           req.session.passport.user.id
         ];
 
