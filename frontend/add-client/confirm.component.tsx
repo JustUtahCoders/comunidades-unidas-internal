@@ -57,13 +57,16 @@ export default function Confirm(props: StepComponentProps) {
         civilStatus: d.civilStatus,
         countryOfOrigin: d.countryOfOrigin,
         dateOfUSArrival: d.dateOfUSArrival || null,
-        primaryLanguage: d.primaryLanguage,
+        homeLanguage: d.homeLanguage,
+        englishProficiency: d.englishLevel,
         currentlyEmployed: d.currentlyEmployed,
         employmentSector: d.employmentSector,
         payInterval: d.payInterval,
-        weeklyEmployedHours: d.weeklyEmployedHours,
-        annualIncome: d.annualIncome,
+        weeklyEmployedHours: d.weeklyEmployedHours || null,
+        householdIncome: d.householdIncome,
         householdSize: d.householdSize,
+        dependents: d.dependents,
+        housingStatus: d.housing || null,
         isStudent: d.isStudent,
         eligibleToVote: d.eligibleToVote,
         clientSource: d.clientSource,
@@ -76,9 +79,5 @@ export default function Confirm(props: StepComponentProps) {
       .catch(function(err) {
         console.error(err);
       });
-  }
-
-  function addAnother() {
-    props.reset();
   }
 }
