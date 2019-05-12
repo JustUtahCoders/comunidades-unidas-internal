@@ -63,7 +63,6 @@ CREATE TABLE IF NOT EXISTS intakeData (
   registeredVoter varchar(5), /*Y N*/
   registerToVote varchar(5), /*Y N, does client want to register to vote..*/
   couldVolunteer varchar(5), /*Y N*/
-  intakeServicesId int NOT NULL, /*1:1:M intakeData:intakeServices:Services*/
   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
   addedBy int NOT NULL,
   FOREIGN KEY (addedby) REFERENCES users(id),
