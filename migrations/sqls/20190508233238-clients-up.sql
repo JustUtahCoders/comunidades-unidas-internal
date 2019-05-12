@@ -75,10 +75,8 @@ Create Services Table: Services are in turn adminstered by a program. Pogram 1:M
 */
 CREATE TABLE IF NOT EXISTS services (
   id int AUTO_INCREMENT PRIMARY KEY,
-  programId int NOT NULL,
   serviceName varchar(64),
   serviceDesc varchar(128),
-  FOREIGN KEY (programId) REFERENCES programs(id)
 ); 
 
 /*Intake Services is a 1:M intakeData:IntakeServices*/
