@@ -25,13 +25,15 @@ POST /api/clients
   "civilStatus": "single",
   "countryOfOrigin": "MX",
   "dateOfUSArrival": null,
-  "primaryLanguage": "english",
+  "homeLanguage": "english",
   "currentlyEmployed": "n/a",
   "employmentSector": "industrial",
   "payInterval": "every-week",
   "weeklyEmployedHours": "0-20",
-  "annualIncome": 42000,
+  "householdIncome": 42000,
   "householdSize": 1,
+  "dependents": 0,
+  "housingStatus": "renter",
   "isStudent": true,
   "eligibleToVote": true,
   "clientSource": "facebook",
@@ -44,7 +46,8 @@ POST /api/clients
 - `dateOfUSArrival` is null for those born in the United States.
 - `currentlyEmployed` is an enum with possible values `yes`, `no`, `n/a`, and `unknown`.
 - `payInterval` is an enum with possible values `every-week`, `every-two-weeks`, `every-month`, `every-quarter`, `every-year`
-- `weeklyEmployedHours` is an enum with possible values `0-20`, `21-30`, `31-40`, `41-more`.
+- `weeklyEmployedHours` is an enum with possible values `0-20`, `21-30`, `31-40`, `41+`.
+- `housingStatus` is an enum with possible values `renter`, `homeowner`, and `other`.
 
 ## Response
 
@@ -86,13 +89,15 @@ The response object is the same as if you do a `GET /api/clients/:id`
   "civilStatus": "single",
   "countryOfOrigin": "MX",
   "dateOfUSArrival": null,
-  "primaryLanguage": "english",
+  "homeLanguage": "english",
   "currentlyEmployed": "unknown",
   "employmentSector": "industrial",
   "payInterval": "every-week",
   "weeklyEmployedHours": "0-20",
-  "annualIncome": 42000,
+  "householdIncome": 42000,
   "householdSize": 1,
+  "dependents": 0,
+  "housingStatus": "renter",
   "isStudent": true,
   "eligibleToVote": true,
   "clientSource": "facebook",

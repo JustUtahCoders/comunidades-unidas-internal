@@ -122,14 +122,15 @@ export type ClientState = {
   civilStatus?: CivilStatus;
   countryOfOrigin?: string;
   dateOfUSArrival?: string;
-  primaryLanguage?: string;
+  homeLanguage?: string;
   englishLevel?: EnglishLevel;
   currentlyEmployed?: string;
   employmentSector?: string;
   payInterval?: PayInterval;
   weeklyEmployedHours?: string;
-  annualIncome?: number;
+  householdIncome?: number;
   householdSize?: number;
+  dependents?: number;
   isStudent?: boolean;
   eligibleToVote?: boolean;
   // Client source

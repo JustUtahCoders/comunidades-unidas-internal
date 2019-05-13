@@ -13,7 +13,7 @@ export default function ContactInformation(props: StepComponentProps) {
   const [city, setCity] = useState("");
   const [state, setState] = useState("UT");
   const [zip, setZip] = useState("");
-  const [housing, setHousing] = useState("");
+  const [housing, setHousing] = useState("renter");
   const [email, setEmail] = useState("");
   const [dateOfIntake, setDateOfIntake] = useState(getTodayAsString);
   const scope = useCss(css);
