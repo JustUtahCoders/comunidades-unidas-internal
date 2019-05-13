@@ -3,7 +3,7 @@
 API is provided to query a list of clients from the database.
 
 ##Request
-GET /api/clients/?firstName=Mario&lastName=Luigi&zip=84107&page=1
+GET /api/clients?firstName=Mario&lastName=Luigi&zip=84107&page=1
 
 Notes:
 
@@ -24,10 +24,10 @@ Notes:
       "firstName": "Mario",
       "lastName": "Luigi",
       "zip": "84107",
-      "dob": "01/01/1981",
+      "birthday": "1981/01/01",
       "primaryPhone": "5551111111",
-      "dateAdded": "04/28/2019",
-      "addedBy": "Shigeru Miyamoto"
+      "dateAdded": "2019/05/13",
+      "createdBy": "Shigeru Miyamoto"
     }
   ]
 }
