@@ -166,8 +166,6 @@ app.post("/api/clients", (req, res, next) => {
           clientId,
           req.body.dateOfIntake,
           requestEnum(req.body.clientSource),
-          requestBoolean(req.body.registeredToVote),
-          requestBoolean(req.body.eligibleToVote),
           requestBoolean(req.body.couldVolunteer),
           req.session.passport.user.id
         ];
@@ -225,6 +223,17 @@ app.post("/api/clients", (req, res, next) => {
 
           const intakeDataResult = results[2];
           const intakeDataId = intakeDataResult.insertId;
+
+          if (req.body.intakeServices.length === 0) {
+            connection.commit();
+            connection.release();
+
+            res.send({
+              success: true
+            });
+
+            return;
+          }
 
           const intakeServicesValues = req.body.intakeServices.reduce(
             (acc, intakeService) => {
