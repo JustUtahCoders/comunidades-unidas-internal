@@ -42,6 +42,8 @@ CREATE TABLE IF NOT EXISTS demographics (
   employed ENUM('yes', 'no', 'n/a', 'unknown'), /*employed, not applicable for age < 16*/
   employmentSector varchar(128), /*Can be null if not employed*/
   payInterval varchar(64),
+  registeredVoter varchar(5), /*Y N*/
+  registerToVote varchar(5), /*Y N, does client want to register to vote..*/
   weeklyAvgHoursWorked ENUM("0-20","21-35","36-40","41+"), /*Can be null if not employed*/  
   householdSize tinyint, 
   dependents tinyint, /*Replace people under 18 in house hold question*/
@@ -61,8 +63,6 @@ CREATE TABLE IF NOT EXISTS intakeData (
   clientId int NOT NULL,
   dateOfIntake date NOT NULL, /*Not time stap because it maybe different*/
   clientSource ENUM('facebook', 'instagram', 'website', 'promotionalMaterial', 'consulate', 'friend', 'previousClient', 'employee', 'sms', 'radio', 'tv', 'other'), /*how did person hear of CU*/
-  registeredVoter varchar(5), /*Y N*/
-  registerToVote varchar(5), /*Y N, does client want to register to vote..*/
   couldVolunteer varchar(5), /*Y N*/
   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
   addedBy int NOT NULL,
@@ -76,7 +76,7 @@ Create Services Table: Services are in turn adminstered by a program. Pogram 1:M
 CREATE TABLE IF NOT EXISTS services (
   id int AUTO_INCREMENT PRIMARY KEY,
   serviceName varchar(64),
-  serviceDesc varchar(128),
+  serviceDesc varchar(128)
 ); 
 
 /*Intake Services is a 1:M intakeData:IntakeServices*/

@@ -155,6 +155,8 @@ app.post("/api/clients", (req, res, next) => {
           req.body.dependents,
           req.body.civilStatus,
           req.body.householdIncome,
+          req.body.registerToVote,
+          req.body.registeredVoter,
           req.session.passport.user.id
         ];
 
@@ -187,8 +189,10 @@ app.post("/api/clients", (req, res, next) => {
             dependents,
             civilStatus,
             householdIncome,
+            registerToVote,
+            registeredVoter,
             addedBy
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
         `,
           [...contactInfoValues, ...demographicsValues]
         );
