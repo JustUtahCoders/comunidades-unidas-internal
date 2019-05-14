@@ -52,6 +52,7 @@ require("./apis/login.api");
 require("./apis/github-key.api");
 require("./apis/clients/add-client.api");
 require("./apis/clients/client-duplicates.api");
+require("./apis/services/list-services.api");
 require("./index-html.js");
 
 process.on("uncaughtException", function(err) {

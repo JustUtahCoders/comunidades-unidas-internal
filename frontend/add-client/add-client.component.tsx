@@ -136,6 +136,8 @@ export type ClientState = {
   // Client source
   clientSource?: ClientSources | string;
   couldVolunteer?: boolean;
+  // Intake services
+  intakeServices?: number[];
 };
 
 export type StepComponentProps = {

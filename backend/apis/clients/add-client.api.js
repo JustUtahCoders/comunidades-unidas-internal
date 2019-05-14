@@ -1,8 +1,8 @@
 const { app, databaseError, pool } = require("../../server");
 const mysql = require("mysql");
 const {
-  responseDateWithoutTime,
   requestEnum,
+  requestBoolean,
   requestPhone
 } = require("../utils/transform-utils");
 const {
@@ -19,6 +19,7 @@ const {
   nullableValidEnum,
   validEnum,
   validCountry,
+  validArray,
   validInteger
 } = require("../utils/validation-utils");
 
@@ -82,7 +83,8 @@ app.post("/api/clients", (req, res, next) => {
         "tv",
         "other"
       ),
-      validBoolean("couldVolunteer")
+      validBoolean("couldVolunteer"),
+      validArray("intakeServices", validInteger)
     );
 
     if (validityErrors.length > 0) {
@@ -130,7 +132,7 @@ app.post("/api/clients", (req, res, next) => {
 
         const contactInfoValues = [
           clientId,
-          req.body.phone,
+          requestPhone(req.body.phone),
           req.body.smsConsent,
           req.body.email,
           req.body.homeAddress.street,
@@ -157,6 +159,14 @@ app.post("/api/clients", (req, res, next) => {
           req.body.householdIncome,
           req.body.registerToVote,
           req.body.registeredVoter,
+          req.session.passport.user.id
+        ];
+
+        const intakeDataValues = [
+          clientId,
+          req.body.dateOfIntake,
+          requestEnum(req.body.clientSource),
+          requestBoolean(req.body.couldVolunteer),
           req.session.passport.user.id
         ];
 
@@ -193,19 +203,69 @@ app.post("/api/clients", (req, res, next) => {
             registeredVoter,
             addedBy
           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+          INSERT INTO intakeData (
+            clientId,
+            dateOfIntake,
+            clientSource,
+            couldVolunteer,
+            addedBy
+          ) VALUES (?, ?, ?, ?, ?);
         `,
-          [...contactInfoValues, ...demographicsValues]
+          [...contactInfoValues, ...demographicsValues, ...intakeDataValues]
         );
 
-        connection.query(insertOther, (err, result, fields) => {
+        connection.query(insertOther, (err, results, fields) => {
           if (err) {
             connection.rollback();
             return databaseError(req, res, err, connection);
           }
 
-          connection.commit();
-          res.send({
-            success: true
+          const intakeDataResult = results[2];
+          const intakeDataId = intakeDataResult.insertId;
+
+          if (req.body.intakeServices.length === 0) {
+            connection.commit();
+            connection.release();
+
+            res.send({
+              success: true
+            });
+
+            return;
+          }
+
+          const intakeServicesValues = req.body.intakeServices.reduce(
+            (acc, intakeService) => {
+              return [...acc, intakeDataId, intakeService];
+            },
+            []
+          );
+
+          const insertIntakeServicesQuery = req.body.intakeServices
+            .map(
+              intakeService => `
+            INSERT INTO intakeServices (intakeDataId, serviceId) VALUES (?, ?);
+          `
+            )
+            .join("");
+
+          const insertIntakeServices = mysql.format(
+            insertIntakeServicesQuery,
+            intakeServicesValues
+          );
+
+          connection.query(insertIntakeServices, (err, result, fields) => {
+            if (err) {
+              connection.rollback();
+              return databaseError(req, res, err, connection);
+            }
+
+            connection.commit();
+            connection.release();
+            res.send({
+              success: true
+            });
           });
         });
       });
