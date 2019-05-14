@@ -26,7 +26,7 @@ export default function Services(props: StepComponentProps) {
           <img src={agendaIconUrl} className="hint-icon" />
         </div>
         <div className="instruction">
-          What services are they interested in?
+          What services are they interested in today?
           <div className="warning">
             This is not what Comunidades Unidas did for them in their first
             visit, but the services they might want in the future.
@@ -57,7 +57,7 @@ export default function Services(props: StepComponentProps) {
           <button
             type="button"
             className="secondary"
-            onClick={() => props.goBack(Step.DEMOGRAPHICS_INFORMATION)}
+            onClick={() => props.goBack(Step.CLIENT_SOURCE, {})}
           >
             Go back
           </button>

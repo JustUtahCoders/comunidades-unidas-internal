@@ -7,11 +7,28 @@ import {
 import targetIconUrl from "../../icons/148705-essential-collection/svg/target.svg";
 
 export default function ClientSource(props: StepComponentProps) {
-  const [clientSource, setClientSource] = useState(
-    props.clientState.clientSource || "friend"
+  const getInitialClientSource = () => {
+    if (
+      props.clientState.clientSource &&
+      !ClientSources[props.clientState.clientSource]
+    ) {
+      return "other";
+    } else if (ClientSources[props.clientState.clientSource]) {
+      return ClientSources[props.clientState.clientSource];
+    } else {
+      return "friend";
+    }
+  };
+
+  const [clientSource, setClientSource] = useState(getInitialClientSource());
+  const [otherSource, setOtherSource] = useState(
+    ClientSources[props.clientState.clientSource]
+      ? ""
+      : props.clientState.clientSource
   );
-  const [otherSource, setOtherSource] = useState("");
-  const [couldVolunteer, setCouldVolunteer] = useState(false);
+  const [couldVolunteer, setCouldVolunteer] = useState(
+    props.clientState.couldVolunteer || false
+  );
 
   return (
     <>
@@ -82,7 +99,13 @@ export default function ClientSource(props: StepComponentProps) {
           <button
             type="button"
             className="secondary"
-            onClick={() => props.goBack(Step.DEMOGRAPHICS_INFORMATION)}
+            onClick={() => {
+              props.goBack(Step.DEMOGRAPHICS_INFORMATION, {
+                clientSource:
+                  clientSource === "other" ? otherSource : clientSource,
+                couldVolunteer
+              });
+            }}
           >
             Go back
           </button>
