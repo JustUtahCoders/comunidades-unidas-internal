@@ -26,8 +26,10 @@ This is all you need for to authenticate and authorize.
 
 [Check duplicate clients](/api-docs/check-duplicate-client.md)
 
-[List clients](/api-docs/list-clients.md)
-
 [Create client](/api-docs/create-client.md)
+
+[Get client](/api-docs/get-client.md)
+
+[List clients](/api-docs/list-clients.md)
 
 [Update client](/api-docs/update-client.md)
