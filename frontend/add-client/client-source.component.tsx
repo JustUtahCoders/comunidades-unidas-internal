@@ -7,14 +7,24 @@ import {
 import targetIconUrl from "../../icons/148705-essential-collection/svg/target.svg";
 
 export default function ClientSource(props: StepComponentProps) {
-  const [clientSource, setClientSource] = useState(
-    // props.clientState.clientSource || "friend"
-    ClientSources[props.clientState.clientSource] || "friend"
-  );
+  const getInitialClientSource = () => {
+    if (
+      props.clientState.clientSource &&
+      !ClientSources[props.clientState.clientSource]
+    ) {
+      return "other";
+    } else if (ClientSources[props.clientState.clientSource]) {
+      return ClientSources[props.clientState.clientSource];
+    } else {
+      return "friend";
+    }
+  };
+
+  const [clientSource, setClientSource] = useState(getInitialClientSource());
   const [otherSource, setOtherSource] = useState(
     ClientSources[props.clientState.clientSource]
       ? ""
-      : ClientSources[props.clientState.clientSource]
+      : props.clientState.clientSource
   );
   const [couldVolunteer, setCouldVolunteer] = useState(
     props.clientState.couldVolunteer || false
