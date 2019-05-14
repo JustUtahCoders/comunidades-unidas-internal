@@ -56,7 +56,8 @@ export default function AddClient(props: AddClientProps) {
     setStep(stepName);
   }
 
-  function goBack(step: Step) {
+  function goBack(step: Step, newState: ClientState) {
+    setClientState({ ...clientState, ...newState });
     setStep(step);
   }
 
@@ -136,13 +137,14 @@ export type ClientState = {
   registerToVote?: boolean;
   // Client source
   clientSource?: ClientSources | string;
+  otherSource?: string;
   couldVolunteer?: boolean;
 };
 
 export type StepComponentProps = {
   nextStep: (stepName: string, newClientState: ClientState) => void;
   clientState: ClientState;
-  goBack(Step): void;
+  goBack(Step, newClientState): void;
   reset(): void;
   showDuplicateWarning(DuplicateWarning): void;
 };

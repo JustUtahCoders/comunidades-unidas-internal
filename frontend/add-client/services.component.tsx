@@ -163,7 +163,7 @@ export default function Services(props: StepComponentProps) {
                 checked={services.financialCoaching}
                 onChange={handleChange}
               />
-              <span>Finacial Coaching</span>
+              <span>Financial Coaching</span>
             </label>
             <label>
               <input
@@ -203,7 +203,7 @@ export default function Services(props: StepComponentProps) {
           <button
             type="button"
             className="secondary"
-            onClick={() => props.goBack(Step.CLIENT_SOURCE)}
+            onClick={() => props.goBack(Step.CLIENT_SOURCE, {})}
           >
             Go back
           </button>

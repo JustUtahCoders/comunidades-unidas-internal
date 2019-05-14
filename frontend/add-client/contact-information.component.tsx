@@ -7,15 +7,21 @@ import StateSelect from "../util/state-select.component";
 import CityInput from "../util/city-input.component";
 
 export default function ContactInformation(props: StepComponentProps) {
-  const [phone, setPhone] = useState("");
-  const [smsConsent, setSmsConsent] = useState(false);
-  const [streetAddress, setStreetAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("UT");
-  const [zip, setZip] = useState("");
-  const [housing, setHousing] = useState("");
-  const [email, setEmail] = useState("");
-  const [dateOfIntake, setDateOfIntake] = useState(getTodayAsString);
+  const [phone, setPhone] = useState(props.clientState.phone || "");
+  const [smsConsent, setSmsConsent] = useState(
+    props.clientState.smsConsent || false
+  );
+  const [streetAddress, setStreetAddress] = useState(
+    props.clientState.streetAddress || ""
+  );
+  const [city, setCity] = useState(props.clientState.city || "");
+  const [state, setState] = useState(props.clientState.state || "UT");
+  const [zip, setZip] = useState(props.clientState.zip || "");
+  const [housing, setHousing] = useState(props.clientState.housing || "");
+  const [email, setEmail] = useState(props.clientState.email || "");
+  const [dateOfIntake, setDateOfIntake] = useState(
+    props.clientState.dateOfIntake || getTodayAsString
+  );
   const scope = useCss(css);
 
   return (
@@ -89,14 +95,14 @@ export default function ContactInformation(props: StepComponentProps) {
         </div>
         <div>
           <label>
-            <span>City</span>
-            <CityInput state={state} city={city} setCity={setCity} />
+            <span>State</span>
+            <StateSelect state={state} setState={setState} />
           </label>
         </div>
         <div>
           <label>
-            <span>State</span>
-            <StateSelect state={state} setState={setState} />
+            <span>City</span>
+            <CityInput state={state} city={city} setCity={setCity} />
           </label>
         </div>
         <div>
@@ -131,7 +137,19 @@ export default function ContactInformation(props: StepComponentProps) {
           <button
             type="button"
             className="secondary"
-            onClick={() => props.goBack(Step.CHECK_DUPLICATE)}
+            onClick={() =>
+              props.goBack(Step.CHECK_DUPLICATE, {
+                phone,
+                smsConsent,
+                streetAddress,
+                city,
+                state,
+                zip,
+                housing,
+                email,
+                dateOfIntake
+              })
+            }
           >
             Go back
           </button>

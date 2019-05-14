@@ -5,7 +5,9 @@ import CountrySelect from "../util/country-select.component";
 import CurrencyInput from "../util/currency-input.component";
 
 export default function DemographicInformation(props: StepComponentProps) {
-  const [civilStatus, setCivilStatus] = useState(CivilStatus.SINGLE);
+  const [civilStatus, setCivilStatus] = useState(
+    props.clientState.civilStatus || CivilStatus.SINGLE
+  );
   const [annualIncome, setAnnualIncome] = useState(
     props.clientState.annualIncome
   );
@@ -123,8 +125,8 @@ export default function DemographicInformation(props: StepComponentProps) {
                 setHouseholdSizeChildren(Number(evt.target.value))
               }
               required
-              min="0"
-              max="30"
+              min={0}
+              max={30}
             />
           </label>
         </div>
@@ -275,7 +277,7 @@ export default function DemographicInformation(props: StepComponentProps) {
             )}
             <div>
               <label>
-                <span>Pay interval frequency</span>
+                <span>Pay interval</span>
                 <select
                   required
                   value={payInterval}
@@ -378,7 +380,27 @@ export default function DemographicInformation(props: StepComponentProps) {
           <button
             type="button"
             className="secondary"
-            onClick={() => props.goBack(Step.CONTACT_INFORMATION)}
+            onClick={() =>
+              props.goBack(Step.CONTACT_INFORMATION, {
+                civilStatus,
+                countryOfOrigin,
+                dateOfUSArrival,
+                primaryLanguage:
+                  primaryLanguage === "other" ? otherLanguage : primaryLanguage,
+                englishLevel,
+                currentlyEmployed,
+                employmentSector:
+                  employmentSector === "other"
+                    ? empSectorExplain
+                    : employmentSector || null,
+                payInterval,
+                weeklyEmployedHours,
+                annualIncome,
+                householdSize,
+                isStudent,
+                eligibleToVote
+              })
+            }
           >
             Go back
           </button>

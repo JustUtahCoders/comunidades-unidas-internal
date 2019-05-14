@@ -10,8 +10,12 @@ export default function ClientSource(props: StepComponentProps) {
   const [clientSource, setClientSource] = useState(
     props.clientState.clientSource || "friend"
   );
-  const [otherSource, setOtherSource] = useState("");
-  const [couldVolunteer, setCouldVolunteer] = useState(false);
+  const [otherSource, setOtherSource] = useState(
+    props.clientState.otherSource || ""
+  );
+  const [couldVolunteer, setCouldVolunteer] = useState(
+    props.clientState.couldVolunteer || false
+  );
 
   return (
     <>
@@ -82,7 +86,13 @@ export default function ClientSource(props: StepComponentProps) {
           <button
             type="button"
             className="secondary"
-            onClick={() => props.goBack(Step.DEMOGRAPHICS_INFORMATION)}
+            onClick={() => {
+              props.goBack(Step.DEMOGRAPHICS_INFORMATION, {
+                clientSource:
+                  clientSource === "other" ? otherSource : clientSource,
+                couldVolunteer
+              });
+            }}
           >
             Go back
           </button>
