@@ -1,5 +1,7 @@
 # Get client
 
+To retrieve a specific client, call the following API.
+
 ## Request
 
 ```http
