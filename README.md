@@ -101,7 +101,7 @@ use ebdb;
 show tables;
 ```
 
-git stuff part 2.
+`git stuff` part 2.
 
 ## SSH access
 
