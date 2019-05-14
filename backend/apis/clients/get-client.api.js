@@ -56,7 +56,6 @@ function getClientById(connection, clientId, cbk) {
       intake.clientId,
       intake.dateOfIntake,
       intake.clientSource,
-      intake.registeredVoter,
       intake.couldVolunteer,
       intake.dateAdded,
       intake.addedBy,

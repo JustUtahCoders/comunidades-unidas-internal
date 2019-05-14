@@ -18,6 +18,7 @@ const {
   validArray,
   validInteger
 } = require("../utils/validation-utils");
+const { getClientById } = require("./get-client.api");
 
 app.post("/api/clients", (req, res, next) => {
   pool.getConnection((err, connection) => {
@@ -162,7 +163,7 @@ app.post("/api/clients", (req, res, next) => {
           clientId,
           req.body.dateOfIntake,
           requestEnum(req.body.clientSource),
-          requestBoolean(req.body.couldVolunteer),
+          Boolean(req.body.couldVolunteer),
           req.session.passport.user.id
         ];
 
@@ -224,9 +225,7 @@ app.post("/api/clients", (req, res, next) => {
             connection.commit();
             connection.release();
 
-            res.send({
-              success: true
-            });
+            returnTheClient();
 
             return;
           }
@@ -258,12 +257,23 @@ app.post("/api/clients", (req, res, next) => {
             }
 
             connection.commit();
-            connection.release();
-            res.send({
-              success: true
-            });
+            returnTheClient();
           });
         });
+
+        function returnTheClient() {
+          getClientById(connection, clientId, (err, client) => {
+            if (err) {
+              return databaseError(req, res, err, connection);
+            }
+
+            connection.release();
+
+            res.send({
+              client
+            });
+          });
+        }
       });
     });
   });
