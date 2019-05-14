@@ -153,6 +153,8 @@ app.post("/api/clients", (req, res, next) => {
           req.body.dependents,
           req.body.civilStatus,
           req.body.householdIncome,
+          Boolean(req.body.eligibleToVote),
+          Boolean(req.body.registeredToVote),
           req.session.passport.user.id
         ];
 
@@ -160,9 +162,7 @@ app.post("/api/clients", (req, res, next) => {
           clientId,
           req.body.dateOfIntake,
           requestEnum(req.body.clientSource),
-          Boolean(req.body.eligibleToVote),
-          Boolean(req.body.registeredToVote),
-          Boolean(req.body.couldVolunteer),
+          requestBoolean(req.body.couldVolunteer),
           req.session.passport.user.id
         ];
 
@@ -195,18 +195,18 @@ app.post("/api/clients", (req, res, next) => {
             dependents,
             civilStatus,
             householdIncome,
+            registerToVote,
+            registeredVoter,
             addedBy
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
           INSERT INTO intakeData (
             clientId,
             dateOfIntake,
             clientSource,
-            registeredVoter,
-            registerToVote,
             couldVolunteer,
             addedBy
-          ) VALUES (?, ?, ?, ?, ?, ?, ?);
+          ) VALUES (?, ?, ?, ?, ?);
         `,
           [...contactInfoValues, ...demographicsValues, ...intakeDataValues]
         );
@@ -219,6 +219,17 @@ app.post("/api/clients", (req, res, next) => {
 
           const intakeDataResult = results[2];
           const intakeDataId = intakeDataResult.insertId;
+
+          if (req.body.intakeServices.length === 0) {
+            connection.commit();
+            connection.release();
+
+            res.send({
+              success: true
+            });
+
+            return;
+          }
 
           const intakeServicesValues = req.body.intakeServices.reduce(
             (acc, intakeService) => {

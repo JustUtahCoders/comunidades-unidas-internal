@@ -94,7 +94,7 @@ Run the following commands in a terminal. Replace `$HOSTNAME`, `$USERNAME`, and 
 ```sh
 mysql -h $HOSTNAME -u $USERNAME -p$PASSWORD
 # OR, if you don't have `mysql` installed on your computer
-docker run -it --rm mysql mysql -h$HOSTNAME -u$USERNAME -p$PASSWORD
+docker run -it --rm mysql mysql -h $HOSTNAME -u $USERNAME -p$PASSWORD
 
 # Now you'll be in the mysql shell
 use ebdb;
