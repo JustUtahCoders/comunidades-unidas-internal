@@ -8,10 +8,13 @@ import targetIconUrl from "../../icons/148705-essential-collection/svg/target.sv
 
 export default function ClientSource(props: StepComponentProps) {
   const [clientSource, setClientSource] = useState(
-    props.clientState.clientSource || "friend"
+    // props.clientState.clientSource || "friend"
+    ClientSources[props.clientState.clientSource] || "friend"
   );
   const [otherSource, setOtherSource] = useState(
-    props.clientState.otherSource || ""
+    ClientSources[props.clientState.clientSource]
+      ? ""
+      : ClientSources[props.clientState.clientSource]
   );
   const [couldVolunteer, setCouldVolunteer] = useState(
     props.clientState.couldVolunteer || false
