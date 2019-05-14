@@ -17,7 +17,7 @@ export default function ContactInformation(props: StepComponentProps) {
   const [city, setCity] = useState(props.clientState.city || "");
   const [state, setState] = useState(props.clientState.state || "UT");
   const [zip, setZip] = useState(props.clientState.zip || "");
-  const [housing, setHousing] = useState(props.clientState.housing || "");
+  const [housing, setHousing] = useState(props.clientState.housing || "renter");
   const [email, setEmail] = useState(props.clientState.email || "");
   const [dateOfIntake, setDateOfIntake] = useState(
     props.clientState.dateOfIntake || getTodayAsString

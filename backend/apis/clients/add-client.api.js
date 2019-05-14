@@ -1,8 +1,8 @@
 const { app, databaseError, pool } = require("../../server");
 const mysql = require("mysql");
 const {
-  responseDateWithoutTime,
   requestEnum,
+  requestBoolean,
   requestPhone
 } = require("../utils/transform-utils");
 const {
@@ -19,6 +19,7 @@ const {
   nullableValidEnum,
   validEnum,
   validCountry,
+  validArray,
   validInteger
 } = require("../utils/validation-utils");
 
@@ -52,7 +53,7 @@ app.post("/api/clients", (req, res, next) => {
       ),
       validCountry("countryOfOrigin"),
       nullableValidDate("dateOfUSArrival"),
-      nonEmptyString("primaryLanguage"),
+      nonEmptyString("homeLanguage"),
       validEnum("currentlyEmployed", "yes", "no", "n/a", "unknown"),
       nullableNonEmptyString("employmentSector"),
       nullableValidEnum(
@@ -63,14 +64,8 @@ app.post("/api/clients", (req, res, next) => {
         "every-quarter",
         "every-year"
       ),
-      nullableValidEnum(
-        "weeklyEmployedHours",
-        "0-20",
-        "21-30",
-        "31-40",
-        "41-more"
-      ),
-      validInteger("annualIncome"),
+      nullableValidEnum("weeklyEmployedHours", "0-20", "21-35", "36-40", "41+"),
+      validInteger("householdIncome"),
       validInteger("householdSize"),
       validBoolean("isStudent"),
       validEnum(
@@ -88,7 +83,8 @@ app.post("/api/clients", (req, res, next) => {
         "tv",
         "other"
       ),
-      validBoolean("couldVolunteer")
+      validBoolean("couldVolunteer"),
+      validArray("intakeServices", validInteger)
     );
 
     if (validityErrors.length > 0) {
@@ -98,157 +94,179 @@ app.post("/api/clients", (req, res, next) => {
       return;
     }
 
-    const insertValues = [
-      req.body.firstName,
-      req.body.lastName,
-      req.body.birthday,
-      requestEnum(req.body.gender),
-      req.body.dateOfIntake,
-      requestPhone(req.body.phone),
-      req.body.smsConsent,
-      req.body.homeAddress.street,
-      req.body.homeAddress.city,
-      req.body.homeAddress.state,
-      req.body.homeAddress.zip,
-      req.body.email,
-      requestEnum(req.body.civilStatus),
-      req.body.countryOfOrigin,
-      req.body.dateOfUSArrival,
-      requestEnum(req.body.primaryLanguage),
-      req.body.currentlyEmployed,
-      requestEnum(req.body.employmentSector),
-      requestEnum(req.body.payInterval),
-      requestEnum(req.body.weeklyEmployedHours),
-      req.body.annualIncome,
-      req.body.householdSize,
-      req.body.isStudent,
-      req.body.eligibleToVote,
-      requestEnum(req.body.clientSource),
-      req.body.couldVolunteer,
-      req.session.passport.user.id,
-      req.session.passport.user.id
-    ];
-
-    const insertQuery = mysql.format(
-      `
-    INSERT INTO clients
-    (
-      firstName,
-      lastName,
-      birthday,
-      gender,
-      dateOfIntake,
-      phone,
-      smsConsent,
-      homeStreet,
-      homeCity,
-      homeState,
-      homeZip,
-      email,
-      civilStatus,
-      countryOfOrigin,
-      dateOfUSArrival,
-      primaryLanguage,
-      currentlyEmployed,
-      employmentSector,
-      payInterval,
-      weeklyEmployedHours,
-      annualIncome,
-      householdSize,
-      isStudent,
-      eligibleToVote,
-      clientSource,
-      couldVolunteer,
-      addedBy,
-      modifiedBy
-    )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `,
-      insertValues
-    );
-
-    connection.query(insertQuery, (err, insertResult) => {
+    connection.beginTransaction(err => {
       if (err) {
-        return databaseError(req, res, err, connection);
+        return databaseError(req, ers, err, connection);
       }
 
-      const selectQuery = mysql.format(
+      const insertClient = mysql.format(
         `
-        SELECT
-          clients.id, clients.dateOfIntake, clients.firstName, clients.lastName, clients.birthday, clients.gender, clients.phone,
-          clients.smsConsent, clients.homeStreet, clients.homeCity, clients.homeState, clients.homeZip, clients.email, clients.civilStatus,
-          clients.countryOfOrigin, clients.dateOfUSArrival, clients.primaryLanguage, clients.currentlyEmployed, clients.employmentSector,
-          clients.annualIncome, clients.householdSize, clients.isStudent, clients.eligibleToVote, clients.clientSource, clients.couldVolunteer,
-          clients.dateAdded, clients.dateModified,
-          created.id as createdById, created.firstName as createdByFirstName, created.lastName as createdByLastName,
-          updated.id as updatedById, updated.firstName as updatedByFirstName, updated.lastName as updatedByLastName
-        FROM
-          clients
-          JOIN
-            users AS created
-          JOIN
-            users AS updated
-        WHERE
-          clients.id = ? AND created.id = clients.addedBy AND updated.id = clients.modifiedBy
+        INSERT INTO clients
+        (
+          firstName,
+          lastName,
+          birthday,
+          gender,
+          addedBy,
+          modifiedBy
+        )
+        VALUES (?, ?, ?, ?, ?, ?)
       `,
-        [insertResult.insertId]
+        [
+          req.body.firstName,
+          req.body.lastName,
+          req.body.birthday,
+          req.body.gender,
+          req.session.passport.user.id,
+          req.session.passport.user.id
+        ]
       );
 
-      connection.query(selectQuery, (err, rows) => {
-        if (err) {
-          return databaseError(req, res, err, connection);
+      connection.query(insertClient, (insertClientErr, result, fields) => {
+        if (insertClientErr) {
+          connection.rollback();
+          return databaseError(req, res, insertClientErr, connection);
         }
 
-        const row = rows[0];
+        const clientId = result.insertId;
 
-        res.send({
-          id: row.id,
-          createdBy: {
-            userId: row.createdById,
-            firstName: row.createdByFirstName,
-            lastName: row.createdByLastName,
-            fullName:
-              (row.createdByFirstName || "") +
-              " " +
-              (row.createdByLastName || ""),
-            timestamp: row.dateAdded
-          },
-          lastUpdatedBy: {
-            userId: row.createdById,
-            firstName: row.createdByFirstName,
-            lastName: row.createdByLastName,
-            fullName:
-              (row.createdByFirstName || "") +
-              " " +
-              (row.createdByLastName || ""),
-            timestamp: row.dateModified
-          },
-          dateOfIntake: responseDateWithoutTime(row.dateOfIntake),
-          firstName: row.firstName,
-          lastName: row.lastName,
-          birthday: responseDateWithoutTime(row.birthday),
-          gender: row.gender,
-          phone: row.phone,
-          smsConsent: Boolean(row.smsConsent),
-          homeAddress: {
-            street: row.homeStreet,
-            city: row.homeCity,
-            state: row.homeState,
-            zip: row.zip
-          },
-          email: row.email,
-          civilStatus: row.civilStatus,
-          countryOfOrigin: row.countryOfOrigin,
-          dateOfUSArrival: responseDateWithoutTime(row.dateOfUSArrival),
-          primaryLanguage: row.primaryLanguage,
-          currentlyEmployed: Boolean(row.currentlyEmployed),
-          employmentSector: row.employmentSector,
-          annualIncome: row.annualIncome,
-          householdSize: row.householdSize,
-          isStudent: Boolean(row.isStudent),
-          eligibleToVote: Boolean(row.eligibleToVote),
-          clientSource: row.clientSource,
-          couldVolunteer: Boolean(row.couldVolunteer)
+        const contactInfoValues = [
+          clientId,
+          requestPhone(req.body.phone),
+          req.body.smsConsent,
+          req.body.email,
+          req.body.homeAddress.street,
+          req.body.homeAddress.city,
+          req.body.homeAddress.state,
+          req.body.homeAddress.zip,
+          requestEnum(req.body.housingStatus),
+          req.session.passport.user.id
+        ];
+
+        const demographicsValues = [
+          clientId,
+          req.body.countryOfOrigin.toUpperCase(),
+          requestEnum(req.body.homeLanguage),
+          req.body.englishProficiency,
+          req.body.dateOfUSArrival,
+          requestEnum(req.body.currentlyEmployed),
+          req.body.employmentSector,
+          req.body.payInterval,
+          req.body.weeklyEmployedHours,
+          req.body.householdSize,
+          req.body.dependents,
+          req.body.civilStatus,
+          req.body.householdIncome,
+          req.body.registerToVote,
+          req.body.registeredVoter,
+          req.session.passport.user.id
+        ];
+
+        const intakeDataValues = [
+          clientId,
+          req.body.dateOfIntake,
+          requestEnum(req.body.clientSource),
+          requestBoolean(req.body.couldVolunteer),
+          req.session.passport.user.id
+        ];
+
+        const insertOther = mysql.format(
+          `
+          INSERT INTO contactInformation (
+            clientId,
+            primaryPhone,
+            textMessages,
+            email,
+            address,
+            city,
+            state,
+            zip,
+            housingStatus,
+            addedBy
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+          INSERT INTO demographics (
+            clientId,
+            countryOfOrigin,
+            homeLanguage,
+            englishProficiency,
+            dateOfUSArrival,
+            employed,
+            employmentSector,
+            payInterval,
+            weeklyAvgHoursWorked,
+            householdSize,
+            dependents,
+            civilStatus,
+            householdIncome,
+            registerToVote,
+            registeredVoter,
+            addedBy
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+          INSERT INTO intakeData (
+            clientId,
+            dateOfIntake,
+            clientSource,
+            couldVolunteer,
+            addedBy
+          ) VALUES (?, ?, ?, ?, ?);
+        `,
+          [...contactInfoValues, ...demographicsValues, ...intakeDataValues]
+        );
+
+        connection.query(insertOther, (err, results, fields) => {
+          if (err) {
+            connection.rollback();
+            return databaseError(req, res, err, connection);
+          }
+
+          const intakeDataResult = results[2];
+          const intakeDataId = intakeDataResult.insertId;
+
+          if (req.body.intakeServices.length === 0) {
+            connection.commit();
+            connection.release();
+
+            res.send({
+              success: true
+            });
+
+            return;
+          }
+
+          const intakeServicesValues = req.body.intakeServices.reduce(
+            (acc, intakeService) => {
+              return [...acc, intakeDataId, intakeService];
+            },
+            []
+          );
+
+          const insertIntakeServicesQuery = req.body.intakeServices
+            .map(
+              intakeService => `
+            INSERT INTO intakeServices (intakeDataId, serviceId) VALUES (?, ?);
+          `
+            )
+            .join("");
+
+          const insertIntakeServices = mysql.format(
+            insertIntakeServicesQuery,
+            intakeServicesValues
+          );
+
+          connection.query(insertIntakeServices, (err, result, fields) => {
+            if (err) {
+              connection.rollback();
+              return databaseError(req, res, err, connection);
+            }
+
+            connection.commit();
+            connection.release();
+            res.send({
+              success: true
+            });
+          });
         });
       });
     });

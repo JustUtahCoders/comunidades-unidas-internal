@@ -5,17 +5,15 @@ import CountrySelect from "../util/country-select.component";
 import CurrencyInput from "../util/currency-input.component";
 
 export default function DemographicInformation(props: StepComponentProps) {
-  const [civilStatus, setCivilStatus] = useState(
-    props.clientState.civilStatus || CivilStatus.SINGLE
-  );
-  const [annualIncome, setAnnualIncome] = useState(
-    props.clientState.annualIncome
+  const [civilStatus, setCivilStatus] = useState(CivilStatus.SINGLE);
+  const [householdIncome, setHouseholdIncome] = useState(
+    props.clientState.householdIncome
   );
   const [householdSize, setHouseholdSize] = useState(
     props.clientState.householdSize || 1
   );
-  const [householdSizeChildren, setHouseholdSizeChildren] = useState(
-    props.clientState.householdSizeChildren || 0
+  const [juvenileDependents, setJuvenileDependents] = useState(
+    props.clientState.juvenileDependents || 0
   );
   const [currentlyEmployed, setCurrentlyEmployed] = useState(
     props.clientState.currentlyEmployed || "no"
@@ -38,11 +36,11 @@ export default function DemographicInformation(props: StepComponentProps) {
   const [dateOfUSArrival, setDateOfUSArrival] = useState(
     props.clientState.dateOfUSArrival || ""
   );
-  const [primaryLanguage, setPrimaryLanguage] = useState(
-    getInitialPrimaryLanguage(props.clientState.primaryLanguage)
+  const [homeLanguage, setHomeLanguage] = useState(
+    getInitialHomeLanguage(props.clientState.homeLanguage)
   );
   const [otherLanguage, setOtherLanguage] = useState(
-    getInitialOtherPrimaryLanguage(props.clientState.primaryLanguage)
+    getInitialOtherHomeLanguage(props.clientState.homeLanguage)
   );
   const [isStudent, setIsStudent] = useState(
     props.clientState.isStudent || false
@@ -96,8 +94,8 @@ export default function DemographicInformation(props: StepComponentProps) {
           <label>
             <span>Approximate annual income</span>
             <CurrencyInput
-              setDollars={setAnnualIncome}
-              initialValue={annualIncome}
+              setDollars={setHouseholdIncome}
+              initialValue={householdIncome}
               required
             />
           </label>
@@ -120,10 +118,8 @@ export default function DemographicInformation(props: StepComponentProps) {
             <span>Number household dependents under age 18</span>
             <input
               type="number"
-              value={householdSizeChildren}
-              onChange={evt =>
-                setHouseholdSizeChildren(Number(evt.target.value))
-              }
+              value={juvenileDependents}
+              onChange={evt => setJuvenileDependents(Number(evt.target.value))}
               required
               min={0}
               max={30}
@@ -302,9 +298,9 @@ export default function DemographicInformation(props: StepComponentProps) {
                   value={weeklyEmployedHours}
                 >
                   <option value="0-20">20 or less</option>
-                  <option value="21-30">21 to 35</option>
-                  <option value="31-40">36 to 40</option>
-                  <option value="41-more">41 or more</option>
+                  <option value="21-35">21 to 35</option>
+                  <option value="36-40">36 to 40</option>
+                  <option value="41+">41 or more</option>
                 </select>
               </label>
             </div>
@@ -337,9 +333,9 @@ export default function DemographicInformation(props: StepComponentProps) {
             <span>Primary language in home</span>
             <select
               required
-              name="primaryLanguage"
-              value={primaryLanguage}
-              onChange={evt => setPrimaryLanguage(evt.target.value)}
+              name="homeLanguage"
+              value={homeLanguage}
+              onChange={evt => setHomeLanguage(evt.target.value)}
             >
               {Object.keys(languageOptions).map(value => (
                 <option key={value} value={value}>
@@ -349,7 +345,7 @@ export default function DemographicInformation(props: StepComponentProps) {
             </select>
           </label>
         </div>
-        {primaryLanguage === "other" && (
+        {homeLanguage === "other" && (
           <div>
             <label>
               <span>Other language</span>
@@ -386,7 +382,7 @@ export default function DemographicInformation(props: StepComponentProps) {
                 countryOfOrigin,
                 dateOfUSArrival,
                 primaryLanguage:
-                  primaryLanguage === "other" ? otherLanguage : primaryLanguage,
+                  homeLanguage === "other" ? otherLanguage : homeLanguage,
                 englishLevel,
                 currentlyEmployed,
                 employmentSector:
@@ -395,7 +391,7 @@ export default function DemographicInformation(props: StepComponentProps) {
                     : employmentSector || null,
                 payInterval,
                 weeklyEmployedHours,
-                annualIncome,
+                householdIncome,
                 householdSize,
                 isStudent,
                 eligibleToVote
@@ -417,8 +413,7 @@ export default function DemographicInformation(props: StepComponentProps) {
       civilStatus,
       countryOfOrigin,
       dateOfUSArrival,
-      primaryLanguage:
-        primaryLanguage === "other" ? otherLanguage : primaryLanguage,
+      homeLanguage: homeLanguage === "other" ? otherLanguage : homeLanguage,
       englishLevel,
       currentlyEmployed,
       employmentSector:
@@ -427,8 +422,9 @@ export default function DemographicInformation(props: StepComponentProps) {
           : employmentSector || null,
       payInterval,
       weeklyEmployedHours,
-      annualIncome,
+      householdIncome,
       householdSize,
+      juvenileDependents,
       isStudent,
       eligibleToVote
     });
@@ -451,7 +447,7 @@ function getInitialOtherEmploymentSector(val) {
   }
 }
 
-function getInitialPrimaryLanguage(val) {
+function getInitialHomeLanguage(val) {
   if (val) {
     return Object.keys(languageOptions).includes(val) ? val : "other";
   } else {
@@ -459,7 +455,7 @@ function getInitialPrimaryLanguage(val) {
   }
 }
 
-function getInitialOtherPrimaryLanguage(val) {
+function getInitialOtherHomeLanguage(val) {
   if (val) {
     return Object.keys(languageOptions).includes(val) ? "" : val;
   } else {

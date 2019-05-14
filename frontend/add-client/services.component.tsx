@@ -2,10 +2,22 @@ import React, { useState } from "react";
 import { StepComponentProps, Step } from "./add-client.component";
 import agendaIconUrl from "../../icons/148705-essential-collection/svg/agenda.svg";
 import { useCss } from "kremling";
+import easyFetch from "../util/easy-fetch";
 
 export default function Services(props: StepComponentProps) {
-  const [services, setServices] = useState(defaultServices);
+  const [services, setServices] = useState([]);
+  const [checkedServices, setCheckedServices] = useState([]);
   const scope = useCss(css);
+
+  React.useEffect(() => {
+    const abortController = new AbortController();
+
+    easyFetch("/api/services", { signal: abortController.signal }).then(data =>
+      setServices(data.services)
+    );
+
+    return () => abortController.abort();
+  }, []);
 
   return (
     <div {...scope}>
@@ -24,179 +36,21 @@ export default function Services(props: StepComponentProps) {
       <form onSubmit={handleSubmit}>
         <div>
           <div className="vertical-options">
-            <label>
-              <input
-                type="checkbox"
-                name="services"
-                value="citizenship"
-                checked={services.citizenship}
-                onChange={handleChange}
-                autoFocus
-              />
-              <span>Citizenship</span>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="services"
-                value="familyPetition"
-                checked={services.familyPetition}
-                onChange={handleChange}
-              />
-              <span>Family Petition</span>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="services"
-                value="workersRightsAndSafety"
-                checked={services.workersRightsAndSafety}
-                onChange={handleChange}
-              />
-              <span>Workers' rights / safety</span>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="services"
-                value="DACA"
-                checked={services.DACA}
-                onChange={handleChange}
-              />
-              <span>DACA</span>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="services"
-                value="youthGroup"
-                checked={services.youthGroup}
-                onChange={handleChange}
-              />
-              <span>Youth group</span>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="services"
-                value="leadershipClasses"
-                checked={services.leadershipClasses}
-                onChange={handleChange}
-              />
-              <span>Promoters / Leadership classes</span>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="services"
-                value="SNAP"
-                checked={services.SNAP}
-                onChange={handleChange}
-              />
-              <span>SNAP / Food Stamps</span>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="services"
-                value="chronicDiseaseTesting"
-                checked={services.chronicDiseaseTesting}
-                onChange={handleChange}
-              />
-              <span>Evidence of chronic diseases</span>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="services"
-                value="nutrition"
-                checked={services.nutrition}
-                onChange={handleChange}
-              />
-              <span>Nutrition</span>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="services"
-                value="groceryTour"
-                checked={services.groceryTour}
-                onChange={handleChange}
-              />
-              <span>Visit to the supermarket</span>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="services"
-                value="cookingClass"
-                checked={services.cookingClass}
-                onChange={handleChange}
-              />
-              <span>Food Demonstration</span>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="services"
-                value="communityEngagement"
-                checked={services.communityEngagement}
-                onChange={handleChange}
-              />
-              <span>Community Organization / Advocacy</span>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="services"
-                value="financialEducation"
-                checked={services.financialEducation}
-                onChange={handleChange}
-              />
-              <span>Education / Financial Advising</span>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="services"
-                value="financialCoaching"
-                checked={services.financialCoaching}
-                onChange={handleChange}
-              />
-              <span>Financial Coaching</span>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="services"
-                value="reference"
-                checked={services.reference}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="services"
-                value={services.referenceDescription}
-                onChange={handleChange}
-              />
-              <span>Reference</span>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="services"
-                value="other"
-                checked={services.other}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="services"
-                value={services.otherDescription}
-                onChange={handleChange}
-              />
-              <span>Other</span>
-            </label>
+            {services.map(service => (
+              <label key={service.id}>
+                <input
+                  type="checkbox"
+                  name="services"
+                  value={service.id}
+                  checked={checkedServices.some(
+                    checkedService => checkedService === service.id
+                  )}
+                  onChange={handleChange}
+                  autoFocus
+                />
+                <span>{service.serviceName}</span>
+              </label>
+            ))}
           </div>
         </div>
         <div className="actions">
@@ -207,7 +61,11 @@ export default function Services(props: StepComponentProps) {
           >
             Go back
           </button>
-          <button type="submit" className="primary">
+          <button
+            type="submit"
+            className="primary"
+            disabled={services.length === 0}
+          >
             Next step
           </button>
         </div>
@@ -216,35 +74,25 @@ export default function Services(props: StepComponentProps) {
   );
 
   function handleChange(evt) {
-    setServices({ ...services, [evt.target.value]: evt.target.checked });
+    const serviceId = Number(evt.target.value);
+    let newCheckedServices;
+    if (evt.target.checked) {
+      newCheckedServices = [...checkedServices, serviceId];
+    } else {
+      newCheckedServices = checkedServices.filter(
+        service => service.id !== serviceId
+      );
+    }
+    setCheckedServices(newCheckedServices);
   }
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    props.nextStep(Step.CONFIRM, {});
+    props.nextStep(Step.CONFIRM, {
+      intakeServices: checkedServices
+    });
   }
 }
-
-const defaultServices = {
-  citizenship: false,
-  familyPetition: false,
-  workersRightsAndSafety: false,
-  DACA: false,
-  youthGroup: false,
-  leadershipClasses: false,
-  SNAP: false,
-  chronicDiseaseTesting: false,
-  nutrition: false,
-  groceryTour: false,
-  cookingClass: false,
-  communityEngagement: false,
-  financialEducation: false,
-  financialCoaching: false,
-  reference: false,
-  referenceDescription: "",
-  other: false,
-  otherDescription: ""
-};
 
 const css = `
 & .warning {

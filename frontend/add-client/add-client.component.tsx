@@ -123,21 +123,23 @@ export type ClientState = {
   civilStatus?: CivilStatus;
   countryOfOrigin?: string;
   dateOfUSArrival?: string;
-  primaryLanguage?: string;
+  homeLanguage?: string;
   englishLevel?: EnglishLevel;
   currentlyEmployed?: string;
   employmentSector?: string;
   payInterval?: PayInterval;
   weeklyEmployedHours?: string;
-  annualIncome?: number;
+  householdIncome?: number;
   householdSize?: number;
-  householdSizeChildren?: number;
+  juvenileDependents?: number;
   isStudent?: boolean;
   eligibleToVote?: boolean;
   registerToVote?: boolean;
   // Client source
   clientSource?: ClientSources | string;
   couldVolunteer?: boolean;
+  // Intake services
+  intakeServices?: number[];
 };
 
 export type StepComponentProps = {

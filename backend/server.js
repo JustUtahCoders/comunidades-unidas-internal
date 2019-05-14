@@ -19,7 +19,8 @@ exports.pool = mysql.createPool({
   user: process.env.RDS_USERNAME || "root",
   password: process.env.RDS_PASSWORD || "password",
   database: process.env.RDS_DB_NAME || "local_db",
-  port: process.env.RDS_PORT || "3306"
+  port: process.env.RDS_PORT || "3306",
+  multipleStatements: true
 });
 
 exports.invalidRequest = function invalidRequest(res, msg) {
@@ -51,6 +52,7 @@ require("./apis/login.api");
 require("./apis/github-key.api");
 require("./apis/clients/add-client.api");
 require("./apis/clients/client-duplicates.api");
+require("./apis/services/list-services.api");
 require("./index-html.js");
 
 process.on("uncaughtException", function(err) {
