@@ -66,6 +66,7 @@ app.get("/api/client-duplicates", (req, res, next) => {
       if (err) {
         return databaseError(req, res, err, connection);
       }
+      connection.release();
       res.send({
         numDuplicates: rows.length,
         clientDuplicates: rows.map(row => ({

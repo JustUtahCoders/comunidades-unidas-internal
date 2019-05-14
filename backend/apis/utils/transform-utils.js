@@ -5,3 +5,4 @@ exports.responseDateWithoutTime = date => {
 
 exports.requestEnum = val => (val ? val.toLowerCase() : null);
 exports.requestPhone = val => (val ? val.replace(/[\(\)\-\s]/g, "") : null);
+exports.requestBoolean = val => Boolean(val);

@@ -7,13 +7,9 @@ exports.checkValid = function(obj, ...rules) {
 };
 
 const checkDefined = cbk => (propertyName, ...args) => obj => {
-  if (propertyName === "dateOfUSArrival") {
-    throw Error("hi");
-  }
-
   return typeof get(obj, propertyName) !== "undefined" &&
     get(obj, propertyName) !== null
-    ? cbk(propertyName, ...args)(get(obj, propertyName))
+    ? cbk(propertyName, ...args)(get(obj, propertyName), obj)
     : `Property ${propertyName} must be provided. Got '${get(
         obj,
         propertyName
@@ -58,6 +54,22 @@ exports.validEmail = checkDefined(propertyName => val =>
 
 exports.nullableValidEnum = nullable(_validEnum);
 exports.validEnum = checkDefined(_validEnum);
+exports.validArray = (propertyName, itemValidator) => obj => {
+  const val = obj[propertyName];
+
+  if (Array.isArray(val)) {
+    const validationError = val.find((item, index) => {
+      return itemValidator(index)(val);
+    });
+    if (validationError) {
+      return `Property ${propertyName} is an array with an invalid item: ${validationError}`;
+    } else {
+      return null;
+    }
+  } else {
+    return `Property ${propertyName} must be an array.`;
+  }
+};
 
 exports.validCountry = checkDefined(propertyName => val =>
   typeof val === "string" && /^[A-Z]{2}$/.test(val)
