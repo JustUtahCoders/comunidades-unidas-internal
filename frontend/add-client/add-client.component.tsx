@@ -144,7 +144,7 @@ export type ClientState = {
 export type StepComponentProps = {
   nextStep: (stepName: string, newClientState: ClientState) => void;
   clientState: ClientState;
-  goBack(Step, newClientState): void;
+  goBack(Step, newClientState?): void;
   reset(): void;
   showDuplicateWarning(DuplicateWarning): void;
 };
