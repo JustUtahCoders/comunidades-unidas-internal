@@ -137,7 +137,6 @@ export type ClientState = {
   registerToVote?: boolean;
   // Client source
   clientSource?: ClientSources | string;
-  // otherSource?: string;
   couldVolunteer?: boolean;
 };
 
