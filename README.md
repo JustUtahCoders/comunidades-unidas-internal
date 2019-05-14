@@ -101,6 +101,8 @@ use ebdb;
 show tables;
 ```
 
+git stuff part 2
+
 ## SSH access
 
 Install [ebcli](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html). Then run `eb ssh`. Our code is
