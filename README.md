@@ -112,3 +112,5 @@ If the production environment is having issues, you'll need access to Comunidade
 you'll need to install [Python3](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html) and
 [ebcli](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html). Then run `eb status`, `eb logs`, and other commands
 to try to diagnose.
+
+git stuff part 1.
