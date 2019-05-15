@@ -3,6 +3,7 @@ import usersUrl from "../../icons/148705-essential-collection/svg/users-1.svg";
 import { DuplicateWarning, ClientState } from "./add-client.component";
 import { useCss } from "kremling";
 import dateformat from "dateformat";
+import { Link } from "@reach/router";
 
 type ListDuplicatesProps = {
   duplicateWarning: DuplicateWarning;
@@ -52,9 +53,12 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
                   </td>
                   <td>{duplicate.gender}</td>
                   <td>
-                    <button type="button" className="primary">
+                    <Link
+                      className="primary button"
+                      to={`/clients/${duplicate.id}`}
+                    >
                       <span>Update</span>
-                    </button>
+                    </Link>
                   </td>
                 </tr>
               ))}

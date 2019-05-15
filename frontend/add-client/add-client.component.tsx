@@ -182,7 +182,7 @@ type Duplicate = {
   gender: string;
 };
 
-const css = `
+export const css = `
 & form > div {
   margin-bottom: 16rem;
 }

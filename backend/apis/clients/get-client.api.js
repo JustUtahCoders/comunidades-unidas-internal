@@ -1,7 +1,10 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
 const mysql = require("mysql");
-const { checkValid, validInteger } = require("../utils/validation-utils");
-const { responseFullName } = require("../utils/transform-utils");
+const { checkValid, validId } = require("../utils/validation-utils");
+const {
+  responseFullName,
+  responseDateWithoutTime
+} = require("../utils/transform-utils");
 
 app.get("/api/clients/:id", (req, res, next) => {
   pool.getConnection((err, connection) => {
@@ -9,25 +12,18 @@ app.get("/api/clients/:id", (req, res, next) => {
       return databaseError(req, res, err, connection);
     }
 
-    try {
-      req.params.id = Number(req.params.id);
-    } catch (err) {
-      // Failing to cast the param to a string will be caught by checkValid()
-    }
-
-    const validationErrors = checkValid(req.params, validInteger("id"));
+    const validationErrors = checkValid(req.params, validId("id"));
 
     if (validationErrors.length > 0) {
-      res.status(400).send({
-        validationErrors
-      });
-      return;
+      return invalidRequest(res, validationErrors);
     }
 
     getClientById(connection, req.params.id, (err, client) => {
       if (err) {
         return databaseError(req, res, err, connection);
       }
+
+      connection.release();
 
       if (client) {
         res.send({
@@ -107,7 +103,7 @@ function getClientById(connection, clientId, cbk) {
       firstName: c.firstName,
       lastName: c.lastName,
       fullName: responseFullName(c.firstName, c.lastName),
-      birthday: c.birthday,
+      birthday: responseDateWithoutTime(c.birthday),
       gender: c.gender,
       phone: c.primaryPhone,
       smsConsent: Boolean(c.textMessages),

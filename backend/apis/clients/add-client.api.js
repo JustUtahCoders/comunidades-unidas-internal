@@ -1,4 +1,4 @@
-const { app, databaseError, pool } = require("../../server");
+const { app, databaseError, pool, invalidRequest } = require("../../server");
 const mysql = require("mysql");
 const { requestEnum, requestPhone } = require("../utils/transform-utils");
 const {
@@ -85,10 +85,7 @@ app.post("/api/clients", (req, res, next) => {
     );
 
     if (validityErrors.length > 0) {
-      res.status(400).send({
-        validationErrors: validityErrors
-      });
-      return;
+      return invalidRequest(res, validityErrors);
     }
 
     connection.beginTransaction(err => {

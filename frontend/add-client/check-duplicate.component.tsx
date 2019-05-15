@@ -1,17 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import user2Url from "../../icons/148705-essential-collection/svg/user-2.svg";
 import { StepComponentProps, Step } from "./add-client.component";
 import easyFetch from "../util/easy-fetch";
+import BasicInformationInputs from "./form-inputs/basic-information-inputs.component";
 
 export default function CheckDuplicate(props: StepComponentProps) {
-  const [firstName, setFirstName] = useState(props.clientState.firstName || "");
-  const [lastName, setLastName] = useState(props.clientState.lastName || "");
-  const [birthday, setBirthday] = useState(
-    props.clientState.birthday || "1990-01-01"
-  );
-  const [gender, setGender] = useState(getInitialGender);
-  const [otherGender, setOtherGender] = useState(getInitialOtherGender);
-
   return (
     <>
       <div className="hints-and-instructions">
@@ -22,82 +15,22 @@ export default function CheckDuplicate(props: StepComponentProps) {
           Let's first check if this person already exists in the database.
         </div>
       </div>
-      <form onSubmit={handleSubmit} autoComplete="off">
-        <div>
-          <label>
-            <span>First Name</span>
-            <input
-              type="text"
-              value={firstName}
-              onChange={evt => setFirstName(evt.target.value)}
-              required
-              autoComplete="off"
-              autoFocus
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            <span>Last Name</span>
-            <input
-              type="text"
-              value={lastName}
-              onChange={evt => setLastName(evt.target.value)}
-              autoComplete="off"
-              required
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            <span>Birthday</span>
-            <input
-              type="date"
-              value={birthday}
-              onChange={evt => setBirthday(evt.target.value)}
-              required
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            <span>Gender</span>
-            <select
-              value={gender}
-              onChange={evt => setGender(evt.target.value)}
-              autoComplete="off"
-              required
-            >
-              <option value="female">Female</option>
-              <option value="male">Male</option>
-              <option value="nonbinary">Non-binary</option>
-              <option value="other">Other</option>
-            </select>
-          </label>
-        </div>
-        {gender === "other" && (
-          <div>
-            <label>
-              <span>Other gender</span>
-              <input
-                type="text"
-                value={otherGender}
-                onChange={evt => setOtherGender(evt.target.value)}
-                required
-              />
-            </label>
-          </div>
-        )}
+      <BasicInformationInputs
+        client={props.clientState}
+        handleSubmit={handleSubmit}
+      >
         <div className="actions">
           <button type="submit" className="primary">
             <span>Check client</span>
           </button>
         </div>
-      </form>
+      </BasicInformationInputs>
     </>
   );
 
-  function handleSubmit(evt) {
+  function handleSubmit(evt, data) {
+    const { firstName, lastName, gender, birthday } = data;
+
     evt.preventDefault();
     easyFetch(
       `/api/client-duplicates?firstName=${encodeURIComponent(
@@ -112,14 +45,14 @@ export default function CheckDuplicate(props: StepComponentProps) {
             firstName,
             lastName,
             birthday,
-            gender: gender === "other" ? otherGender : gender,
+            gender,
             duplicates: data.clientDuplicates
           });
         } else {
           props.nextStep(Step.CONTACT_INFORMATION, {
             firstName,
             lastName,
-            gender: gender === "other" ? otherGender : gender,
+            gender,
             birthday
           });
         }
@@ -127,28 +60,5 @@ export default function CheckDuplicate(props: StepComponentProps) {
       .catch(function(err) {
         console.log(err);
       });
-  }
-}
-
-const genderOptions = {
-  female: "Female",
-  male: "Male",
-  nonbinary: "Nonbinary",
-  other: "Other"
-};
-
-function getInitialGender(val) {
-  if (val) {
-    return Object.keys(genderOptions).includes(val) ? val : "other";
-  } else {
-    return "female";
-  }
-}
-
-function getInitialOtherGender(val) {
-  if (val) {
-    return Object.keys(genderOptions).includes(val) ? "" : val;
-  } else {
-    return "";
   }
 }

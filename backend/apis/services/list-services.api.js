@@ -1,4 +1,4 @@
-const { app, databaseError, pool, invalidRequest } = require("../../server");
+const { app, databaseError, pool } = require("../../server");
 const mysql = require("mysql");
 
 app.get("/api/services", (req, res, next) => {
