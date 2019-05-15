@@ -7,7 +7,7 @@ import Home from "./home/home.component";
 import ReportIssue from "./report-issue/report-issue.component";
 import ReportIssueSuccess from "./report-issue/report-issue-success.component";
 import UserContext from "./util/user.context";
-import ViewClient from "./view-client/view-client.component";
+import ViewClient from "./view-edit-client/view-client.component";
 
 export default function Root() {
   return (

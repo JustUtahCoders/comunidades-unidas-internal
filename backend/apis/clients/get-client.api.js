@@ -54,6 +54,7 @@ function getClientById(connection, clientId, cbk) {
       clients.firstName,
       clients.lastName,
       clients.gender,
+      clients.birthday,
       clients.dateAdded as clientDateAdded,
       clients.dateModified as clientDateModified,
       clients.addedBy as createdById,
