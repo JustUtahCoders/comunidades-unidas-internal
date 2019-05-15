@@ -1,10 +1,6 @@
 const { app, databaseError, pool } = require("../../server");
 const mysql = require("mysql");
-const {
-  requestEnum,
-  requestBoolean,
-  requestPhone
-} = require("../utils/transform-utils");
+const { requestEnum, requestPhone } = require("../utils/transform-utils");
 const {
   nullableValidDate,
   checkValid,
@@ -22,6 +18,7 @@ const {
   validArray,
   validInteger
 } = require("../utils/validation-utils");
+const { getClientById } = require("./get-client.api");
 
 app.post("/api/clients", (req, res, next) => {
   pool.getConnection((err, connection) => {
@@ -157,8 +154,8 @@ app.post("/api/clients", (req, res, next) => {
           req.body.dependents,
           req.body.civilStatus,
           req.body.householdIncome,
-          req.body.registerToVote,
-          req.body.registeredVoter,
+          Boolean(req.body.eligibleToVote),
+          Boolean(req.body.registeredToVote),
           req.session.passport.user.id
         ];
 
@@ -166,7 +163,7 @@ app.post("/api/clients", (req, res, next) => {
           clientId,
           req.body.dateOfIntake,
           requestEnum(req.body.clientSource),
-          requestBoolean(req.body.couldVolunteer),
+          Boolean(req.body.couldVolunteer),
           req.session.passport.user.id
         ];
 
@@ -228,9 +225,7 @@ app.post("/api/clients", (req, res, next) => {
             connection.commit();
             connection.release();
 
-            res.send({
-              success: true
-            });
+            returnTheClient();
 
             return;
           }
@@ -262,12 +257,23 @@ app.post("/api/clients", (req, res, next) => {
             }
 
             connection.commit();
-            connection.release();
-            res.send({
-              success: true
-            });
+            returnTheClient();
           });
         });
+
+        function returnTheClient() {
+          getClientById(connection, clientId, (err, client) => {
+            if (err) {
+              return databaseError(req, res, err, connection);
+            }
+
+            connection.release();
+
+            res.send({
+              client
+            });
+          });
+        }
       });
     });
   });
