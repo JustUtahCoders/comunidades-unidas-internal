@@ -21,7 +21,8 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
       const abortController = new AbortController();
       easyFetch(`/api/clients/${props.client.id}`, {
         method: "PATCH",
-        body: apiStatus.newClientData
+        body: apiStatus.newClientData,
+        signal: abortController.signal
       })
         .then(data => {
           props.clientUpdated(data.client);
@@ -30,6 +31,8 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
         .finally(() => {
           dispatchApiStatus({ type: "reset" });
         });
+
+      return () => abortController.abort();
     }
   }, [apiStatus]);
 
