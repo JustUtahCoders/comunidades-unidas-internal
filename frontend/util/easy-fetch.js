@@ -22,12 +22,15 @@ export default function easyFetch(url, opts = {}) {
             `Api request to '${url}' failed with HTTP status ${response.status}`
           );
           err.body = json;
+          err.status = response.status;
           throw err;
         })
         .catch(err => {
-          throw Error(
+          const errorObject = Error(
             `Api request to '${url}' failed with HTTP status ${response.status}`
           );
+          errorObject.status = response.status;
+          throw errorObject;
         });
     }
   });

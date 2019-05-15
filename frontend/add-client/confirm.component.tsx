@@ -75,7 +75,7 @@ export default function Confirm(props: StepComponentProps) {
       }
     })
       .then(function(data) {
-        props.nextStep(Step.FINISHED, {});
+        props.nextStep(Step.FINISHED, { id: data.client.id });
       })
       .catch(function(err) {
         console.error(err);

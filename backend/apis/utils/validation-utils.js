@@ -76,11 +76,11 @@ exports.validCountry = checkDefined(propertyName => val =>
     ? null
     : `Property ${propertyName} must be a valid, capitalized, two-digit country code. Received '${val}`
 );
-exports.validInteger = checkDefined(propertyName => val =>
-  typeof val === "number" && Number.isInteger(val)
+exports.validInteger = checkDefined(propertyName => val => {
+  return typeof val === "number" && Number.isInteger(val)
     ? null
-    : `Property ${propertyName} must be an integer. Received '${val}'`
-);
+    : `Property ${propertyName} must be an integer. Received '${val}'`;
+});
 exports.isDefined = checkDefined(propertyName => val => null);
 
 function _validDate(propertyName) {

@@ -9,7 +9,13 @@ app.get("/api/clients/:id", (req, res, next) => {
       return databaseError(req, res, err, connection);
     }
 
-    const validationErrors = checkValid(validInteger(req.params.id));
+    try {
+      req.params.id = Number(req.params.id);
+    } catch (err) {
+      // Failing to cast the param to a string will be caught by checkValid()
+    }
+
+    const validationErrors = checkValid(req.params, validInteger("id"));
 
     if (validationErrors.length > 0) {
       res.status(400).send({
@@ -99,6 +105,7 @@ function getClientById(connection, clientId, cbk) {
       id: c.clientId,
       firstName: c.firstName,
       lastName: c.lastName,
+      fullName: responseFullName(c.firstName, c.lastName),
       birthday: c.birthday,
       gender: c.gender,
       phone: c.primaryPhone,

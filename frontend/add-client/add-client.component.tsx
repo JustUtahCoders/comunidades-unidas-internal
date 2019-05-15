@@ -104,6 +104,7 @@ type AddClientProps = {
 };
 
 export type ClientState = {
+  id?: string;
   firstName?: string;
   lastName?: string;
   birthday?: string;

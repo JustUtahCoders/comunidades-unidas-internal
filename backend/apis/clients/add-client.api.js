@@ -223,7 +223,6 @@ app.post("/api/clients", (req, res, next) => {
 
           if (req.body.intakeServices.length === 0) {
             connection.commit();
-            connection.release();
 
             returnTheClient();
 

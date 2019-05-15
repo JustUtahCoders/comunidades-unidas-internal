@@ -20,7 +20,7 @@ To use your API key, send an HTTP header with your requests that looks like this
 Authorization: Basic YOUR_API_KEY
 ```
 
-This is all you need for to authenticate and authorize.
+This is all you need to authenticate and authorize.
 
 ## Available APIs
 

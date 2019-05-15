@@ -19,6 +19,7 @@ GET /clients/:id
     "dateOfIntake": "2019-05-06T06:00:00.000Z",
     "firstName": "Freddy",
     "lastName": "Mercury",
+    "fullName": "Freddy Mercury",
     "birthday": "1946-09-05",
     "gender": "male",
     "phone": "8011111111",
