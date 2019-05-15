@@ -40,5 +40,9 @@ const css = `
   padding: 16rem 32rem;
 }
 
+& button.icon {
+  margin-left: 16rem;
+}
+
 ${addClientCss}
 `;

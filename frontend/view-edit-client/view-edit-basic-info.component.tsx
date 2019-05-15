@@ -69,7 +69,7 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
       ) : (
         <div {...scope} className="view-basic-info">
           {client.fullName} - {dayjs(client.birthday).format("M/D/YYYY")} -{" "}
-          {client.gender} -{" "}
+          {client.gender}
           <button className="icon" onClick={() => setEditing(true)}>
             <img src={editImg} alt="Edit Basic Information" />
           </button>
