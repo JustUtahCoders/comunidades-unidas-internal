@@ -103,8 +103,4 @@ const css = `
   justify-content: center;
   align-items: center;
 }
-
-& .view-basic-info .icon {
-
-}
 `;
