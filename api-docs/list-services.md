@@ -1,5 +1,8 @@
 # List CU Services
 
+The list of services that Comunidades Unidas provides to its clients is stored in the database and can change over time.
+Here is how you can get a list of the services.
+
 ## Request
 
 ```http

@@ -33,6 +33,7 @@
     "cookie-parser": "^1.4.4",
     "cookie-session": "https://github.com/joeldenning/cookie-session.git#secure-fix",
     "dateformat": "^3.0.3",
+    "dayjs": "^1.8.14",
     "dotenv": "^7.0.0",
     "ejs": "^2.6.1",
     "email-validator": "^2.0.4",

@@ -2,7 +2,8 @@
 
 API is provided to query a list of clients from the database.
 
-##Request
+## Request
+
 GET /api/clients?firstName=Mario&lastName=Luigi&zip=84107&page=1
 
 Notes:
@@ -13,7 +14,7 @@ Notes:
 - "firstName" and "lastName" can be partial
 - If "firstName", "lastName", and "zip" are not provided the top 100 rows will be returned ordered by lastName, firstName
 
-##Response
+## Response
 
 ```json
 {

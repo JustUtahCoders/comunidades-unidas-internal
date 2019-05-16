@@ -65,7 +65,7 @@ export default function Confirm(props: StepComponentProps) {
         weeklyEmployedHours: d.weeklyEmployedHours || null,
         householdIncome: d.householdIncome,
         householdSize: d.householdSize,
-        dependents: d.dependents,
+        dependents: d.juvenileDependents,
         housingStatus: d.housing || null,
         isStudent: d.isStudent,
         eligibleToVote: d.eligibleToVote,
@@ -75,7 +75,7 @@ export default function Confirm(props: StepComponentProps) {
       }
     })
       .then(function(data) {
-        props.nextStep(Step.FINISHED, {});
+        props.nextStep(Step.FINISHED, { id: data.client.id });
       })
       .catch(function(err) {
         console.error(err);

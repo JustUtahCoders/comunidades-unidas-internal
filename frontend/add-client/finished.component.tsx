@@ -1,5 +1,5 @@
 import React from "react";
-import { Step, StepComponentProps } from "./add-client.component";
+import { StepComponentProps } from "./add-client.component";
 import successIconUrl from "../../icons/148705-essential-collection/svg/success.svg";
 
 export default function Finished(props: StepComponentProps) {
@@ -11,7 +11,7 @@ export default function Finished(props: StepComponentProps) {
         </div>
         <div className="instruction">
           {props.clientState.firstName} {props.clientState.lastName} is now in
-          the system!
+          the system! Their client id is {props.clientState.id}.
         </div>
         <div className="actions">
           <button className="primary" onClick={addAnother}>

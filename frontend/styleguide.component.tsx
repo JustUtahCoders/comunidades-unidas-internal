@@ -22,6 +22,7 @@ const css = `
   font-size: 1px;
   font-family: 'Montserrat', sans-serif;
   background-color: #efefef;
+  --very-light-gray: #F3F3F3;
 }
 
 body {
@@ -38,6 +39,10 @@ body {
   background-color: white;
   border-radius: 3rem;
   padding: 32rem;
+}
+
+& .card.padding-0 {
+  padding: 0;
 }
 
 & input {
@@ -79,6 +84,7 @@ body {
   padding: 0;
   width: auto;
   overflow: visible;
+  border-radius: 0;
 
   background: transparent;
 
