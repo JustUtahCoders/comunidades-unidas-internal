@@ -1,5 +1,6 @@
 import React from "react";
 import { useCss } from "kremling";
+import { css as addClientCss } from "../add-client/add-client.component";
 
 export default function ClientSection(props: ClientSectionProps) {
   const [expanded, setExpanded] = React.useState(true);
@@ -38,4 +39,6 @@ const css = `
 & .client-section-content {
   padding: 16rem 32rem;
 }
+
+${addClientCss}
 `;

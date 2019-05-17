@@ -12,8 +12,8 @@ export default function Styleguide(props: StyleguideProps) {
 }
 
 export const brandColor: Color = `rgba(184, 17, 17, 1)`;
-export const boxShadow1: BoxShadow = `0 10px 30px -24px #4b4e53`;
-export const boxShadow2: BoxShadow = `0 10px 40px -24px #393b3f`;
+export const boxShadow1: BoxShadow = `0 10rem 30rem -24rem #4b4e53`;
+export const boxShadow2: BoxShadow = `0 10rem 40rem -24rem #393b3f`;
 export const mediaMobile: String = `@media screen and (max-width: 800px) and (min-width: 1px)`;
 export const mediaDesktop: String = `@media screen and (min-width: 800px)`;
 
@@ -111,12 +111,28 @@ body {
 & button {
   font-size: 18rem;
   border-radius: 6rem;
-  padding: 8px 12px;
+  padding: 8rem 12rem;
   border: none;
   text-align: center;
 }
 
-& button + button {
+& button.icon {
+  padding: 8rem;
+  margin: 4rem;
+  background-color: transparent;
+  border-radius: 6rem;
+}
+
+& button.icon:hover {
+  background-color: #e9e9e9;
+}
+
+& button.icon img {
+  width: 16rem;
+  height: 16rem;
+}
+
+& button + button, & button + a.button, & a.button + button, & a.button + a.button {
   margin-left: 16rem;
 }
 
@@ -126,17 +142,26 @@ body {
   transition: background-color .2s;
 }
 
+& a.button {
+  font-size: 18rem;
+  border-radius: 6rem;
+  padding: 8rem 12rem;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+}
+
 & button.primary:hover, & a.button.primary:hover {
   background-color: #507b97;
 }
 
-& button.secondary, & a.secondary {
+& button.secondary, & a.button.secondary {
   background-color: #e9e9e9;
   color: black;
   transition: background-color .2s;
 }
 
-& button.secondary:hover, & a.secondary:hover {
+& button.secondary:hover, & a.button.secondary:hover {
   background-color: #afafaf;
 }
 
@@ -145,7 +170,7 @@ body {
   box-shadow: ${boxShadow2};
   background-color: white;
   border-radius: 3rem;
-  border: 1px solid #e9e9e9;
+  border: 1rem solid #e9e9e9;
   min-width: 150rem;
 }
 

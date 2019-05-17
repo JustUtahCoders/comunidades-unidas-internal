@@ -1,6 +1,7 @@
 import React from "react";
 import { StepComponentProps } from "./add-client.component";
 import successIconUrl from "../../icons/148705-essential-collection/svg/success.svg";
+import { Link } from "@reach/router";
 
 export default function Finished(props: StepComponentProps) {
   return (
@@ -14,6 +15,12 @@ export default function Finished(props: StepComponentProps) {
           the system! Their client id is {props.clientState.id}.
         </div>
         <div className="actions">
+          <Link
+            className="button secondary"
+            to={`/clients/${props.clientState.id}`}
+          >
+            View {props.clientState.firstName} {props.clientState.lastName}
+          </Link>
           <button className="primary" onClick={addAnother}>
             Add another client
           </button>

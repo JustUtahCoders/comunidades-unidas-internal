@@ -29,7 +29,7 @@ export default function ViewClient(props: ViewClientProps) {
       <PageHeader title={getHeaderTitle()} />
       {client && typeof client === "object" && (
         <>
-          <ViewEditBasicInfo client={client} />
+          <ViewEditBasicInfo client={client} clientUpdated={setClient} />
         </>
       )}
     </>
@@ -54,37 +54,37 @@ type ViewClientProps = {
 };
 
 export type SingleClient = {
-  id: number;
-  dateOfIntake: string;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  birthday: string;
-  gender: string;
-  phone: string;
-  smsConsent: boolean;
-  homeAddress: Address;
-  email: string;
-  civilStatus: CivilStatus;
-  countryOfOrigin: string;
-  dateOfUSArrival: string;
-  homeLanguage: string;
-  currentlyEmployed: boolean;
+  id?: number;
+  dateOfIntake?: string;
+  firstName?: string;
+  lastName?: string;
+  fullName?: string;
+  birthday?: string;
+  gender?: string;
+  phone?: string;
+  smsConsent?: boolean;
+  homeAddress?: Address;
+  email?: string;
+  civilStatus?: CivilStatus;
+  countryOfOrigin?: string;
+  dateOfUSArrival?: string;
+  homeLanguage?: string;
+  currentlyEmployed?: boolean;
   employmentSector?: string;
-  payInterval: PayInterval;
-  weeklyEmployedHours: WeeklyEmployedHours;
-  householdIncome: number;
-  householdSize: number;
-  dependents: number;
-  housingStatus: string;
-  isStudent: boolean;
-  eligibleToVote: boolean;
-  registeredToVote: boolean;
-  clientSource: ClientSources;
-  couldVolunteer: boolean;
-  intakeServices: IntakeService[];
-  createdBy: ClientUserRelationship;
-  lastUpdatedBy: ClientUserRelationship;
+  payInterval?: PayInterval;
+  weeklyEmployedHours?: WeeklyEmployedHours;
+  householdIncome?: number;
+  householdSize?: number;
+  dependents?: number;
+  housingStatus?: string;
+  isStudent?: boolean;
+  eligibleToVote?: boolean;
+  registeredToVote?: boolean;
+  clientSource?: ClientSources;
+  couldVolunteer?: boolean;
+  intakeServices?: IntakeService[];
+  createdBy?: ClientUserRelationship;
+  lastUpdatedBy?: ClientUserRelationship;
 };
 
 type IntakeService = {

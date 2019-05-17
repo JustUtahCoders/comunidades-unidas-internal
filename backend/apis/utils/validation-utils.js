@@ -26,6 +26,7 @@ exports.nullableNonEmptyString = nullable(_nonEmptyString);
 exports.nonEmptyString = checkDefined(_nonEmptyString);
 exports.nullableValidDate = nullable(_validDate);
 exports.validDate = checkDefined(_validDate);
+exports.validId = checkDefined(_validId);
 exports.validPhone = checkDefined(propertyName => val =>
   /^[0-9\-\(\) x]+$/.test(val)
     ? null
@@ -104,4 +105,15 @@ function _validEnum(propertyName, ...possibleValues) {
       : `Property ${propertyName} must be one of the following: ${possibleValues.join(
           ", "
         )}. Received '${val}'`;
+}
+
+function _validId(propertyName) {
+  return val => {
+    try {
+      Number(val);
+      return null;
+    } catch (err) {
+      return `Property '${propertyName}' must be a valid number ID`;
+    }
+  };
 }
