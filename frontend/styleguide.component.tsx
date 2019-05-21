@@ -19,14 +19,14 @@ export const mediaDesktop: String = `@media screen and (min-width: 800px)`;
 
 const css = `
 :root {
-  font-size: 1px;
+  font-size: 10px;
   font-family: 'Montserrat', sans-serif;
   background-color: #efefef;
   --very-light-gray: #F3F3F3;
 }
 
 body {
-  font-size: 18rem;
+  font-size: 2.5rem;
   margin: 0;
 }
 
@@ -38,7 +38,7 @@ body {
   box-shadow: ${boxShadow1};
   background-color: white;
   border-radius: 3rem;
-  padding: 32rem;
+  padding: 1rem;
 }
 
 & .card.padding-0 {
@@ -46,21 +46,21 @@ body {
 }
 
 & input {
-  font-size: 18rem;
+  font-size: 2.5rem;
   padding: 4rem 6rem;
 }
 
 & select {
-  font-size: 18rem;
+  font-size: 2.5rem;
   max-width: 250rem;
 }
 
 & option {
-  font-size: 18rem;
+  font-size: 2.5rem;
 }
 
 & textarea {
-  font-size: 18rem;
+  font-size: 2.5rem;
   font-family: Montserrat;
 }
 
@@ -109,7 +109,7 @@ body {
  }
 
 & button {
-  font-size: 18rem;
+  font-size: 2.25rem;
   border-radius: 6rem;
   padding: 8rem 12rem;
   border: none;

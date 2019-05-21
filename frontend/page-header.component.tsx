@@ -36,23 +36,23 @@ type PageHeaderProps = {
 
 const css = `
 & .page-header {
-  height: 102rem;
-  padding: 32rem;
+  height: 10rem;
+  padding: 2rem;
   display: flex;
   align-items: flex-end;
 }
 
 ${mediaDesktop} {
   & .page-header {
-    margin-bottom: 32rem;
-    height: 180rem;
+    margin-bottom: 3rem;
+    height: 18rem;
   }
 }
 
 & .page-header h1 {
   color: white;
   font-weight: bold;
-  font-size: 32rem;
+  font-size: 3rem;
   margin: 0;
   padding: 0;
 }

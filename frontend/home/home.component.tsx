@@ -44,8 +44,8 @@ const css = `
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin-top: 24rem;
-  margin-left: 24rem;
+  margin-top: 2rem;
+  margin-left: 2rem;
 }
 `;
 

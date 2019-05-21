@@ -39,11 +39,9 @@ const css = `
   padding: 0 4rem;
   border-bottom: 1rem solid #e9e9e9;
 }
-
 & .logo {
   height: 30rem;
 }
-
 & .logo-link, & .logo-link:focus, & .logo-link:visited {
   display: flex;
   align-items: center;
@@ -54,7 +52,6 @@ const css = `
   min-height: 56rem;
   padding: 0 6rem;
 }
-
 & .hamburger {
   height: 100%;
   display: flex;
@@ -62,7 +59,6 @@ const css = `
   justify-content: center;
   cursor: pointer;
 }
-
 & .hamburger > * {
   width: 24rem;
   border-radius: 3rem;
@@ -71,7 +67,6 @@ const css = `
   margin: 0 16rem 4rem 16rem;
   display: block;
 }
-
 ${mediaDesktop} {
   & .topnav {
     display: none;
