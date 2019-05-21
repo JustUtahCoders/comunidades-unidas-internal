@@ -23,15 +23,15 @@ export default function HomeCard(props: HomeCardProps) {
 
 const css = `
 & .home-card.unstyled {
-  border-radius: 3rem;
+  border-radius: 25pt;
   background-color: white;
-  padding: 32rem;
+  padding: 1vh 1vw 1vh 1vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   box-shadow: ${boxShadow1};
-  margin-bottom: 24rem;
+  margin-bottom: 5vh;
 }
 
 ${mediaMobile} {
@@ -52,12 +52,12 @@ ${mediaMobile} {
 
 ${mediaDesktop} {
   & .home-card {
-    height: 200rem;
-    width: 200rem;
+    height: 20vh;
+    width: calc(20vh);
   }
 
   & .card-container {
-    flex-basis: 224rem;
+    flex-basis: 10vw;
   }
 
   & .home-card.unstyled:first-child {
@@ -65,8 +65,9 @@ ${mediaDesktop} {
   }
 
   & .icon {
-    height: 64rem;
-    width: 64rem;
+    height: 6.5vh;
+    width: calc(6.5vh);
+    
   }
 }
 
@@ -75,10 +76,11 @@ ${mediaDesktop} {
 }
 
 & .icon {
-  margin-bottom: 16rem;
+  margin-bottom: 2vh;
 }
 
 & .title {
+  font-size: 2vh;
   text-align: center;
 }
 `;

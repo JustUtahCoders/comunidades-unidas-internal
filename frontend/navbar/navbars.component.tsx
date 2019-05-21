@@ -39,7 +39,7 @@ export default function Navbars(props: NavbarsProps) {
 const css = `
 & .main-content {
   margin: 0 auto;
-  max-width: 800rem;
+  max-width: 80vw;
 }
 
 ${mediaDesktop} {
@@ -48,10 +48,11 @@ ${mediaDesktop} {
   }
 
   & .navbar-margin {
-    margin-left: 236rem;
+    margin-left: 25vw;
   }
 }
 
+//FIXME 
 ${mediaMobile} {
   & .navbar-margin {
     margin-top: 56rem;

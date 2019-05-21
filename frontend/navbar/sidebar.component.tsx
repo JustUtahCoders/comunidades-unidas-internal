@@ -39,9 +39,7 @@ export default function Sidebar(props: SidebarProps) {
                   src="https://static.wixstatic.com/media/738269_e2e22398263d4de8b795dfc67035a1f8~mv2.png/v1/fill/w_254,h_254,al_c,q_80,usm_0.66_1.00_0.01/Comunidades-Unidas-Logo.webp"
                   alt="Comunidades Unidas Logo"
                 />
-                <div className="product-name" style={{ marginLeft: "2vw" }}>
-                  Comunidades
-                </div>
+                <div className="product-name">Comunidades</div>
               </div>
             </Link>
           </li>
@@ -133,6 +131,7 @@ ${mediaMobile} {
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+  font-size: 2.5vh;
 }
 
 & .logo-row {
@@ -146,9 +145,9 @@ ${mediaMobile} {
   height: 15vh;
 }
 
-// FIXME - not responding as expected to changes. Changes made in dev tools show this should be 2vw margin-left. Placing directly inline also worked (currently there as a work around)
 & .product-name {
-  padding-left: 8rem;
+  font-size: 2.25vh;
+  margin-left: 2vw;
 }
 
 & .logo-link.nav-link, .logo-link:focus.nav-link:focus {

@@ -41,11 +41,12 @@ export default function Home(props: HomeProps) {
 
 const css = `
 & .home-cards {
+  width: 59vw;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin-top: 24rem;
-  margin-left: 24rem;
+  margin-top: 1vh;
+  margin-left: 1vw;
 }
 `;
 
