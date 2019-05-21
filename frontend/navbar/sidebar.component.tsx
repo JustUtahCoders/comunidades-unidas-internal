@@ -39,7 +39,9 @@ export default function Sidebar(props: SidebarProps) {
                   src="https://static.wixstatic.com/media/738269_e2e22398263d4de8b795dfc67035a1f8~mv2.png/v1/fill/w_254,h_254,al_c,q_80,usm_0.66_1.00_0.01/Comunidades-Unidas-Logo.webp"
                   alt="Comunidades Unidas Logo"
                 />
-                <div className="product-name">Comunidades</div>
+                <div className="product-name" style={{ marginLeft: "2vw" }}>
+                  Comunidades
+                </div>
               </div>
             </Link>
           </li>
@@ -121,7 +123,7 @@ ${mediaMobile} {
   left: 0;
   top: 0;
   height: 100vh;
-  width: 236rem;
+  width: 30vw;
   background-color: white;
   transition: left 0.2s ease-in-out;
 }
@@ -137,19 +139,20 @@ ${mediaMobile} {
   display: flex;
   align-items: center;
   font-weight: bold;
-  font-size: 21rem;
+  font-size: 2vh;
 }
 
 & .logo {
-  height: 40rem;
+  height: 15vh;
 }
 
+// FIXME - not responding as expected to changes. Changes made in dev tools show this should be 2vw margin-left. Placing directly inline also worked (currently there as a work around)
 & .product-name {
   padding-left: 8rem;
 }
 
 & .logo-link.nav-link, .logo-link:focus.nav-link:focus {
-  height: 40rem;
+  height: 20vh;
 }
 
 & .nav-link:hover {
@@ -171,8 +174,8 @@ ${mediaMobile} {
   color: black;
   display: flex;
   align-items: center;
-  min-height: 56rem;
-  padding: 8rem 16rem;
+  min-height: 4vh;
+  padding: 4vh 3.5vw;
 }
 
 & .nav-link > div {
