@@ -110,12 +110,6 @@ export default function Sidebar(props: SidebarProps) {
 }
 
 const css = `
-${mediaMobile} {
-  & .sidebar:not(.force-show) {
-    left: calc(-100%);
-  }
-}
-
 & nav {
   position: fixed;
   left: 0;
@@ -186,6 +180,29 @@ ${mediaMobile} {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+${mediaMobile} {
+  & nav {
+    width: 32rem;
+  }
+
+  & .sidebar:not(.force-show) {
+    left: calc(-100%);
+  }
+
+  & .logo-row {
+    visibility: hidden;
+  }
+
+  & .navbar-links {
+    font-size: 2rem;
+  }
+
+  & .nav-link, .nav-link:focus, nav-link:focus, nav-link:visited {
+      min-height: 8rem;
+      padding: 1rem 4rem;
+  }
 }
 `;
 

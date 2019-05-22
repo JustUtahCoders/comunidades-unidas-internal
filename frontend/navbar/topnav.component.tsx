@@ -29,18 +29,18 @@ const css = `
   position: fixed;
   top: 0;
   left: 0;
-  height: 56rem;
+  height: 8rem;
   width: 100vw;
   background-color: white;
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 4rem;
+  padding: 0 2rem;
   border-bottom: 1rem solid #e9e9e9;
 }
 & .logo {
-  height: 30rem;
+  height: 15rem;
 }
 & .logo-link, & .logo-link:focus, & .logo-link:visited {
   display: flex;
@@ -50,7 +50,8 @@ const css = `
   display: flex;
   align-items: center;
   min-height: 56rem;
-  padding: 0 6rem;
+  padding: 0 1.5rem 0 2rem;
+  font-size: 2rem;
 }
 & .hamburger {
   height: 100%;
@@ -58,13 +59,14 @@ const css = `
   flex-direction: column;
   justify-content: center;
   cursor: pointer;
+  margin-top: 0.75rem;
 }
 & .hamburger > * {
-  width: 24rem;
+  width: 4.25rem;
   border-radius: 3rem;
-  height: 3rem;
+  height: .7rem;
   background-color: #afafaf;
-  margin: 0 16rem 4rem 16rem;
+  margin-bottom: .7rem;
   display: block;
 }
 ${mediaDesktop} {

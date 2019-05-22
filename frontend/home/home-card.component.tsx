@@ -25,39 +25,41 @@ const css = `
 & .home-card.unstyled {
   border-radius: 3rem;
   background-color: white;
-  padding: 32rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   box-shadow: ${boxShadow1};
-  margin-bottom: 24rem;
+  margin-bottom: 2rem;
 }
 
 ${mediaMobile} {
   & .home-card {
-    height: 150rem;
-    width: 150rem;
+    height: 14rem;
+    width: 14rem;
+    font-size: 1.75rem;
   }
 
   & .card-container {
-    flex-basis: 174rem;
+    flex-basis: 14rem;
   }
 
   & .icon {
-    height: 32rem;
-    width: 32rem;
+    height: 4rem;
+    width: 4rem;
   }
 }
 
 ${mediaDesktop} {
   & .home-card {
-    height: 200rem;
-    width: 200rem;
+    height: 20rem;
+    width: 20rem;
+    font-size: 2rem;
   }
 
   & .card-container {
-    flex-basis: 224rem;
+    flex-basis: 22rem;
   }
 
   & .home-card.unstyled:first-child {
@@ -65,8 +67,8 @@ ${mediaDesktop} {
   }
 
   & .icon {
-    height: 64rem;
-    width: 64rem;
+    height: 8rem;
+    width: 8rem;
   }
 }
 
@@ -75,7 +77,7 @@ ${mediaDesktop} {
 }
 
 & .icon {
-  margin-bottom: 16rem;
+  margin-bottom: 2rem;
 }
 
 & .title {

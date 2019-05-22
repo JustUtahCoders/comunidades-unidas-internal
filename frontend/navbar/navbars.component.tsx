@@ -48,7 +48,7 @@ ${mediaDesktop} {
   }
 
   & .navbar-margin {
-    margin-left: 0.25rem;
+    margin-left: 42rem;
   }
 }
 
