@@ -49,7 +49,7 @@ const css = `
   color: black;
   display: flex;
   align-items: center;
-  min-height: 56rem;
+  min-height: 5rem;
   padding: 0 1.5rem 0 2rem;
   font-size: 2rem;
 }

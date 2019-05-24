@@ -208,12 +208,41 @@ export const css = `
 }
 
 ${mediaMobile} {
+  & .hints-and-instructions {
+    width: 30rem;
+  }
+
+  & form {
+    font-size: 1.6rem;
+  }
+
   & .form-with-hints form input:not([type="radio"]):not([type="checkbox"]), & .form-with-hints form select {
-    width: 17rem;
+    width: 16.75rem;
+    font-size: 1.6rem;
   }
 
   & .form-with-hints form {
-    width: 35rem;
+    width: 30rem;
+  }
+
+  & .form-with-hints form > div > label > span {
+    width: 10rem;
+    font-size: 1.6rem;
+  }
+
+  & .form-with-hints > .hints-and-instructions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 1.8rem;
+  }
+
+  & .form-with-hints form input:([type="checkbox"]) {
+    min-width: 20rem;
+    max-width: 30rem;
+    margin-left: 3rem;
   }
 }
 

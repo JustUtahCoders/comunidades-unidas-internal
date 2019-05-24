@@ -46,21 +46,22 @@ body {
 }
 
 & input {
-  font-size: 2.2rem;
+  font-size: 1.6rem;
   padding: .4rem .6rem;
 }
 
 & select {
-  font-size: 2.2rem;
+  font-size: 1.6rem;
   max-width: 25rem;
+  padding: 1rem .6rem;
 }
 
 & option {
-  font-size: 2.2rem;
+  font-size: 1.6rem;
 }
 
 & textarea {
-  font-size: 2.5rem;
+  font-size: 1.6rem;
   font-family: Montserrat;
 }
 
@@ -109,9 +110,9 @@ body {
  }
 
 & button {
-  font-size: 2.25rem;
+  font-size: 1.7rem;
   border-radius: 1.2rem;
-  padding: 1.6rem 2.4rem;
+  padding: 1rem 2.4rem;
   border: none;
   text-align: center;
 }

@@ -4,6 +4,8 @@ import agendaIconUrl from "../../icons/148705-essential-collection/svg/agenda.sv
 import { useCss } from "kremling";
 import easyFetch from "../util/easy-fetch";
 
+import { mediaMobile } from "../styleguide.component";
+
 export default function Services(props: StepComponentProps) {
   const [services, setServices] = useState([]);
   const [checkedServices, setCheckedServices] = useState([]);
@@ -98,6 +100,14 @@ const css = `
 & .warning {
   font-weight: bold;
   font-style: italic;
+  font-size: 1.6rem;
+  padding: 0 1rem;
   margin-top: .8rem;
+}
+
+${mediaMobile} {
+  & .vertical-options {
+    margin-left: 1rem;
+  }
 }
 `;
