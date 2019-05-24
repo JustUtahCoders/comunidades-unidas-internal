@@ -234,7 +234,7 @@ ${mediaDesktop} {
 }
 
 & .hint-icon {
-  height: 7rem;
+  height: 10rem;
   margin-top: 1.6rem;
   margin-bottom: .8rem;
 }
