@@ -54,7 +54,7 @@ ${mediaDesktop} {
   & .page-header {
     margin-bottom: 3rem;
     height: 18rem;
-    width: 84rem;
+    width: 100%;
   }
 }
 

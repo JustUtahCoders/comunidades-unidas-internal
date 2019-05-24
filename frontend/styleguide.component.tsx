@@ -26,7 +26,7 @@ const css = `
 }
 
 body {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   margin: 0;
 }
 
@@ -37,8 +37,8 @@ body {
 & .card {
   box-shadow: ${boxShadow1};
   background-color: white;
-  border-radius: 3rem;
-  padding: 1rem;
+  border-radius: .3rem;
+  padding: .1rem;
 }
 
 & .card.padding-0 {
@@ -46,17 +46,17 @@ body {
 }
 
 & input {
-  font-size: 2.5rem;
-  padding: 4rem 6rem;
+  font-size: 2.2rem;
+  padding: .4rem .6rem;
 }
 
 & select {
-  font-size: 2.5rem;
-  max-width: 250rem;
+  font-size: 2.2rem;
+  max-width: 25rem;
 }
 
 & option {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
 }
 
 & textarea {
@@ -110,17 +110,17 @@ body {
 
 & button {
   font-size: 2.25rem;
-  border-radius: 6rem;
-  padding: 8rem 12rem;
+  border-radius: 1.2rem;
+  padding: 1.6rem 2.4rem;
   border: none;
   text-align: center;
 }
 
 & button.icon {
-  padding: 8rem;
-  margin: 4rem;
+  padding: 1.6rem;
+  margin: .8rem;
   background-color: transparent;
-  border-radius: 6rem;
+  border-radius: 1.2rem;
 }
 
 & button.icon:hover {
@@ -128,12 +128,12 @@ body {
 }
 
 & button.icon img {
-  width: 16rem;
-  height: 16rem;
+  width: 1.6rem;
+  height: 1.6rem;
 }
 
 & button + button, & button + a.button, & a.button + button, & a.button + a.button {
-  margin-left: 16rem;
+  margin-left: 1.6rem;
 }
 
 & button.primary, & a.primary {
@@ -143,9 +143,9 @@ body {
 }
 
 & a.button {
-  font-size: 18rem;
-  border-radius: 6rem;
-  padding: 8rem 12rem;
+  font-size: 1.8rem;
+  border-radius: 1.2rem;
+  padding: 1.6rem 2.4rem;
   border: none;
   text-align: center;
   text-decoration: none;
@@ -169,13 +169,13 @@ body {
   position: absolute;
   box-shadow: ${boxShadow2};
   background-color: white;
-  border-radius: 3rem;
-  border: 1rem solid #e9e9e9;
-  min-width: 150rem;
+  border-radius: .3rem;
+  border: .1rem solid #e9e9e9;
+  min-width: 15rem;
 }
 
 & .popup ul li {
-  padding: 4rem 8rem;
+  padding: .8rem 1.6rem;
 }
 
 & .popup ul {

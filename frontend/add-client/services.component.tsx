@@ -98,6 +98,6 @@ const css = `
 & .warning {
   font-weight: bold;
   font-style: italic;
-  margin-top: 8rem;
+  margin-top: .8rem;
 }
 `;
