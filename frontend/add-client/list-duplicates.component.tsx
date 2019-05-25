@@ -95,12 +95,12 @@ const css = `
 }
 
 & table th {
-  padding: 8rem;
+  padding: .8rem;
 }
 
 & table td {
   text-align: center;
   vertical-align: middle;
-  padding: 8rem;
+  padding: .8rem;
 }
 `;

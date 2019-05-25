@@ -110,18 +110,12 @@ export default function Sidebar(props: SidebarProps) {
 }
 
 const css = `
-${mediaMobile} {
-  & .sidebar:not(.force-show) {
-    left: calc(-100%);
-  }
-}
-
 & nav {
   position: fixed;
   left: 0;
   top: 0;
   height: 100vh;
-  width: 236rem;
+  width: 50rem;
   background-color: white;
   transition: left 0.2s ease-in-out;
 }
@@ -137,19 +131,19 @@ ${mediaMobile} {
   display: flex;
   align-items: center;
   font-weight: bold;
-  font-size: 21rem;
+  font-size: 3rem;
 }
 
 & .logo {
-  height: 40rem;
+  height: 13rem;
 }
 
 & .product-name {
-  padding-left: 8rem;
+  margin-left: 3rem
 }
 
 & .logo-link.nav-link, .logo-link:focus.nav-link:focus {
-  height: 40rem;
+  height: 3rem;
 }
 
 & .nav-link:hover {
@@ -171,8 +165,8 @@ ${mediaMobile} {
   color: black;
   display: flex;
   align-items: center;
-  min-height: 56rem;
-  padding: 8rem 16rem;
+  min-height: 15rem;
+  padding: 1rem 4rem;
 }
 
 & .nav-link > div {
@@ -186,6 +180,29 @@ ${mediaMobile} {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+${mediaMobile} {
+  & nav {
+    width: 32rem;
+  }
+
+  & .sidebar:not(.force-show) {
+    left: calc(-100%);
+  }
+
+  & .logo-row {
+    visibility: hidden;
+  }
+
+  & .navbar-links {
+    font-size: 2rem;
+  }
+
+  & .nav-link, .nav-link:focus, nav-link:focus, nav-link:visited {
+      min-height: 8rem;
+      padding: 1rem 4rem;
+  }
 }
 `;
 

@@ -65,6 +65,7 @@ export default function ContactInformation(props: StepComponentProps) {
               name="smsConsent"
               checked={smsConsent}
               onChange={evt => setSmsConsent(Boolean(evt.target.checked))}
+              className="checkbox"
             />
           </label>
         </div>
