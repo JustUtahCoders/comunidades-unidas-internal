@@ -19,7 +19,7 @@ import { mediaMobile, mediaDesktop } from "../styleguide.component";
 
 export default function AddClient(props: AddClientProps) {
   const scope = useCss(css);
-  const [step, setStep] = useState<Step>(Step.CHECK_DUPLICATE);
+  const [step, setStep] = useState<Step>(Step.DEMOGRAPHICS_INFORMATION);
   const [clientState, setClientState] = useState<ClientState>({});
   const [duplicateWarning, setDuplicateWarning] = useState<DuplicateWarning>(
     null

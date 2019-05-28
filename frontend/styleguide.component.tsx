@@ -35,7 +35,7 @@ body {
 }
 
 & .card + .card {
-  margin-top: 32rem;
+  margin-top: 3.2rem;
 }
 
 & .card {

@@ -93,8 +93,8 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
           </div>
         </ContactInformationInputsComponent>
       ) : (
-        <div {...scope} className="contact-information">
-          <div>
+        <div {...scope} className="view-edit-contact-information">
+          <div className="view-contact-information">
             <div>{client.homeAddress.street}</div>
             <div>
               {client.homeAddress.city}, {client.homeAddress.state}{" "}
@@ -108,11 +108,12 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
             {smsConsent()}
             <div>{client.email}</div>
           </div>
-          <div>
-            <button className="icon" onClick={() => setIsEditing(true)}>
-              <img src={editImg} alt="Edit Basic Information" />
-            </button>
-          </div>
+          <button
+            className="secondary edit-button"
+            onClick={() => setIsEditing(true)}
+          >
+            Edit
+          </button>
         </div>
       )}
     </ClientSection>
@@ -193,9 +194,16 @@ type ViewEditContactInfoProps = {
 };
 
 const css = `
-& .contact-information {
+& .view-edit-contact-information {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+& .view-contact-information {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -209,7 +217,7 @@ const css = `
 }
 
 & .sms-consent-icon {
-  width: 16rem;
-  margin-left: 8rem;
+  width: 1.6rem;
+  margin-left: .8rem;
 }
 `;

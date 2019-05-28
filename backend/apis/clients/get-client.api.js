@@ -118,6 +118,7 @@ function getClientById(connection, clientId, cbk) {
       countryOfOrigin: c.countryOfOrigin,
       dateOfUSArrival: c.dateOfUSArrival,
       homeLanguage: c.homeLanguage,
+      englishProficiency: c.englishProficiency,
       currentlyEmployed: c.employed,
       employmentSector: c.employmentSector,
       payInterval: c.payInterval,

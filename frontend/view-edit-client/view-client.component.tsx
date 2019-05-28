@@ -8,6 +8,7 @@ import {
 } from "../add-client/demographic-information.component";
 import { ClientSources } from "../add-client/add-client.component";
 import ViewEditContactInfo from "./view-edit-contact-info.component";
+import ViewEditDemographicsInfo from "./view-edit-demographics-info.component";
 
 export default function ViewClient(props: ViewClientProps) {
   const [client, setClient] = React.useState<SingleClient>(null);
@@ -29,10 +30,11 @@ export default function ViewClient(props: ViewClientProps) {
     <>
       <PageHeader title={getHeaderTitle()} />
       {client && typeof client === "object" && (
-        <>
+        <div style={{ marginBottom: "3.2rem" }}>
           <ViewEditBasicInfo client={client} clientUpdated={setClient} />
           <ViewEditContactInfo client={client} clientUpdated={setClient} />
-        </>
+          <ViewEditDemographicsInfo client={client} clientUpdated={setClient} />
+        </div>
       )}
     </>
   );
@@ -71,7 +73,8 @@ export type SingleClient = {
   countryOfOrigin?: string;
   dateOfUSArrival?: string;
   homeLanguage?: string;
-  currentlyEmployed?: boolean;
+  englishProficiency?: string;
+  currentlyEmployed?: string;
   employmentSector?: string;
   payInterval?: PayInterval;
   weeklyEmployedHours?: WeeklyEmployedHours;

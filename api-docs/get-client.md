@@ -35,6 +35,7 @@ GET /clients/:id
     "countryOfOrigin": "MX",
     "dateOfUSArrival": null,
     "homeLanguage": "english",
+    "englishProficiency": "advanced",
     "currentlyEmployed": "unknown",
     "employmentSector": "industrial",
     "payInterval": "every-week",

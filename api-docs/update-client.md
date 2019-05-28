@@ -28,6 +28,7 @@ PATCH /clients/:id
   "countryOfOrigin": "MX",
   "dateOfUSArrival": null,
   "homeLanguage": "english",
+  "englishProficiency": "advanced",
   "currentlyEmployed": "n/a",
   "employmentSector": "industrial",
   "payInterval": "every-week",
