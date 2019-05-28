@@ -41,6 +41,6 @@ export default function easyFetch(url: string, opts?: any) {
 }
 
 class FetchError extends Error {
-  body?: string = null;
-  status?: number = null;
+  body?: string;
+  status?: number;
 }
