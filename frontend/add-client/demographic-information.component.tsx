@@ -46,7 +46,7 @@ export default function DemographicInformation(props: StepComponentProps) {
     props.clientState.isStudent || false
   );
   const [englishLevel, setEnglishLevel] = useState(
-    props.clientState.englishLevel || EnglishLevel.INTERMEDIATE
+    props.clientState.englishLevel || EnglishLevel.intermediate
   );
   const [eligibleToVote, setEligibleToVote] = useState(
     props.clientState.eligibleToVote || false
@@ -366,9 +366,11 @@ export default function DemographicInformation(props: StepComponentProps) {
               value={englishLevel}
               onChange={evt => setEnglishLevel(EnglishLevel[evt.target.value])}
             >
-              <option value="Beginner">Beginner</option>
-              <option value="Intermediate">Intermediate</option>
-              <option value="Advanced">Advanced</option>
+              {Object.keys(EnglishLevel).map(englishLevelKey => (
+                <option value={englishLevelKey}>
+                  EnglishLevel[englishLevelKey
+                </option>
+              ))}
             </select>
           </label>
         </div>
@@ -474,12 +476,12 @@ const employmentSectors = {
   other: "Other (Explain)"
 };
 
-const languageOptions = {
-  english: "English",
-  spanish: "Spanish",
-  englishAndSpanish: "English And Spanish",
-  other: "Other"
-};
+export enum languageOptions {
+  english = "English",
+  spanish = "Spanish",
+  englishandspanish = "English And Spanish",
+  other = "Other"
+}
 
 export enum CivilStatus {
   SINGLE = "single",
@@ -489,9 +491,9 @@ export enum CivilStatus {
   WIDOWED = "widowed"
 }
 export enum EnglishLevel {
-  BEGINNER = "beginner",
-  INTERMEDIATE = "intermediate",
-  ADVANCED = "advanced"
+  beginner = "Beginner",
+  intermediate = "Intermediate",
+  advanced = "Advanced"
 }
 
 export enum PayInterval {
