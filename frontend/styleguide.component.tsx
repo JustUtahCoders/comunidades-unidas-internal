@@ -26,7 +26,7 @@ const css = `
 }
 
 body {
-  font-size: 2.2rem;
+  font-size: 1.8rem;
   margin: 0;
 }
 
@@ -42,7 +42,7 @@ body {
   box-shadow: ${boxShadow1};
   background-color: white;
   border-radius: .3rem;
-  padding: .1rem;
+  padding: 3.2rem;
 }
 
 & .card.padding-0 {
@@ -50,22 +50,21 @@ body {
 }
 
 & input {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   padding: .4rem .6rem;
 }
 
 & select {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   max-width: 25rem;
-  padding: 1rem .6rem;
 }
 
 & option {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
 }
 
 & textarea {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   font-family: Montserrat;
 }
 
@@ -114,18 +113,18 @@ body {
  }
 
 & button {
-  font-size: 1.7rem;
-  border-radius: 1.2rem;
-  padding: 1rem 2.4rem;
+  font-size: 1.8rem;
+  border-radius: .6rem;
+  padding: .8rem 1.2rem;
   border: none;
   text-align: center;
 }
 
 & button.icon {
-  padding: 1.6rem;
-  margin: .8rem;
+  padding: .8rem;
+  margin: .4rem;
   background-color: transparent;
-  border-radius: 1.2rem;
+  border-radius: .6rem;
 }
 
 & button.icon:hover {
@@ -149,8 +148,8 @@ body {
 
 & a.button {
   font-size: 1.8rem;
-  border-radius: 1.2rem;
-  padding: 1.6rem 2.4rem;
+  border-radius: .6rem;
+  padding: .8rem 1.2rem;
   border: none;
   text-align: center;
   text-decoration: none;
@@ -180,7 +179,7 @@ body {
 }
 
 & .popup ul li {
-  padding: .8rem 1.6rem;
+  padding: .4rem .8rem;
 }
 
 & .popup ul {

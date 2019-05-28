@@ -36,8 +36,8 @@ type PageHeaderProps = {
 
 const css = `
 & .page-header {
-  height: 10rem;
-  padding: 5rem;
+  height: 10.2rem;
+  padding: 3.2rem;
   display: flex;
   align-items: flex-end;
 }
@@ -45,29 +45,15 @@ const css = `
 & .page-header h1 {
   color: white;
   font-weight: bold;
-  font-size: 3rem;
+  font-size: 3.2rem;
   margin: 0;
   padding: 0;
 }
 
 ${mediaDesktop} {
   & .page-header {
-    margin-bottom: 3rem;
+    margin-bottom: 3.2rem;
     height: 18rem;
-    width: 100%;
-  }
-}
-
-${mediaMobile} {
-  & .page-header {
-    margin-top: 9rem;
-    padding: 3rem 2rem 3rem 2rem;
-    height: 15rem;
-    width: 100%;
-  }
-
-  & .page-header h1 {
-    font-size: 2.75rem;
   }
 }
 `;
