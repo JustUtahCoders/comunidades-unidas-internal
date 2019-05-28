@@ -1,4 +1,5 @@
 import React from "react";
+import { useCss } from "kremling";
 import { StepComponentProps } from "./add-client.component";
 import successIconUrl from "../../icons/148705-essential-collection/svg/success.svg";
 import { Link } from "@reach/router";
@@ -33,3 +34,9 @@ export default function Finished(props: StepComponentProps) {
     props.reset();
   }
 }
+
+export const css = `
+  & .actions {
+    margin-left: 1rem;
+  }
+`;

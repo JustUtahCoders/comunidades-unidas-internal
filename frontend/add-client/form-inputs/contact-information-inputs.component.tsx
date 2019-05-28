@@ -62,6 +62,7 @@ export default React.forwardRef(function ContactInformationInputs(
             name="smsConsent"
             checked={smsConsent}
             onChange={evt => setSmsConsent(Boolean(evt.target.checked))}
+            className="checkbox"
           />
         </label>
       </div>

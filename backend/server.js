@@ -55,6 +55,7 @@ require("./apis/clients/client-duplicates.api");
 require("./apis/clients/get-client.api");
 require("./apis/clients/update-client.api");
 require("./apis/services/list-services.api");
+require("./apis/clients/list-clients.api");
 require("./index-html.js");
 
 process.on("uncaughtException", function(err) {
