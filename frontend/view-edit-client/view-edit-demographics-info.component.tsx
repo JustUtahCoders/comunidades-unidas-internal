@@ -2,7 +2,6 @@ import React from "react";
 import ClientSection from "./client-section.component";
 import { SingleClient } from "./view-client.component";
 import { useCss } from "kremling";
-import editImg from "../../icons/148705-essential-collection/svg/edit.svg";
 import checkedUrl from "../../icons/148705-essential-collection/svg/checked-1.svg";
 import closeUrl from "../../icons/148705-essential-collection/svg/close.svg";
 import { countryCodeToName } from "../util/country-select.component";
