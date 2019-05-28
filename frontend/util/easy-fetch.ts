@@ -1,4 +1,8 @@
 export default function easyFetch(url: string, opts?: any) {
+  if (!opts) {
+    opts = {};
+  }
+
   if (!opts.headers) {
     opts.headers = {};
   }
