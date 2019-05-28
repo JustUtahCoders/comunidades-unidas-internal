@@ -4,8 +4,9 @@ import PageHeader from "../page-header.component";
 import ViewEditBasicInfo from "./view-edit-basic-info.component";
 import {
   CivilStatus,
-  PayInterval
-} from "../add-client/demographic-information.component";
+  PayInterval,
+  WeeklyEmployedHours
+} from "../add-client/form-inputs/demographic-information-inputs.component";
 import { ClientSources } from "../add-client/add-client.component";
 import ViewEditContactInfo from "./view-edit-contact-info.component";
 import ViewEditDemographicsInfo from "./view-edit-demographics-info.component";
@@ -103,13 +104,6 @@ type Address = {
   city: string;
   state: string;
   zip: string;
-};
-
-type WeeklyEmployedHours = {
-  "0-20": "0-20";
-  "21-35": "21-35";
-  "36-40": "36-40";
-  "41+": "41+";
 };
 
 type ClientUserRelationship = {

@@ -9,14 +9,16 @@ export default function CountrySelect(props: CountrySelectProps) {
     >
       <optgroup label="Most common countries">
         {Object.keys(mostCommonCountries).map(commonCountryCode => (
-          <option value={commonCountryCode}>
+          <option value={commonCountryCode} key={commonCountryCode}>
             {mostCommonCountries[commonCountryCode]}
           </option>
         ))}
       </optgroup>
       <optgroup label="All countries">
         {Object.keys(otherCountries).map(countryCode => (
-          <option value={countryCode}>{otherCountries[countryCode]}</option>
+          <option value={countryCode} key={countryCode}>
+            {otherCountries[countryCode]}
+          </option>
         ))}
       </optgroup>
     </select>
