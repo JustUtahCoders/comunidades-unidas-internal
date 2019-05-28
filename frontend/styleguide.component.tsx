@@ -34,6 +34,10 @@ body {
   box-sizing: border-box;
 }
 
+& .card + .card {
+  margin-top: 32rem;
+}
+
 & .card {
   box-shadow: ${boxShadow1};
   background-color: white;

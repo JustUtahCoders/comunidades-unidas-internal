@@ -21,15 +21,15 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
       const abortController = new AbortController();
       easyFetch(`/api/clients/${props.client.id}`, {
         method: "PATCH",
-        body: apiStatus.newClientData
-      })
-        .then(data => {
-          props.clientUpdated(data.client);
-          setEditing(false);
-        })
-        .finally(() => {
-          dispatchApiStatus({ type: "reset" });
-        });
+        body: apiStatus.newClientData,
+        signal: abortController.signal
+      }).then(data => {
+        dispatchApiStatus({ type: "reset" });
+        props.clientUpdated(data.client);
+        setEditing(false);
+      });
+
+      return () => abortController.abort();
     }
   }, [apiStatus]);
 
@@ -66,7 +66,7 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
       ) : (
         <div {...scope} className="view-basic-info">
           {client.fullName} - {dayjs(client.birthday).format("M/D/YYYY")} -{" "}
-          {client.gender} -{" "}
+          {client.gender}
           <button className="icon" onClick={() => setEditing(true)}>
             <img src={editImg} alt="Edit Basic Information" />
           </button>

@@ -7,6 +7,7 @@ import {
   PayInterval
 } from "../add-client/demographic-information.component";
 import { ClientSources } from "../add-client/add-client.component";
+import ViewEditContactInfo from "./view-edit-contact-info.component";
 
 export default function ViewClient(props: ViewClientProps) {
   const [client, setClient] = React.useState<SingleClient>(null);
@@ -30,6 +31,7 @@ export default function ViewClient(props: ViewClientProps) {
       {client && typeof client === "object" && (
         <>
           <ViewEditBasicInfo client={client} clientUpdated={setClient} />
+          <ViewEditContactInfo client={client} clientUpdated={setClient} />
         </>
       )}
     </>
