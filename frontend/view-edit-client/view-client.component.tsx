@@ -4,7 +4,8 @@ import PageHeader from "../page-header.component";
 import ViewEditBasicInfo from "./view-edit-basic-info.component";
 import {
   CivilStatus,
-  PayInterval
+  PayInterval,
+  WeeklyEmployedHours
 } from "../add-client/form-inputs/demographic-information-inputs.component";
 import { ClientSources } from "../add-client/add-client.component";
 import ViewEditContactInfo from "./view-edit-contact-info.component";
@@ -104,13 +105,6 @@ type Address = {
   state: string;
   zip: string;
 };
-
-export enum WeeklyEmployedHours {
-  "0-20" = "0-20",
-  "21-35" = "21-35",
-  "36-40" = "36-40",
-  "41+" = "41+"
-}
 
 type ClientUserRelationship = {
   userId: number;

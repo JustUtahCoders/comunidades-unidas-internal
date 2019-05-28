@@ -122,7 +122,7 @@ function getClientById(connection, clientId, cbk) {
       currentlyEmployed: c.employed,
       employmentSector: c.employmentSector,
       payInterval: c.payInterval,
-      weeklyEmployedHours: c.weeklyEmployedHours,
+      weeklyEmployedHours: c.weeklyAvgHoursWorked,
       householdIncome: c.householdIncome,
       householdSize: c.householdSize,
       dependents: c.dependents,

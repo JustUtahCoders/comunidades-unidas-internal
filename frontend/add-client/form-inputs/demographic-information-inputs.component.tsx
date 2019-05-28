@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import CountrySelect from "../../util/country-select.component";
 import CurrencyInput from "../../util/currency-input.component";
-import { WeeklyEmployedHours } from "../../view-edit-client/view-client.component";
 
 export default function DemographicInformationInputs(
   props: DemographicInformationInputsProps
@@ -485,4 +484,11 @@ export enum CivilStatus {
   COMMON_LAW_MARRIAGE = "commonLawMarriage",
   DIVORCED = "divorced",
   WIDOWED = "widowed"
+}
+
+export enum WeeklyEmployedHours {
+  "0-20" = "0-20",
+  "21-35" = "21-35",
+  "36-40" = "36-40",
+  "41+" = "41+"
 }
