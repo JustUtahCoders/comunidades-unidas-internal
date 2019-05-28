@@ -48,13 +48,13 @@ ${mediaDesktop} {
   }
 
   & .navbar-margin {
-    margin-left: 42rem;
+    margin-left: 23.6rem;
   }
 }
 
 ${mediaMobile} {
   & .navbar-margin {
-    margin-top: 5rem;
+    margin-top: 5.6rem;
   }
 }
 `;

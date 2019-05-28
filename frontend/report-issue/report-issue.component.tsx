@@ -127,12 +127,12 @@ export default function ReportIssue(props: ReportIssueProps) {
 
 const css = `
 & .report-issue-form > *:not(:first-child) {
-  padding-top: 16rem;
+  padding-top: 1.6rem;
 }
 
 & .report-issue-form textarea {
   width: 100%;
-  height: 300rem;
+  height: 30rem;
 }
 `;
 

@@ -110,12 +110,18 @@ export default function Sidebar(props: SidebarProps) {
 }
 
 const css = `
+${mediaMobile} {
+  & .sidebar:not(.force-show) {
+    left: calc(-100%);
+  }
+}
+
 & nav {
   position: fixed;
   left: 0;
   top: 0;
   height: 100vh;
-  width: 50rem;
+  width: 23.6rem;
   background-color: white;
   transition: left 0.2s ease-in-out;
 }
@@ -131,19 +137,19 @@ const css = `
   display: flex;
   align-items: center;
   font-weight: bold;
-  font-size: 3rem;
+  font-size: 2.1rem;
 }
 
 & .logo {
-  height: 13rem;
+  height: 4rem;
 }
 
 & .product-name {
-  margin-left: 3rem
+  padding-left: .8rem;
 }
 
 & .logo-link.nav-link, .logo-link:focus.nav-link:focus {
-  height: 3rem;
+  height: 4rem;
 }
 
 & .nav-link:hover {
@@ -165,8 +171,8 @@ const css = `
   color: black;
   display: flex;
   align-items: center;
-  min-height: 15rem;
-  padding: 1rem 4rem;
+  min-height: 5.6rem;
+  padding: .8rem 1.6rem;
 }
 
 & .nav-link > div {
@@ -180,29 +186,6 @@ const css = `
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-${mediaMobile} {
-  & nav {
-    width: 32rem;
-  }
-
-  & .sidebar:not(.force-show) {
-    left: calc(-100%);
-  }
-
-  & .logo-row {
-    visibility: hidden;
-  }
-
-  & .navbar-links {
-    font-size: 2rem;
-  }
-
-  & .nav-link, .nav-link:focus, nav-link:focus, nav-link:visited {
-      min-height: 8rem;
-      padding: 1rem 4rem;
-  }
 }
 `;
 
