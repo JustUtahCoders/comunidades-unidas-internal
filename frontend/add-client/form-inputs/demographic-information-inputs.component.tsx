@@ -70,10 +70,9 @@ export default function DemographicInformationInputs(
     householdSize,
     isStudent,
     eligibleToVote,
-    registerToVote
+    registerToVote,
+    juvenileDependents
   };
-
-  console.log("civil status", civilStatus);
 
   return (
     <form onSubmit={handleSubmit} autoComplete="off">

@@ -69,6 +69,7 @@ export default function DemographicInformation(props: StepComponentProps) {
       householdSize: demographicInfo.householdSize,
       isStudent: demographicInfo.isStudent,
       eligibleToVote: demographicInfo.eligibleToVote,
+      juvenileDependents: demographicInfo.juvenileDependents,
       registerToVote: demographicInfo.registerToVote
     };
   }
