@@ -199,7 +199,23 @@ export default function ViewEditDemographicsInfo(
     evt.preventDefault();
     dispatchApiStatus({
       type: UpdateActionType.update,
-      newClientData: demographicsInfo
+      newClientData: {
+        civilStatus: demographicsInfo.civilStatus,
+        householdIncome: demographicsInfo.householdIncome,
+        householdSize: demographicsInfo.householdSize,
+        dependents: demographicsInfo.dependents,
+        currentlyEmployed: demographicsInfo.currentlyEmployed,
+        weeklyEmployedHours: demographicsInfo.weeklyEmployedHours,
+        employmentSector: demographicsInfo.employmentSector,
+        payInterval: demographicsInfo.payInterval,
+        countryOfOrigin: demographicsInfo.countryOfOrigin,
+        dateOfUSArrival: demographicsInfo.dateOfUSArrival,
+        homeLanguage: demographicsInfo.homeLanguage,
+        isStudent: demographicsInfo.isStudent,
+        englishProficiency: demographicsInfo.englishProficiency,
+        eligibleToVote: demographicsInfo.eligibleToVote,
+        registeredToVote: demographicsInfo.registeredToVote
+      }
     });
   }
 
@@ -268,7 +284,7 @@ type ViewEditDemographicsInfoProps = {
 
 type UpdateAction = {
   type: UpdateActionType;
-  newClientData?: DemographicInformationClient;
+  newClientData?: SingleClient;
 };
 
 enum UpdateActionType {

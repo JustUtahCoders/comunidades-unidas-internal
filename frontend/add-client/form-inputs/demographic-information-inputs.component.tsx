@@ -70,7 +70,8 @@ export default function DemographicInformationInputs(
     householdSize,
     isStudent,
     eligibleToVote,
-    registerToVote
+    registerToVote,
+    juvenileDependents
   };
 
   return (
