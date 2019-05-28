@@ -5,7 +5,7 @@ import CurrencyInput from "../../util/currency-input.component";
 export default function DemographicInformationInputs(
   props: DemographicInformationInputsProps
 ) {
-  const [civilStatus, setCivilStatus] = useState(CivilStatus.SINGLE);
+  const [civilStatus, setCivilStatus] = useState(CivilStatus.single);
   const [householdIncome, setHouseholdIncome] = useState(
     props.client.householdIncome
   );
@@ -56,7 +56,7 @@ export default function DemographicInformationInputs(
   const demographicInfo: DemographicInformationClient = {
     civilStatus,
     countryOfOrigin,
-    dateOfUSArrival,
+    dateOfUSArrival: dateOfUSArrival || null,
     homeLanguage: homeLanguage === "other" ? otherLanguage : homeLanguage,
     englishLevel,
     currentlyEmployed,
@@ -72,6 +72,8 @@ export default function DemographicInformationInputs(
     eligibleToVote,
     registerToVote
   };
+
+  console.log("civil status", civilStatus);
 
   return (
     <form onSubmit={handleSubmit} autoComplete="off">
@@ -479,11 +481,11 @@ export const EnglishLevel = {
 };
 
 export enum CivilStatus {
-  SINGLE = "single",
-  MARRIED = "married",
-  COMMON_LAW_MARRIAGE = "commonLawMarriage",
-  DIVORCED = "divorced",
-  WIDOWED = "widowed"
+  single = "single",
+  married = "married",
+  commonLawMarriage = "commonLawMarriage",
+  divorced = "divorced",
+  widowed = "widowed"
 }
 
 export enum WeeklyEmployedHours {

@@ -24,64 +24,40 @@ const nullable = cbk => (propertyName, ...args) => obj =>
 
 exports.nullableNonEmptyString = nullable(_nonEmptyString);
 exports.nonEmptyString = checkDefined(_nonEmptyString);
+
 exports.nullableValidDate = nullable(_validDate);
 exports.validDate = checkDefined(_validDate);
+
 exports.validId = checkDefined(_validId);
-exports.validPhone = checkDefined(propertyName => val =>
-  /^[0-9\-\(\) x]+$/.test(val)
-    ? null
-    : `Property ${propertyName} must be a valid phone number. Received '${val}'`
-);
-exports.validBoolean = checkDefined(propertyName => val =>
-  typeof val === "boolean"
-    ? null
-    : `Property ${propertyName} must be a boolean. Received '${val}'`
-);
-exports.validState = checkDefined(propertyName => val =>
-  typeof val === "string" && /^[A-Z]{2}$/.test(val)
-    ? null
-    : `Property ${propertyName} must be a valid, capitalized, two-digit State abbreviation. Received '${val}'`
-);
-exports.validZip = checkDefined(propertyName => val =>
-  typeof val === "string" && /^[0-9\-]+$/.test(val)
-    ? null
-    : `Property ${propertyName} must be a valid ZIP code. Received '${val}'`
-);
-exports.validEmail = checkDefined(propertyName => val =>
-  emailValidator.validate(val)
-    ? null
-    : `Property ${propertyName} must be a valid email address. Received '${val}'`
-);
+
+exports.nullableValidPhone = nullable(_validPhone);
+exports.validPhone = checkDefined(_validPhone);
+
+exports.nullableValidBoolean = nullable(_validBoolean);
+exports.validBoolean = checkDefined(_validBoolean);
+
+exports.nullableValidState = nullable(_validState);
+exports.validState = checkDefined(_validState);
+
+exports.nullableValidZip = nullable(_validZip);
+exports.validZip = checkDefined(_validZip);
+
+exports.nullableValidEmail = nullable(_validEmail);
+exports.validEmail = checkDefined(_validEmail);
 
 exports.nullableValidEnum = nullable(_validEnum);
 exports.validEnum = checkDefined(_validEnum);
-exports.validArray = (propertyName, itemValidator) => obj => {
-  const val = obj[propertyName];
 
-  if (Array.isArray(val)) {
-    const validationError = val.find((item, index) => {
-      return itemValidator(index)(val);
-    });
-    if (validationError) {
-      return `Property ${propertyName} is an array with an invalid item: ${validationError}`;
-    } else {
-      return null;
-    }
-  } else {
-    return `Property ${propertyName} must be an array.`;
-  }
-};
+exports.nullableValidArray = (propertyName, itemValidator) =>
+  _validArray(propertyName, itemValidator, true);
+exports.validArray = _validArray;
 
-exports.validCountry = checkDefined(propertyName => val =>
-  typeof val === "string" && /^[A-Z]{2}$/.test(val)
-    ? null
-    : `Property ${propertyName} must be a valid, capitalized, two-digit country code. Received '${val}`
-);
-exports.validInteger = checkDefined(propertyName => val => {
-  return typeof val === "number" && Number.isInteger(val)
-    ? null
-    : `Property ${propertyName} must be an integer. Received '${val}'`;
-});
+exports.nullableValidCountry = nullable(_validCountry);
+exports.validCountry = checkDefined(_validCountry);
+
+exports.nullableValidInteger = nullable(_validInteger);
+exports.validInteger = checkDefined(_validInteger);
+
 exports.isDefined = checkDefined(propertyName => val => null);
 
 function _validDate(propertyName) {
@@ -116,4 +92,74 @@ function _validId(propertyName) {
       return `Property '${propertyName}' must be a valid number ID`;
     }
   };
+}
+
+function _validPhone(propertyName) {
+  return val =>
+    /^[0-9\-\(\) x]+$/.test(val)
+      ? null
+      : `Property ${propertyName} must be a valid phone number. Received '${val}'`;
+}
+
+function _validBoolean(propertyName) {
+  return val =>
+    typeof val === "boolean"
+      ? null
+      : `Property ${propertyName} must be a boolean. Received '${val}'`;
+}
+
+function _validState(propertyName) {
+  return val =>
+    typeof val === "string" && /^[A-Z]{2}$/.test(val)
+      ? null
+      : `Property ${propertyName} must be a valid, capitalized, two-digit State abbreviation. Received '${val}'`;
+}
+
+function _validZip(propertyName) {
+  return val =>
+    typeof val === "string" && /^[0-9\-]+$/.test(val)
+      ? null
+      : `Property ${propertyName} must be a valid ZIP code. Received '${val}'`;
+}
+
+function _validEmail(propertyName) {
+  return val =>
+    emailValidator.validate(val)
+      ? null
+      : `Property ${propertyName} must be a valid email address. Received '${val}'`;
+}
+
+function _validArray(propertyName, itemValidator, nullable) {
+  return obj => {
+    const val = obj[propertyName];
+
+    if (Array.isArray(val)) {
+      const validationError = val.find((item, index) => {
+        return itemValidator(index)(val);
+      });
+      if (validationError) {
+        return `Property ${propertyName} is an array with an invalid item: ${validationError}`;
+      } else {
+        return null;
+      }
+    } else if ((nullable && typeof val === "undefined") || val === null) {
+      return null;
+    } else {
+      return `Property ${propertyName} must be an array.`;
+    }
+  };
+}
+
+function _validCountry(propertyName) {
+  return val =>
+    typeof val === "string" && /^[A-Z]{2}$/.test(val)
+      ? null
+      : `Property ${propertyName} must be a valid, capitalized, two-digit country code. Received '${val}`;
+}
+
+function _validInteger(propertyName) {
+  return val =>
+    typeof val === "number" && Number.isInteger(val)
+      ? null
+      : `Property ${propertyName} must be an integer. Received '${val}'`;
 }

@@ -35,3 +35,50 @@ exports.insertContactInformationQuery = function insertContactInformationQuery(
     ]
   );
 };
+
+exports.insertDemographicsInformationQuery = function insertDemographicsInformationQuery(
+  clientId,
+  data,
+  userId
+) {
+  return mysql.format(
+    `
+    INSERT INTO demographics (
+      clientId,
+      countryOfOrigin,
+      homeLanguage,
+      englishProficiency,
+      dateOfUSArrival,
+      employed,
+      employmentSector,
+      payInterval,
+      weeklyAvgHoursWorked,
+      householdSize,
+      dependents,
+      civilStatus,
+      householdIncome,
+      registerToVote,
+      registeredVoter,
+      addedBy
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+  `,
+    [
+      clientId,
+      data.countryOfOrigin.toUpperCase(),
+      requestEnum(data.homeLanguage),
+      data.englishProficiency,
+      data.dateOfUSArrival,
+      requestEnum(data.currentlyEmployed),
+      data.employmentSector,
+      data.payInterval,
+      data.weeklyEmployedHours,
+      data.householdSize,
+      data.dependents,
+      data.civilStatus,
+      data.householdIncome,
+      Boolean(data.eligibleToVote),
+      Boolean(data.registeredToVote),
+      userId
+    ]
+  );
+};

@@ -34,6 +34,7 @@ export default function ViewEditDemographicsInfo(
       const abortController = new AbortController();
       easyFetch(`/api/clients/${client.id}`, {
         method: "PATCH",
+        body: apiStatus.newClientData,
         signal: abortController.signal
       })
         .then(data => {
@@ -195,11 +196,11 @@ export default function ViewEditDemographicsInfo(
     }
   }
 
-  function handleSubmit(evt, demographicsInfo) {
+  function handleSubmit(evt, newClientData) {
     evt.preventDefault();
     dispatchApiStatus({
       type: UpdateActionType.update,
-      newClientData: demographicsInfo
+      newClientData
     });
   }
 
