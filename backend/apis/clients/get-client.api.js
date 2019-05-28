@@ -131,7 +131,7 @@ function getClientById(connection, clientId, cbk) {
       registeredToVote: Boolean(c.registeredVoter),
       clientSource: c.clientSource,
       couldVolunteer: Boolean(c.couldVolunteer),
-      dateOfIntake: c.dateOfIntake,
+      dateOfIntake: responseDateWithoutTime(c.dateOfIntake),
       intakeServices: [],
       createdBy: {
         userId: c.createdById,

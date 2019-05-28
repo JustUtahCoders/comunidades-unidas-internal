@@ -23,14 +23,11 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
         method: "PATCH",
         body: apiStatus.newClientData,
         signal: abortController.signal
-      })
-        .then(data => {
-          props.clientUpdated(data.client);
-          setEditing(false);
-        })
-        .finally(() => {
-          dispatchApiStatus({ type: "reset" });
-        });
+      }).then(data => {
+        dispatchApiStatus({ type: "reset" });
+        props.clientUpdated(data.client);
+        setEditing(false);
+      });
 
       return () => abortController.abort();
     }

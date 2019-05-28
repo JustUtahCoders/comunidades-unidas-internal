@@ -10,7 +10,7 @@ PATCH /clients/:id
 
 ```json
 {
-  "dateOfIntake": "2019-05-06T06:00:00.000Z",
+  "dateOfIntake": "2019-05-06",
   "firstName": "Freddy",
   "lastName": "Mercury",
   "birthday": "1946-09-06",

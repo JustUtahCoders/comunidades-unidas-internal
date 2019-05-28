@@ -16,7 +16,7 @@ GET /clients/:id
 {
   "client": {
     "id": 123,
-    "dateOfIntake": "2019-05-06T06:00:00.000Z",
+    "dateOfIntake": "2019-05-06",
     "firstName": "Freddy",
     "lastName": "Mercury",
     "fullName": "Freddy Mercury",
