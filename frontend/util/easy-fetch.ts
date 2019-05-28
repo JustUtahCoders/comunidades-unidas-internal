@@ -1,4 +1,4 @@
-export default function easyFetch(url, opts = {}) {
+export default function easyFetch(url: string, opts?: any) {
   if (!opts.headers) {
     opts.headers = {};
   }
@@ -18,7 +18,7 @@ export default function easyFetch(url, opts = {}) {
       return response
         .json()
         .then(json => {
-          const err = Error(
+          const err = new FetchError(
             `Api request to '${url}' failed with HTTP status ${response.status}`
           );
           err.body = json;
@@ -26,7 +26,7 @@ export default function easyFetch(url, opts = {}) {
           throw err;
         })
         .catch(err => {
-          const errorObject = Error(
+          const errorObject = new FetchError(
             `Api request to '${url}' failed with HTTP status ${response.status}`
           );
           errorObject.status = response.status;
@@ -34,4 +34,9 @@ export default function easyFetch(url, opts = {}) {
         });
     }
   });
+}
+
+class FetchError extends Error {
+  body?: string = null;
+  status?: number = null;
 }

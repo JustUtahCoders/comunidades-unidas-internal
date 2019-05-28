@@ -5,10 +5,12 @@ import { useCss } from "kremling";
 import checkedUrl from "../../icons/148705-essential-collection/svg/checked-1.svg";
 import closeUrl from "../../icons/148705-essential-collection/svg/close.svg";
 import { countryCodeToName } from "../util/country-select.component";
-import {
+import DemographicInformationInputs, {
   languageOptions,
-  EnglishLevel
-} from "../add-client/demographic-information.component";
+  EnglishLevel,
+  DemographicInformationClient
+} from "../add-client/form-inputs/demographic-information-inputs.component";
+import easyFetch from "../util/easy-fetch";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -20,12 +22,58 @@ export default function ViewEditDemographicsInfo(
 ) {
   const { client } = props;
   const [editing, setEditing] = React.useState(false);
+  const [apiStatus, dispatchApiStatus] = React.useReducer(updatingReducer, {
+    isUpdating: false,
+    newClientData: null
+  });
+
   const scope = useCss(css);
+
+  React.useEffect(() => {
+    if (apiStatus.isUpdating) {
+      const abortController = new AbortController();
+      easyFetch(`/api/clients/${client.id}`, {
+        method: "PATCH",
+        signal: abortController.signal
+      })
+        .then(data => {
+          dispatchApiStatus({ type: UpdateActionType.reset });
+          setEditing(false);
+          props.clientUpdated(data.client);
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    }
+  }, [apiStatus.isUpdating]);
 
   return (
     <ClientSection title="Demographics information">
       {editing ? (
-        <div>editing</div>
+        <DemographicInformationInputs
+          client={getDemographicsClient()}
+          onSubmit={handleSubmit}
+        >
+          {demographicsInfo => (
+            <div className="actions">
+              <button
+                type="button"
+                className="secondary"
+                onClick={() => setEditing(false)}
+                disabled={apiStatus.isUpdating}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="primary"
+                disabled={apiStatus.isUpdating}
+              >
+                Update
+              </button>
+            </div>
+          )}
+        </DemographicInformationInputs>
       ) : (
         <article className="view-demographics-info" {...scope}>
           <section>
@@ -146,6 +194,45 @@ export default function ViewEditDemographicsInfo(
         return `Unknown employment status`;
     }
   }
+
+  function handleSubmit(evt, demographicsInfo) {
+    evt.preventDefault();
+    dispatchApiStatus({
+      type: UpdateActionType.update,
+      newClientData: demographicsInfo
+    });
+  }
+
+  function getDemographicsClient(): DemographicInformationClient {
+    return {
+      civilStatus: client.civilStatus,
+      householdIncome: client.householdIncome,
+      householdSize: client.householdSize,
+      juvenileDependents: client.dependents,
+      currentlyEmployed: client.currentlyEmployed,
+      weeklyEmployedHours: client.weeklyEmployedHours,
+      employmentSector: client.employmentSector,
+      payInterval: client.payInterval,
+      countryOfOrigin: client.countryOfOrigin,
+      dateOfUSArrival: client.dateOfUSArrival,
+      homeLanguage: client.homeLanguage,
+      isStudent: client.isStudent,
+      englishLevel: client.englishProficiency,
+      eligibleToVote: client.eligibleToVote,
+      registerToVote: client.registeredToVote
+    };
+  }
+}
+
+function updatingReducer(state, action: UpdateAction) {
+  switch (action.type) {
+    case UpdateActionType.update:
+      return { isUpdating: true, newClientData: action.newClientData };
+    case UpdateActionType.reset:
+      return { isUpdating: false };
+    default:
+      throw Error(`Unknown action type '${action.type}'`);
+  }
 }
 
 const css = `
@@ -178,3 +265,13 @@ type ViewEditDemographicsInfoProps = {
   client: SingleClient;
   clientUpdated(client: SingleClient): void;
 };
+
+type UpdateAction = {
+  type: UpdateActionType;
+  newClientData?: DemographicInformationClient;
+};
+
+enum UpdateActionType {
+  update = "update",
+  reset = "reset"
+}

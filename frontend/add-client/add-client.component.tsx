@@ -7,15 +7,16 @@ import ListDuplicates from "./list-duplicates.component";
 import ContactInformation from "./contact-information.component";
 import ClientSource from "./client-source.component";
 import Confirm from "./confirm.component";
-import DemographicInformation, {
+import DemographicInformation from "./demographic-information.component";
+import {
   PayInterval,
-  EnglishLevel,
   CivilStatus
-} from "./demographic-information.component";
+} from "./form-inputs/demographic-information-inputs.component";
 import Services from "./services.component";
 import Finished from "./finished.component";
 
 import { mediaMobile, mediaDesktop } from "../styleguide.component";
+import { WeeklyEmployedHours } from "../view-edit-client/view-client.component";
 
 export default function AddClient(props: AddClientProps) {
   const scope = useCss(css);
@@ -125,11 +126,11 @@ export type ClientState = {
   countryOfOrigin?: string;
   dateOfUSArrival?: string;
   homeLanguage?: string;
-  englishLevel?: EnglishLevel;
+  englishLevel?: string;
   currentlyEmployed?: string;
   employmentSector?: string;
   payInterval?: PayInterval;
-  weeklyEmployedHours?: string;
+  weeklyEmployedHours?: WeeklyEmployedHours;
   householdIncome?: number;
   householdSize?: number;
   juvenileDependents?: number;
