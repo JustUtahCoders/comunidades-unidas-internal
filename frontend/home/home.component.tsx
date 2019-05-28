@@ -45,19 +45,8 @@ const css = `
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin-top: 3rem;
-  margin-left: 1rem;
-  width: 82rem;
-}
-
-${mediaMobile} {
-  & .home-cards {
-    width: 100%;
-    margin-top: 2rem;
-    margin-left: 1.5rem;
-    padding-right: 3rem;
-    justify-contents: center;
-  }
+  margin-top: 2.4rem;
+  margin-left: 2.4rem;
 }
 
 `;
