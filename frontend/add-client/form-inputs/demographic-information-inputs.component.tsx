@@ -240,7 +240,7 @@ export default function DemographicInformationInputs(
             name="currentlyEmployed"
             onChange={evt => {
               setCurrentlyEmployed(evt.target.value);
-              if (!evt.target.value) {
+              if (evt.target.value !== "yes") {
                 setEmploymentSector(getInitialEmploymentSector(null));
                 setEmpSectorExplain("");
                 setWeeklyEmployedHours(WeeklyEmployedHours["0-20"]);
