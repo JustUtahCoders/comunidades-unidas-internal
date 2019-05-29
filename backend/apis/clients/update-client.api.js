@@ -81,7 +81,9 @@ app.patch("/api/clients/:id", (req, res, next) => {
       "other"
     ),
     nullableValidBoolean("couldVolunteer"),
-    nullableValidArray("intakeServices", validInteger)
+    nullableValidArray("intakeServices", validInteger),
+    nullableValidBoolean("registeredToVote"),
+    nullableValidBoolean("eligibleToVote")
   );
 
   const validationErrors = [...paramValidationErrors, ...bodyValidationErrors];

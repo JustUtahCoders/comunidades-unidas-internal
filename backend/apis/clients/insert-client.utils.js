@@ -59,8 +59,9 @@ exports.insertDemographicsInformationQuery = function insertDemographicsInformat
       householdIncome,
       registerToVote,
       registeredVoter,
+      isStudent,
       addedBy
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
   `,
     [
       clientId,
@@ -78,6 +79,7 @@ exports.insertDemographicsInformationQuery = function insertDemographicsInformat
       data.householdIncome,
       Boolean(data.eligibleToVote),
       Boolean(data.registeredToVote),
+      Boolean(data.isStudent),
       userId
     ]
   );

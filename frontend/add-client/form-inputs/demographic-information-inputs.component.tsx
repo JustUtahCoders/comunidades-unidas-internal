@@ -5,7 +5,9 @@ import CurrencyInput from "../../util/currency-input.component";
 export default function DemographicInformationInputs(
   props: DemographicInformationInputsProps
 ) {
-  const [civilStatus, setCivilStatus] = useState(CivilStatus.single);
+  const [civilStatus, setCivilStatus] = useState<CivilStatus>(
+    CivilStatus[props.client.civilStatus] || CivilStatus.single
+  );
   const [householdIncome, setHouseholdIncome] = useState(
     props.client.householdIncome
   );
@@ -27,8 +29,8 @@ export default function DemographicInformationInputs(
   const [empSectorExplain, setEmpSectorExplain] = useState(
     getInitialOtherEmploymentSector(props.client.employmentSector)
   );
-  const [payInterval, setPayInterval] = useState(
-    props.client.payInterval || PayInterval["every-two-weeks"]
+  const [payInterval, setPayInterval] = useState<PayInterval>(
+    PayInterval[props.client.payInterval] || PayInterval["every-two-weeks"]
   );
   const [countryOfOrigin, setCountryOfOrigin] = useState(
     props.client.countryOfOrigin || "US"
@@ -86,13 +88,11 @@ export default function DemographicInformationInputs(
             required
             autoFocus
           >
-            <option value="single">Single</option>
-            <option value="married">Married</option>
-            <option value="commonLawMarriage">
-              Common law marriage (unión libre)
-            </option>
-            <option value="divorced">Divorced</option>
-            <option value="widowed">Widowed</option>
+            {Object.keys(civilStatuses).map(statusKey => (
+              <option key={statusKey} value={statusKey}>
+                {civilStatuses[statusKey]}
+              </option>
+            ))}
           </select>
         </label>
       </div>
@@ -154,7 +154,10 @@ export default function DemographicInformationInputs(
                   type="radio"
                   name="eligible-to-vote"
                   value="false"
-                  onChange={() => setEligibleToVote(false)}
+                  onChange={() => {
+                    setEligibleToVote(false);
+                    setRegisterToVote(false);
+                  }}
                   checked={!eligibleToVote}
                 />
                 Not eligible to vote
@@ -235,7 +238,14 @@ export default function DemographicInformationInputs(
           <select
             value={currentlyEmployed}
             name="currentlyEmployed"
-            onChange={evt => setCurrentlyEmployed(evt.target.value)}
+            onChange={evt => {
+              setCurrentlyEmployed(evt.target.value);
+              if (!evt.target.value) {
+                setEmploymentSector(getInitialEmploymentSector(null));
+                setEmpSectorExplain("");
+                setWeeklyEmployedHours(WeeklyEmployedHours["0-20"]);
+              }
+            }}
             required
           >
             <option value="yes">Yes</option>
@@ -285,11 +295,11 @@ export default function DemographicInformationInputs(
                 value={payInterval}
                 onChange={evt => setPayInterval(PayInterval[evt.target.value])}
               >
-                <option value="every-week">Weekly</option>
-                <option value="every-two-weeks">Every two weeks</option>
-                <option value="every-month">Monthly</option>
-                <option value="every-quarter">Quarterly (3 months)</option>
-                <option value="every-year">Annually (1 year)</option>
+                {Object.keys(payIntervals).map(payIntervalName => (
+                  <option key={payIntervalName} value={payIntervalName}>
+                    {payIntervals[payIntervalName]}
+                  </option>
+                ))}
               </select>
             </label>
           </div>
@@ -303,10 +313,11 @@ export default function DemographicInformationInputs(
                 }
                 value={weeklyEmployedHours}
               >
-                <option value="0-20">20 or less</option>
-                <option value="21-35">21 to 35</option>
-                <option value="36-40">36 to 40</option>
-                <option value="41+">41 or more</option>
+                {Object.keys(WeeklyEmployedHours).map(weeklyHour => (
+                  <option key={weeklyHour} value={weeklyHour}>
+                    {WeeklyEmployedHours[weeklyHour]}
+                  </option>
+                ))}
               </select>
             </label>
           </div>
@@ -421,7 +432,7 @@ function getInitialOtherHomeLanguage(val) {
   }
 }
 
-const employmentSectors = {
+export const employmentSectors = {
   landscaping: "Landscaping/Gardening",
   construction: "Construction",
   services: "Services (Restaurants, Hotels)",
@@ -438,6 +449,14 @@ export enum languageOptions {
   englishandspanish = "English And Spanish",
   other = "Other"
 }
+
+export const payIntervals = {
+  "every-week": "Every week",
+  "every-two-weeks": "Every two weeks",
+  "every-month": "Every month",
+  "every-quarter": "Every quarter",
+  "every-year": "Every year"
+};
 
 export enum PayInterval {
   "every-week" = "every-week",
@@ -456,14 +475,14 @@ type DemographicInformationInputsProps = {
 };
 
 export type DemographicInformationClient = {
-  civilStatus?: string;
+  civilStatus?: CivilStatus;
   householdIncome?: number;
   householdSize?: number;
   juvenileDependents?: number;
   currentlyEmployed?: string;
   weeklyEmployedHours?: WeeklyEmployedHours;
   employmentSector?: string;
-  payInterval?: string;
+  payInterval?: PayInterval;
   countryOfOrigin?: string;
   dateOfUSArrival?: string;
   homeLanguage?: string;
@@ -486,6 +505,14 @@ export enum CivilStatus {
   divorced = "divorced",
   widowed = "widowed"
 }
+
+export const civilStatuses = {
+  [CivilStatus.single]: "Single",
+  [CivilStatus.married]: "Married",
+  [CivilStatus.commonLawMarriage]: "Common Law Marriage",
+  [CivilStatus.divorced]: "Divorced",
+  [CivilStatus.widowed]: "Widowed"
+};
 
 export enum WeeklyEmployedHours {
   "0-20" = "0-20",
