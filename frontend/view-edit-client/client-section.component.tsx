@@ -12,7 +12,7 @@ export default function ClientSection(props: ClientSectionProps) {
         className="unstyled client-section-header"
         onClick={() => setExpanded(!expanded)}
       >
-        <h4>{props.title}</h4>
+        <h3>{props.title}</h3>
       </button>
       {expanded && (
         <div className="client-section-content">{props.children}</div>
@@ -28,7 +28,7 @@ type ClientSectionProps = {
 
 const css = `
 & button.unstyled.client-section-header {
-  padding: 16rem 32rem;
+  padding: 1.6rem 3.2rem;
   width: 100%;
 }
 
@@ -37,7 +37,15 @@ const css = `
 }
 
 & .client-section-content {
-  padding: 16rem 32rem;
+  padding: 1.6rem 3.2rem;
+}
+
+& button.icon {
+  margin-left: 1.6rem;
+}
+
+& .edit-button {
+  margin-top: 1.6rem;
 }
 
 ${addClientCss}

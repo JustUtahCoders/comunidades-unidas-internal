@@ -3,7 +3,6 @@ import ClientSection from "./client-section.component";
 import { SingleClient } from "./view-client.component";
 import dayjs from "dayjs";
 import { useCss } from "kremling";
-import editImg from "../../icons/148705-essential-collection/svg/edit.svg";
 import BasicInformationInputs from "../add-client/form-inputs/basic-information-inputs.component";
 import easyFetch from "../util/easy-fetch";
 
@@ -21,15 +20,15 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
       const abortController = new AbortController();
       easyFetch(`/api/clients/${props.client.id}`, {
         method: "PATCH",
-        body: apiStatus.newClientData
-      })
-        .then(data => {
-          props.clientUpdated(data.client);
-          setEditing(false);
-        })
-        .finally(() => {
-          dispatchApiStatus({ type: "reset" });
-        });
+        body: apiStatus.newClientData,
+        signal: abortController.signal
+      }).then(data => {
+        dispatchApiStatus({ type: "reset" });
+        props.clientUpdated(data.client);
+        setEditing(false);
+      });
+
+      return () => abortController.abort();
     }
   }, [apiStatus]);
 
@@ -64,11 +63,16 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
           </div>
         </BasicInformationInputs>
       ) : (
-        <div {...scope} className="view-basic-info">
-          {client.fullName} - {dayjs(client.birthday).format("M/D/YYYY")} -{" "}
-          {client.gender} -{" "}
-          <button className="icon" onClick={() => setEditing(true)}>
-            <img src={editImg} alt="Edit Basic Information" />
+        <div className="view-edit-basic-info" {...scope}>
+          <div className="view-basic-info">
+            {client.fullName} - {dayjs(client.birthday).format("M/D/YYYY")} -{" "}
+            {client.gender}
+          </div>
+          <button
+            className="secondary edit-button"
+            onClick={() => setEditing(true)}
+          >
+            Edit
           </button>
         </div>
       )}
@@ -98,6 +102,13 @@ type ViewEditBasicInfoProps = {
 };
 
 const css = `
+& .view-edit-basic-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 & .view-basic-info {
   display: flex;
   justify-content: center;

@@ -4,6 +4,7 @@ import FuzzySearch from "fuzzy-search";
 
 export default function CityInput(props) {
   const [focused, setFocused] = useState(false);
+  const [justBlurred, setJustBlurred] = useState(false);
   const [statesToCities, setStatesToCities] = useState({});
   const [fuzzySearcher, setFuzzySearcher] = useState(null);
   const scope = useCss(css);
@@ -20,6 +21,17 @@ export default function CityInput(props) {
       new FuzzySearch(statesToCities[props.state] || [], ["city"])
     );
   }, [props.state, statesToCities]);
+
+  useEffect(() => {
+    if (justBlurred) {
+      const timeoutId = setTimeout(() => {
+        setJustBlurred(false);
+        setFocused(false);
+      }, 100);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [justBlurred]);
 
   return (
     <div

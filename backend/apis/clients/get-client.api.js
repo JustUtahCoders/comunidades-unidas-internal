@@ -3,6 +3,7 @@ const mysql = require("mysql");
 const { checkValid, validId } = require("../utils/validation-utils");
 const {
   responseFullName,
+  responseBoolean,
   responseDateWithoutTime
 } = require("../utils/transform-utils");
 
@@ -106,7 +107,7 @@ function getClientById(connection, clientId, cbk) {
       birthday: responseDateWithoutTime(c.birthday),
       gender: c.gender,
       phone: c.primaryPhone,
-      smsConsent: Boolean(c.textMessages),
+      smsConsent: responseBoolean(c.textMessages),
       homeAddress: {
         street: c.address,
         city: c.city,
@@ -116,22 +117,23 @@ function getClientById(connection, clientId, cbk) {
       email: c.email,
       civilStatus: c.civilStatus,
       countryOfOrigin: c.countryOfOrigin,
-      dateOfUSArrival: c.dateOfUSArrival,
+      dateOfUSArrival: responseDateWithoutTime(c.dateOfUSArrival),
       homeLanguage: c.homeLanguage,
+      englishProficiency: c.englishProficiency,
       currentlyEmployed: c.employed,
       employmentSector: c.employmentSector,
       payInterval: c.payInterval,
-      weeklyEmployedHours: c.weeklyEmployedHours,
+      weeklyEmployedHours: c.weeklyAvgHoursWorked,
       householdIncome: c.householdIncome,
       householdSize: c.householdSize,
       dependents: c.dependents,
       housingStatus: c.housingStatus,
-      isStudent: Boolean(c.isStudent),
-      eligibleToVote: Boolean(c.registerToVote),
-      registeredToVote: Boolean(c.registeredVoter),
+      isStudent: responseBoolean(c.isStudent),
+      eligibleToVote: responseBoolean(c.registerToVote),
+      registeredToVote: responseBoolean(c.registeredVoter),
       clientSource: c.clientSource,
-      couldVolunteer: Boolean(c.couldVolunteer),
-      dateOfIntake: c.dateOfIntake,
+      couldVolunteer: responseBoolean(c.couldVolunteer),
+      dateOfIntake: responseDateWithoutTime(c.dateOfIntake),
       intakeServices: [],
       createdBy: {
         userId: c.createdById,

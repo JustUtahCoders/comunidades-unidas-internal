@@ -7,15 +7,16 @@ import ListDuplicates from "./list-duplicates.component";
 import ContactInformation from "./contact-information.component";
 import ClientSource from "./client-source.component";
 import Confirm from "./confirm.component";
-import DemographicInformation, {
+import DemographicInformation from "./demographic-information.component";
+import {
   PayInterval,
-  EnglishLevel,
   CivilStatus
-} from "./demographic-information.component";
+} from "./form-inputs/demographic-information-inputs.component";
 import Services from "./services.component";
 import Finished from "./finished.component";
 
 import { mediaMobile, mediaDesktop } from "../styleguide.component";
+import { WeeklyEmployedHours } from "./form-inputs/demographic-information-inputs.component";
 
 export default function AddClient(props: AddClientProps) {
   const scope = useCss(css);
@@ -125,11 +126,11 @@ export type ClientState = {
   countryOfOrigin?: string;
   dateOfUSArrival?: string;
   homeLanguage?: string;
-  englishLevel?: EnglishLevel;
+  englishLevel?: string;
   currentlyEmployed?: string;
   employmentSector?: string;
   payInterval?: PayInterval;
-  weeklyEmployedHours?: string;
+  weeklyEmployedHours?: WeeklyEmployedHours;
   householdIncome?: number;
   householdSize?: number;
   juvenileDependents?: number;
@@ -184,7 +185,7 @@ type Duplicate = {
 
 export const css = `
 & form > div {
-  margin-bottom: 16rem;
+  margin-bottom: 1.6rem;
 }
 
 & .form-with-hints {
@@ -194,7 +195,7 @@ export const css = `
 }
 
 & .hints-and-instructions {
-  margin-bottom: 32rem;
+  margin-bottom: 3.2rem;
 }
 
 & .form-with-hints form {
@@ -204,26 +205,54 @@ export const css = `
 & .form-with-hints form input[type="checkbox"] {
   min-width: inherit;
   width: inherit;
-  margin-right: 8rem;
+  margin-right: .8rem;
 }
 
 ${mediaMobile} {
+  & .hints-and-instructions {
+    width: 30rem;
+  }
+
+  & form {
+    font-size: 1.6rem;
+  }
+
   & .form-with-hints form input:not([type="radio"]):not([type="checkbox"]), & .form-with-hints form select {
-    width: 170rem;
+    width: 16.75rem;
+    font-size: 1.6rem;
   }
 
   & .form-with-hints form {
-    width: 350rem;
+    width: 30rem;
+  }
+
+  & .form-with-hints form > div > label > span {
+    width: 10rem;
+    font-size: 1.6rem;
+  }
+
+  & .form-with-hints > .hints-and-instructions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 1.8rem;
+  }
+
+  & .form-with-hints form input:([type="checkbox"]) {
+    min-width: 20rem;
+    max-width: 30rem;
+    margin-left: 3rem;
   }
 }
 
 ${mediaDesktop} {
   & .form-with-hints form input:not([type="radio"]):not([type="checkbox"]), & .form-with-hints form select {
-    min-width: 200rem;
-    max-width: 300rem;
+    min-width: 20rem;
+    max-width: 30rem;
   }
 }
-
 
 & .hints-and-instructions {
   display: flex;
@@ -231,16 +260,17 @@ ${mediaDesktop} {
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-size: 16rem;
+  font-size: 2rem;
 }
 
 & .hint-icon {
-  height: 70rem;
-  margin-bottom: 16rem;
+  height: 10rem;
+  margin-top: 1.6rem;
+  margin-bottom: .8rem;
 }
 
 & .instruction {
-  max-width: 200rem;
+  max-width: 35rem;
 }
 
 & label {
@@ -250,9 +280,10 @@ ${mediaDesktop} {
 
 & form > div > label > span {
   display: inline-block;
-  width: 140rem;
+  width: 14rem;
   text-align: right;
-  margin-right: 24rem;
+  margin-right: 2.4rem;
+  font-size: 1.8rem;
 }
 
 & form .radio-options {
@@ -264,7 +295,7 @@ ${mediaDesktop} {
 & .actions {
   display: flex;
   justify-content: center;
-  margin-top: 32rem;
+  margin-top: 3.2rem;
 }
 
 & .vertical-options {
@@ -272,6 +303,6 @@ ${mediaDesktop} {
 }
 
 & .vertical-options > * {
-  padding: 8rem 0;
+  padding: .8rem 0;
 }
 `;

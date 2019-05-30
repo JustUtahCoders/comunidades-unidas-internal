@@ -19,14 +19,14 @@ export const mediaDesktop: String = `@media screen and (min-width: 800px)`;
 
 const css = `
 :root {
-  font-size: 1px;
+  font-size: 10px;
   font-family: 'Montserrat', sans-serif;
   background-color: #efefef;
   --very-light-gray: #F3F3F3;
 }
 
 body {
-  font-size: 18rem;
+  font-size: 1.8rem;
   margin: 0;
 }
 
@@ -34,11 +34,15 @@ body {
   box-sizing: border-box;
 }
 
+& .card + .card {
+  margin-top: 3.2rem;
+}
+
 & .card {
   box-shadow: ${boxShadow1};
   background-color: white;
-  border-radius: 3rem;
-  padding: 32rem;
+  border-radius: .3rem;
+  padding: 3.2rem;
 }
 
 & .card.padding-0 {
@@ -46,21 +50,21 @@ body {
 }
 
 & input {
-  font-size: 18rem;
-  padding: 4rem 6rem;
+  font-size: 1.8rem;
+  padding: .4rem .6rem;
 }
 
 & select {
-  font-size: 18rem;
-  max-width: 250rem;
+  font-size: 1.8rem;
+  max-width: 25rem;
 }
 
 & option {
-  font-size: 18rem;
+  font-size: 1.8rem;
 }
 
 & textarea {
-  font-size: 18rem;
+  font-size: 1.8rem;
   font-family: Montserrat;
 }
 
@@ -109,18 +113,18 @@ body {
  }
 
 & button {
-  font-size: 18rem;
-  border-radius: 6rem;
-  padding: 8rem 12rem;
+  font-size: 1.8rem;
+  border-radius: .6rem;
+  padding: .8rem 1.2rem;
   border: none;
   text-align: center;
 }
 
 & button.icon {
-  padding: 8rem;
-  margin: 4rem;
+  padding: .8rem;
+  margin: .4rem;
   background-color: transparent;
-  border-radius: 6rem;
+  border-radius: .6rem;
 }
 
 & button.icon:hover {
@@ -128,12 +132,12 @@ body {
 }
 
 & button.icon img {
-  width: 16rem;
-  height: 16rem;
+  width: 1.6rem;
+  height: 1.6rem;
 }
 
 & button + button, & button + a.button, & a.button + button, & a.button + a.button {
-  margin-left: 16rem;
+  margin-left: 1.6rem;
 }
 
 & button.primary, & a.primary {
@@ -143,9 +147,9 @@ body {
 }
 
 & a.button {
-  font-size: 18rem;
-  border-radius: 6rem;
-  padding: 8rem 12rem;
+  font-size: 1.8rem;
+  border-radius: .6rem;
+  padding: .8rem 1.2rem;
   border: none;
   text-align: center;
   text-decoration: none;
@@ -169,13 +173,13 @@ body {
   position: absolute;
   box-shadow: ${boxShadow2};
   background-color: white;
-  border-radius: 3rem;
-  border: 1rem solid #e9e9e9;
-  min-width: 150rem;
+  border-radius: .3rem;
+  border: .1rem solid #e9e9e9;
+  min-width: 15rem;
 }
 
 & .popup ul li {
-  padding: 4rem 8rem;
+  padding: .4rem .8rem;
 }
 
 & .popup ul {

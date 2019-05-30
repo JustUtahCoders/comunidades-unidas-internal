@@ -39,13 +39,13 @@ const css = `
 }
 
 & .success-icon {
-  width: 80rem;
-  height: 80rem;
-  margin-bottom: 16rem;
+  width: 8rem;
+  height: 8rem;
+  margin-bottom: 1.6rem;
 }
 
 & .explanation {
-  max-width: 350rem;
+  max-width: 35rem;
 }
 `;
 

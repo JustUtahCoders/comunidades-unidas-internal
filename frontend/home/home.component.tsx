@@ -6,6 +6,7 @@ import reportIssueUrl from "../../icons/148705-essential-collection/svg/info.svg
 import recordVisitUrl from "../../icons/148705-essential-collection/svg/hourglass-2.svg";
 import clientListUrl from "../../icons/148705-essential-collection/svg/agenda.svg";
 import { useCss } from "kremling";
+import { mediaMobile, mediaDesktop } from "../styleguide.component";
 
 export default function Home(props: HomeProps) {
   const scope = useCss(css);
@@ -44,9 +45,10 @@ const css = `
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin-top: 24rem;
-  margin-left: 24rem;
+  margin-top: 2.4rem;
+  margin-left: 2.4rem;
 }
+
 `;
 
 type HomeProps = {

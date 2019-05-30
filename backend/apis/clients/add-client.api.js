@@ -1,6 +1,6 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
 const mysql = require("mysql");
-const { requestEnum, requestPhone } = require("../utils/transform-utils");
+const { requestEnum } = require("../utils/transform-utils");
 const {
   nullableValidDate,
   checkValid,
@@ -19,6 +19,10 @@ const {
   validInteger
 } = require("../utils/validation-utils");
 const { getClientById } = require("./get-client.api");
+const {
+  insertContactInformationQuery,
+  insertDemographicsInformationQuery
+} = require("./insert-client.utils");
 
 app.post("/api/clients", (req, res, next) => {
   pool.getConnection((err, connection) => {
@@ -124,38 +128,6 @@ app.post("/api/clients", (req, res, next) => {
 
         const clientId = result.insertId;
 
-        const contactInfoValues = [
-          clientId,
-          requestPhone(req.body.phone),
-          req.body.smsConsent,
-          req.body.email,
-          req.body.homeAddress.street,
-          req.body.homeAddress.city,
-          req.body.homeAddress.state,
-          req.body.homeAddress.zip,
-          requestEnum(req.body.housingStatus),
-          req.session.passport.user.id
-        ];
-
-        const demographicsValues = [
-          clientId,
-          req.body.countryOfOrigin.toUpperCase(),
-          requestEnum(req.body.homeLanguage),
-          req.body.englishProficiency,
-          req.body.dateOfUSArrival,
-          requestEnum(req.body.currentlyEmployed),
-          req.body.employmentSector,
-          req.body.payInterval,
-          req.body.weeklyEmployedHours,
-          req.body.householdSize,
-          req.body.dependents,
-          req.body.civilStatus,
-          req.body.householdIncome,
-          Boolean(req.body.eligibleToVote),
-          Boolean(req.body.registeredToVote),
-          req.session.passport.user.id
-        ];
-
         const intakeDataValues = [
           clientId,
           req.body.dateOfIntake,
@@ -166,37 +138,17 @@ app.post("/api/clients", (req, res, next) => {
 
         const insertOther = mysql.format(
           `
-          INSERT INTO contactInformation (
+          ${insertContactInformationQuery(
             clientId,
-            primaryPhone,
-            textMessages,
-            email,
-            address,
-            city,
-            state,
-            zip,
-            housingStatus,
-            addedBy
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+            req.body,
+            req.session.passport.user.id
+          )}
 
-          INSERT INTO demographics (
+          ${insertDemographicsInformationQuery(
             clientId,
-            countryOfOrigin,
-            homeLanguage,
-            englishProficiency,
-            dateOfUSArrival,
-            employed,
-            employmentSector,
-            payInterval,
-            weeklyAvgHoursWorked,
-            householdSize,
-            dependents,
-            civilStatus,
-            householdIncome,
-            registerToVote,
-            registeredVoter,
-            addedBy
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+            req.body,
+            req.session.passport.user.id
+          )}
 
           INSERT INTO intakeData (
             clientId,
@@ -206,7 +158,7 @@ app.post("/api/clients", (req, res, next) => {
             addedBy
           ) VALUES (?, ?, ?, ?, ?);
         `,
-          [...contactInfoValues, ...demographicsValues, ...intakeDataValues]
+          [...intakeDataValues]
         );
 
         connection.query(insertOther, (err, results, fields) => {

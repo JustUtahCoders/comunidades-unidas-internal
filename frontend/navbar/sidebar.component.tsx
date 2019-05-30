@@ -121,7 +121,7 @@ ${mediaMobile} {
   left: 0;
   top: 0;
   height: 100vh;
-  width: 236rem;
+  width: 23.6rem;
   background-color: white;
   transition: left 0.2s ease-in-out;
 }
@@ -137,19 +137,19 @@ ${mediaMobile} {
   display: flex;
   align-items: center;
   font-weight: bold;
-  font-size: 21rem;
+  font-size: 2.1rem;
 }
 
 & .logo {
-  height: 40rem;
+  height: 4rem;
 }
 
 & .product-name {
-  padding-left: 8rem;
+  padding-left: .8rem;
 }
 
 & .logo-link.nav-link, .logo-link:focus.nav-link:focus {
-  height: 40rem;
+  height: 4rem;
 }
 
 & .nav-link:hover {
@@ -171,8 +171,8 @@ ${mediaMobile} {
   color: black;
   display: flex;
   align-items: center;
-  min-height: 56rem;
-  padding: 8rem 16rem;
+  min-height: 5.6rem;
+  padding: .8rem 1.6rem;
 }
 
 & .nav-link > div {

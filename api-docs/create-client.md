@@ -8,7 +8,7 @@ POST /api/clients
 
 ```json
 {
-  "dateOfIntake": "2019-05-06T06:00:00.000Z",
+  "dateOfIntake": "2019-05-06",
   "firstName": "Freddy",
   "lastName": "Mercury",
   "birthday": "1946-09-06",
@@ -26,6 +26,7 @@ POST /api/clients
   "countryOfOrigin": "MX",
   "dateOfUSArrival": null,
   "homeLanguage": "english",
+  "englishProficiency": "advanced",
   "currentlyEmployed": "n/a",
   "employmentSector": "industrial",
   "payInterval": "every-week",
@@ -51,6 +52,7 @@ POST /api/clients
 - `weeklyEmployedHours` is an enum with possible values `0-20`, `21-30`, `31-40`, `41+`.
 - `housingStatus` is an enum with possible values `renter`, `homeowner`, and `other`.
 - `intakeServices` is an array of integer service ids. See (/api-docs/list-services.md).
+- `englishProficiency` is an enum with possible values `beginner`, `intermediate`, and `advanced`.
 
 ## Response
 
@@ -62,7 +64,7 @@ The response object is the same as if you do a `GET /api/clients/:id`
 {
   "client": {
     "id": 123,
-    "dateOfIntake": "2019-05-06T06:00:00.000Z",
+    "dateOfIntake": "2019-05-06",
     "firstName": "Freddy",
     "lastName": "Mercury",
     "fullName": "Freddy Mercury",
@@ -81,6 +83,7 @@ The response object is the same as if you do a `GET /api/clients/:id`
     "countryOfOrigin": "MX",
     "dateOfUSArrival": null,
     "homeLanguage": "english",
+    "englishProficiency": "advanced",
     "currentlyEmployed": "unknown",
     "employmentSector": "industrial",
     "payInterval": "every-week",

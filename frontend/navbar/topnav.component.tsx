@@ -29,21 +29,19 @@ const css = `
   position: fixed;
   top: 0;
   left: 0;
-  height: 56rem;
+  height: 5.6rem;
   width: 100vw;
   background-color: white;
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 4rem;
-  border-bottom: 1rem solid #e9e9e9;
+  padding: 0 .4rem;
+  border-bottom: .1rem solid #e9e9e9;
 }
-
 & .logo {
-  height: 30rem;
+  height: 3rem;
 }
-
 & .logo-link, & .logo-link:focus, & .logo-link:visited {
   display: flex;
   align-items: center;
@@ -51,10 +49,9 @@ const css = `
   color: black;
   display: flex;
   align-items: center;
-  min-height: 56rem;
-  padding: 0 6rem;
+  min-height: 5.6rem;
+  padding: 0 .6rem;
 }
-
 & .hamburger {
   height: 100%;
   display: flex;
@@ -62,16 +59,14 @@ const css = `
   justify-content: center;
   cursor: pointer;
 }
-
 & .hamburger > * {
-  width: 24rem;
+  width: 2.4rem;
   border-radius: 3rem;
-  height: 3rem;
+  height: .3rem;
   background-color: #afafaf;
-  margin: 0 16rem 4rem 16rem;
+  margin: 0 1.6rem .4rem 1.6rem;
   display: block;
 }
-
 ${mediaDesktop} {
   & .topnav {
     display: none;

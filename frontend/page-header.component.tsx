@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useCss, always, maybe } from "kremling";
-import { brandColor, mediaDesktop } from "./styleguide.component";
+import { brandColor, mediaDesktop, mediaMobile } from "./styleguide.component";
 
 export default function PageHeader(props: PageHeaderProps) {
   const scope = useCss(css);
@@ -36,24 +36,24 @@ type PageHeaderProps = {
 
 const css = `
 & .page-header {
-  height: 102rem;
-  padding: 32rem;
+  height: 10.2rem;
+  padding: 3.2rem;
   display: flex;
   align-items: flex-end;
-}
-
-${mediaDesktop} {
-  & .page-header {
-    margin-bottom: 32rem;
-    height: 180rem;
-  }
 }
 
 & .page-header h1 {
   color: white;
   font-weight: bold;
-  font-size: 32rem;
+  font-size: 3.2rem;
   margin: 0;
   padding: 0;
+}
+
+${mediaDesktop} {
+  & .page-header {
+    margin-bottom: 3.2rem;
+    height: 18rem;
+  }
 }
 `;

@@ -4,9 +4,12 @@ import PageHeader from "../page-header.component";
 import ViewEditBasicInfo from "./view-edit-basic-info.component";
 import {
   CivilStatus,
-  PayInterval
-} from "../add-client/demographic-information.component";
+  PayInterval,
+  WeeklyEmployedHours
+} from "../add-client/form-inputs/demographic-information-inputs.component";
 import { ClientSources } from "../add-client/add-client.component";
+import ViewEditContactInfo from "./view-edit-contact-info.component";
+import ViewEditDemographicsInfo from "./view-edit-demographics-info.component";
 
 export default function ViewClient(props: ViewClientProps) {
   const [client, setClient] = React.useState<SingleClient>(null);
@@ -28,9 +31,11 @@ export default function ViewClient(props: ViewClientProps) {
     <>
       <PageHeader title={getHeaderTitle()} />
       {client && typeof client === "object" && (
-        <>
+        <div style={{ marginBottom: "3.2rem" }}>
           <ViewEditBasicInfo client={client} clientUpdated={setClient} />
-        </>
+          <ViewEditContactInfo client={client} clientUpdated={setClient} />
+          <ViewEditDemographicsInfo client={client} clientUpdated={setClient} />
+        </div>
       )}
     </>
   );
@@ -69,7 +74,8 @@ export type SingleClient = {
   countryOfOrigin?: string;
   dateOfUSArrival?: string;
   homeLanguage?: string;
-  currentlyEmployed?: boolean;
+  englishProficiency?: string;
+  currentlyEmployed?: string;
   employmentSector?: string;
   payInterval?: PayInterval;
   weeklyEmployedHours?: WeeklyEmployedHours;
@@ -98,13 +104,6 @@ type Address = {
   city: string;
   state: string;
   zip: string;
-};
-
-type WeeklyEmployedHours = {
-  "0-20": "0-20";
-  "21-35": "21-35";
-  "36-40": "36-40";
-  "41+": "41+";
 };
 
 type ClientUserRelationship = {
