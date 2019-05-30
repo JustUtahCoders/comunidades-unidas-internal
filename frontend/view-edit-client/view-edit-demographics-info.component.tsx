@@ -8,9 +8,13 @@ import { countryCodeToName } from "../util/country-select.component";
 import DemographicInformationInputs, {
   languageOptions,
   EnglishLevel,
-  DemographicInformationClient
+  DemographicInformationClient,
+  employmentSectors,
+  payIntervals,
+  civilStatuses
 } from "../add-client/form-inputs/demographic-information-inputs.component";
 import easyFetch from "../util/easy-fetch";
+import dateformat from "dateformat";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -34,6 +38,7 @@ export default function ViewEditDemographicsInfo(
       const abortController = new AbortController();
       easyFetch(`/api/clients/${client.id}`, {
         method: "PATCH",
+        body: apiStatus.newClientData,
         signal: abortController.signal
       })
         .then(data => {
@@ -97,18 +102,36 @@ export default function ViewEditDemographicsInfo(
           </section>
           <section>
             <h4>Personal information</h4>
-            <div>{client.civilStatus}</div>
+            <div>{civilStatuses[client.civilStatus] || client.civilStatus}</div>
             <div>{voterEligibility()}</div>
             {client.eligibleToVote && wantsToRegisterToVote()}
             <div>{client.isStudent ? "Student" : "Not student"}</div>
             <div>{employmentInfo()}</div>
+            {client.currentlyEmployed === "yes" && (
+              <div>
+                Paid{" "}
+                {(
+                  payIntervals[client.payInterval] || client.payInterval
+                ).toLowerCase()}{" "}
+                - {client.weeklyEmployedHours} weekly hours
+              </div>
+            )}
             <div>
               Born in{" "}
               {countryCodeToName[client.countryOfOrigin] || "Unknown country"}
             </div>
             {client.countryOfOrigin === "US" ? null : (
-              <div>{client.dateOfUSArrival || "Unknown"} arrival to USA</div>
+              <div>
+                {client.dateOfUSArrival
+                  ? dateformat(client.dateOfUSArrival, "m/d/yyyy")
+                  : "Unknown"}{" "}
+                arrival to USA
+              </div>
             )}
+            <div>
+              {languageOptions[client.homeLanguage] || client.homeLanguage}{" "}
+              spoken at home
+            </div>
             <div>
               {EnglishLevel[client.englishProficiency] ||
                 client.englishProficiency}{" "}
@@ -155,7 +178,7 @@ export default function ViewEditDemographicsInfo(
   }
 
   function wantsToRegisterToVote() {
-    if (client.eligibleToVote) {
+    if (client.registeredToVote) {
       return (
         <div className="text-with-inline-icon">
           Wants to register to vote
@@ -185,7 +208,8 @@ export default function ViewEditDemographicsInfo(
   function employmentInfo() {
     switch (client.currentlyEmployed) {
       case "yes":
-        return `Employed - ${client.employmentSector} - ${client.payInterval}`;
+        return `Employed - ${employmentSectors[client.employmentSector] ||
+          client.employmentSector}`;
       case "no":
         return `Not employed`;
       case "n/a":
@@ -195,7 +219,7 @@ export default function ViewEditDemographicsInfo(
     }
   }
 
-  function handleSubmit(evt, demographicsInfo) {
+  function handleSubmit(evt, demographicsInfo: DemographicInformationClient) {
     evt.preventDefault();
     dispatchApiStatus({
       type: UpdateActionType.update,
@@ -203,7 +227,7 @@ export default function ViewEditDemographicsInfo(
         civilStatus: demographicsInfo.civilStatus,
         householdIncome: demographicsInfo.householdIncome,
         householdSize: demographicsInfo.householdSize,
-        dependents: demographicsInfo.dependents,
+        dependents: demographicsInfo.juvenileDependents,
         currentlyEmployed: demographicsInfo.currentlyEmployed,
         weeklyEmployedHours: demographicsInfo.weeklyEmployedHours,
         employmentSector: demographicsInfo.employmentSector,
@@ -212,9 +236,9 @@ export default function ViewEditDemographicsInfo(
         dateOfUSArrival: demographicsInfo.dateOfUSArrival,
         homeLanguage: demographicsInfo.homeLanguage,
         isStudent: demographicsInfo.isStudent,
-        englishProficiency: demographicsInfo.englishProficiency,
+        englishProficiency: demographicsInfo.englishLevel,
         eligibleToVote: demographicsInfo.eligibleToVote,
-        registeredToVote: demographicsInfo.registeredToVote
+        registeredToVote: demographicsInfo.registerToVote
       }
     });
   }
