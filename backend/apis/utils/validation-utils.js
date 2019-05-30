@@ -25,6 +25,7 @@ const nullable = cbk => (propertyName, ...args) => obj =>
 exports.nullableNonEmptyString = nullable(_nonEmptyString);
 exports.nonEmptyString = checkDefined(_nonEmptyString);
 exports.nullableValidDate = nullable(_validDate);
+exports.nullableValidInteger = nullable(_validInteger);
 exports.validDate = checkDefined(_validDate);
 exports.validId = checkDefined(_validId);
 exports.validPhone = checkDefined(propertyName => val =>
@@ -116,4 +117,11 @@ function _validId(propertyName) {
       return `Property '${propertyName}' must be a valid number ID`;
     }
   };
+}
+
+function _validInteger(propertyName) {
+  return val =>
+    typeof val == "number" && Number.isInteger(val)
+      ? null
+      : `Property '${propertyName}' must be a valid number. Received '${val}'`;
 }
