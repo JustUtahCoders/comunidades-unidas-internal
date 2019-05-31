@@ -9,7 +9,6 @@ import ContactInformationInputsComponent, {
   HousingStatuses
 } from "../add-client/form-inputs/contact-information-inputs.component";
 import easyFetch from "../util/easy-fetch";
-import AuditSummarySection from "./audit-summary-section.component";
 
 export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
   const { client } = props;
@@ -57,12 +56,10 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
   }, [apiStatus]);
 
   return (
-    <ClientSection title="Contact information">
-      {props.auditSummary && (
-        <AuditSummarySection
-          auditSection={props.auditSummary.contactInformation}
-        />
-      )}
+    <ClientSection
+      title="Contact information"
+      auditSection={props.auditSummary && props.auditSummary.contactInformation}
+    >
       {isEditing ? (
         <ContactInformationInputsComponent
           ref={contactInfoInputsRef}
@@ -98,28 +95,49 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
           </div>
         </ContactInformationInputsComponent>
       ) : (
-        <div {...scope} className="view-edit-contact-information">
-          <div className="view-contact-information">
-            <div>{client.homeAddress.street}</div>
-            <div>
-              {client.homeAddress.city}, {client.homeAddress.state}{" "}
-              {client.homeAddress.zip}
-            </div>
-            <div>
-              Housing:{" "}
-              {HousingStatuses[client.housingStatus] || client.housingStatus}
-            </div>
-            <div>{formattedPhone()}</div>
-            {smsConsent()}
-            <div>{client.email}</div>
-          </div>
+        <>
+          <table className="client-table" {...scope}>
+            <tbody>
+              <tr>
+                <td>Phone:</td>
+                <td>{formattedPhone()}</td>
+              </tr>
+              <tr>
+                <td>Email:</td>
+                <td>
+                  <div>{client.email}</div>
+                </td>
+              </tr>
+              <tr>
+                <td>Address:</td>
+                <td>
+                  <div>{client.homeAddress.street}</div>
+                  <div>
+                    {client.homeAddress.city}, {client.homeAddress.state}{" "}
+                    {client.homeAddress.zip}
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Wants texts:</td>
+                <td>{smsConsent()}</td>
+              </tr>
+              <tr>
+                <td>Housing:</td>
+                <td>
+                  {HousingStatuses[client.housingStatus] ||
+                    client.housingStatus}
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <button
             className="secondary edit-button"
             onClick={() => setIsEditing(true)}
           >
             Edit
           </button>
-        </div>
+        </>
       )}
     </ClientSection>
   );
@@ -144,7 +162,7 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
     if (client.smsConsent) {
       return (
         <div className="sms-consent">
-          Wants texts{" "}
+          Wants{" "}
           <img
             src={checkedUrl}
             alt="wants text messages"
@@ -156,7 +174,7 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
     } else {
       return (
         <div className="sms-consent">
-          No texts{" "}
+          No{" "}
           <img
             src={closeUrl}
             alt="no text messages"
@@ -200,26 +218,9 @@ type ViewEditContactInfoProps = {
 };
 
 const css = `
-& .view-edit-contact-information {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-& .view-contact-information {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
 & .sms-consent {
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
 }
 
 & .sms-consent-icon {
