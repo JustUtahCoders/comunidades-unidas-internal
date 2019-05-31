@@ -109,3 +109,19 @@ exports.insertIntakeDataQuery = function insertIntakeDataQuery(
     ]
   );
 };
+
+exports.insertIntakeServicesQuery = function insertIntakeServicesQuery(data) {
+  return mysql.format(
+    `
+      SET @intakeDataId = LAST_INSERT_ID();
+
+      ${data.intakeServices
+        .map(
+          () =>
+            "INSERT INTO intakeServices (intakeDataId, serviceId) VALUES (@intakeDataId, ?);\n"
+        )
+        .join("")}
+    `,
+    data.intakeServices
+  );
+};
