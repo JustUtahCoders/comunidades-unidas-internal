@@ -26,7 +26,6 @@ exports.nullableNonEmptyString = nullable(_nonEmptyString);
 exports.nonEmptyString = checkDefined(_nonEmptyString);
 
 exports.nullableValidDate = nullable(_validDate);
-exports.nullableValidInteger = nullable(_validInteger);
 exports.validDate = checkDefined(_validDate);
 
 exports.validId = checkDefined(_validId);
