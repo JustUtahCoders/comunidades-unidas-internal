@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useCss } from "kremling";
+import { useCss, m } from "kremling";
 import FuzzySearch from "fuzzy-search";
 
 export default function CityInput(props) {
@@ -7,6 +7,7 @@ export default function CityInput(props) {
   const [justBlurred, setJustBlurred] = useState(false);
   const [statesToCities, setStatesToCities] = useState({});
   const [fuzzySearcher, setFuzzySearcher] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const scope = useCss(css);
   const inputRef = useRef(null);
 
@@ -47,10 +48,35 @@ export default function CityInput(props) {
         required
         ref={inputRef}
         autoComplete="off"
+        onFocus={() => setSelectedIndex(0)}
+        onKeyDown={onKeyDown}
       />
       {renderPopup()}
     </div>
   );
+
+  function setCityAndTab(city) {
+    props.setCity(city);
+    props.nextInputRef.current.focus();
+  }
+
+  function onKeyDown(evt) {
+    const possibleCities = fuzzySearcher.search(props.city).slice(0, 8);
+    if (evt.key === "Enter") {
+      evt.preventDefault();
+      setCityAndTab(possibleCities[selectedIndex].city);
+    } else if (evt.key === "ArrowDown") {
+      setSelectedIndex(
+        possibleCities.length - 1 === selectedIndex ? 0 : selectedIndex + 1
+      );
+    } else if (evt.key === "ArrowUp") {
+      setSelectedIndex(
+        selectedIndex === 0 ? possibleCities.length - 1 : selectedIndex - 1
+      );
+    } else {
+      setSelectedIndex(0);
+    }
+  }
 
   function renderPopup() {
     if (!focused || !fuzzySearcher || props.city.trim().length === 0) {
@@ -62,14 +88,16 @@ export default function CityInput(props) {
     return (
       <div className="popup">
         <ul>
-          {possibleCities.map(possibleCity => (
-            <li key={possibleCity.city}>
+          {possibleCities.map((possibleCity, i) => (
+            <li
+              key={possibleCity.city}
+              className={m("selected-index", selectedIndex === i)}
+            >
               <button
                 type="button"
                 className="unstyled city-button"
                 onClick={() => {
-                  props.setCity(possibleCity.city);
-                  inputRef.current.blur();
+                  setCityAndTab(possibleCity);
                 }}
                 tabIndex={-1}
                 title={possibleCity.city}
@@ -100,5 +128,9 @@ const css = `
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+
+& .selected-index {
+  background-color: darkgray;
 }
 `;
