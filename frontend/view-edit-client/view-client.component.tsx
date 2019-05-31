@@ -15,10 +15,13 @@ import ViewEditIntakeInfo from "./view-edit-intake-info.component";
 export default function ViewClient(props: ViewClientProps) {
   const [client, setClient] = React.useState<SingleClient>(null);
   const [error, setError] = React.useState(null);
+  const [auditSummary, setAuditSummary] = React.useState(null);
   const clientId = props.clientId;
 
   React.useEffect(() => {
-    easyFetch(`/api/clients/${clientId}`)
+    const abortController = new AbortController();
+
+    easyFetch(`/api/clients/${clientId}`, { signal: abortController.signal })
       .then(data => {
         setClient(data.client);
       })
@@ -26,17 +29,54 @@ export default function ViewClient(props: ViewClientProps) {
         console.error(err);
         setError(err);
       });
+
+    return () => abortController.abort();
   }, [clientId]);
+
+  React.useEffect(() => {
+    if (client) {
+      const abortController = new AbortController();
+
+      easyFetch(`/api/clients/${clientId}/audits`, {
+        signal: abortController.signal
+      })
+        .then(data => {
+          setAuditSummary(data.auditSummary);
+        })
+        .catch(err => {
+          console.error(err);
+          setError(err);
+        });
+
+      return () => abortController.abort();
+    }
+  }, [client]);
 
   return (
     <>
       <PageHeader title={getHeaderTitle()} />
       {client && typeof client === "object" && (
         <div style={{ marginBottom: "3.2rem" }}>
-          <ViewEditBasicInfo client={client} clientUpdated={setClient} />
-          <ViewEditContactInfo client={client} clientUpdated={setClient} />
-          <ViewEditDemographicsInfo client={client} clientUpdated={setClient} />
-          <ViewEditIntakeInfo client={client} clientUpdated={setClient} />
+          <ViewEditBasicInfo
+            client={client}
+            clientUpdated={setClient}
+            auditSummary={auditSummary}
+          />
+          <ViewEditContactInfo
+            client={client}
+            clientUpdated={setClient}
+            auditSummary={auditSummary}
+          />
+          <ViewEditDemographicsInfo
+            client={client}
+            clientUpdated={setClient}
+            auditSummary={auditSummary}
+          />
+          <ViewEditIntakeInfo
+            client={client}
+            clientUpdated={setClient}
+            auditSummary={auditSummary}
+          />
         </div>
       )}
     </>
@@ -113,5 +153,30 @@ type ClientUserRelationship = {
   firstName: string;
   lastName: string;
   fullName: string;
+  timestamp: string;
+};
+
+export type AuditSummary = {
+  client: {
+    lastUpdate: LastUpdate;
+  };
+  contactInformation: {
+    numWrites: number;
+    lastUpdate: LastUpdate;
+  };
+  demographics: {
+    numWrites: number;
+    lastUpdate: LastUpdate;
+  };
+  intakeData: {
+    numWrites: number;
+    lastUpdate: LastUpdate;
+  };
+};
+
+export type LastUpdate = {
+  fullName: string;
+  firstName: string;
+  lastName: string;
   timestamp: string;
 };
