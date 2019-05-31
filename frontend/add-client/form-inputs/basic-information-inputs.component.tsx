@@ -28,7 +28,6 @@ export default function BasicInformationInputs(
             onChange={evt => setFirstName(evt.target.value)}
             required
             autoComplete="new-password"
-            autoCapitalize="words"
             autoFocus
           />
         </label>
@@ -41,7 +40,6 @@ export default function BasicInformationInputs(
             value={lastName}
             onChange={evt => setLastName(evt.target.value)}
             autoComplete="new-password"
-            autoCapitalize="words"
             required
           />
         </label>
