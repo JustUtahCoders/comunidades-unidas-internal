@@ -10,6 +10,7 @@ import {
 import { ClientSources } from "../add-client/add-client.component";
 import ViewEditContactInfo from "./view-edit-contact-info.component";
 import ViewEditDemographicsInfo from "./view-edit-demographics-info.component";
+import ViewEditIntakeInfo from "./view-edit-intake-info.component";
 
 export default function ViewClient(props: ViewClientProps) {
   const [client, setClient] = React.useState<SingleClient>(null);
@@ -35,6 +36,7 @@ export default function ViewClient(props: ViewClientProps) {
           <ViewEditBasicInfo client={client} clientUpdated={setClient} />
           <ViewEditContactInfo client={client} clientUpdated={setClient} />
           <ViewEditDemographicsInfo client={client} clientUpdated={setClient} />
+          <ViewEditIntakeInfo client={client} clientUpdated={setClient} />
         </div>
       )}
     </>
