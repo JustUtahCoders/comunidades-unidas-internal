@@ -92,7 +92,7 @@ app.get(`/api/clients/:id/audits`, (req, res) => {
         auditSummary: {
           client: {
             lastUpdate: {
-              id: lastClient[0].id,
+              userId: lastClient[0].id,
               fullName: responseFullName(
                 lastClient[0].firstName,
                 lastClient[0].lastName
@@ -105,7 +105,7 @@ app.get(`/api/clients/:id/audits`, (req, res) => {
           contactInformation: {
             numWrites: numContactInfoWrites[0]["COUNT(*)"],
             lastUpdate: {
-              id: lastContactInfo[0].id,
+              userId: lastContactInfo[0].id,
               fullName: responseFullName(
                 lastContactInfo[0].firstName,
                 lastContactInfo[0].lastName
@@ -118,7 +118,7 @@ app.get(`/api/clients/:id/audits`, (req, res) => {
           demographics: {
             numWrites: numDemographicsWrites[0]["COUNT(*)"],
             lastUpdate: {
-              id: lastDemographics[0].id,
+              userId: lastDemographics[0].id,
               fullName: responseFullName(
                 lastDemographics[0].firstName,
                 lastDemographics[0].lastName
@@ -131,7 +131,7 @@ app.get(`/api/clients/:id/audits`, (req, res) => {
           intakeData: {
             numWrites: numIntakeDataWrites[0]["COUNT(*)"],
             lastUpdate: {
-              id: lastIntakeData[0].id,
+              userId: lastIntakeData[0].id,
               fullName: responseFullName(
                 lastIntakeData[0].firstName,
                 lastIntakeData[0].lastName
