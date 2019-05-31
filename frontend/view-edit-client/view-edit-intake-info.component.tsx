@@ -74,7 +74,7 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
           </div>
         </form>
       ) : (
-        <article className="view-edit-intake-info" {...scope}>
+        <section className="view-edit-intake-info" {...scope}>
           <div>{dateformat(client.dateOfIntake, "m/d/yyyy")}</div>
           <div>{clientSources[client.clientSource] || client.clientSource}</div>
           <div>
@@ -87,7 +87,7 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
           >
             Edit
           </button>
-        </article>
+        </section>
       )}
     </ClientSection>
   );
