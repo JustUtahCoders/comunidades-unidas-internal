@@ -21,6 +21,7 @@ const { getClientById } = require("./get-client.api");
 const {
   insertContactInformationQuery,
   insertDemographicsInformationQuery,
+  insertIntakeServicesQuery,
   insertIntakeDataQuery
 } = require("./insert-client.utils");
 
@@ -207,6 +208,8 @@ app.patch("/api/clients/:id", (req, res, next) => {
             req.session.passport.user.id
           )
         );
+
+        queries.push(insertIntakeServicesQuery(fullClient));
       }
 
       if (queries.length === 0) {

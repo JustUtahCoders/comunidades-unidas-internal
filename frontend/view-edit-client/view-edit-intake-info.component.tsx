@@ -8,6 +8,7 @@ import ClientSourceInputsComponent, {
 import { useCss } from "kremling";
 import IntakeDateInput from "../add-client/form-inputs/intake-date-input.component";
 import easyFetch from "../util/easy-fetch";
+import IntakeServicesInputs from "../add-client/form-inputs/intake-services-inputs.component";
 
 export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
   const { client } = props;
@@ -19,6 +20,18 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
     isUpdating: false,
     newClientData: null
   });
+  const [services, setServices] = React.useState([]);
+  const intakeServicesRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const abortController = new AbortController();
+
+    easyFetch("/api/services", { signal: abortController.signal }).then(data =>
+      setServices(data.services)
+    );
+
+    return () => abortController.abort();
+  }, []);
 
   React.useEffect(() => {
     if (apiStatus.isUpdating) {
@@ -34,6 +47,7 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
         })
         .finally(() => {
           setEditing(false);
+          dispatchApiStatus({ type: "reset" });
         });
 
       return () => abortController.abort();
@@ -55,6 +69,18 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
               couldVolunteer: client.couldVolunteer
             }}
           />
+          <div>
+            <label>
+              <span>Intake Services</span>
+              <IntakeServicesInputs
+                ref={intakeServicesRef}
+                services={services}
+                checkedServices={client.intakeServices.map(
+                  service => service.id
+                )}
+              />
+            </label>
+          </div>
           <div className="actions">
             <button
               type="button"
@@ -80,7 +106,11 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
           <div>
             {client.couldVolunteer ? "Can volunteer" : "Can't volunteer"}
           </div>
-          <div>{client.intakeServices.join(", ")}</div>
+          <div>
+            {client.intakeServices
+              .map(service => service.serviceName)
+              .join(", ")}
+          </div>
           <button
             className="secondary edit-button"
             onClick={() => setEditing(true)}
@@ -97,7 +127,8 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
     const newClientData = {
       dateOfIntake: intakeDateInputRef.current.value,
       couldVolunteer: clientSourceRef.current.couldVolunteer,
-      clientSource: clientSourceRef.current.clientSource
+      clientSource: clientSourceRef.current.clientSource,
+      intakeServices: intakeServicesRef.current.checkedServices
     };
     dispatchApiStatus({
       type: "do-patch",
