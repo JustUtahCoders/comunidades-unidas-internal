@@ -77,7 +77,7 @@ export default function DemographicInformationInputs(
   };
 
   return (
-    <form onSubmit={handleSubmit} autoComplete="off">
+    <form onSubmit={handleSubmit} autoComplete="new-password">
       <div>
         <label>
           <span>Civil status</span>

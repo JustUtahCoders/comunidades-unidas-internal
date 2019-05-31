@@ -48,6 +48,7 @@ export default function CityInput(props) {
         required
         ref={inputRef}
         autoComplete="new-password"
+        autoCapitalize="words"
         onFocus={() => setSelectedIndex(0)}
         onKeyDown={onKeyDown}
       />

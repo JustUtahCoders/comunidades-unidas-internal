@@ -35,7 +35,7 @@ export default React.forwardRef(function ContactInformationInputs(
   });
 
   return (
-    <form onSubmit={props.handleSubmit} autoComplete="off">
+    <form onSubmit={props.handleSubmit} autoComplete="new-password">
       {props.showDateOfIntake && (
         <div>
           <label>
@@ -75,8 +75,8 @@ export default React.forwardRef(function ContactInformationInputs(
             type="email"
             value={email}
             onChange={evt => setEmail(evt.target.value)}
-            required
             autoComplete="new-password"
+            required
           />
         </label>
       </div>
@@ -118,6 +118,7 @@ export default React.forwardRef(function ContactInformationInputs(
             type="text"
             value={zip}
             onChange={evt => setZip(evt.target.value)}
+            autoComplete="new-password"
             required
           />
         </label>

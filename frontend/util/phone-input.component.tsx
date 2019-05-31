@@ -12,7 +12,7 @@ export default function PhoneInput(props: PhoneInputProps) {
       pattern="\(?[0-9]{3}\)?[ ]?-?[0-9]{3}-?[0-9]{4}"
       required
       autoFocus={props.autoFocus}
-      autoComplete="off"
+      autoComplete="new-password"
     />
   );
 
