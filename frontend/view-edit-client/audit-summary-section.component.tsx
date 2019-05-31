@@ -1,6 +1,6 @@
 import React from "react";
 import { LastUpdate } from "./view-client.component";
-import dateformat from "dateformat";
+import { format } from "timeago.js";
 
 export default function AuditSummarySection({
   auditSection
@@ -14,8 +14,8 @@ export default function AuditSummarySection({
         </div>
       )}
       <div>
-        Last updated {dateformat(auditSection.lastUpdate.timestamp, "default")}{" "}
-        by {auditSection.lastUpdate.fullName}
+        Last updated {format(auditSection.lastUpdate.timestamp)} by{" "}
+        {auditSection.lastUpdate.fullName}
       </div>
     </section>
   );

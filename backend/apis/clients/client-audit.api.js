@@ -37,7 +37,7 @@ app.get(`/api/clients/:id/audits`, (req, res) => {
         ON c.addedBy = u.id
       WHERE
         c.clientId = ?
-      ORDER BY c.dateAdded
+      ORDER BY c.dateAdded DESC
       LIMIT 1;
 
       # 4) num demographics writes
@@ -52,7 +52,7 @@ app.get(`/api/clients/:id/audits`, (req, res) => {
         ON d.addedBy = u.id
       WHERE
         d.clientId = ?
-      ORDER BY d.dateAdded
+      ORDER BY d.dateAdded DESC
       LIMIT 1;
 
       # 6) num intakeData writes
@@ -67,7 +67,7 @@ app.get(`/api/clients/:id/audits`, (req, res) => {
         ON i.addedBy = u.id
       WHERE
         i.clientId = ?
-      ORDER BY i.dateAdded
+      ORDER BY i.dateAdded DESC
       LIMIT 1;
     `,
       [clientId, clientId, clientId, clientId, clientId, clientId, clientId]
@@ -87,6 +87,8 @@ app.get(`/api/clients/:id/audits`, (req, res) => {
         numIntakeDataWrites,
         lastIntakeData
       ] = result;
+
+      connection.release();
 
       res.send({
         auditSummary: {
