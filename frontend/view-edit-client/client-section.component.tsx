@@ -44,7 +44,7 @@ const css = `
 }
 
 & button.unstyled.client-section-header:hover {
-  background-color: var(--very-light-gray);
+  background-color: var(--light-gray);
 }
 
 & .client-section-content {
