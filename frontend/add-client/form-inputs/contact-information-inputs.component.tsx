@@ -76,7 +76,7 @@ export default React.forwardRef(function ContactInformationInputs(
             value={email}
             onChange={evt => setEmail(evt.target.value)}
             required
-            autoComplete="off"
+            autoComplete="new-password"
           />
         </label>
       </div>
@@ -89,7 +89,7 @@ export default React.forwardRef(function ContactInformationInputs(
             onChange={evt => setStreetAddress(evt.target.value)}
             required
             placeholder="1211 W. 3200 S."
-            autoComplete="off"
+            autoComplete="new-password"
           />
         </label>
       </div>
