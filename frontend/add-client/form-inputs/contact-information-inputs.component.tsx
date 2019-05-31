@@ -25,6 +25,8 @@ export default React.forwardRef(function ContactInformationInputs(
     props.client.dateOfIntake || getTodayAsString
   );
 
+  const zipRef = React.useRef(null);
+
   React.useEffect(() => {
     // @ts-ignore
     ref.current = {
@@ -100,13 +102,19 @@ export default React.forwardRef(function ContactInformationInputs(
       <div>
         <label>
           <span>City</span>
-          <CityInput state={state} city={city} setCity={setCity} />
+          <CityInput
+            state={state}
+            city={city}
+            setCity={setCity}
+            nextInputRef={zipRef}
+          />
         </label>
       </div>
       <div>
         <label>
           <span>ZIP Code</span>
           <input
+            ref={zipRef}
             type="text"
             value={zip}
             onChange={evt => setZip(evt.target.value)}
