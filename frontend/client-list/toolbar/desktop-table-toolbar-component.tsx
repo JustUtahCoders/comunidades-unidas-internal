@@ -9,37 +9,38 @@ export default function DesktopTableToolbar(props: ClientsTableToolbarProps) {
   const scope = useCss(css);
   const [selectAll, setSelectAll] = React.useState(false);
 
+  const lastPage = Math.ceil(props.numClients / props.pageSize);
+
   return (
     <div className="desktop-table-toolbar" {...scope}>
-      <div>
-        <input
-          type="checkbox"
-          checked={selectAll}
-          onChange={evt => setSelectAll(evt.target.checked)}
-          name="select-all"
-        />
-      </div>
-      <div>
+      <div />
+      {lastPage !== 0 && (
         <div>
-          {(props.page - 1) * props.pageSize + 1} -{" "}
-          {Math.min(props.page * props.pageSize, props.numClients)} of{" "}
-          {props.numClients.toLocaleString()}
+          <div>
+            {(props.page - 1) * props.pageSize + 1} -{" "}
+            {Math.min(props.page * props.pageSize, props.numClients)} of{" "}
+            {props.numClients.toLocaleString()}
+          </div>
+          <button className="icon" onClick={goBack} disabled={props.page === 1}>
+            <img
+              src={backIcon}
+              alt="Go back one page"
+              title="Go back one page"
+            />
+          </button>
+          <button
+            className="icon"
+            onClick={goForward}
+            disabled={props.page === lastPage}
+          >
+            <img
+              src={nextIcon}
+              alt="Go forward one page"
+              title="Go forward one page"
+            />
+          </button>
         </div>
-        <button className="icon" onClick={goBack} disabled={props.page === 1}>
-          <img src={backIcon} alt="Go back one page" title="Go back one page" />
-        </button>
-        <button
-          className="icon"
-          onClick={goForward}
-          disabled={props.page === Math.ceil(props.numClients / props.pageSize)}
-        >
-          <img
-            src={nextIcon}
-            alt="Go forward one page"
-            title="Go forward one page"
-          />
-        </button>
-      </div>
+      )}
     </div>
   );
 
@@ -59,12 +60,12 @@ const css = `
   justify-content: space-between;
   align-items: center;
   padding: 0 1.4rem;
-  box-shadow: ${boxShadow2};
   position: sticky;
   top: 0;
   left: 23.6rem;
   width: 100%;
   height: 6rem;
+  z-index: 100;
 }
 
 & .desktop-table-toolbar > * {

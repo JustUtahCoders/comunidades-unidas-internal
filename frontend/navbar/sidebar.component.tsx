@@ -18,10 +18,7 @@ export default function Sidebar(props: SidebarProps) {
   return (
     <nav
       {...scope}
-      className={always("box-shadow-2 sidebar").maybe(
-        "force-show",
-        props.forceShow
-      )}
+      className={always("sidebar").maybe("force-show", props.forceShow)}
       onClick={evt => evt.stopPropagation()}
     >
       <ul className="navbar-links">
@@ -114,6 +111,11 @@ ${mediaMobile} {
   & .sidebar:not(.force-show) {
     left: calc(-100%);
   }
+}
+
+& .sidebar {
+  box-shadow: .2rem 0 .2rem var(--light-gray);
+  z-index: 1000;
 }
 
 & nav {

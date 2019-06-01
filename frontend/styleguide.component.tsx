@@ -23,6 +23,7 @@ const css = `
   background-color: #efefef;
   --very-light-gray: #F3F3F3;
   --light-gray: #dfdfdf;
+  --medium-gray: #afafaf;
   --brand-color: rgba(184, 17, 17, 1);
 }
 
