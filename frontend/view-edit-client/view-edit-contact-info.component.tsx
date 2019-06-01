@@ -9,6 +9,7 @@ import ContactInformationInputsComponent, {
   HousingStatuses
 } from "../add-client/form-inputs/contact-information-inputs.component";
 import easyFetch from "../util/easy-fetch";
+import { formatPhone } from "../util/formatters";
 
 export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
   const { client } = props;
@@ -100,7 +101,7 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
             <tbody>
               <tr>
                 <td>Phone:</td>
-                <td>{formattedPhone()}</td>
+                <td>{formatPhone(client.phone)}</td>
               </tr>
               <tr>
                 <td>Email:</td>
@@ -141,22 +142,6 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
       )}
     </ClientSection>
   );
-
-  function formattedPhone() {
-    const { phone } = client;
-    if (phone) {
-      if (phone.length === 10) {
-        return `(${phone.slice(0, 3)}) ${phone.slice(3, 6)}-${phone.slice(
-          6,
-          10
-        )}`;
-      } else {
-        return phone;
-      }
-    } else {
-      return "";
-    }
-  }
 
   function smsConsent() {
     if (client.smsConsent) {

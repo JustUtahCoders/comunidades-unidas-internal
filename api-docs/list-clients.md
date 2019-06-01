@@ -24,9 +24,10 @@ Notes:
       "id": 56,
       "firstName": "Mario",
       "lastName": "Luigi",
+      "fullName": "Mario Luigi",
       "zip": "84107",
       "birthday": "1981-01-01",
-      "primaryPhone": "5551111111",
+      "phone": "5551111111",
       "dateAdded": "2019-05-13",
       "createdBy": {
         "userId": 123,

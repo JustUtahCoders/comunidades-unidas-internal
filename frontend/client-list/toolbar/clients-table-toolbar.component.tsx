@@ -17,4 +17,5 @@ export type ClientsTableToolbarProps = {
   numClients: number;
   page: number;
   pageSize: number;
+  setPage(pageNum: number): void;
 };
