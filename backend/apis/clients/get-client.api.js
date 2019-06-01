@@ -83,9 +83,18 @@ function getClientById(connection, clientId, cbk) {
       ) intake ON intake.clientId = clients.id
       INNER JOIN users created ON created.id = clients.addedBy
       INNER JOIN users modified ON modified.id = clients.modifiedBy
-      WHERE clients.id = ?
+      WHERE clients.id = ?;
+
+    SELECT serviceId, serviceName
+    FROM
+      intakeServices
+      JOIN
+      services ON intakeServices.serviceId = services.id
+    WHERE intakeDataId = (
+      SELECT id from intakeData WHERE clientId = ? ORDER BY dateAdded DESC LIMIT 1
+    );
   `,
-    [clientId]
+    [clientId, clientId]
   );
 
   connection.query(getClient, (err, data, fields) => {
@@ -93,11 +102,14 @@ function getClientById(connection, clientId, cbk) {
       return cbk(err, data, fields);
     }
 
-    if (data.length === 0) {
+    const bigClientObj = data[0];
+    const intakeServices = data[1];
+
+    if (bigClientObj.length === 0) {
       return cbk(err, null);
     }
 
-    const c = data[0];
+    const c = bigClientObj[0];
 
     const client = {
       id: c.clientId,
@@ -134,7 +146,10 @@ function getClientById(connection, clientId, cbk) {
       clientSource: c.clientSource,
       couldVolunteer: responseBoolean(c.couldVolunteer),
       dateOfIntake: responseDateWithoutTime(c.dateOfIntake),
-      intakeServices: [],
+      intakeServices: intakeServices.map(intakeService => ({
+        id: intakeService.serviceId,
+        serviceName: intakeService.serviceName
+      })),
       createdBy: {
         userId: c.createdById,
         firstName: c.createdByFirstName,

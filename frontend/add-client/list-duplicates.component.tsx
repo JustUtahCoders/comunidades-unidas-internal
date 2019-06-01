@@ -32,7 +32,7 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
         </div>
       </div>
       <div>
-        <form onSubmit={handleSubmit} autoComplete="off">
+        <form onSubmit={handleSubmit} autoComplete="new-password">
           <table>
             <thead>
               <tr>

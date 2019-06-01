@@ -3,12 +3,12 @@ import { StepComponentProps, Step } from "./add-client.component";
 import agendaIconUrl from "../../icons/148705-essential-collection/svg/agenda.svg";
 import { useCss } from "kremling";
 import easyFetch from "../util/easy-fetch";
-
+import IntakeServicesInputs from "./form-inputs/intake-services-inputs.component";
 import { mediaMobile } from "../styleguide.component";
 
 export default function Services(props: StepComponentProps) {
   const [services, setServices] = useState([]);
-  const [checkedServices, setCheckedServices] = useState([]);
+  const intakeServicesRef = React.useRef(null);
   const scope = useCss(css);
 
   React.useEffect(() => {
@@ -36,30 +36,20 @@ export default function Services(props: StepComponentProps) {
         </div>
       </div>
       <form onSubmit={handleSubmit}>
-        <div>
-          <div className="vertical-options">
-            {services.map(service => (
-              <label key={service.id}>
-                <input
-                  type="checkbox"
-                  name="services"
-                  value={service.id}
-                  checked={checkedServices.some(
-                    checkedService => checkedService === service.id
-                  )}
-                  onChange={handleChange}
-                  autoFocus
-                />
-                <span>{service.serviceName}</span>
-              </label>
-            ))}
-          </div>
-        </div>
+        <IntakeServicesInputs
+          checkedServices={props.clientState.intakeServices}
+          services={services}
+          ref={intakeServicesRef}
+        />
         <div className="actions">
           <button
             type="button"
             className="secondary"
-            onClick={() => props.goBack(Step.CLIENT_SOURCE, {})}
+            onClick={() =>
+              props.goBack(Step.CLIENT_SOURCE, {
+                intakeServices: intakeServicesRef.current.checkedServices
+              })
+            }
           >
             Go back
           </button>
@@ -75,23 +65,10 @@ export default function Services(props: StepComponentProps) {
     </div>
   );
 
-  function handleChange(evt) {
-    const serviceId = Number(evt.target.value);
-    let newCheckedServices;
-    if (evt.target.checked) {
-      newCheckedServices = [...checkedServices, serviceId];
-    } else {
-      newCheckedServices = checkedServices.filter(
-        service => service.id !== serviceId
-      );
-    }
-    setCheckedServices(newCheckedServices);
-  }
-
   function handleSubmit(evt) {
     evt.preventDefault();
     props.nextStep(Step.CONFIRM, {
-      intakeServices: checkedServices
+      intakeServices: intakeServicesRef.current.checkedServices
     });
   }
 }

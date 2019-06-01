@@ -20,7 +20,9 @@ const { atLeastOne } = require("../utils/patch-utils");
 const { getClientById } = require("./get-client.api");
 const {
   insertContactInformationQuery,
-  insertDemographicsInformationQuery
+  insertDemographicsInformationQuery,
+  insertIntakeServicesQuery,
+  insertIntakeDataQuery
 } = require("./insert-client.utils");
 
 app.patch("/api/clients/:id", (req, res, next) => {
@@ -189,6 +191,25 @@ app.patch("/api/clients/:id", (req, res, next) => {
             req.session.passport.user.id
           )
         );
+      }
+
+      const intakeDataChanged = atLeastOne(
+        req.body,
+        "clientSource",
+        "couldVolunteer",
+        "dateOfIntake"
+      );
+
+      if (intakeDataChanged) {
+        queries.push(
+          insertIntakeDataQuery(
+            clientId,
+            fullClient,
+            req.session.passport.user.id
+          )
+        );
+
+        queries.push(insertIntakeServicesQuery(fullClient));
       }
 
       if (queries.length === 0) {

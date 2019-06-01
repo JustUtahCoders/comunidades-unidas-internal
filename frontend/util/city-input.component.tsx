@@ -47,7 +47,7 @@ export default function CityInput(props) {
         onChange={evt => props.setCity(evt.target.value)}
         required
         ref={inputRef}
-        autoComplete="off"
+        autoComplete="new-password"
         onFocus={() => setSelectedIndex(0)}
         onKeyDown={onKeyDown}
       />

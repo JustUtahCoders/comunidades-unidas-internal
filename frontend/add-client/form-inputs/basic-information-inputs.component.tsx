@@ -27,7 +27,7 @@ export default function BasicInformationInputs(
             value={firstName}
             onChange={evt => setFirstName(evt.target.value)}
             required
-            autoComplete="off"
+            autoComplete="new-password"
             autoFocus
           />
         </label>
@@ -39,7 +39,7 @@ export default function BasicInformationInputs(
             type="text"
             value={lastName}
             onChange={evt => setLastName(evt.target.value)}
-            autoComplete="off"
+            autoComplete="new-password"
             required
           />
         </label>
@@ -61,7 +61,7 @@ export default function BasicInformationInputs(
           <select
             value={gender}
             onChange={evt => setGender(evt.target.value)}
-            autoComplete="off"
+            autoComplete="new-password"
             required
           >
             <option value="female">Female</option>

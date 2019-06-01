@@ -84,3 +84,44 @@ exports.insertDemographicsInformationQuery = function insertDemographicsInformat
     ]
   );
 };
+
+exports.insertIntakeDataQuery = function insertIntakeDataQuery(
+  clientId,
+  data,
+  userId
+) {
+  return mysql.format(
+    `
+    INSERT INTO intakeData (
+      clientId,
+      dateOfIntake,
+      clientSource,
+      couldVolunteer,
+      addedBy
+    ) VALUES (?, ?, ?, ?, ?);
+  `,
+    [
+      clientId,
+      data.dateOfIntake,
+      requestEnum(data.clientSource),
+      Boolean(data.couldVolunteer),
+      userId
+    ]
+  );
+};
+
+exports.insertIntakeServicesQuery = function insertIntakeServicesQuery(data) {
+  return mysql.format(
+    `
+      SET @intakeDataId = LAST_INSERT_ID();
+
+      ${data.intakeServices
+        .map(
+          () =>
+            "INSERT INTO intakeServices (intakeDataId, serviceId) VALUES (@intakeDataId, ?);\n"
+        )
+        .join("")}
+    `,
+    data.intakeServices
+  );
+};

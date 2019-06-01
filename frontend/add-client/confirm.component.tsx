@@ -20,7 +20,7 @@ export default function Confirm(props: StepComponentProps) {
           <button
             type="button"
             className="secondary"
-            onClick={() => props.goBack(Step.CLIENT_SOURCE)}
+            onClick={() => props.goBack(Step.SERVICES)}
           >
             Go back
           </button>

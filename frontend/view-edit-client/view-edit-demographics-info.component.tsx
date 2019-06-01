@@ -1,6 +1,6 @@
 import React from "react";
 import ClientSection from "./client-section.component";
-import { SingleClient } from "./view-client.component";
+import { SingleClient, AuditSummary } from "./view-client.component";
 import { useCss } from "kremling";
 import checkedUrl from "../../icons/148705-essential-collection/svg/checked-1.svg";
 import closeUrl from "../../icons/148705-essential-collection/svg/close.svg";
@@ -15,6 +15,7 @@ import DemographicInformationInputs, {
 } from "../add-client/form-inputs/demographic-information-inputs.component";
 import easyFetch from "../util/easy-fetch";
 import dateformat from "dateformat";
+import AuditSummarySection from "./audit-summary-section.component";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -54,6 +55,9 @@ export default function ViewEditDemographicsInfo(
 
   return (
     <ClientSection title="Demographics information">
+      {props.auditSummary && (
+        <AuditSummarySection auditSection={props.auditSummary.demographics} />
+      )}
       {editing ? (
         <DemographicInformationInputs
           client={getDemographicsClient()}
@@ -304,6 +308,7 @@ const css = `
 type ViewEditDemographicsInfoProps = {
   client: SingleClient;
   clientUpdated(client: SingleClient): void;
+  auditSummary: AuditSummary;
 };
 
 type UpdateAction = {

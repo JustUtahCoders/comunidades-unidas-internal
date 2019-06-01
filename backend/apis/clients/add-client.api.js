@@ -21,6 +21,7 @@ const {
 const { getClientById } = require("./get-client.api");
 const {
   insertContactInformationQuery,
+  insertIntakeDataQuery,
   insertDemographicsInformationQuery
 } = require("./insert-client.utils");
 
@@ -128,16 +129,7 @@ app.post("/api/clients", (req, res, next) => {
 
         const clientId = result.insertId;
 
-        const intakeDataValues = [
-          clientId,
-          req.body.dateOfIntake,
-          requestEnum(req.body.clientSource),
-          Boolean(req.body.couldVolunteer),
-          req.session.passport.user.id
-        ];
-
-        const insertOther = mysql.format(
-          `
+        const insertOther = mysql.format(`
           ${insertContactInformationQuery(
             clientId,
             req.body,
@@ -150,16 +142,12 @@ app.post("/api/clients", (req, res, next) => {
             req.session.passport.user.id
           )}
 
-          INSERT INTO intakeData (
+          ${insertIntakeDataQuery(
             clientId,
-            dateOfIntake,
-            clientSource,
-            couldVolunteer,
-            addedBy
-          ) VALUES (?, ?, ?, ?, ?);
-        `,
-          [...intakeDataValues]
-        );
+            req.body,
+            req.session.passport.user.id
+          )}
+        `);
 
         connection.query(insertOther, (err, results, fields) => {
           if (err) {
