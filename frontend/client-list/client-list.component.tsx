@@ -51,7 +51,7 @@ export default function ClientList(props: ClientListProps) {
         pageSize={pageSize}
         setPage={setPage}
       />
-      <ClientsTable />
+      <ClientsTable clients={clientApiData.clients} />
     </>
   );
 
