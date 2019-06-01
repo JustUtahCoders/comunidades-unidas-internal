@@ -42,6 +42,11 @@ const css = `
   max-width: 80rem;
 }
 
+& .main-content.full {
+  max-width: inherit;
+  width: inherit;
+}
+
 ${mediaDesktop} {
   & .main-content {
     width: 75%;
