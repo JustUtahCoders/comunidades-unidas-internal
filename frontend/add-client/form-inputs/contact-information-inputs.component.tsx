@@ -162,6 +162,8 @@ export default React.forwardRef(function ContactInformationInputs(
 function getTodayAsString() {
   const date = new Date().toISOString();
   return date.slice(0, date.indexOf("T"));
+
+  console.log(date);
 }
 
 type ContactInformationInputsProps = {

@@ -225,6 +225,7 @@ ${mediaMobile} {
 
   & .form-with-hints form {
     width: 30rem;
+    justify-contents: center;
   }
 
   & .form-with-hints form > div > label > span {
