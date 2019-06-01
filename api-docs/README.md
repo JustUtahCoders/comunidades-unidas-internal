@@ -30,6 +30,8 @@ This is all you need to authenticate and authorize.
 
 [Get client](/api-docs/get-client.md)
 
+[Get client audit history](/api-docs/get-client-audit.md)
+
 [List clients](/api-docs/list-clients.md)
 
 [Update client](/api-docs/update-client.md)

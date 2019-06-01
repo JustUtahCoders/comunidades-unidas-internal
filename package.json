@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@reach/router": "^1.2.1",
+    "@types/jquery": "^3.3.29",
     "@types/reach__router": "^1.2.3",
     "@types/react": "^16.8.5",
     "@types/react-dom": "^16.8.2",
@@ -48,7 +49,8 @@
     "passport-google-oauth20": "^2.0.0",
     "query-string": "^6.5.0",
     "react": "^16.8.3",
-    "react-dom": "^16.8.3"
+    "react-dom": "^16.8.3",
+    "timeago.js": "^4.0.0-beta.2"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",

@@ -1,6 +1,6 @@
 import React from "react";
 import ClientSection from "./client-section.component";
-import { SingleClient } from "./view-client.component";
+import { SingleClient, AuditSummary } from "./view-client.component";
 import dateformat from "dateformat";
 import ClientSourceInputsComponent, {
   clientSources
@@ -9,6 +9,7 @@ import { useCss } from "kremling";
 import IntakeDateInput from "../add-client/form-inputs/intake-date-input.component";
 import easyFetch from "../util/easy-fetch";
 import IntakeServicesInputs from "../add-client/form-inputs/intake-services-inputs.component";
+import AuditSummarySection from "./audit-summary-section.component";
 
 export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
   const { client } = props;
@@ -56,6 +57,9 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
 
   return (
     <ClientSection title="Intake Information">
+      {props.auditSummary && (
+        <AuditSummarySection auditSection={props.auditSummary.intakeData} />
+      )}
       {editing ? (
         <form onSubmit={handleEditSubmit}>
           <IntakeDateInput
@@ -151,6 +155,7 @@ function apiStatusReducer(state, action) {
 type ViewEditIntakeInfoProps = {
   client: SingleClient;
   clientUpdated(client: SingleClient): void;
+  auditSummary: AuditSummary;
 };
 
 const css = `

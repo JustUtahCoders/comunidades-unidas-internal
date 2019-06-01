@@ -1,10 +1,11 @@
 import React from "react";
 import ClientSection from "./client-section.component";
-import { SingleClient } from "./view-client.component";
+import { SingleClient, AuditSummary } from "./view-client.component";
 import dayjs from "dayjs";
 import { useCss } from "kremling";
 import BasicInformationInputs from "../add-client/form-inputs/basic-information-inputs.component";
 import easyFetch from "../util/easy-fetch";
+import AuditSummarySection from "./audit-summary-section.component";
 
 export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
   const [editing, setEditing] = React.useState(false);
@@ -34,6 +35,9 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
 
   return (
     <ClientSection title="Basic information">
+      {props.auditSummary && (
+        <AuditSummarySection auditSection={props.auditSummary.client} />
+      )}
       {editing ? (
         <BasicInformationInputs
           client={{
@@ -99,6 +103,7 @@ function updatingReducer(state, action) {
 type ViewEditBasicInfoProps = {
   client: SingleClient;
   clientUpdated(client: SingleClient): void;
+  auditSummary: AuditSummary;
 };
 
 const css = `
