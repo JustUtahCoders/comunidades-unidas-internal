@@ -21,8 +21,7 @@ import { WeeklyEmployedHours } from "./form-inputs/demographic-information-input
 export default function AddClient(props: AddClientProps) {
   const scope = useCss(css);
 
-  const [step, setStep] = useState<Step>(Step.CONTACT_INFORMATION);
-  // const [step, setStep] = useState<Step>(Step.CHECK_DUPLICATE);
+  const [step, setStep] = useState<Step>(Step.CHECK_DUPLICATE);
   const [clientState, setClientState] = useState<ClientState>({});
   const [duplicateWarning, setDuplicateWarning] = useState<DuplicateWarning>(
     null
