@@ -6,18 +6,17 @@ export default function AuditSummarySection({
   auditSection
 }: AuditSummarySectionProps) {
   return (
-    <section>
+    <div>
+      Last updated by {auditSection.lastUpdate.fullName}{" "}
+      {format(auditSection.lastUpdate.timestamp)}
       {typeof auditSection.numWrites === "number" && (
-        <div>
-          {auditSection.numWrites} update
-          {auditSection.numWrites === 1 ? "" : "s"}
-        </div>
+        <>
+          {" ("}
+          {auditSection.numWrites} total update
+          {auditSection.numWrites === 1 ? "" : "s"})
+        </>
       )}
-      <div>
-        Last updated {format(auditSection.lastUpdate.timestamp)} by{" "}
-        {auditSection.lastUpdate.fullName}
-      </div>
-    </section>
+    </div>
   );
 }
 

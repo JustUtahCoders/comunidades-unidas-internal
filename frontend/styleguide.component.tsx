@@ -22,6 +22,7 @@ const css = `
   font-family: 'Montserrat', sans-serif;
   background-color: #efefef;
   --very-light-gray: #F3F3F3;
+  --light-gray: #dfdfdf;
   --brand-color: rgba(184, 17, 17, 1);
 }
 

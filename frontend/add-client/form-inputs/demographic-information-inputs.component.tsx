@@ -259,7 +259,7 @@ export default function DemographicInformationInputs(
         <>
           <div>
             <label>
-              <span>Type of employment</span>
+              <span>Employment sector</span>
               <select
                 value={employmentSector}
                 name="employmentSector"

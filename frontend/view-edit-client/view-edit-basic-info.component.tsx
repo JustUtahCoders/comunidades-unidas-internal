@@ -2,10 +2,8 @@ import React from "react";
 import ClientSection from "./client-section.component";
 import { SingleClient, AuditSummary } from "./view-client.component";
 import dayjs from "dayjs";
-import { useCss } from "kremling";
 import BasicInformationInputs from "../add-client/form-inputs/basic-information-inputs.component";
 import easyFetch from "../util/easy-fetch";
-import AuditSummarySection from "./audit-summary-section.component";
 
 export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
   const [editing, setEditing] = React.useState(false);
@@ -14,7 +12,6 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
     newClientData: null
   });
   const { client } = props;
-  const scope = useCss(css);
 
   React.useEffect(() => {
     if (apiStatus.isUpdating) {
@@ -34,10 +31,10 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
   }, [apiStatus]);
 
   return (
-    <ClientSection title="Basic information">
-      {props.auditSummary && (
-        <AuditSummarySection auditSection={props.auditSummary.client} />
-      )}
+    <ClientSection
+      title="Basic information"
+      auditSection={props.auditSummary && props.auditSummary.client}
+    >
       {editing ? (
         <BasicInformationInputs
           client={{
@@ -67,18 +64,30 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
           </div>
         </BasicInformationInputs>
       ) : (
-        <div className="view-edit-basic-info" {...scope}>
-          <div className="view-basic-info">
-            {client.fullName} - {dayjs(client.birthday).format("M/D/YYYY")} -{" "}
-            {client.gender}
-          </div>
+        <>
+          <table className="client-table">
+            <tbody>
+              <tr>
+                <td>Name:</td>
+                <td>{client.fullName}</td>
+              </tr>
+              <tr>
+                <td>Birthday:</td>
+                <td>{dayjs(client.birthday).format("M/D/YYYY")}</td>
+              </tr>
+              <tr>
+                <td>Gender:</td>
+                <td>{client.gender}</td>
+              </tr>
+            </tbody>
+          </table>
           <button
             className="secondary edit-button"
             onClick={() => setEditing(true)}
           >
             Edit
           </button>
-        </div>
+        </>
       )}
     </ClientSection>
   );
@@ -105,18 +114,3 @@ type ViewEditBasicInfoProps = {
   clientUpdated(client: SingleClient): void;
   auditSummary: AuditSummary;
 };
-
-const css = `
-& .view-edit-basic-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-& .view-basic-info {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-`;
