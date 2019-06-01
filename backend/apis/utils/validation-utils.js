@@ -94,6 +94,13 @@ function _validId(propertyName) {
   };
 }
 
+function _validPhone(propertyName) {
+  return val =>
+    /^[0-9\-\(\) x]+$/.test(val)
+      ? null
+      : `Property ${propertyName} must be a valid phone number. Received '${val}'`;
+}
+
 function _validBoolean(propertyName) {
   return val =>
     typeof val === "boolean"
