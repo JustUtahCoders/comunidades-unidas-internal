@@ -25,6 +25,8 @@ export default React.forwardRef(function ContactInformationInputs(
     props.client.dateOfIntake || getTodayAsString
   );
 
+  const zipRef = React.useRef(null);
+
   React.useEffect(() => {
     // @ts-ignore
     ref.current = {
@@ -33,7 +35,7 @@ export default React.forwardRef(function ContactInformationInputs(
   });
 
   return (
-    <form onSubmit={props.handleSubmit} autoComplete="off">
+    <form onSubmit={props.handleSubmit} autoComplete="new-password">
       {props.showDateOfIntake && (
         <div>
           <label>
@@ -73,8 +75,8 @@ export default React.forwardRef(function ContactInformationInputs(
             type="email"
             value={email}
             onChange={evt => setEmail(evt.target.value)}
+            autoComplete="new-password"
             required
-            autoComplete="off"
           />
         </label>
       </div>
@@ -87,7 +89,7 @@ export default React.forwardRef(function ContactInformationInputs(
             onChange={evt => setStreetAddress(evt.target.value)}
             required
             placeholder="1211 W. 3200 S."
-            autoComplete="off"
+            autoComplete="new-password"
           />
         </label>
       </div>
@@ -100,16 +102,23 @@ export default React.forwardRef(function ContactInformationInputs(
       <div>
         <label>
           <span>City</span>
-          <CityInput state={state} city={city} setCity={setCity} />
+          <CityInput
+            state={state}
+            city={city}
+            setCity={setCity}
+            nextInputRef={zipRef}
+          />
         </label>
       </div>
       <div>
         <label>
           <span>ZIP Code</span>
           <input
+            ref={zipRef}
             type="text"
             value={zip}
             onChange={evt => setZip(evt.target.value)}
+            autoComplete="new-password"
             required
           />
         </label>
