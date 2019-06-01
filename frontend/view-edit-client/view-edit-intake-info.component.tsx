@@ -5,16 +5,13 @@ import dateformat from "dateformat";
 import ClientSourceInputsComponent, {
   clientSources
 } from "../add-client/form-inputs/client-source-inputs.component";
-import { useCss } from "kremling";
 import IntakeDateInput from "../add-client/form-inputs/intake-date-input.component";
 import easyFetch from "../util/easy-fetch";
 import IntakeServicesInputs from "../add-client/form-inputs/intake-services-inputs.component";
-import AuditSummarySection from "./audit-summary-section.component";
 
 export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
   const { client } = props;
   const [editing, setEditing] = React.useState(false);
-  const scope = useCss(css);
   const intakeDateInputRef = React.useRef(null);
   const clientSourceRef = React.useRef(null);
   const [apiStatus, dispatchApiStatus] = React.useReducer(apiStatusReducer, {
@@ -56,10 +53,10 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
   }, [apiStatus.isUpdating]);
 
   return (
-    <ClientSection title="Intake Information">
-      {props.auditSummary && (
-        <AuditSummarySection auditSection={props.auditSummary.intakeData} />
-      )}
+    <ClientSection
+      title="Intake Information"
+      auditSection={props.auditSummary && props.auditSummary.intakeData}
+    >
       {editing ? (
         <form onSubmit={handleEditSubmit}>
           <IntakeDateInput
@@ -104,24 +101,38 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
           </div>
         </form>
       ) : (
-        <section className="view-edit-intake-info" {...scope}>
-          <div>{dateformat(client.dateOfIntake, "m/d/yyyy")}</div>
-          <div>{clientSources[client.clientSource] || client.clientSource}</div>
-          <div>
-            {client.couldVolunteer ? "Can volunteer" : "Can't volunteer"}
-          </div>
-          <div>
-            {client.intakeServices
-              .map(service => service.serviceName)
-              .join(", ")}
-          </div>
+        <>
+          <table className="client-table">
+            <tbody>
+              <tr>
+                <td>Intake Date:</td>
+                <td>{dateformat(client.dateOfIntake, "m/d/yyyy")}</td>
+              </tr>
+              <tr>
+                <td>Client source:</td>
+                <td>
+                  {clientSources[client.clientSource] || client.clientSource}
+                </td>
+              </tr>
+              <tr>
+                <td>Services interested in:</td>
+                <td>
+                  {client.intakeServices.length === 0
+                    ? "(None)"
+                    : client.intakeServices
+                        .map(service => service.serviceName)
+                        .join(", ")}
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <button
             className="secondary edit-button"
             onClick={() => setEditing(true)}
           >
             Edit
           </button>
-        </section>
+        </>
       )}
     </ClientSection>
   );
@@ -157,12 +168,3 @@ type ViewEditIntakeInfoProps = {
   clientUpdated(client: SingleClient): void;
   auditSummary: AuditSummary;
 };
-
-const css = `
-& .view-edit-intake-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-`;
