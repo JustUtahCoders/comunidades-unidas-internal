@@ -22,7 +22,7 @@ app.get("/api/clients", (req, res, next) => {
       FROM 
         clients cl 
       JOIN 
-        contactInformation ct ON cl.id = ct.clientId 
+        (SELECT * FROM contactInformation ORDER BY dateAdded DESC LIMIT 1) ct ON cl.id = ct.clientId 
       JOIN 
         users us ON cl.addedBy = us.id 
       WHERE 
