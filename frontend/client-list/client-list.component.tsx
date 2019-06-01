@@ -86,9 +86,9 @@ export default function ClientList(props: ClientListProps) {
 
 const dummyClient = {
   id: 2,
-  firstName: "Mario",
-  lastName: "Luigi",
-  fullName: "Mario Luigi",
+  firstName: "Freddy",
+  lastName: "Mercury",
+  fullName: "Freddy Mercury",
   zip: "84107",
   birthday: "1981-01-01",
   phone: "5551111111",
