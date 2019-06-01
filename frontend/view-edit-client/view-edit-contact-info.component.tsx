@@ -218,5 +218,6 @@ const css = `
 & .sms-consent-icon {
   width: 1.6rem;
   margin-left: .8rem;
+  filter: contrast(210%) brightness(105%);
 }
 `;

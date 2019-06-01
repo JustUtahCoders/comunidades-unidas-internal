@@ -293,6 +293,7 @@ const css = `
   align-items: center;
   justify-content: center;
   text-align: center;
+  filter: contrast(210%) brightness(105%);
 }
 
 & .inline-icon {
