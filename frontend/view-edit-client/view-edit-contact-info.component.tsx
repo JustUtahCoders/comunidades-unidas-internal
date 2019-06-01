@@ -1,6 +1,6 @@
 import React from "react";
 import ClientSection from "./client-section.component";
-import { SingleClient } from "./view-client.component";
+import { SingleClient, AuditSummary } from "./view-client.component";
 import { useCss } from "kremling";
 import checkedUrl from "../../icons/148705-essential-collection/svg/checked-1.svg";
 import closeUrl from "../../icons/148705-essential-collection/svg/close.svg";
@@ -9,6 +9,7 @@ import ContactInformationInputsComponent, {
   HousingStatuses
 } from "../add-client/form-inputs/contact-information-inputs.component";
 import easyFetch from "../util/easy-fetch";
+import AuditSummarySection from "./audit-summary-section.component";
 
 export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
   const { client } = props;
@@ -57,6 +58,11 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
 
   return (
     <ClientSection title="Contact information">
+      {props.auditSummary && (
+        <AuditSummarySection
+          auditSection={props.auditSummary.contactInformation}
+        />
+      )}
       {isEditing ? (
         <ContactInformationInputsComponent
           ref={contactInfoInputsRef}
@@ -190,6 +196,7 @@ type UpdateAction = {
 type ViewEditContactInfoProps = {
   client: SingleClient;
   clientUpdated(newClient: SingleClient): void;
+  auditSummary: AuditSummary;
 };
 
 const css = `
