@@ -159,7 +159,7 @@ function _validCountry(propertyName) {
 
 function _validInteger(propertyName) {
   return val =>
-    typeof val === "number" && Number.isInteger(val)
+    typeof Number.isInteger(Number(val))
       ? null
       : `Property ${propertyName} must be an integer. Received '${val}'`;
 }

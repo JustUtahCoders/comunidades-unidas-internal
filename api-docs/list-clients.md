@@ -18,7 +18,6 @@ Notes:
 
 ```json
 {
-  "numClients": 1,
   "clients": [
     {
       "id": 56,
@@ -28,12 +27,20 @@ Notes:
       "zip": "84107",
       "birthday": "1981-01-01",
       "phone": "5551111111",
-      "dateAdded": "2019-05-13",
       "createdBy": {
         "userId": 123,
-        "fullName": "Shigeru Miyamoto"
+        "firstName": "Shigeru",
+        "lastName": "Miyamoto",
+        "fullName": "Shigeru Miyamoto",
+        "timestamp": "2019-05-06T06:00:00.000Z"
       }
     }
-  ]
+  ],
+  "pagination": {
+    "numClients": 50,
+    "currentPage": 1,
+    "pageSize": 100,
+    "numPages": 1
+  }
 }
 ```

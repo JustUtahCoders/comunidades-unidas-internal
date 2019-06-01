@@ -4,12 +4,13 @@ const {
   checkValid,
   nullableValidInteger
 } = require("../utils/validation-utils");
+const { responseFullName } = require("../utils/transform-utils");
 
 app.get("/api/clients", (req, res, next) => {
   const validationErrors = checkValid(req.query, nullableValidInteger("page"));
 
   if (validationErrors.length > 0) {
-    return invalidRequest(res.validationErrors);
+    return invalidRequest(res, validationErrors);
   }
 
   pool.getConnection((err, connection) => {
@@ -17,46 +18,74 @@ app.get("/api/clients", (req, res, next) => {
       return databaseError(req, res, err);
     }
 
-    let queryString = `SELECT cl.id, cl.firstName, cl.lastName, cl.birthday, ct.zip, ct.primaryPhone, cl.addedBy as addedById,
-        us.firstName as addedByFirstName, us.lastname as addedByLastName, cl.dateAdded 
+    const pageSize = 100;
+
+    let queryString = `
+      SELECT SQL_CALC_FOUND_ROWS
+        cl.id, cl.firstName, cl.lastName, cl.birthday, ct.zip, ct.primaryPhone, cl.addedBy as addedById,
+        us.firstName as addedByFirstName, us.lastname as addedByLastName, cl.dateAdded
       FROM 
         clients cl 
       JOIN 
-        (SELECT * FROM contactInformation ORDER BY dateAdded DESC LIMIT 1) ct ON cl.id = ct.clientId 
+        (
+          SELECT *
+          FROM
+            contactInformation innerCt
+            JOIN
+            (
+              SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
+              FROM contactInformation GROUP BY clientId
+            ) latestCt
+            ON latestCt.latestDateAdded = innerCt.dateAdded
+        ) ct ON cl.id = ct.clientId
       JOIN 
         users us ON cl.addedBy = us.id 
-      WHERE 
-        (cl.firstName LIKE ? AND cl.lastName LIKE ?) OR ct.zip = ? 
-      ORDER BY cl.firstName,cl.lastName DESC LIMIT 100`;
+      ORDER BY cl.firstName,cl.lastName DESC LIMIT ?, ?;
+      
+      SELECT FOUND_ROWS();
+    `;
 
-    if (req.query.page) {
-      queryString += "," + parseInt(req.query.page) * 100;
-    }
-    const getClientList = mysql.format(queryString, [
-      "%" + req.query.firstName + "%",
-      "%" + req.query.lastName + "%",
-      req.query.zip
-    ]);
-    connection.query(getClientList, function(err, rows, fields) {
+    const zeroBasedPage = req.query.page ? parseInt(req.query.page) - 1 : 0;
+    const mysqlOffset = zeroBasedPage * pageSize;
+    const getClientList = mysql.format(queryString, [mysqlOffset, pageSize]);
+
+    connection.query(getClientList, function(err, result, fields) {
       if (err) {
         return databaseError(req, res, err);
       }
+
+      connection.release();
+
+      const [clientRows, totalCountRows] = result;
+
+      const totalCount = totalCountRows[0]["FOUND_ROWS()"];
+
       res.send({
-        numClients: rows.length,
-        clients: rows.map(row => ({
+        clients: clientRows.map(row => ({
           id: row.id,
           firstName: row.firstName,
           lastName: row.lastName,
+          fullName: responseFullName(row.firstName, row.lastName),
           birthday: row.birthday,
           zip: row.zip,
-          primaryPhone: row.primaryPhone,
-          addedBy: {
-            addedById: row.addedById,
-            addedByFirstName: row.addedByFirstName,
-            addedByLastName: row.addedByLastName
-          },
-          dateAdded: row.dateAdded
-        }))
+          phone: row.primaryPhone,
+          createdBy: {
+            userId: row.addedById,
+            firstName: row.addedByFirstName,
+            lastName: row.addedByLastName,
+            fullName: responseFullName(
+              row.addedByFirstName,
+              row.addedByLastName
+            ),
+            timestamp: row.dateAdded
+          }
+        })),
+        pagination: {
+          currentPage: zeroBasedPage + 1,
+          pageSize,
+          numClients: totalCount,
+          numPages: Math.ceil(totalCount / pageSize)
+        }
       });
     });
   });
