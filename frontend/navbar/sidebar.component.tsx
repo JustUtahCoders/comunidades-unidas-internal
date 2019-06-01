@@ -60,7 +60,7 @@ export default function Sidebar(props: SidebarProps) {
               onClick={maybeHideSidebar}
               getProps={maybeActiveLink}
             >
-              <div>View clients</div>
+              <div>Client list</div>
             </Link>
           </li>
           <li>

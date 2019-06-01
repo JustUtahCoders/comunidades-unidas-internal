@@ -8,6 +8,7 @@ import ReportIssue from "./report-issue/report-issue.component";
 import ReportIssueSuccess from "./report-issue/report-issue-success.component";
 import UserContext from "./util/user.context";
 import ViewClient from "./view-edit-client/view-client.component";
+import ClientList from "./client-list/client-list.component";
 
 export default function Root() {
   return (
@@ -17,6 +18,7 @@ export default function Root() {
           <Navbars path="/">
             <Home path="/" exact />
             <AddClient path="/add-client" />
+            <ClientList path="client-list" />
             <ViewClient path="/clients/:clientId" />
             <ReportIssue path="/report-issue" exact />
             <ReportIssueSuccess path="/report-issue/:issueId" />

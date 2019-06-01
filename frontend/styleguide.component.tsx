@@ -11,7 +11,6 @@ export default function Styleguide(props: StyleguideProps) {
   return <div {...scope}>{props.children}</div>;
 }
 
-export const brandColor: Color = `rgba(184, 17, 17, 1)`;
 export const boxShadow1: BoxShadow = `0 10rem 30rem -24rem #4b4e53`;
 export const boxShadow2: BoxShadow = `0 10rem 40rem -24rem #393b3f`;
 export const mediaMobile: String = `@media screen and (max-width: 800px) and (min-width: 1px)`;
@@ -24,6 +23,7 @@ const css = `
   background-color: #efefef;
   --very-light-gray: #F3F3F3;
   --light-gray: #dfdfdf;
+  --brand-color: rgba(184, 17, 17, 1);
 }
 
 body {
