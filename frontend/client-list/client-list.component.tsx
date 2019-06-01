@@ -30,7 +30,7 @@ export default function ClientList(props: ClientListProps) {
       clientApiData.pagination.numClients / clientApiData.pagination.pageSize
     );
 
-    if (typeof page !== "number" || isNaN(page)) {
+    if (typeof page !== "number" || isNaN(page) || isNaN(lastPage)) {
       setPage(1);
     } else if (page <= 0) {
       setPage(1);

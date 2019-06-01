@@ -8,7 +8,7 @@ GET /api/clients?name=Mario%20Luigi&zip=84107&page=1
 
 Notes:
 
-- Result is limited to 100 rows ordered by lastName, firstName
+- Result is limited to 100 rows ordered by lastName and then firstName
 - Values for the query should be URL encoded
 - "page" query parameter defaults to 1
 - "name" can be partial

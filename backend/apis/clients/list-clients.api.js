@@ -40,7 +40,7 @@ app.get("/api/clients", (req, res, next) => {
         ) ct ON cl.id = ct.clientId
       JOIN 
         users us ON cl.addedBy = us.id 
-      ORDER BY cl.firstName,cl.lastName DESC LIMIT ?, ?;
+      ORDER BY cl.lastName, cl.firstName DESC LIMIT ?, ?;
       
       SELECT FOUND_ROWS();
     `;

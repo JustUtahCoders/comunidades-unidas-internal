@@ -73,13 +73,34 @@ function getClientById(connection, clientId, cbk) {
       modified.lastName as modifiedByLastName
     FROM clients
       INNER JOIN (
-        SELECT * FROM contactInformation ORDER BY dateAdded DESC LIMIT 1
+        SELECT *
+        FROM
+          contactInformation innerContactInformation
+          JOIN (
+            SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
+            FROM contactInformation GROUP BY clientId
+          ) latestContactInformation
+          ON latestContactInformation.latestDateAdded = innerContactInformation.dateAdded
       ) contactInfo ON contactInfo.clientId = clients.id
       INNER JOIN (
-        SELECT * FROM demographics ORDER BY dateAdded DESC LIMIT 1
+        SELECT *
+        FROM
+          demographics innerDemographics
+          JOIN (
+            SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
+            FROM demographics GROUP BY clientId
+          ) latestDemographics
+          ON latestDemographics.latestDateAdded = innerDemographics.dateAdded
       ) demograph ON demograph.clientId = clients.id
       INNER JOIN (
-        SELECT * FROM intakeData ORDER BY dateAdded DESC LIMIT 1
+        SELECT *
+        FROM
+          intakeData innerIntake
+          JOIN (
+            SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
+            FROM intakeData GROUP BY clientId
+          ) latestIntake
+          ON latestIntake.latestDateAdded = innerIntake.dateAdded
       ) intake ON intake.clientId = clients.id
       INNER JOIN users created ON created.id = clients.addedBy
       INNER JOIN users modified ON modified.id = clients.modifiedBy
