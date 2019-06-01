@@ -160,10 +160,12 @@ export default React.forwardRef(function ContactInformationInputs(
 });
 
 function getTodayAsString() {
-  const date = new Date().toISOString();
-  return date.slice(0, date.indexOf("T"));
+  const day = new Date().getDate();
+  const year = new Date().getFullYear();
+  const month = new Date().getMonth();
 
-  console.log(date);
+  const date = `${year}-${month > 10 ? "" : "0"}${month + 1}-${day}`;
+  return date;
 }
 
 type ContactInformationInputsProps = {
