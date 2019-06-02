@@ -5,7 +5,7 @@ const axios = require("axios");
 app.post("/api/github-issues", (req, res, next) => {
   if (!process.env.GUEST_GITHUB_KEY) {
     res.status(500).send({
-      "github-key": "The server does not have a github key configured"
+      error: "The server does not have a github key configured"
     });
     return;
   }
