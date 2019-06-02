@@ -40,6 +40,7 @@ GOOGLE_CLIENT_ID=<insert_id_here>
 GOOGLE_CLIENT_SECRET=<insert_client_secret_here>
 GOOGLE_CALLBACK_URL=http://localhost:8080/api/auth/google/callback
 KEYGRIP_SECRET=123
+GUEST_GITHUB_KEY=<insert_github_key_here>
 ```
 
 Now run the following command:
@@ -83,7 +84,7 @@ mysql -u root -ppassword # yep, it has two p's. The first is for password, the s
 # Now you'll be in the mysql shell
 use local_db;
 show tables;
-SELECT * FROM Dummy;
+SELECT * FROM clients;
 # etc etc
 ```
 
@@ -99,6 +100,7 @@ docker run -it --rm mysql mysql -h $HOSTNAME -u $USERNAME -p$PASSWORD
 # Now you'll be in the mysql shell
 use ebdb;
 show tables;
+SELECT * FROM clients;
 ```
 
 ## SSH access
