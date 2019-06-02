@@ -37,7 +37,6 @@ type PageHeaderProps = {
 const css = `
 & .page-header {
   height: 10.2rem;
-  padding: 3.2rem;
   display: flex;
   align-items: flex-end;
 }
@@ -50,10 +49,17 @@ const css = `
   padding: 0;
 }
 
+${mediaMobile} {
+  & .page-header {
+    padding: .8rem;
+  }
+}
+
 ${mediaDesktop} {
   & .page-header {
     margin-bottom: 3.2rem;
     height: 18rem;
+    padding: 3.2rem;
   }
 
   & .page-header.full-screen {

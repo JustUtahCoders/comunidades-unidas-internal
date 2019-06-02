@@ -14,6 +14,10 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
   );
   const inputRef = React.useRef<HTMLInputElement>(null);
 
+  React.useEffect(() => {
+    inputRef.current.setCustomValidity(search.parseResult.errors.join(", "));
+  }, [search]);
+
   return (
     <div className="search-container" {...scope}>
       <form
@@ -60,7 +64,7 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
     if (search.parseResult.isValid) {
       props.performSearch(search.parseResult.parse);
     } else {
-      inputRef.current.setCustomValidity(search.parseResult.errors.join(", "));
+      return false;
     }
   }
 }

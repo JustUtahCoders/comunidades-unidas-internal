@@ -36,7 +36,7 @@ app.get("/api/clients", (req, res, next) => {
 
     let queryString = `
       SELECT SQL_CALC_FOUND_ROWS
-        cl.id, cl.firstName, cl.lastName, cl.birthday,
+        cl.id, cl.firstName, cl.lastName, cl.birthday, ct.email,
         ct.zip, ct.primaryPhone, cl.addedBy as addedById, us.firstName as addedByFirstName,
         us.lastname as addedByLastName, cl.dateAdded
       FROM 
@@ -90,6 +90,7 @@ app.get("/api/clients", (req, res, next) => {
           birthday: row.birthday,
           zip: row.zip,
           phone: row.primaryPhone,
+          email: row.email,
           createdBy: {
             userId: row.addedById,
             firstName: row.addedByFirstName,
