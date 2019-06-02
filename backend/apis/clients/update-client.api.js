@@ -67,6 +67,7 @@ app.patch("/api/clients/:id", (req, res, next) => {
     nullableValidInteger("householdIncome"),
     nullableValidInteger("householdSize"),
     nullableValidBoolean("isStudent"),
+    nullableValidEnum("housingStatus", "renter", "homeowner", "other"),
     nullableValidEnum(
       "clientSource",
       "facebook",
