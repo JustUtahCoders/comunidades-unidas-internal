@@ -49,7 +49,7 @@ app.use((err, req, res, next) => {
 });
 
 require("./apis/login.api");
-require("./apis/github-key.api");
+require("./apis/github-issues.api");
 require("./apis/clients/add-client.api");
 require("./apis/clients/client-duplicates.api");
 require("./apis/clients/get-client.api");
