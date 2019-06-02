@@ -6,16 +6,19 @@ import ClientsTable from "./table/clients-table.component";
 import easyFetch from "../util/easy-fetch";
 import { useQueryParamState } from "../util/use-query-param-state.hook";
 
-const pageSize = 100;
-
 export default function ClientList(props: ClientListProps) {
   useFullWidth();
   const [page, setPage] = useQueryParamState("page", "1", Number);
   const [clientApiData, setClientApiData] = React.useState<ClientApiData>({
-    numClients: 0,
+    pagination: {
+      currentPage: 0,
+      numPages: 0,
+      numClients: 0,
+      pageSize: 0
+    },
     clients: []
   });
-  const [fetchingClients, setFetchingClients] = React.useState(true);
+  const [fetchingClients, setFetchingClients] = React.useState<Number>(null);
 
   React.useEffect(() => {
     if (fetchingClients) {
@@ -23,11 +26,15 @@ export default function ClientList(props: ClientListProps) {
       return;
     }
 
-    const lastPage = Math.ceil(clientApiData.numClients / pageSize);
+    const lastPage = Math.ceil(
+      clientApiData.pagination.numClients / clientApiData.pagination.pageSize
+    );
 
-    if (typeof page !== "number" || isNaN(page)) {
+    if (typeof page !== "number" || isNaN(page) || isNaN(lastPage)) {
       setPage(1);
     } else if (page <= 0) {
+      setPage(1);
+    } else if (lastPage === 0) {
       setPage(1);
     } else if (page > lastPage) {
       setPage(lastPage);
@@ -35,25 +42,14 @@ export default function ClientList(props: ClientListProps) {
   }, [page, clientApiData, fetchingClients]);
 
   React.useEffect(() => {
-    if (fetchingClients) {
-      new Promise<ClientApiData>(resolve => {
-        setTimeout(() => {
-          resolve(getDummyClientData(page));
-        }, 300);
-      })
-        .then(data => {
-          setClientApiData(data);
-        })
-        .finally(() => {
-          setFetchingClients(false);
-        });
-      // const abortController = new AbortController()
-      // easyFetch(`/api/clients?${constructQueryString()}`)
-      // .then(data => {
-      //   setClientApiData(data)
-      // })
+    if (fetchingClients !== page) {
+      const abortController = new AbortController();
+      easyFetch(`/api/clients?${constructQueryString()}`).then(data => {
+        setFetchingClients(page);
+        setClientApiData(data);
+      });
 
-      // return () => abortController.abort()
+      return () => abortController.abort();
     }
   }, [fetchingClients, page]);
 
@@ -61,14 +57,14 @@ export default function ClientList(props: ClientListProps) {
     <>
       <PageHeader title="Client list" fullScreen={true} />
       <ClientsTableToolbar
-        numClients={clientApiData.numClients}
+        numClients={clientApiData.pagination.numClients}
         page={page}
-        pageSize={pageSize}
+        pageSize={clientApiData.pagination.pageSize}
         setPage={newPage}
       />
       <ClientsTable
         clients={clientApiData.clients}
-        fetchingClients={fetchingClients}
+        fetchingClients={fetchingClients !== page}
         page={page}
       />
     </>
@@ -76,44 +72,11 @@ export default function ClientList(props: ClientListProps) {
 
   function newPage(page: number) {
     setPage(page);
-    setFetchingClients(true);
   }
 
   function constructQueryString() {
-    return "";
+    return `page=${page}`;
   }
-}
-
-const dummyClient = {
-  id: 2,
-  firstName: "Freddy",
-  lastName: "Mercury",
-  fullName: "Freddy Mercury",
-  zip: "84107",
-  birthday: "1981-01-01",
-  phone: "5551111111",
-  dateAdded: "2019-05-13",
-  createdBy: {
-    userId: 123,
-    fullName: "Shigeru Miyamoto"
-  }
-};
-
-function getDummyClientData(page: number): ClientApiData {
-  const numClients = 211;
-  const lastPage = 3;
-
-  let clients = Array(page === lastPage ? 11 : pageSize);
-  clients.fill(dummyClient);
-  clients = clients.map((client, index) => ({
-    ...client,
-    id: index + 1 + (page - 1) * 100
-  }));
-
-  return {
-    numClients,
-    clients
-  };
 }
 
 type ClientListProps = {
@@ -121,8 +84,13 @@ type ClientListProps = {
 };
 
 type ClientApiData = {
-  numClients: number;
   clients: ClientListClient[];
+  pagination: {
+    numClients: number;
+    currentPage: number;
+    pageSize: number;
+    numPages: number;
+  };
 };
 
 export type ClientListClient = {

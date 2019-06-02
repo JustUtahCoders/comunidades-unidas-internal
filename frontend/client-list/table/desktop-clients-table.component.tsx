@@ -4,6 +4,7 @@ import { useCss } from "kremling";
 import { Link } from "@reach/router";
 import { formatPhone } from "../../util/formatters";
 import dateformat from "dateformat";
+import targetImg from "../../../icons/148705-essential-collection/svg/target.svg";
 
 export default function DesktopClientsTable(props: ClientsTableProps) {
   const scope = useCss(css);
@@ -41,6 +42,16 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
           </tr>
         </thead>
         <tbody>
+          {props.clients.length === 0 && !props.fetchingClients && (
+            <tr className="empty-state">
+              <td colSpan={7}>
+                <div>
+                  <img src={targetImg} alt="No clients" title="No clients" />
+                  <div>No clients match the search criteria</div>
+                </div>
+              </td>
+            </tr>
+          )}
           {props.clients.map(client => (
             <tr key={client.id}>
               <td onClick={checkTdClicked}>
@@ -63,7 +74,7 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
               </td>
               <td>
                 <Link to={`/clients/${client.id}`} className="unstyled">
-                  {client.birthday}
+                  {dateformat(client.birthday, "m/d/yyyy")}
                 </Link>
               </td>
               <td>
@@ -154,5 +165,25 @@ const css = `
   z-index: 10;
   background-color: var(--light-gray);
   opacity: 0.7;
+}
+
+& .empty-state img {
+  width: 10rem;
+  padding: 1rem;
+}
+
+& .empty-state > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 15rem;
+}
+
+& .empty-state td {
+  padding: 1.6rem;
+}
+
+& .clients-table tbody tr.empty-state:hover td {
+  background-color: white;
 }
 `;
