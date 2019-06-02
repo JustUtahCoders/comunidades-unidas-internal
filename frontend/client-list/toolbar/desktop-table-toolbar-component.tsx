@@ -1,19 +1,25 @@
 import React from "react";
 import { ClientsTableToolbarProps } from "./clients-table-toolbar.component";
 import { useCss } from "kremling";
-import { boxShadow2 } from "../../styleguide.component";
 import backIcon from "../../../icons/148705-essential-collection/svg/back.svg";
 import nextIcon from "../../../icons/148705-essential-collection/svg/next.svg";
+import ClientSearchInput from "../../client-search/client-search-input.component";
+import { SearchParseValues } from "../../client-search/client-search-dsl.helpers";
 
 export default function DesktopTableToolbar(props: ClientsTableToolbarProps) {
   const scope = useCss(css);
-  const [selectAll, setSelectAll] = React.useState(false);
 
   const lastPage = Math.ceil(props.numClients / props.pageSize);
 
   return (
     <div className="desktop-table-toolbar" {...scope}>
-      <div />
+      <div className="left">
+        <ClientSearchInput
+          autoFocus
+          performSearch={performSearch}
+          disabled={props.fetchingClient}
+        />
+      </div>
       {lastPage !== 0 && (
         <div>
           <div>
@@ -51,6 +57,10 @@ export default function DesktopTableToolbar(props: ClientsTableToolbarProps) {
   function goForward() {
     props.setPage(props.page + 1);
   }
+
+  function performSearch(searchParse: SearchParseValues) {
+    props.setSearch(searchParse);
+  }
 }
 
 const css = `
@@ -71,5 +81,9 @@ const css = `
 & .desktop-table-toolbar > * {
   display: flex;
   align-items: center;
+}
+
+& .left {
+  width: 60%;
 }
 `;

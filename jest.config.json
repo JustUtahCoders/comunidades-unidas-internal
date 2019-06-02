@@ -1,0 +1,6 @@
+{
+  "roots": ["<rootDir>/frontend", "<rootDir>/backend"],
+  "transform": {
+    "^.+\\.tsx?$": "babel-jest"
+  }
+}

@@ -13,8 +13,13 @@ export function useQueryParamState(
 
   React.useEffect(() => {
     const query = queryString.parse(window.location.search);
-    // @ts-ignore
-    query[name] = value;
+    if (value) {
+      // @ts-ignore
+      query[name] = value;
+    } else {
+      // @ts-ignore
+      delete query[name];
+    }
     window.history.replaceState(
       history.state,
       document.title,
