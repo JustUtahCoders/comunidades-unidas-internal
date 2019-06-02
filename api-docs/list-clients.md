@@ -27,6 +27,7 @@ Notes:
       "zip": "84107",
       "birthday": "1981-01-01",
       "phone": "5551111111",
+      "email": "marioluigi@nintendo.com",
       "createdBy": {
         "userId": 123,
         "firstName": "Shigeru",

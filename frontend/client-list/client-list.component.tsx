@@ -247,6 +247,7 @@ export type ClientListClient = {
   zip: string;
   birthday: string;
   phone: string;
+  email: string;
   dateAdded: string;
   createdBy: {
     userId: number;
