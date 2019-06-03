@@ -1,5 +1,10 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
 const mysql = require("mysql");
+const {
+  checkValid,
+  nonEmptyString,
+  validDate
+} = require("../utils/validation-utils");
 
 app.get("/api/client-duplicates", (req, res, next) => {
   pool.getConnection((err, connection) => {
@@ -7,40 +12,19 @@ app.get("/api/client-duplicates", (req, res, next) => {
       return databaseError(req, res, err, connection);
     }
 
-    if (!req.query.firstName) {
-      return invalidRequest(res, `queryParam 'firstName' is required`);
+    const validationErrors = checkValid(
+      req.query,
+      nonEmptyString("firstName"),
+      nonEmptyString("lastName"),
+      validDate("birthday"),
+      nonEmptyString("gender")
+    );
+
+    if (validationErrors.length > 0) {
+      return invalidRequest(res, validationErrors);
     }
 
-    if (!req.query.lastName) {
-      return invalidRequest(res, `queryParam 'firstName' is required`);
-    }
-
-    if (!req.query.birthday) {
-      return invalidRequest(res, `queryParam 'birthday' is required`);
-    }
-
-    let birthDate;
-    try {
-      birthDate = new Date(req.query.birthday);
-    } catch (err) {
-      return invalidRequest(
-        res,
-        `queryParam 'birthday' must be a valid date. Use YYYY-MM-DD format`
-      );
-    }
-
-    if (isNaN(birthDate)) {
-      return invalidRequest(
-        res,
-        `queryParam 'birthday' must be a valid date. Use YYYY-MM-DD format`
-      );
-    }
-
-    if (!req.query.gender) {
-      res.status(400).send({ error: `queryParam 'gender' is required` });
-      return;
-    }
-
+    const birthDate = new Date(req.query.birthday);
     const year = birthDate.getUTCFullYear();
     const month = birthDate.getUTCMonth() + 1;
     const query = mysql.format(
