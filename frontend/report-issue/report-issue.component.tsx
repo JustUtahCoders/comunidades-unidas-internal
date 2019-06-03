@@ -2,43 +2,33 @@ import React, { useState, useEffect } from "react";
 import PageHeader from "../page-header.component";
 import { useCss } from "kremling";
 import { navigate } from "@reach/router";
+import easyFetch from "../util/easy-fetch";
 
 export default function ReportIssue(props: ReportIssueProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [description, setDescription] = useState("");
-  const [githubKey, setGithubKey] = useState(null);
   const [creatingIssue, setCreatingIssue] = useState(false);
   const [subject, setSubject] = useState("");
   const scope = useCss(css);
 
   useEffect(() => {
-    const abortController = new AbortController();
-    fetch("/api/github-key", { signal: abortController.signal })
-      .then(resp => resp.json())
-      .then(data => setGithubKey(data["github-key"]));
-
-    return () => abortController.abort();
-  }, []);
-
-  useEffect(() => {
-    if (githubKey) {
-      fetch(
-        "https://api.github.com/repos/JustUtahCoders/comunidades-unidas-internal/issues",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `bearer ${githubKey}`
-          },
-          body: JSON.stringify({
-            title: subject,
-            body: `From: ${name}, ${email}\n\n${description}`
-          })
+    if (creatingIssue) {
+      easyFetch(`/api/github-issues`, {
+        method: "POST",
+        body: {
+          name,
+          email,
+          title: subject,
+          body: description
         }
-      )
-        .then(resp => resp.json())
+      })
         .then(data => {
-          navigate(`/report-issue/${data.number}`);
+          navigate(`/report-issue/${data.issueNumber}`);
+        })
+        .catch(err => {
+          console.error(err);
+          setCreatingIssue(false);
         });
     }
   }, [creatingIssue]);
@@ -119,9 +109,7 @@ export default function ReportIssue(props: ReportIssueProps) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    if (githubKey) {
-      setCreatingIssue(true);
-    }
+    setCreatingIssue(true);
   }
 }
 
