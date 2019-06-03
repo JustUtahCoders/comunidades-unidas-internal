@@ -70,6 +70,7 @@ app.post("/api/clients", (req, res, next) => {
       validInteger("householdIncome"),
       validInteger("householdSize"),
       validBoolean("isStudent"),
+      validEnum("housingStatus", "renter", "homeowner", "other"),
       validEnum(
         "clientSource",
         "facebook",
