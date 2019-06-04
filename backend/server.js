@@ -9,6 +9,7 @@ const port = process.env.PORT || 8080;
 const mysql = require("mysql");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const morgan = require("morgan");
 
 require("./run-database-migrations");
 
@@ -47,6 +48,7 @@ app.use(cookieParser());
 app.use((err, req, res, next) => {
   console.error("ERROR: ", err);
 });
+app.use(morgan("tiny"));
 
 require("./apis/login.api");
 require("./apis/github-issues.api");
