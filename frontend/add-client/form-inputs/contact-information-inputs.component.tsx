@@ -160,8 +160,9 @@ export default React.forwardRef(function ContactInformationInputs(
 });
 
 function getTodayAsString() {
-  const date = new Date().toISOString();
-  return date.slice(0, date.indexOf("T"));
+  const dateFormat = require("dateformat");
+  const date = dateFormat(new Date(), "yyyy-mm-dd");
+  return date;
 }
 
 type ContactInformationInputsProps = {
