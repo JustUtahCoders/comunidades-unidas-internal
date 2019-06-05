@@ -1,7 +1,9 @@
 exports.responseDateWithoutTime = date => {
-  const isoString = new Date(date).toISOString();
-  return isoString.slice(0, isoString.indexOf("T"));
+  const dateFormat = require("dateformat");
+  const formattedDate = dateFormat(date, "yyyy-mm-dd");
+  return formattedDate;
 };
+
 exports.responseFullName = (firstName, lastName) =>
   `${firstName || ""} ${lastName || ""}`;
 
