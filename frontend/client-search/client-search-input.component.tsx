@@ -3,7 +3,8 @@ import { useCss } from "kremling";
 import {
   parseSearch,
   SearchParse,
-  SearchParseValues
+  SearchParseValues,
+  deserializeSearch
 } from "./client-search-dsl.helpers";
 
 export default function ClientSearchInput(props: ClientSearchInputProps) {
@@ -45,7 +46,12 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
   }
 
   function getInitialSearch(): Search {
-    const value = props.initialValue || "";
+    let value: string;
+    if (props.initialValueFromQueryParams) {
+      value = deserializeSearch();
+    } else {
+      value = props.initialValue || "";
+    }
 
     return {
       value,
@@ -114,6 +120,7 @@ type NewValueAction = {
 
 type ClientSearchInputProps = {
   initialValue?: string;
+  initialValueFromQueryParams?: boolean;
   autoFocus?: boolean;
   performSearch(parseResult: SearchParseValues): any;
   disabled: boolean;

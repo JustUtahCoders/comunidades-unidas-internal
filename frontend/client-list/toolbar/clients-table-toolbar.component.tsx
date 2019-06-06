@@ -17,6 +17,7 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
         <ClientSearchInput
           autoFocus
           performSearch={performSearch}
+          initialValueFromQueryParams
           disabled={props.fetchingClient}
         />
       </div>

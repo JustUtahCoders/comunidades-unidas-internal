@@ -11,7 +11,8 @@ export default function ClientList(props: ClientListProps) {
   useFullWidth();
   const [apiState, dispatchApiState] = React.useReducer(
     reduceApiState,
-    initialState
+    null,
+    getInitialState
   );
 
   useAlwaysValidPage(apiState, dispatchApiState);
@@ -254,17 +255,27 @@ export type ClientListClient = {
   };
 };
 
-const initialState = {
-  status: ApiStateStatus.uninitialized,
-  apiData: {
-    pagination: {
-      currentPage: 0,
-      numPages: 0,
-      numClients: 0,
-      pageSize: 0
+function getInitialState(): ApiState {
+  const queryParams = queryString.parse(window.location.search);
+
+  const page = !isNaN(Number(queryParams.page))
+    ? Number(queryParams.page)
+    : null;
+  const search = { ...queryParams };
+  delete search.page;
+
+  return {
+    status: ApiStateStatus.uninitialized,
+    apiData: {
+      pagination: {
+        currentPage: 0,
+        numPages: 0,
+        numClients: 0,
+        pageSize: 0
+      },
+      clients: []
     },
-    clients: []
-  },
-  page: null,
-  search: null
-};
+    page,
+    search
+  };
+}
