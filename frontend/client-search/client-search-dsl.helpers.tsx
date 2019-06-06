@@ -1,6 +1,11 @@
+import queryString from "query-string";
+
 const allowedKeys = ["zip"];
 
 export function parseSearch(value: string): SearchParse {
+  if (value.startsWith("?")) {
+    value = value.slice(1);
+  }
   const tokens = value.split(/\s/);
   let nameFound = false;
   let errors = [];
@@ -46,6 +51,20 @@ export function serializeSearch(parse: SearchParseValues): string {
       }
     }, parse.name || "")
     .trim();
+}
+
+export function deserializeSearch(
+  queryParamString: string = window.location.search
+): string {
+  const params = queryString.parse(queryParamString);
+  const relevantParams = Object.keys(params).reduce((acc, key) => {
+    if (allowedKeys.includes(key)) {
+      acc.push(`${key}:${params[key]}`);
+    }
+    return acc;
+  }, []);
+
+  return `${params.name || ""} ${relevantParams.join(" ")}`;
 }
 
 export type SearchParse = {
