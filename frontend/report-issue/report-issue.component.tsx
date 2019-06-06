@@ -118,7 +118,7 @@ function getInitialDescription() {
     return `Information about error: \n\n${JSON.stringify(
       window.history.state.prepopulatedDescription,
       null,
-      2
+      4
     )}`;
   } else {
     return "";
