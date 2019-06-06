@@ -7,7 +7,7 @@ import easyFetch from "../util/easy-fetch";
 export default function ReportIssue(props: ReportIssueProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(getInitialDescription);
   const [creatingIssue, setCreatingIssue] = useState(false);
   const [subject, setSubject] = useState("");
   const scope = useCss(css);
@@ -110,6 +110,18 @@ export default function ReportIssue(props: ReportIssueProps) {
   function handleSubmit(evt) {
     evt.preventDefault();
     setCreatingIssue(true);
+  }
+}
+
+function getInitialDescription() {
+  if (window.history.state && window.history.state.prepopulatedDescription) {
+    return `Information about error: \n\n${JSON.stringify(
+      window.history.state.prepopulatedDescription,
+      null,
+      4
+    )}`;
+  } else {
+    return "";
   }
 }
 

@@ -2,7 +2,7 @@ import React from "react";
 import { useCss } from "kremling";
 
 type StyleguideProps = {
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
 };
 
 export default function Styleguide(props: StyleguideProps) {
@@ -24,6 +24,7 @@ const css = `
   --very-light-gray: #F3F3F3;
   --light-gray: #dfdfdf;
   --medium-gray: #afafaf;
+  --very-dark-gray: #3C464D;
   --brand-color: rgba(184, 17, 17, 1);
 }
 
