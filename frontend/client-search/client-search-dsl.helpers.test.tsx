@@ -1,4 +1,8 @@
-import { parseSearch, serializeSearch } from "./client-search-dsl.helpers";
+import {
+  parseSearch,
+  serializeSearch,
+  deserializeSearch
+} from "./client-search-dsl.helpers";
 
 describe(`client-search-dsl.helpers`, () => {
   describe(`parseSearch`, () => {
@@ -49,6 +53,22 @@ describe(`client-search-dsl.helpers`, () => {
 
     it(`can serialize just a zip code`, () => {
       expect(serializeSearch({ zip: "84109" })).toEqual("zip:84109");
+    });
+  });
+
+  describe(`deserializeSearch`, () => {
+    it(`can deserialize just a name`, () => {
+      expect(deserializeSearch("?name=hello there")).toEqual("hello there");
+    });
+
+    it(`can deserialize a name and zip`, () => {
+      expect(deserializeSearch("?name=super&zip=boom")).toEqual(
+        "super zip:boom"
+      );
+    });
+
+    it(`can deserialize just a zip`, () => {
+      expect(deserializeSearch("?zip=isai")).toEqual("zip:isai");
     });
   });
 });

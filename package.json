@@ -22,7 +22,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint && yarn typescript && pretty-quick --staged"
+      "pre-commit": "yarn lint && yarn typescript && pretty-quick --staged && yarn test"
     }
   },
   "dependencies": {
