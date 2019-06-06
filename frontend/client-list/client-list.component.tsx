@@ -18,9 +18,7 @@ export default function ClientList(props: ClientListProps) {
   useClientsApi(apiState, dispatchApiState);
   useFrontendUrlParams(apiState, dispatchApiState);
 
-  const fetchingClient =
-    apiState.status === ApiStateStatus.fetching ||
-    apiState.status === ApiStateStatus.shouldFetch;
+  const fetchingClient = apiState.status !== ApiStateStatus.fetched;
 
   return (
     <>
@@ -179,6 +177,7 @@ type ApiState = {
 };
 
 enum ApiStateStatus {
+  uninitialized = "uninitialized",
   shouldFetch = "shouldFetch",
   fetching = "fetching",
   fetched = "fetched"
@@ -256,7 +255,7 @@ export type ClientListClient = {
 };
 
 const initialState = {
-  status: ApiStateStatus.fetched,
+  status: ApiStateStatus.uninitialized,
   apiData: {
     pagination: {
       currentPage: 0,
