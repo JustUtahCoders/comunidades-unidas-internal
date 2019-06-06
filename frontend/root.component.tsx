@@ -9,6 +9,7 @@ import ReportIssueSuccess from "./report-issue/report-issue-success.component";
 import UserContext from "./util/user.context";
 import ViewClient from "./view-edit-client/view-client.component";
 import ClientList from "./client-list/client-list.component";
+import Growls from "./growls/growls.component";
 
 export default function Root() {
   return (
@@ -24,6 +25,7 @@ export default function Root() {
             <ReportIssueSuccess path="/report-issue/:issueId" />
           </Navbars>
         </Router>
+        <Growls />
       </Styleguide>
     </UserContext>
   );
