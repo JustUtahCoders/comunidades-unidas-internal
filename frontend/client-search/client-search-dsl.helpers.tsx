@@ -64,7 +64,7 @@ export function deserializeSearch(
     return acc;
   }, []);
 
-  return `${params.name || ""} ${relevantParams.join(" ")}`;
+  return `${params.name || ""} ${relevantParams.join(" ")}`.trim();
 }
 
 export type SearchParse = {

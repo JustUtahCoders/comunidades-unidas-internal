@@ -3,10 +3,7 @@ import { useCss } from "kremling";
 import backIcon from "../../../icons/148705-essential-collection/svg/back.svg";
 import nextIcon from "../../../icons/148705-essential-collection/svg/next.svg";
 import ClientSearchInput from "../../client-search/client-search-input.component";
-import {
-  SearchParseValues,
-  parseSearch
-} from "../../client-search/client-search-dsl.helpers";
+import { SearchParseValues } from "../../client-search/client-search-dsl.helpers";
 import { mediaDesktop, mediaMobile } from "../../styleguide.component";
 
 export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
