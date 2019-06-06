@@ -1,4 +1,5 @@
 import React, { FormEvent } from "react";
+import dateFormat from "dateformat";
 import PhoneInput from "../../util/phone-input.component";
 import StateSelect from "../../util/state-select.component";
 import CityInput from "../../util/city-input.component";
@@ -160,7 +161,6 @@ export default React.forwardRef(function ContactInformationInputs(
 });
 
 function getTodayAsString() {
-  const dateFormat = require("dateformat");
   const date = dateFormat(new Date(), "yyyy-mm-dd");
   return date;
 }
