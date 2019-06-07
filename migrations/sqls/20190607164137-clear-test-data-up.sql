@@ -6,3 +6,4 @@ DELETE FROM contactInformation;
 DELETE FROM demographics;
 DELETE FROM intakeServices;
 DELETE FROM intakeData;
+DELETE FROM clients;
