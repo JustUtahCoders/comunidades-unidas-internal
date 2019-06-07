@@ -1,4 +1,5 @@
 import React, { FormEvent } from "react";
+import dateFormat from "dateformat";
 import PhoneInput from "../../util/phone-input.component";
 import StateSelect from "../../util/state-select.component";
 import CityInput from "../../util/city-input.component";
@@ -160,8 +161,8 @@ export default React.forwardRef(function ContactInformationInputs(
 });
 
 function getTodayAsString() {
-  const date = new Date().toISOString();
-  return date.slice(0, date.indexOf("T"));
+  const date = dateFormat(new Date(), "yyyy-mm-dd");
+  return date;
 }
 
 type ContactInformationInputsProps = {
