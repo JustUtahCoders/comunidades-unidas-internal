@@ -58,7 +58,7 @@ export default function DemographicInformationInputs(
   const demographicInfo: DemographicInformationClient = {
     civilStatus,
     countryOfOrigin,
-    dateOfUSArrival: dateOfUSArrival || null,
+    dateOfUSArrival: fullDateOfUSArrival(dateOfUSArrival),
     homeLanguage: homeLanguage === "other" ? otherLanguage : homeLanguage,
     englishLevel,
     currentlyEmployed,
@@ -338,7 +338,11 @@ export default function DemographicInformationInputs(
             <span>Approximate date of U.S. arrival</span>
             <input
               required
-              type="date"
+              type={
+                window.navigator.userAgent.toLowerCase().includes("firefox")
+                  ? "date"
+                  : "month"
+              }
               value={dateOfUSArrival}
               onChange={evt => setDateOfUSArrival(evt.target.value)}
             />
@@ -429,6 +433,20 @@ function getInitialOtherHomeLanguage(val) {
     return Object.keys(languageOptions).includes(val) ? "" : val;
   } else {
     return "";
+  }
+}
+
+function fullDateOfUSArrival(str) {
+  if (!str) {
+    return null;
+  } else if (
+    str.lastIndexOf("-") === str.indexOf("-") &&
+    str.indexOf("-") > 0
+  ) {
+    // We only have month, not day
+    return str + "-01";
+  } else {
+    return str;
   }
 }
 
