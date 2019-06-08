@@ -11,7 +11,7 @@ const {
   validBoolean,
   validState,
   validZip,
-  validEmail,
+  nullableValidEmail,
   nullableValidEnum,
   validEnum,
   validCountry,
@@ -44,7 +44,7 @@ app.post("/api/clients", (req, res, next) => {
       nonEmptyString("homeAddress.city"),
       validState("homeAddress.state"),
       validZip("homeAddress.zip"),
-      validEmail("email"),
+      nullableValidEmail("email"),
       validEnum(
         "civilStatus",
         "single",
