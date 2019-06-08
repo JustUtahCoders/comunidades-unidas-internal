@@ -27,7 +27,7 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
         className="search-form"
       >
         <input
-          type="text"
+          type="search"
           value={search.value}
           onChange={handleChange}
           className="search-input"
