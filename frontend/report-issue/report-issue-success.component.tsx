@@ -15,9 +15,7 @@ export default function ReportIssueSuccess(props: ReportIssueSuccessProps) {
           Thanks! We'll email you about this, and you can check for updates at
           any time at{" "}
           <a
-            href={`https://github.com/JustUtahCoders/comunidades-unidas-internal/issues/${
-              props.issueId
-            }`}
+            href={`https://github.com/JustUtahCoders/comunidades-unidas-internal/issues/${props.issueId}`}
             target="_blank"
           >
             Github Issue #{props.issueId}
