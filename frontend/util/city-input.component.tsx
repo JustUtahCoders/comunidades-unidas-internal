@@ -42,6 +42,7 @@ export default function CityInput(props) {
       onBlur={handleBlur}
     >
       <input
+        id="cityInput"
         type="text"
         value={props.city}
         onChange={evt => props.setCity(evt.target.value)}
@@ -56,6 +57,7 @@ export default function CityInput(props) {
   );
 
   function setCityAndTab(city) {
+    console.log(city);
     props.setCity(city);
     props.nextInputRef.current.focus();
   }
@@ -97,7 +99,7 @@ export default function CityInput(props) {
                 type="button"
                 className="unstyled city-button"
                 onClick={() => {
-                  setCityAndTab(possibleCity);
+                  setCityAndTab(possibleCity.city);
                 }}
                 tabIndex={-1}
                 title={possibleCity.city}
