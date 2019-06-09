@@ -42,7 +42,6 @@ export default function CityInput(props) {
       onBlur={handleBlur}
     >
       <input
-        id="cityInput"
         type="text"
         value={props.city}
         onChange={evt => props.setCity(evt.target.value)}
@@ -57,7 +56,6 @@ export default function CityInput(props) {
   );
 
   function setCityAndTab(city) {
-    console.log(city);
     props.setCity(city);
     props.nextInputRef.current.focus();
   }
