@@ -37,9 +37,7 @@ app.post("/api/github-issues", (req, res, next) => {
     .then(response => {
       res.status(200).send({
         issueNumber: response.data.number,
-        issueUrl: `https://github.com/JustUtahCoders/comunidades-unidas-internal/issues/${
-          response.data.number
-        }`
+        issueUrl: `https://github.com/JustUtahCoders/comunidades-unidas-internal/issues/${response.data.number}`
       });
     })
     .catch(err => {

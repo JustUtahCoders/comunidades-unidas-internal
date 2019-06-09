@@ -1,40 +1,42 @@
-const CleanWebpackPlugin = require('clean-webpack-plugin')
+const CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin;
 
 module.exports = {
-  entry: './frontend/comunidades-unidas-internal.tsx',
+  entry: "./frontend/comunidades-unidas-internal.tsx",
   output: {
-    filename: 'comunidades-unidas-internal.js',
-    path: __dirname + '/static',
-    publicPath: process.env.PUBLIC_PATH || '/static/',
+    filename: "comunidades-unidas-internal.js",
+    path: __dirname + "/static",
+    publicPath: process.env.PUBLIC_PATH || "/static/"
   },
-  devtool: 'sourcemap',
+  devtool: "sourcemap",
   module: {
     rules: [
-      {test: /\.tsx$|\.ts|\.js|\.jsx/, use: 'babel-loader', exclude: /node_modules/},
+      {
+        test: /\.tsx$|\.ts|\.js|\.jsx/,
+        use: "babel-loader",
+        exclude: /node_modules/
+      },
       {
         test: /\.(png|jpg|gif|svg)$/,
         use: [
           {
-            loader: 'file-loader',
-            options: {},
-          },
-        ],
-      },
-    ],
+            loader: "file-loader",
+            options: {}
+          }
+        ]
+      }
+    ]
   },
   devServer: {
     historyApiFallback: true,
-    index: 'index.html',
+    index: "index.html",
     port: 9018,
-    publicPath: 'http://localhost:9018/',
+    publicPath: "http://localhost:9018/"
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.jsx', '.js'],
+    extensions: [".tsx", ".ts", ".jsx", ".js"]
   },
-  plugins: [
-    new CleanWebpackPlugin(),
-  ],
+  plugins: [new CleanWebpackPlugin()],
   optimization: {
-    namedChunks: true,
-  },
-}
+    namedChunks: true
+  }
+};
