@@ -98,9 +98,6 @@ export default function CityInput(props) {
               <button
                 type="button"
                 className="unstyled city-button"
-                onClick={() => {
-                  setCityAndTab(possibleCity.city);
-                }}
                 tabIndex={-1}
                 title={possibleCity.city}
               >
