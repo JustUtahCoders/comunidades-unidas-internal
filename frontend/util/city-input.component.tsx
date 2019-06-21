@@ -56,6 +56,7 @@ export default function CityInput(props) {
   );
 
   function setCityAndTab(city) {
+    console.log("setting city and tab");
     props.setCity(city);
     props.nextInputRef.current.focus();
   }
@@ -98,6 +99,7 @@ export default function CityInput(props) {
                 className="unstyled city-button"
                 tabIndex={-1}
                 title={possibleCity.city}
+                onClick={() => setCityAndTab(possibleCity.city)}
               >
                 {possibleCity.city}
               </button>
