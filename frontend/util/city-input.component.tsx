@@ -56,7 +56,6 @@ export default function CityInput(props) {
   );
 
   function setCityAndTab(city) {
-    console.log("setting city and tab");
     props.setCity(city);
     props.nextInputRef.current.focus();
   }
