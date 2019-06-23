@@ -6,14 +6,21 @@ import { LastUpdate } from "./view-client.component";
 
 export default function ClientSection(props: ClientSectionProps) {
   const [expanded, setExpanded] = React.useState(
-    JSON.parse(localStorage.getItem(props.title)) === null
+    JSON.parse(
+      localStorage.getItem(`cu-client-section-expanded:${props.title}`)
+    ) === null
       ? true
-      : JSON.parse(localStorage.getItem(props.title))
+      : JSON.parse(
+          localStorage.getItem(`cu-client-section-expanded:${props.title}`)
+        )
   );
   const scope = useCss(css);
 
   const toggleExpandAndStore = title => {
-    localStorage.setItem(title, JSON.stringify(!expanded));
+    localStorage.setItem(
+      `cu-client-section-expanded:${title}`,
+      JSON.stringify(!expanded)
+    );
     setExpanded(!expanded);
   };
 
