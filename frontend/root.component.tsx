@@ -10,6 +10,8 @@ import UserContext from "./util/user.context";
 import ViewClient from "./view-edit-client/view-client.component";
 import ClientList from "./client-list/client-list.component";
 import Growls from "./growls/growls.component";
+import RecordVisit from "./record-client-visit/record-client-visit.component";
+import MakeSuggestionSuccess from "./record-client-visit/make-suggestion-success.component";
 
 export default function Root() {
   return (
@@ -21,6 +23,8 @@ export default function Root() {
             <AddClient path="/add-client" />
             <ClientList path="client-list" />
             <ViewClient path="/clients/:clientId" />
+            <RecordVisit path="/record-client-visit" exact />
+            <MakeSuggestionSuccess path="/make-suggestion/:issueId" />
             <ReportIssue path="/report-issue" exact />
             <ReportIssueSuccess path="/report-issue/:issueId" />
           </Navbars>
