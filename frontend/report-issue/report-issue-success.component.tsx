@@ -1,53 +1,12 @@
 import React from "react";
-import successIconUrl from "../../icons/148705-essential-collection/svg/success.svg";
-import { useCss } from "kremling";
-import PageHeader from "../page-header.component";
+import GithubIssueSuccess from "../util/github-issue-success.component";
+import { navigate } from "@reach/router";
+import easyFetch from "../util/easy-fetch";
 
-export default function ReportIssueSuccess(props: ReportIssueSuccessProps) {
-  const scope = useCss(css);
-
+export default function ReportIssueSuccess(props) {
   return (
     <>
-      <PageHeader title="Report an issue" />
-      <div className="card issue-success" {...scope}>
-        <img src={successIconUrl} className="success-icon" />
-        <div className="explanation">
-          Thanks! We'll email you about this, and you can check for updates at
-          any time at{" "}
-          <a
-            href={`https://github.com/JustUtahCoders/comunidades-unidas-internal/issues/${props.issueId}`}
-            target="_blank"
-          >
-            Github Issue #{props.issueId}
-          </a>
-          .
-        </div>
-      </div>
+      <GithubIssueSuccess successTitle="Report an issue" path="" />
     </>
   );
 }
-
-const css = `
-& .issue-success {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-& .success-icon {
-  width: 8rem;
-  height: 8rem;
-  margin-bottom: 1.6rem;
-}
-
-& .explanation {
-  max-width: 35rem;
-}
-`;
-
-type ReportIssueSuccessProps = {
-  issueId?: string;
-  path: string;
-};
