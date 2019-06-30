@@ -1,15 +1,15 @@
 import React from "react";
 import ClientSection from "./client-section.component";
-import { SingleClient, AuditSummary } from "./view-client.component";
+import { SingleClient, AuditSummary } from "../view-client.component";
 import { useCss } from "kremling";
-import checkedUrl from "../../icons/148705-essential-collection/svg/checked-1.svg";
-import closeUrl from "../../icons/148705-essential-collection/svg/close.svg";
+import checkedUrl from "../../../icons/148705-essential-collection/svg/checked-1.svg";
+import closeUrl from "../../../icons/148705-essential-collection/svg/close.svg";
 import ContactInformationInputsComponent, {
   ContactInformationFormClient,
   HousingStatuses
-} from "../add-client/form-inputs/contact-information-inputs.component";
-import easyFetch from "../util/easy-fetch";
-import { formatPhone } from "../util/formatters";
+} from "../../add-client/form-inputs/contact-information-inputs.component";
+import easyFetch from "../../util/easy-fetch";
+import { formatPhone } from "../../util/formatters";
 
 export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
   const { client } = props;

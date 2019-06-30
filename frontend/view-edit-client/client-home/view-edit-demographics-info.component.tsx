@@ -1,10 +1,10 @@
 import React from "react";
 import ClientSection from "./client-section.component";
-import { SingleClient, AuditSummary } from "./view-client.component";
+import { SingleClient, AuditSummary } from "../view-client.component";
 import { useCss } from "kremling";
-import checkedUrl from "../../icons/148705-essential-collection/svg/checked-1.svg";
-import closeUrl from "../../icons/148705-essential-collection/svg/close.svg";
-import { countryCodeToName } from "../util/country-select.component";
+import checkedUrl from "../../../icons/148705-essential-collection/svg/checked-1.svg";
+import closeUrl from "../../../icons/148705-essential-collection/svg/close.svg";
+import { countryCodeToName } from "../../util/country-select.component";
 import DemographicInformationInputs, {
   languageOptions,
   EnglishLevel,
@@ -12,8 +12,8 @@ import DemographicInformationInputs, {
   employmentSectors,
   payIntervals,
   civilStatuses
-} from "../add-client/form-inputs/demographic-information-inputs.component";
-import easyFetch from "../util/easy-fetch";
+} from "../../add-client/form-inputs/demographic-information-inputs.component";
+import easyFetch from "../../util/easy-fetch";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",

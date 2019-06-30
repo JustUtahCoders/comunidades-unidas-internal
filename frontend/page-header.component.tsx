@@ -14,7 +14,8 @@ export default function PageHeader(props: PageHeaderProps) {
       {...scope}
       className={always("page-header box-shadow-1")
         .maybe(props.className || "", Boolean(props.className))
-        .maybe("full-screen", props.fullScreen)}
+        .maybe("full-screen", props.fullScreen)
+        .maybe("with-secondary-nav", props.withSecondaryNav)}
       style={{ backgroundColor: props.backgroundColor }}
     >
       <h1>{props.title}</h1>
@@ -32,19 +33,18 @@ type PageHeaderProps = {
   backgroundColor?: string;
   className?: string;
   fullScreen?: boolean;
+  withSecondaryNav?: boolean;
 };
 
 const css = `
 & .page-header {
   height: 10.2rem;
   display: flex;
-  align-items: flex-end;
 }
 
 & .page-header h1 {
   color: white;
   font-weight: bold;
-  font-size: 3.2rem;
   margin: 0;
   padding: 0;
 }
@@ -52,6 +52,8 @@ const css = `
 ${mediaMobile} {
   & .page-header {
     padding: .8rem;
+    align-items: flex-start;
+    font-size: 1.6rem;
   }
 }
 
@@ -60,6 +62,12 @@ ${mediaDesktop} {
     margin-bottom: 3.2rem;
     height: 18rem;
     padding: 3.2rem;
+    align-items: flex-end;
+    font-size: 2.4rem;
+  }
+
+  & .page-header.with-secondary-nav {
+    margin-bottom: 0;
   }
 
   & .page-header.full-screen {

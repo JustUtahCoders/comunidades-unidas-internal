@@ -1,13 +1,13 @@
 import React from "react";
 import ClientSection from "./client-section.component";
-import { SingleClient, AuditSummary } from "./view-client.component";
+import { SingleClient, AuditSummary } from "../view-client.component";
 import dateformat from "dateformat";
 import ClientSourceInputsComponent, {
   clientSources
-} from "../add-client/form-inputs/client-source-inputs.component";
-import IntakeDateInput from "../add-client/form-inputs/intake-date-input.component";
-import easyFetch from "../util/easy-fetch";
-import IntakeServicesInputs from "../add-client/form-inputs/intake-services-inputs.component";
+} from "../../add-client/form-inputs/client-source-inputs.component";
+import IntakeDateInput from "../../add-client/form-inputs/intake-date-input.component";
+import easyFetch from "../../util/easy-fetch";
+import IntakeServicesInputs from "../../add-client/form-inputs/intake-services-inputs.component";
 
 export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
   const { client } = props;

@@ -1,9 +1,9 @@
 import React from "react";
 import ClientSection from "./client-section.component";
-import { SingleClient, AuditSummary } from "./view-client.component";
+import { SingleClient, AuditSummary } from "../view-client.component";
 import dayjs from "dayjs";
-import BasicInformationInputs from "../add-client/form-inputs/basic-information-inputs.component";
-import easyFetch from "../util/easy-fetch";
+import BasicInformationInputs from "../../add-client/form-inputs/basic-information-inputs.component";
+import easyFetch from "../../util/easy-fetch";
 
 export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
   const [editing, setEditing] = React.useState(false);
