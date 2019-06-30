@@ -97,5 +97,11 @@ The response object is exactly the same as the response object inside of the cli
 ### Request
 
 ```http
-DELETE /api/clients/:id/notes
+DELETE /api/clients/:clientId/logs/logId
 ```
+
+### Response
+
+An HTTP 204 status is returned if you deletion was successful.
+
+An HTTP 400 status is returned if you cannot delete this event.
