@@ -7,7 +7,7 @@ const {
 } = require("../../server");
 const mysql = require("mysql");
 const { checkValid, validId } = require("../utils/validation-utils");
-const { deletableLogTypes } = require("./get-activity-logs.api");
+const { modifiableLogTypes } = require("./get-activity-logs.api");
 
 app.delete("/api/clients/:clientId/logs/:logId", (req, res) => {
   const validationErrors = checkValid(req.params, validId("clientId", "logId"));
@@ -24,7 +24,7 @@ app.delete("/api/clients/:clientId/logs/:logId", (req, res) => {
       return databaseError(req, res, err, connection);
     }
 
-    const inClause = deletableLogTypes
+    const inClause = modifiableLogTypes
       .map(logType => `'${logType}'`)
       .join(", ");
 
@@ -69,18 +69,16 @@ app.delete("/api/clients/:clientId/logs/:logId", (req, res) => {
                 `Cannot delete log entry that you didn't create.`
               );
             } else if (
-              !deletableLogTypes.some(logType => logType === row.logType)
+              !modifiableLogTypes.some(logType => logType === row.logType)
             ) {
               invalidRequest(
                 res,
                 `Log type '${row.logType}' cannot be deleted.`
               );
             } else {
-              res
-                .status(500)
-                .send({
-                  error: "Unknown error while deleting client log entry"
-                });
+              res.status(500).send({
+                error: "Unknown error while deleting client log entry"
+              });
             }
           }
           connection.release();
