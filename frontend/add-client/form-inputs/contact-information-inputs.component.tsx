@@ -95,12 +95,6 @@ export default React.forwardRef(function ContactInformationInputs(
       </div>
       <div>
         <label>
-          <span>State</span>
-          <StateSelect state={state} setState={setState} />
-        </label>
-      </div>
-      <div>
-        <label>
           <span>City</span>
           <CityInput
             state={state}
@@ -108,6 +102,12 @@ export default React.forwardRef(function ContactInformationInputs(
             setCity={setCity}
             nextInputRef={zipRef}
           />
+        </label>
+      </div>
+      <div>
+        <label>
+          <span>State</span>
+          <StateSelect state={state} setState={setState} />
         </label>
       </div>
       <div>
