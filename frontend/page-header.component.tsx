@@ -53,6 +53,9 @@ ${mediaMobile} {
   & .page-header {
     padding: .8rem;
     align-items: flex-start;
+  }
+
+  & .page-header h1 {
     font-size: 1.6rem;
   }
 }
@@ -63,7 +66,10 @@ ${mediaDesktop} {
     height: 18rem;
     padding: 3.2rem;
     align-items: flex-end;
-    font-size: 2.4rem;
+  }
+
+  & .page-header h1 {
+    font-size: 3.2rem;
   }
 
   & .page-header.with-secondary-nav {

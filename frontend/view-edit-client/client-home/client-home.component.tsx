@@ -40,7 +40,6 @@ export default function ClientHome(props: ClientHomeProps) {
 
 type ClientHomeProps = {
   path: string;
-  exact: boolean;
   client: SingleClient;
   setClient(newClient: SingleClient): any;
   auditSummary: AuditSummary;

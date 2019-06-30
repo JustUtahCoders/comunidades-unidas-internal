@@ -33,7 +33,7 @@ app.get("/api/clients/:clientId/logs", (req, res, next) => {
       FROM clientLogs JOIN users
       ON clientLogs.addedBy = users.id
       WHERE clientLogs.clientId = ?
-      ORDER BY dateAdded DESC
+      ORDER BY clientLogs.dateAdded DESC, clientLogs.logType DESC
       LIMIT 200
     `,
       [req.params.clientId]

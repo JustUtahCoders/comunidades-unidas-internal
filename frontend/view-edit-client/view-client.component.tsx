@@ -53,7 +53,7 @@ export default function ViewClient(props: ViewClientProps) {
     }
   }, [client]);
 
-  const childProps = { client, setClient, auditSummary };
+  const childProps = { client, setClient, auditSummary, clientId };
 
   return (
     <>
@@ -75,15 +75,15 @@ export default function ViewClient(props: ViewClientProps) {
             </Link>
           </li>
           <li>
-            <Link to={`/clients/${clientId}/new-entry`} getProps={getLinkProps}>
-              Add entry
+            <Link to={`/clients/${clientId}/add-entry`} getProps={getLinkProps}>
+              Add new
             </Link>
           </li>
         </ul>
       </StickySecondaryNav>
       <Router>
-        <ClientHome path="/" exact {...childProps} />
-        <ClientHistory path="/history" exact {...childProps} />
+        <ClientHome path="/" {...childProps} />
+        <ClientHistory path="/history" {...childProps} />
       </Router>
     </>
   );

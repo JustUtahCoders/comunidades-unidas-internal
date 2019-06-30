@@ -186,6 +186,6 @@ export enum GrowlType {
 type Growl = {
   type: GrowlType;
   message: string;
-  action(): void;
-  actionText: string;
+  action?(): void;
+  actionText?: string;
 };

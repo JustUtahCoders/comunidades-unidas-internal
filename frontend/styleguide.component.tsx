@@ -13,6 +13,8 @@ export default function Styleguide(props: StyleguideProps) {
 
 export const boxShadow1: BoxShadow = `0 10rem 30rem -24rem #4b4e53`;
 export const boxShadow2: BoxShadow = `0 10rem 40rem -24rem #393b3f`;
+export const boxShadow3: BoxShadow = `0 16px 50px -24px #a3a3a3`;
+export const boxShadow4: BoxShadow = `0 4px 8px 0 rgba(0, 0, 0, 0.06), 0 2px 6px 0 rgba(0, 0, 0, 0.26)`;
 export const mediaMobile: String = `@media screen and (max-width: 800px) and (min-width: 1px)`;
 export const mediaDesktop: String = `@media screen and (min-width: 800px)`;
 
@@ -174,11 +176,12 @@ body {
 
 & .popup {
   position: absolute;
-  box-shadow: ${boxShadow2};
+  box-shadow: ${boxShadow4};
   background-color: white;
   border-radius: .3rem;
   border: .1rem solid #e9e9e9;
   min-width: 15rem;
+  z-index: 100;
 }
 
 & .popup ul li {

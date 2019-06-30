@@ -20,6 +20,7 @@ const css = `
   align-items: center;
   white-space: nowrap;
   overflow-x: auto;
+  z-index: 100;
 }
 
 & .sticky-secondary-nav ul, & .sticky-secondary-nav li {

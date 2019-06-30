@@ -4,9 +4,9 @@ import HomeCard from "./home-card.component";
 import addClientIconUrl from "../../icons/148705-essential-collection/svg/add-1.svg";
 import reportIssueUrl from "../../icons/148705-essential-collection/svg/info.svg";
 import recordVisitUrl from "../../icons/148705-essential-collection/svg/hourglass-2.svg";
-import clientListUrl from "../../icons/148705-essential-collection/svg/agenda.svg";
+import clientListUrl from "../../icons/148705-essential-collection/svg/folder-14.svg";
+import caseNoteUrl from "../../icons/148705-essential-collection/svg/note.svg";
 import { useCss } from "kremling";
-import { mediaMobile, mediaDesktop } from "../styleguide.component";
 
 export default function Home(props: HomeProps) {
   const scope = useCss(css);
@@ -16,19 +16,24 @@ export default function Home(props: HomeProps) {
       <PageHeader title="Comunidades Unidas Database" />
       <div className="home-cards">
         <HomeCard
-          iconUrl={addClientIconUrl}
-          title="Add a new client"
-          link="add-client"
-        />
-        <HomeCard
           iconUrl={clientListUrl}
           title="Client list"
           link="client-list"
         />
         <HomeCard
+          iconUrl={addClientIconUrl}
+          title="Add a new client"
+          link="add-client"
+        />
+        <HomeCard
+          iconUrl={caseNoteUrl}
+          title="Add a case note"
+          link="add-case-note"
+        />
+        <HomeCard
           iconUrl={recordVisitUrl}
-          title="Record a client visit"
-          link="record-client-visit"
+          title="Add a client visit"
+          link="add-client-visit"
         />
         <HomeCard
           iconUrl={reportIssueUrl}
