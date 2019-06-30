@@ -9,9 +9,9 @@ const mysql = require("mysql");
 const { checkValid, validId } = require("../utils/validation-utils");
 const { responseFullName } = require("../utils/transform-utils");
 
-const deletableLogTypes = ["caseNote", "clientUpdated:basicInformation"];
+const modifiableLogTypes = ["caseNote"];
 
-exports.deletableLogTypes = deletableLogTypes;
+exports.modifiableLogTypes = modifiableLogTypes;
 
 app.get("/api/clients/:clientId/logs", (req, res, next) => {
   const validationErrors = checkValid(req.params, validId("clientId"));
@@ -52,7 +52,7 @@ app.get("/api/clients/:clientId/logs", (req, res, next) => {
             id: log.id,
             title: log.title,
             logType: log.logType,
-            canDelete: deletableLogTypes.some(
+            canModify: modifiableLogTypes.some(
               logType => logType === log.logType
             ),
             isDeleted: Boolean(log.isDeleted),

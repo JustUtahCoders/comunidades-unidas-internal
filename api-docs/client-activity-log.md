@@ -2,7 +2,7 @@
 
 The client activity log shows the history of everything that has happened with the client.
 A log entry includes a timestamp, title, optional description, "log type", optional
-"detailId", "canDelete", and "is deleted" flag.
+detailId, canModify, and isDeleted flag.
 
 Here is the list of valid log types:
 
@@ -16,8 +16,10 @@ Here is the list of valid log types:
 The `detailId` refers to an id for a different resource that you may request if you
 want additional information about this log entry.
 
-Entries in the activity log may not be modified. Some entries may be soft-deleted,
-but will still show in the activity log as collapsed entries.
+Only some of the entries in the activity log may be modified and deleted. Here are
+the log types that can be modified/deleted:
+
+- `caseNote`
 
 ## Get activity log
 
@@ -36,7 +38,7 @@ GET /api/clients/:id/logs
       "id": 1,
       "title": "Client was created",
       "logType": "clientCreated",
-      "canDelete": false,
+      "canModify": false,
       "isDeleted": false,
       "createdBy": {
         "userId": 1,
@@ -51,7 +53,7 @@ GET /api/clients/:id/logs
       "title": "Notes about first visit",
       "description": "<div>Some rich text</div>",
       "logType": "caseNote",
-      "canDelete": true,
+      "canModify": true,
       "isDeleted": false,
       "createdBy": {
         "userId": 1,
