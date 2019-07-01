@@ -5,14 +5,30 @@ import AuditSummarySection from "./audit-summary-section.component";
 import { LastUpdate } from "./view-client.component";
 
 export default function ClientSection(props: ClientSectionProps) {
-  const [expanded, setExpanded] = React.useState(true);
+  const [expanded, setExpanded] = React.useState(
+    JSON.parse(
+      localStorage.getItem(`cu-client-section-expanded:${props.title}`)
+    ) === null
+      ? true
+      : JSON.parse(
+          localStorage.getItem(`cu-client-section-expanded:${props.title}`)
+        )
+  );
   const scope = useCss(css);
+
+  const toggleExpandAndStore = title => {
+    localStorage.setItem(
+      `cu-client-section-expanded:${title}`,
+      JSON.stringify(!expanded)
+    );
+    setExpanded(!expanded);
+  };
 
   return (
     <div className="card padding-0" {...scope}>
       <button
         className="unstyled client-section-header"
-        onClick={() => setExpanded(!expanded)}
+        onClick={() => toggleExpandAndStore(props.title)}
       >
         <h3>{props.title}</h3>
         {props.auditSection && (
