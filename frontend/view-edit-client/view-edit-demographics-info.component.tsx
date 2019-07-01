@@ -215,9 +215,7 @@ export default function ViewEditDemographicsInfo(
   function employmentInfo() {
     switch (client.currentlyEmployed) {
       case "yes":
-        return (
-          employmentSectors[client.employmentSector] || client.employmentSector
-        );
+        return "employeed";
       case "no":
         return `Not employed`;
       case "n/a":
