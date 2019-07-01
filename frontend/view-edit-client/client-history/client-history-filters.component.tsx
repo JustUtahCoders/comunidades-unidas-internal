@@ -88,7 +88,7 @@ const css = `
 
 & .filter-popup {
   padding: 1.6rem;
-  width: 40rem;
+  width: 30rem;
 }
 
 & .filter-option {
