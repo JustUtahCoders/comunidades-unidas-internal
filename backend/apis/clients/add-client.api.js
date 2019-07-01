@@ -142,7 +142,7 @@ app.post("/api/clients", (req, res, next) => {
         connection.query(insertActivityLog, (err, results) => {
           if (err) {
             connection.rollback();
-            return databaseError(re, res, err, connection);
+            return databaseError(req, res, err, connection);
           }
 
           const insertOther = mysql.format(`
