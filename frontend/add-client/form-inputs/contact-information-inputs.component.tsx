@@ -145,7 +145,7 @@ export default React.forwardRef(function ContactInformationInputs(
   );
 
   function getData(): ContactInformationFormClient {
-    return {
+    const data: ContactInformationFormClient = {
       phone,
       smsConsent,
       streetAddress,
@@ -153,9 +153,14 @@ export default React.forwardRef(function ContactInformationInputs(
       state,
       zip,
       housing,
-      email: email || null,
-      dateOfIntake
+      email: email || null
     };
+
+    if (props.showDateOfIntake) {
+      data.dateOfIntake = dateOfIntake;
+    }
+
+    return data;
   }
 });
 

@@ -59,6 +59,7 @@ require("./apis/clients/update-client.api");
 require("./apis/services/list-services.api");
 require("./apis/clients/list-clients.api");
 require("./apis/clients/client-audit.api");
+require("./apis/clients/get-activity-logs.api");
 require("./index-html.js");
 
 process.on("uncaughtException", function(err) {

@@ -1,10 +1,12 @@
 const mysql = require("mysql");
 const { requestEnum, requestPhone } = require("../utils/transform-utils");
+const { insertActivityLogQuery } = require("./activity-log.utils");
 
 exports.insertContactInformationQuery = function insertContactInformationQuery(
   clientId,
   data,
-  userId
+  userId,
+  insertLogEntry = false
 ) {
   return mysql.format(
     `
@@ -20,6 +22,20 @@ exports.insertContactInformationQuery = function insertContactInformationQuery(
       housingStatus,
       addedBy
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+    ${
+      insertLogEntry
+        ? insertActivityLogQuery({
+            clientId,
+            title: "Contact information was updated",
+            description: null,
+            logType: "clientUpdated:contactInformation",
+            addedBy: userId,
+            detailIdIsLastInsertId: true
+          })
+        : ""
+    }
+
   `,
     [
       clientId,
@@ -39,7 +55,8 @@ exports.insertContactInformationQuery = function insertContactInformationQuery(
 exports.insertDemographicsInformationQuery = function insertDemographicsInformationQuery(
   clientId,
   data,
-  userId
+  userId,
+  insertLogEntry = false
 ) {
   return mysql.format(
     `
@@ -62,6 +79,19 @@ exports.insertDemographicsInformationQuery = function insertDemographicsInformat
       isStudent,
       addedBy
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+    ${
+      insertLogEntry
+        ? insertActivityLogQuery({
+            clientId,
+            title: "Demographics information was updated",
+            description: null,
+            logType: "clientUpdated:demographics",
+            addedBy: userId,
+            detailIdIsLastInsertId: true
+          })
+        : ""
+    }
   `,
     [
       clientId,
@@ -110,10 +140,26 @@ exports.insertIntakeDataQuery = function insertIntakeDataQuery(
   );
 };
 
-exports.insertIntakeServicesQuery = function insertIntakeServicesQuery(data) {
+exports.insertIntakeServicesQuery = function insertIntakeServicesQuery(
+  data,
+  insertLogEntry = false
+) {
   return mysql.format(
     `
       SET @intakeDataId = LAST_INSERT_ID();
+
+      ${
+        insertLogEntry
+          ? insertActivityLogQuery({
+              clientId: data.clientId,
+              title: "Intake data was updated",
+              description: null,
+              logType: "clientUpdated:intakeData",
+              addedBy: data.userId,
+              detailIdIsLastInsertId: true
+            })
+          : ""
+      }
 
       ${data.intakeServices
         .map(

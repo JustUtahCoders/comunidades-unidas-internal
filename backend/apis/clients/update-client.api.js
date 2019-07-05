@@ -24,6 +24,7 @@ const {
   insertIntakeServicesQuery,
   insertIntakeDataQuery
 } = require("./insert-client.utils");
+const { insertActivityLogQuery } = require("./activity-log.utils");
 
 app.patch("/api/clients/:id", (req, res, next) => {
   const paramValidationErrors = checkValid(req.params, validId("id"));
@@ -131,6 +132,13 @@ app.patch("/api/clients/:id", (req, res, next) => {
             gender = ?,
             modifiedBy = ?
           WHERE id = ?;
+
+          ${insertActivityLogQuery({
+            clientId,
+            title: "Basic information was updated",
+            logType: "clientUpdated:basicInformation",
+            addedBy: req.session.passport.user.id
+          })}
         `,
             [
               fullClient.firstName,
@@ -161,7 +169,8 @@ app.patch("/api/clients/:id", (req, res, next) => {
           insertContactInformationQuery(
             clientId,
             fullClient,
-            req.session.passport.user.id
+            req.session.passport.user.id,
+            true
           )
         );
       }
@@ -189,7 +198,8 @@ app.patch("/api/clients/:id", (req, res, next) => {
           insertDemographicsInformationQuery(
             clientId,
             fullClient,
-            req.session.passport.user.id
+            req.session.passport.user.id,
+            true
           )
         );
       }
@@ -210,7 +220,13 @@ app.patch("/api/clients/:id", (req, res, next) => {
           )
         );
 
-        queries.push(insertIntakeServicesQuery(fullClient));
+        queries.push(
+          insertIntakeServicesQuery({
+            clientId: clientId,
+            intakeServices: fullClient.intakeServices,
+            userId: req.session.passport.user.id
+          })
+        );
       }
 
       if (queries.length === 0) {

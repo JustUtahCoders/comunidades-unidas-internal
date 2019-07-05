@@ -24,6 +24,7 @@ const {
   insertIntakeDataQuery,
   insertDemographicsInformationQuery
 } = require("./insert-client.utils");
+const { insertActivityLogQuery } = require("./activity-log.utils");
 
 app.post("/api/clients", (req, res, next) => {
   pool.getConnection((err, connection) => {
@@ -130,71 +131,86 @@ app.post("/api/clients", (req, res, next) => {
 
         const clientId = result.insertId;
 
-        const insertOther = mysql.format(`
-          ${insertContactInformationQuery(
-            clientId,
-            req.body,
-            req.session.passport.user.id
-          )}
+        const insertActivityLog = insertActivityLogQuery({
+          clientId,
+          title: "Client was created",
+          description: null,
+          logType: "clientCreated",
+          addedBy: req.session.passort.user.id
+        });
 
-          ${insertDemographicsInformationQuery(
-            clientId,
-            req.body,
-            req.session.passport.user.id
-          )}
-
-          ${insertIntakeDataQuery(
-            clientId,
-            req.body,
-            req.session.passport.user.id
-          )}
-        `);
-
-        connection.query(insertOther, (err, results, fields) => {
+        connection.query(insertActivityLog, (err, results) => {
           if (err) {
             connection.rollback();
             return databaseError(req, res, err, connection);
           }
 
-          const intakeDataResult = results[2];
-          const intakeDataId = intakeDataResult.insertId;
+          const insertOther = mysql.format(`
+            ${insertContactInformationQuery(
+              clientId,
+              req.body,
+              req.session.passport.user.id
+            )}
 
-          if (req.body.intakeServices.length === 0) {
-            connection.commit();
+            ${insertDemographicsInformationQuery(
+              clientId,
+              req.body,
+              req.session.passport.user.id
+            )}
 
-            returnTheClient();
+            ${insertIntakeDataQuery(
+              clientId,
+              req.body,
+              req.session.passport.user.id
+            )}
+          `);
 
-            return;
-          }
-
-          const intakeServicesValues = req.body.intakeServices.reduce(
-            (acc, intakeService) => {
-              return [...acc, intakeDataId, intakeService];
-            },
-            []
-          );
-
-          const insertIntakeServicesQuery = req.body.intakeServices
-            .map(
-              intakeService => `
-            INSERT INTO intakeServices (intakeDataId, serviceId) VALUES (?, ?);
-          `
-            )
-            .join("");
-
-          const insertIntakeServices = mysql.format(
-            insertIntakeServicesQuery,
-            intakeServicesValues
-          );
-
-          connection.query(insertIntakeServices, (err, result, fields) => {
+          connection.query(insertOther, (err, results, fields) => {
             if (err) {
               connection.rollback();
               return databaseError(req, res, err, connection);
             }
 
-            connection.commit();
-            returnTheClient();
+            const intakeDataResult = results[2];
+            const intakeDataId = intakeDataResult.insertId;
+
+            if (req.body.intakeServices.length === 0) {
+              connection.commit();
+
+              returnTheClient();
+
+              return;
+            }
+
+            const intakeServicesValues = req.body.intakeServices.reduce(
+              (acc, intakeService) => {
+                return [...acc, intakeDataId, intakeService];
+              },
+              []
+            );
+
+            const insertIntakeServicesQuery = req.body.intakeServices
+              .map(
+                intakeService => `
+              INSERT INTO intakeServices (intakeDataId, serviceId) VALUES (?, ?);
+            `
+              )
+              .join("");
+
+            const insertIntakeServices = mysql.format(
+              insertIntakeServicesQuery,
+              intakeServicesValues
+            );
+
+            connection.query(insertIntakeServices, (err, result, fields) => {
+              if (err) {
+                connection.rollback();
+                return databaseError(req, res, err, connection);
+              }
+
+              connection.commit();
+              returnTheClient();
+            });
           });
         });
 
