@@ -9,7 +9,7 @@ const mysql = require("mysql");
 const { checkValid, validId } = require("../utils/validation-utils");
 const { responseFullName } = require("../utils/transform-utils");
 
-const modifiableLogTypes = ["caseNote", "clientUpdated:basicInformation"];
+const modifiableLogTypes = ["caseNote"];
 
 exports.modifiableLogTypes = modifiableLogTypes;
 

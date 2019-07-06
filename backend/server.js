@@ -28,6 +28,10 @@ exports.invalidRequest = function invalidRequest(res, msg) {
   res.status(400).send({ error: msg });
 };
 
+exports.notFound = function notFound(res, msg) {
+  res.status(404).send({ error: msg });
+};
+
 exports.databaseError = function databaseError(req, res, err, connection) {
   if (connection) {
     connection.release();
@@ -60,6 +64,7 @@ require("./apis/services/list-services.api");
 require("./apis/clients/list-clients.api");
 require("./apis/clients/client-audit.api");
 require("./apis/clients/get-activity-logs.api");
+require("./apis/clients/delete-activity-logs.api");
 require("./index-html.js");
 
 process.on("uncaughtException", function(err) {
