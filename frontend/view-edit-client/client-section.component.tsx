@@ -6,8 +6,13 @@ import { LastUpdate } from "./view-client.component";
 
 export default function ClientSection(props: ClientSectionProps) {
   const [expanded, setExpanded] = React.useState(() =>
-    localStorage.getItem("...") ? JSON.parse(localStorage.getItem("...")) : true
+    localStorage.getItem(`cu-client-section-expandeded:${props.title}`)
+      ? JSON.parse(
+          localStorage.getItem(`cu-client-section-expanded:${props.title}`)
+        )
+      : true
   );
+
   const scope = useCss(css);
 
   const toggleExpandAndStore = () => {
@@ -22,7 +27,7 @@ export default function ClientSection(props: ClientSectionProps) {
     <div className="card padding-0" {...scope}>
       <button
         className="unstyled client-section-header"
-        onClick={() => toggleExpandAndStore}
+        onClick={toggleExpandAndStore}
       >
         <h3>{props.title}</h3>
         {props.auditSection && (
