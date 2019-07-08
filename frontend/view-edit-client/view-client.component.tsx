@@ -1,21 +1,22 @@
 import React from "react";
 import easyFetch from "../util/easy-fetch";
 import PageHeader from "../page-header.component";
-import ViewEditBasicInfo from "./view-edit-basic-info.component";
+import ViewEditBasicInfo from "./client-home/view-edit-basic-info.component";
 import {
   CivilStatus,
   PayInterval,
   WeeklyEmployedHours
 } from "../add-client/form-inputs/demographic-information-inputs.component";
 import { ClientSources } from "../add-client/add-client.component";
-import ViewEditContactInfo from "./view-edit-contact-info.component";
-import ViewEditDemographicsInfo from "./view-edit-demographics-info.component";
-import ViewEditIntakeInfo from "./view-edit-intake-info.component";
+import StickySecondaryNav from "../navbar/sticky-secondary-nav.component";
+import { Link, Router } from "@reach/router";
+import ClientHome from "./client-home/client-home.component";
+import ClientHistory from "./client-history/client-history.component";
 
 export default function ViewClient(props: ViewClientProps) {
   const [client, setClient] = React.useState<SingleClient>(null);
   const [error, setError] = React.useState(null);
-  const [auditSummary, setAuditSummary] = React.useState(null);
+  const [auditSummary, setAuditSummary] = React.useState<AuditSummary>(null);
   const clientId = props.clientId;
 
   React.useEffect(() => {
@@ -52,33 +53,38 @@ export default function ViewClient(props: ViewClientProps) {
     }
   }, [client]);
 
+  const childProps = { client, setClient, auditSummary, clientId };
+
   return (
     <>
-      <PageHeader title={getHeaderTitle()} />
-      {client && typeof client === "object" && (
-        <div style={{ marginBottom: "3.2rem" }}>
-          <ViewEditBasicInfo
-            client={client}
-            clientUpdated={setClient}
-            auditSummary={auditSummary}
-          />
-          <ViewEditContactInfo
-            client={client}
-            clientUpdated={setClient}
-            auditSummary={auditSummary}
-          />
-          <ViewEditDemographicsInfo
-            client={client}
-            clientUpdated={setClient}
-            auditSummary={auditSummary}
-          />
-          <ViewEditIntakeInfo
-            client={client}
-            clientUpdated={setClient}
-            auditSummary={auditSummary}
-          />
-        </div>
-      )}
+      <PageHeader title={getHeaderTitle()} withSecondaryNav />
+      <StickySecondaryNav>
+        <ul>
+          <li>
+            <Link to={`/clients/${clientId}`} getProps={getLinkProps}>
+              {client
+                ? client.firstName +
+                  `'${client.firstName.endsWith("s") ? "" : `s`}`
+                : "Client"}{" "}
+              info
+            </Link>
+          </li>
+          <li>
+            <Link to={`/clients/${clientId}/history`} getProps={getLinkProps}>
+              History
+            </Link>
+          </li>
+          <li>
+            <Link to={`/clients/${clientId}/add-entry`} getProps={getLinkProps}>
+              Add new
+            </Link>
+          </li>
+        </ul>
+      </StickySecondaryNav>
+      <Router>
+        <ClientHome path="/" {...childProps} />
+        <ClientHistory path="/history" {...childProps} />
+      </Router>
     </>
   );
 
@@ -88,10 +94,14 @@ export default function ViewClient(props: ViewClientProps) {
     } else if (error && error.status === 400) {
       return `Invalid client id '${clientId}'`;
     } else if (client) {
-      return `Client: ${client.fullName}`;
+      return client.fullName;
     } else {
       return "Loading client...";
     }
+  }
+
+  function getLinkProps({ isCurrent }) {
+    return isCurrent ? { className: "active" } : null;
   }
 }
 

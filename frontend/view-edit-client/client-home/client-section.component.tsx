@@ -1,8 +1,8 @@
 import React from "react";
 import { useCss } from "kremling";
-import { css as addClientCss } from "../add-client/add-client.component";
+import { css as addClientCss } from "../../add-client/add-client.component";
 import AuditSummarySection from "./audit-summary-section.component";
-import { LastUpdate } from "./view-client.component";
+import { LastUpdate } from "../view-client.component";
 
 export default function ClientSection(props: ClientSectionProps) {
   const [expanded, setExpanded] = React.useState(() =>

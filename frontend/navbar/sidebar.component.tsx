@@ -42,16 +42,6 @@ export default function Sidebar(props: SidebarProps) {
           </li>
           <li>
             <Link
-              to="add-client"
-              className="nav-link"
-              onClick={maybeHideSidebar}
-              getProps={maybeActiveLink}
-            >
-              <div>Add a client</div>
-            </Link>
-          </li>
-          <li>
-            <Link
               to="client-list"
               className="nav-link"
               onClick={maybeHideSidebar}
@@ -62,12 +52,32 @@ export default function Sidebar(props: SidebarProps) {
           </li>
           <li>
             <Link
+              to="add-client"
+              className="nav-link"
+              onClick={maybeHideSidebar}
+              getProps={maybeActiveLink}
+            >
+              <div>Add a client</div>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="add-case-note"
+              className="nav-link"
+              onClick={maybeHideSidebar}
+              getProps={maybeActiveLink}
+            >
+              <div>Add a case note</div>
+            </Link>
+          </li>
+          <li>
+            <Link
               to="record-client-visit"
               className="nav-link"
               onClick={maybeHideSidebar}
               getProps={maybeActiveLink}
             >
-              <div>Record client visit</div>
+              <div>Add a client visit</div>
             </Link>
           </li>
           <li>

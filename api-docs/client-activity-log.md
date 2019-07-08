@@ -104,6 +104,6 @@ DELETE /api/clients/:clientId/logs/logId
 
 ### Response
 
-An HTTP 204 status is returned if you deletion was successful.
+An HTTP 204 status is returned if the deletion was successful.
 
 An HTTP 400 status is returned if you cannot delete this event.

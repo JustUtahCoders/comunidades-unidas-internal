@@ -138,5 +138,4 @@ const css = `
 
 type ReportIssueProps = {
   path: string;
-  exact: boolean;
 };

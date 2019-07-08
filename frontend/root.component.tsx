@@ -17,12 +17,12 @@ export default function Root() {
       <Styleguide>
         <Router basepath="/">
           <Navbars path="/">
-            <Home path="/" exact />
-            <AddClient path="/add-client" />
+            <Home path="/" />
+            <AddClient path="add-client" />
             <ClientList path="client-list" />
-            <ViewClient path="/clients/:clientId" />
-            <ReportIssue path="/report-issue" exact />
-            <ReportIssueSuccess path="/report-issue/:issueId" />
+            <ViewClient path="clients/:clientId/*" />
+            <ReportIssue path="report-issue" />
+            <ReportIssueSuccess path="report-issue/:issueId" />
           </Navbars>
         </Router>
         <Growls />

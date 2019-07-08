@@ -1,5 +1,5 @@
 import React from "react";
-import { LastUpdate } from "./view-client.component";
+import { LastUpdate } from "../view-client.component";
 import { format } from "timeago.js";
 
 export default function AuditSummarySection({
