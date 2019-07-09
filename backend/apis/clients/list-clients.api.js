@@ -14,6 +14,15 @@ app.get("/api/clients", (req, res, next) => {
     return invalidRequest(res, validationErrors);
   }
 
+  const requestPage = parseInt(req.query.page);
+
+  if (requestPage < 1) {
+    return invalidRequest(
+      res,
+      `Invalid page ${0}. Must be an integer greater than or equal to 1`
+    );
+  }
+
   pool.getConnection((err, connection) => {
     if (err) {
       return databaseError(req, res, err);
@@ -62,7 +71,7 @@ app.get("/api/clients", (req, res, next) => {
       SELECT FOUND_ROWS();
     `;
 
-    const zeroBasedPage = req.query.page ? parseInt(req.query.page) - 1 : 0;
+    const zeroBasedPage = req.query.page ? requestPage - 1 : 0;
     const mysqlOffset = zeroBasedPage * pageSize;
     const getClientList = mysql.format(queryString, [
       ...whereClauseValues,
