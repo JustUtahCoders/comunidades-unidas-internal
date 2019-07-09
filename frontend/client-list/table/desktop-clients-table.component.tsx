@@ -90,7 +90,7 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
               <td>
                 <Link to={`/clients/${client.id}`} className="unstyled">
                   {client.createdBy.fullName} on{" "}
-                  {dateformat(client.dateAdded, "m/d/yyyy")}
+                  {dateformat(client.createdBy.timestamp, "m/d/yyyy")}
                 </Link>
               </td>
             </tr>
