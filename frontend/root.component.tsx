@@ -21,6 +21,16 @@ export default function Root() {
             <AddClient path="add-client" />
             <ClientList path="client-list" />
             <ViewClient path="clients/:clientId/*" />
+            <ReportIssue
+              missingFeature
+              title="Record Client Visit"
+              path="record-client-visit"
+            />
+            <ReportIssue
+              missingFeature
+              title="Add Case Note"
+              path="add-case-note"
+            />
             <ReportIssue path="report-issue" />
             <ReportIssueSuccess path="report-issue/:issueId" />
           </Navbars>
