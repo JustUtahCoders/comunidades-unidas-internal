@@ -1,4 +1,5 @@
 const CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin;
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = {
   entry: "./frontend/comunidades-unidas-internal.tsx",
@@ -35,7 +36,7 @@ module.exports = {
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js"]
   },
-  plugins: [new CleanWebpackPlugin()],
+  plugins: [new CleanWebpackPlugin(), new ForkTsCheckerWebpackPlugin()],
   optimization: {
     namedChunks: true
   }
