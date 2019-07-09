@@ -8,7 +8,7 @@ export default function ReportIssueSuccess(props: ReportIssueSuccessProps) {
 
   return (
     <>
-      <PageHeader title="Report an issue" />
+      <PageHeader title="Github issue created" />
       <div className="card issue-success" {...scope}>
         <img src={successIconUrl} className="success-icon" />
         <div className="explanation">

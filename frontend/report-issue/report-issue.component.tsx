@@ -4,7 +4,10 @@ import { useCss } from "kremling";
 import { navigate } from "@reach/router";
 import easyFetch from "../util/easy-fetch";
 
-export default function ReportIssue(props: ReportIssueProps) {
+export default function ReportIssue({
+  title = "Report an issue",
+  missingFeature
+}: ReportIssueProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [description, setDescription] = useState(getInitialDescription);
@@ -35,7 +38,7 @@ export default function ReportIssue(props: ReportIssueProps) {
 
   return (
     <>
-      <PageHeader title="Report an issue" />
+      <PageHeader title={title} />
       {showForm()}
     </>
   );
@@ -43,10 +46,7 @@ export default function ReportIssue(props: ReportIssueProps) {
   function showForm() {
     return (
       <div className="card" {...scope}>
-        <h4>
-          Have an issue, idea, or question about this website? Submit it here
-          and we'll get back to you.
-        </h4>
+        <h4>{subheaderText()}</h4>
         <form onSubmit={handleSubmit} className="report-issue-form">
           <div>
             <label>
@@ -87,9 +87,7 @@ export default function ReportIssue(props: ReportIssueProps) {
           </div>
           <div>
             <label>
-              <div>
-                What problem are you experiencing or what idea do you have?
-              </div>
+              <div>{textAreaDescription()}</div>
               <textarea
                 name="issue-description"
                 value={description}
@@ -99,7 +97,7 @@ export default function ReportIssue(props: ReportIssueProps) {
           </div>
           <div>
             <button type="submit" className="primary" disabled={creatingIssue}>
-              Submit an issue
+              {submitText()}
             </button>
           </div>
         </form>
@@ -110,6 +108,30 @@ export default function ReportIssue(props: ReportIssueProps) {
   function handleSubmit(evt) {
     evt.preventDefault();
     setCreatingIssue(true);
+  }
+
+  function subheaderText() {
+    if (missingFeature) {
+      return "This feature is still in development. In the meantime if you would like to make a suggestion or share an insight, please let us know.";
+    } else {
+      return "Have an issue, idea, or question about this website? Submit it here and we'll get back to you.";
+    }
+  }
+
+  function textAreaDescription() {
+    if (missingFeature) {
+      return `Tell us more. The more detail we have the more we can help.`;
+    } else {
+      return `What problem are you experiencing or what idea do you have?`;
+    }
+  }
+
+  function submitText() {
+    if (missingFeature) {
+      return `Submit suggestion`;
+    } else {
+      return `Submit an issue`;
+    }
   }
 }
 
@@ -137,5 +159,7 @@ const css = `
 `;
 
 type ReportIssueProps = {
-  path: string;
+  path?: string;
+  title?: string;
+  missingFeature?: boolean;
 };
