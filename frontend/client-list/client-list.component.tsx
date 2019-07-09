@@ -248,10 +248,10 @@ export type ClientListClient = {
   birthday: string;
   phone: string;
   email: string;
-  dateAdded: string;
   createdBy: {
     userId: number;
     fullName: string;
+    timestamp: string;
   };
 };
 
