@@ -112,7 +112,7 @@ function useClientsApi(apiState, dispatchApiState) {
 
 function useAlwaysValidPage(apiState, dispatchApiState) {
   React.useEffect(() => {
-    if (apiState.status === ApiStateStatus.fetching) {
+    if (apiState.status !== ApiStateStatus.fetched) {
       // wait for data first
       return;
     }
@@ -135,7 +135,7 @@ function useAlwaysValidPage(apiState, dispatchApiState) {
     } else if (lastPage === 0) {
       newPage = 1;
     } else if (apiState.page > lastPage) {
-      newPage = 1;
+      newPage = lastPage;
     }
 
     if (newPage && newPage !== apiState.page) {
@@ -258,9 +258,15 @@ export type ClientListClient = {
 function getInitialState(): ApiState {
   const queryParams = queryString.parse(window.location.search);
 
-  const page = !isNaN(Number(queryParams.page))
-    ? Number(queryParams.page)
-    : null;
+  let page = null;
+
+  if (!isNaN(Number(queryParams.page))) {
+    page = Number(queryParams.page);
+    if (page < 1) {
+      page = 1;
+    }
+  }
+
   const search = { ...queryParams };
   delete search.page;
 
