@@ -136,7 +136,7 @@ app.post("/api/clients", (req, res, next) => {
           title: "Client was created",
           description: null,
           logType: "clientCreated",
-          addedBy: req.session.passort.user.id
+          addedBy: req.session.passport.user.id
         });
 
         connection.query(insertActivityLog, (err, results) => {
