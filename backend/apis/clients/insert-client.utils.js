@@ -1,6 +1,6 @@
 const mysql = require("mysql");
 const { requestEnum, requestPhone } = require("../utils/transform-utils");
-const { insertActivityLogQuery } = require("./activity-log.utils");
+const { insertActivityLogQuery } = require("./client-logs/activity-log.utils");
 
 exports.insertContactInformationQuery = function insertContactInformationQuery(
   clientId,

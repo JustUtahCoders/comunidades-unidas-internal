@@ -4,10 +4,10 @@ const {
   pool,
   invalidRequest,
   notFound
-} = require("../../server");
+} = require("../../../server");
 const mysql = require("mysql");
-const { checkValid, validId } = require("../utils/validation-utils");
-const { modifiableLogTypes } = require("./get-activity-logs.api");
+const { checkValid, validId } = require("../../utils/validation-utils");
+const { modifiableLogTypes } = require("./activity-log.utils");
 
 app.delete("/api/clients/:clientId/logs/:logId", (req, res) => {
   const validationErrors = checkValid(req.params, validId("clientId", "logId"));

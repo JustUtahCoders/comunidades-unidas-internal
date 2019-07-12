@@ -46,8 +46,8 @@ exports.databaseError = function databaseError(req, res, err, connection) {
 app.set("views", path.join(__dirname, "/views"));
 app.set("view engine", "ejs");
 app.use("/static", express.static(path.join(__dirname, "../static")));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false, limit: "50mb" }));
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use(cookieParser());
 app.use((err, req, res, next) => {
   console.error("ERROR: ", err);
@@ -63,8 +63,9 @@ require("./apis/clients/update-client.api");
 require("./apis/services/list-services.api");
 require("./apis/clients/list-clients.api");
 require("./apis/clients/client-audit.api");
-require("./apis/clients/get-activity-logs.api");
-require("./apis/clients/delete-activity-logs.api");
+require("./apis/clients/client-logs/get-activity-logs.api");
+require("./apis/clients/client-logs/delete-activity-logs.api");
+require("./apis/clients/client-logs/create-activity-log.api");
 require("./index-html.js");
 
 process.on("uncaughtException", function(err) {
