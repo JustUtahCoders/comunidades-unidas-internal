@@ -85,12 +85,9 @@ function _validEnum(propertyName, ...possibleValues) {
 
 function _validId(propertyName) {
   return val => {
-    try {
-      Number(val);
-      return null;
-    } catch (err) {
-      return `Property '${propertyName}' must be a valid number ID`;
-    }
+    return isNaN(Number(val))
+      ? `Property '${propertyName}' must be a valid number ID`
+      : null;
   };
 }
 

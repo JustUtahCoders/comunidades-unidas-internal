@@ -1,4 +1,9 @@
 const mysql = require("mysql");
+const { responseFullName } = require("../../utils/transform-utils");
+
+const modifiableLogTypes = ["caseNote"];
+
+exports.modifiableLogTypes = modifiableLogTypes;
 
 exports.insertActivityLogQuery = function(params) {
   if (params.detailIdIsLastInsertId) {
@@ -31,4 +36,22 @@ exports.insertActivityLogQuery = function(params) {
       ]
     );
   }
+};
+
+exports.createResponseLogObject = function createResponseLogObject(log) {
+  return {
+    id: log.id,
+    title: log.title,
+    description: log.description,
+    logType: log.logType,
+    canModify: modifiableLogTypes.some(logType => logType === log.logType),
+    isDeleted: Boolean(log.isDeleted),
+    createdBy: {
+      userId: log.createdById,
+      firstName: log.createdByFirstName,
+      lastName: log.createdByLastName,
+      fullName: responseFullName(log.createdByFirstName, log.createdByLastName),
+      timestamp: log.dateAdded
+    }
+  };
 };

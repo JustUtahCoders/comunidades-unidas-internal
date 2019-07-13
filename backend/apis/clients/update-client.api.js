@@ -24,7 +24,7 @@ const {
   insertIntakeServicesQuery,
   insertIntakeDataQuery
 } = require("./insert-client.utils");
-const { insertActivityLogQuery } = require("./activity-log.utils");
+const { insertActivityLogQuery } = require("./client-logs/activity-log.utils");
 
 app.patch("/api/clients/:id", (req, res, next) => {
   const paramValidationErrors = checkValid(req.params, validId("id"));

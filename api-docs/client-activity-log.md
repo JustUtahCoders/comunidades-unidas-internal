@@ -37,6 +37,7 @@ GET /api/clients/:id/logs
     {
       "id": 1,
       "title": "Client was created",
+      "description": null,
       "logType": "clientCreated",
       "canModify": false,
       "isDeleted": false,

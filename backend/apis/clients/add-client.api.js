@@ -24,7 +24,7 @@ const {
   insertIntakeDataQuery,
   insertDemographicsInformationQuery
 } = require("./insert-client.utils");
-const { insertActivityLogQuery } = require("./activity-log.utils");
+const { insertActivityLogQuery } = require("./client-logs/activity-log.utils");
 
 app.post("/api/clients", (req, res, next) => {
   pool.getConnection((err, connection) => {
