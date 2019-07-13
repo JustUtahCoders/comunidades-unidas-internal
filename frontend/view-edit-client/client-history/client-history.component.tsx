@@ -1,7 +1,6 @@
 import React from "react";
 import { useCss } from "kremling";
 import easyFetch from "../../util/easy-fetch";
-import { showGrowl, GrowlType } from "../../growls/growls.component";
 import dayjs from "dayjs";
 import { boxShadow2 } from "../../styleguide.component";
 import { Link } from "@reach/router";
@@ -32,10 +31,8 @@ export default function ClientHistory(props: ClientHistoryProps) {
         });
       })
       .catch(err => {
-        console.error(err);
-        showGrowl({
-          type: GrowlType.error,
-          message: `Could not load the client history for client ${props.clientId}.`
+        setTimeout(() => {
+          throw err;
         });
       });
 
@@ -60,7 +57,7 @@ export default function ClientHistory(props: ClientHistoryProps) {
         </div>
         <div style={{ marginBottom: ".8rem" }}>
           <Link
-            to={`/clients/${props.clientId}/add-entry`}
+            to={`/clients/${props.clientId}/add-info`}
             className="secondary button"
             style={{ marginLeft: "1.6rem" }}
           >
@@ -78,7 +75,15 @@ export default function ClientHistory(props: ClientHistoryProps) {
             />
           </div>
           <div className="timeline-right">
-            {log.title} by {log.createdBy.fullName}.
+            <h4 className="title">
+              {getTitle(log)} by {log.createdBy.fullName}.
+            </h4>
+            {log.description && (
+              <div
+                dangerouslySetInnerHTML={{ __html: log.description }}
+                className="client-log-description"
+              />
+            )}
           </div>
         </div>
       ))}
@@ -94,12 +99,23 @@ export default function ClientHistory(props: ClientHistoryProps) {
             />
           </div>
           <div className="timeline-right" style={{ marginBottom: 0 }}>
-            {props.client.fullName} filled out the intake form.
+            <h4 className="title">
+              {props.client.fullName} filled out the intake form.
+            </h4>
           </div>
         </div>
       )}
     </div>
   );
+
+  function getTitle(log) {
+    switch (log.logType) {
+      case LogType.caseNote:
+        return "A case note was created";
+      default:
+        return log.title;
+    }
+  }
 
   function getDate(log, index) {
     if (
@@ -143,7 +159,6 @@ export default function ClientHistory(props: ClientHistoryProps) {
 }
 
 function logReducer(state: LogState, action: LogActions): LogState {
-  console.log("state", state, "action", action);
   switch (action.type) {
     case LogActionTypes.newFilters:
       const changeFilterAction = action as ChangeFilterAction;
@@ -193,7 +208,7 @@ enum LogActionTypes {
 function getBackgroundColor(logType: LogType) {
   switch (logType) {
     case LogType.caseNote:
-      return "lightorange";
+      return "pink";
     case LogType.clientCreated:
       return "lightgreen";
     case LogType["clientUpdated:basicInformation"]:
@@ -265,11 +280,20 @@ const css = `
 & .bookend {
   min-height: 2.4rem;
 }
+
+& .client-log-description {
+  margin-top: 1.6rem;
+}
+
+& .title {
+  margin: 0;
+}
 `;
 
 type ClientLog = {
   id: number;
   title: string;
+  description?: string;
   logType: LogType;
   canModify: boolean;
   isDeleted: boolean;

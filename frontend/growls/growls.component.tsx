@@ -118,6 +118,7 @@ const css = `
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index: 10000;
 }
 
 & .growl {
@@ -129,7 +130,6 @@ const css = `
   justify-content: space-between;
   align-items: center;
   padding: .4rem 1rem;
-  z-index: 1000;
 }
 
 & .close {
