@@ -1166,10 +1166,10 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
-bandicoot@^2.9.1:
-  version "2.9.1"
-  resolved "https://registry.yarnpkg.com/bandicoot/-/bandicoot-2.9.1.tgz#ad988ed56c983c438762a08429c27bc207ec1c64"
-  integrity sha512-mis7cXPiXYWf5xn/w5ddK+XKEDbswgTo9rBMYms84T8cNIFLCXe/IZsxt0kLl/Cgv19dkmEkcM3T9kjBx23MiA==
+bandicoot@^2.10.0:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/bandicoot/-/bandicoot-2.10.0.tgz#27717c849094594dc97bbd4a37ccd150e5573dd2"
+  integrity sha512-sUzNsHIrSQVvmzqiNPK89V9roXXwYw19b8bXRDW+uZ6J2dbdjY2P2NHOe2bFPBV4+KokSkkJGYhcQI/T4+kCPg==
   dependencies:
     "@types/react" "^16.8.23"
 
