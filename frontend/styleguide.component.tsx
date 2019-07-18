@@ -136,6 +136,10 @@ body {
   background-color: #e9e9e9;
 }
 
+& button.icon.active, & .button.icon.active:hover {
+  background-color: var(--medium-gray);
+}
+
 & button.icon img {
   width: 1.6rem;
   height: 1.6rem;

@@ -1,7 +1,6 @@
 import React from "react";
 import easyFetch from "../util/easy-fetch";
 import PageHeader from "../page-header.component";
-import ViewEditBasicInfo from "./client-home/view-edit-basic-info.component";
 import {
   CivilStatus,
   PayInterval,
@@ -12,6 +11,8 @@ import StickySecondaryNav from "../navbar/sticky-secondary-nav.component";
 import { Link, Router } from "@reach/router";
 import ClientHome from "./client-home/client-home.component";
 import ClientHistory from "./client-history/client-history.component";
+import ClientAddNewInfo from "./add-new/client-add-new-info.component";
+import AddCaseNote from "./case-notes/add-case-note.component";
 
 export default function ViewClient(props: ViewClientProps) {
   const [client, setClient] = React.useState<SingleClient>(null);
@@ -75,7 +76,7 @@ export default function ViewClient(props: ViewClientProps) {
             </Link>
           </li>
           <li>
-            <Link to={`/clients/${clientId}/add-entry`} getProps={getLinkProps}>
+            <Link to={`/clients/${clientId}/add-info`} getProps={getLinkProps}>
               Add new
             </Link>
           </li>
@@ -83,7 +84,9 @@ export default function ViewClient(props: ViewClientProps) {
       </StickySecondaryNav>
       <Router>
         <ClientHome path="/" {...childProps} />
-        <ClientHistory path="/history" {...childProps} />
+        <ClientHistory path="history" {...childProps} />
+        <ClientAddNewInfo path="add-info" {...childProps} />
+        <AddCaseNote path="add-case-note" {...childProps} />
       </Router>
     </>
   );
