@@ -10,6 +10,7 @@ import UserContext from "./util/user.context";
 import ViewClient from "./view-edit-client/view-client.component";
 import ClientList from "./client-list/client-list.component";
 import Growls from "./growls/growls.component";
+import AddCaseNote from "./view-edit-client/case-notes/add-case-note.component";
 
 export default function Root() {
   return (
@@ -26,11 +27,7 @@ export default function Root() {
               title="Record Client Visit"
               path="record-client-visit"
             />
-            <ReportIssue
-              missingFeature
-              title="Add Case Note"
-              path="add-case-note"
-            />
+            <AddCaseNote isGlobalAdd path="add-case-note" />
             <ReportIssue path="report-issue" />
             <ReportIssueSuccess path="report-issue/:issueId" />
           </Navbars>

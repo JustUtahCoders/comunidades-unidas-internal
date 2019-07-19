@@ -78,6 +78,7 @@ export default function ClientHistory(props: ClientHistoryProps) {
             <h4 className="title">
               {getTitle(log)} by {log.createdBy.fullName}.
             </h4>
+            {log.logType === "caseNote" && <i>{log.title}</i>}
             {log.description && (
               <div
                 dangerouslySetInnerHTML={{ __html: log.description }}

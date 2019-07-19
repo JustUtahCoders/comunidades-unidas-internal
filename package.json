@@ -11,7 +11,8 @@
     "develop-frontend": "cross-env PUBLIC_PATH='http://localhost:9018/' webpack-dev-server --mode=development",
     "develop-backend": "cross-env RUNNING_LOCALLY='true' nodemon backend/server.js --watch backend",
     "develop-database": "docker-compose up",
-    "build": "webpack --config webpack.config.js --mode=production",
+    "build": "webpack --mode=production",
+    "analyze-frontend-build": "webpack --mode=production --env.analyze=true",
     "nuke-database": "docker-compose down -v",
     "db-migrate-prod": "db-migrate up --env prod",
     "lint": "eslint frontend",
@@ -86,6 +87,7 @@
     "pretty-quick": "^1.11.0",
     "typescript": "^3.5.1",
     "webpack": "^4.33.0",
+    "webpack-bundle-analyzer": "^3.3.2",
     "webpack-cli": "^3.3.3",
     "webpack-dev-server": "^3.7.1"
   }
