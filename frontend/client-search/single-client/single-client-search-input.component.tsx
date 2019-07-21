@@ -3,6 +3,7 @@ import easyFetch from "../../util/easy-fetch";
 import { ClientListClient } from "../../client-list/client-list.component";
 import { useCss, m } from "kremling";
 import userIconUrl from "../../../icons/148705-essential-collection/svg/user.svg";
+import dayjs from "dayjs";
 
 export default React.forwardRef<
   React.MutableRefObject<SingleClientSearchInputRef>,
@@ -99,7 +100,9 @@ export default React.forwardRef<
                   tabIndex={-1}
                   title={potentialClient.fullName}
                 >
-                  {potentialClient.fullName}
+                  {`${potentialClient.fullName} (${dayjs(
+                    potentialClient.birthday
+                  ).format("M/D/YYYY")})`}
                 </button>
               </li>
             ))}
