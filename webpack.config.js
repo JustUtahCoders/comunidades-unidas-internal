@@ -1,7 +1,9 @@
 const CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin;
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin;
 
-module.exports = {
+module.exports = env => ({
   entry: "./frontend/comunidades-unidas-internal.tsx",
   output: {
     filename: "comunidades-unidas-internal.js",
@@ -36,8 +38,14 @@ module.exports = {
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js"]
   },
-  plugins: [new CleanWebpackPlugin(), new ForkTsCheckerWebpackPlugin()],
+  plugins: [
+    new CleanWebpackPlugin(),
+    new ForkTsCheckerWebpackPlugin(),
+    new BundleAnalyzerPlugin({
+      analyzerMode: env && env.analyze ? "server" : "disabled"
+    })
+  ],
   optimization: {
     namedChunks: true
   }
-};
+});

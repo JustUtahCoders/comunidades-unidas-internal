@@ -9,23 +9,30 @@ import { navigate } from "@reach/router";
 
 export default function AddCaseNote({
   isGlobalAdd,
-  clientId
+  clientId: clientIdFromProps
 }: AddCaseNoteProps) {
   const scope = useCss(css);
   const [title, setTitle] = React.useState("");
   const [creating, setCreating] = React.useState(false);
   const fullEditorRef = React.useRef(null);
   const formRef = React.useRef(null);
+  const caseNoteTitleRef = React.useRef(null);
+  const singleClientSearchInputRef = React.useRef(null);
+  const clientIdForNote = singleClientSearchInputRef.current
+    ? singleClientSearchInputRef.current.clientId
+    : clientIdFromProps;
 
   React.useEffect(() => {
-    formRef.current.querySelector("input").focus();
-  });
+    if (!isGlobalAdd) {
+      caseNoteTitleRef.current.focus();
+    }
+  }, [caseNoteTitleRef.current]);
 
   React.useEffect(() => {
     if (creating) {
       const abortController = new AbortController();
 
-      easyFetch(`/clients/${clientId}/logs`, {
+      easyFetch(`/clients/${clientIdForNote}/logs`, {
         method: "POST",
         signal: abortController.signal,
         body: {
@@ -36,7 +43,7 @@ export default function AddCaseNote({
       })
         .then(data => {
           showGrowl({ type: GrowlType.success, message: "Created case note" });
-          navigate(`/clients/${clientId}/history`);
+          navigate(`/clients/${clientIdForNote}/history`);
         })
         .catch(err => {
           setTimeout(() => {
@@ -49,7 +56,7 @@ export default function AddCaseNote({
 
       return () => abortController.abort();
     }
-  }, [creating, clientId]);
+  }, [creating, clientIdForNote]);
 
   return (
     <>
@@ -61,7 +68,13 @@ export default function AddCaseNote({
         {...scope}
       >
         {!isGlobalAdd && <h3>Add a case note</h3>}
-        {isGlobalAdd && <SingleClientSearchInput autoFocus />}
+        {isGlobalAdd && (
+          <SingleClientSearchInput
+            autoFocus
+            nextThingToFocusRef={caseNoteTitleRef}
+            ref={singleClientSearchInputRef}
+          />
+        )}
         <div>
           <div>
             <label id="case-note-title">Case note title</label>
@@ -70,6 +83,8 @@ export default function AddCaseNote({
             type="text"
             value={title}
             onChange={evt => setTitle(evt.target.value)}
+            ref={caseNoteTitleRef}
+            required
             id="case-note-title"
           />
         </div>
@@ -83,7 +98,15 @@ export default function AddCaseNote({
           <a className="secondary button" href="javascript:history.back()">
             Cancel
           </a>
-          <button type="submit" className="primary">
+          <button
+            type="submit"
+            className="primary"
+            disabled={
+              title.length > 0 &&
+              fullEditorRef.current.getHTML().length > 0 &&
+              clientIdForNote
+            }
+          >
             Create case note
           </button>
         </div>
