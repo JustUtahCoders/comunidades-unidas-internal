@@ -2,11 +2,15 @@ const CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin;
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
+const ManifestPlugin = require("webpack-manifest-plugin");
 
 module.exports = env => ({
-  entry: "./frontend/comunidades-unidas-internal.tsx",
+  entry: {
+    "comunidades-unidas-internal": "./frontend/comunidades-unidas-internal.tsx"
+  },
   output: {
-    filename: "comunidades-unidas-internal.js",
+    filename:
+      process.env.RUNNING_LOCALLY === "true" ? "[name].js" : "[name].[hash].js",
     path: __dirname + "/static",
     publicPath: process.env.PUBLIC_PATH || "/static/"
   },
@@ -43,7 +47,8 @@ module.exports = env => ({
     new ForkTsCheckerWebpackPlugin(),
     new BundleAnalyzerPlugin({
       analyzerMode: env && env.analyze ? "server" : "disabled"
-    })
+    }),
+    new ManifestPlugin()
   ],
   optimization: {
     namedChunks: true

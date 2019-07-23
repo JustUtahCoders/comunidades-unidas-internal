@@ -31,7 +31,11 @@ app.use(
     res.render("index", {
       frontendBaseUrl: process.env.RUNNING_LOCALLY
         ? "http://localhost:9018"
-        : "/static"
+        : "/static",
+      jsMainFileHash: !process.env.RUNNING_LOCALLY
+        ? ""
+        : "." +
+          require("../static/manifest.json")["comunidades-unidas-internal.js"]
     });
   }
 );
