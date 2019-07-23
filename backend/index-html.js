@@ -28,20 +28,15 @@ app.use(
         secure: process.env.RUNNING_LOCALLY ? false : true
       }
     );
-    res.render(
-      "index",
-      {
-        frontendBaseUrl: process.env.RUNNING_LOCALLY
-          ? "http://localhost:9018"
-          : "/static",
-        jsMainFileHash: process.env.RUNNING_LOCALLY
-          ? ""
-          : "." +
-            require("../static/manifest.json")["comunidades-unidas-internal.js"]
-      },
-      {
-        cache: true
-      }
-    );
+    res.setHeader("cache-control", "no-store");
+    res.render("index", {
+      frontendBaseUrl: process.env.RUNNING_LOCALLY
+        ? "http://localhost:9018"
+        : "/static",
+      jsMainFileHash: process.env.RUNNING_LOCALLY
+        ? ""
+        : "." +
+          require("../static/manifest.json")["comunidades-unidas-internal.js"]
+    });
   }
 );
