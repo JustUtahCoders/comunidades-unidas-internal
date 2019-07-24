@@ -45,7 +45,6 @@ exports.databaseError = function databaseError(req, res, err, connection) {
 
 app.set("views", path.join(__dirname, "/views"));
 app.set("view engine", "ejs");
-app.set("trust proxy", 1);
 app.use("/static", express.static(path.join(__dirname, "../static")));
 app.use(bodyParser.urlencoded({ extended: false, limit: "50mb" }));
 app.use(bodyParser.json({ limit: "50mb" }));
