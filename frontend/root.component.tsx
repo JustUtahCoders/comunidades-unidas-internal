@@ -11,6 +11,7 @@ import ViewClient from "./view-edit-client/view-client.component";
 import ClientList from "./client-list/client-list.component";
 import Growls from "./growls/growls.component";
 import AddCaseNote from "./view-edit-client/case-notes/add-case-note.component";
+import AddClientInteraction from "./view-edit-client/interactions/add-client-interaction.component";
 
 export default function Root() {
   return (
@@ -21,12 +22,8 @@ export default function Root() {
             <Home path="/" />
             <AddClient path="add-client" />
             <ClientList path="client-list" />
+            <AddClientInteraction isGlobalAdd path="add-client-interaction" />
             <ViewClient path="clients/:clientId/*" />
-            <ReportIssue
-              missingFeature
-              title="Record Client Visit"
-              path="record-client-visit"
-            />
             <AddCaseNote isGlobalAdd path="add-case-note" />
             <ReportIssue path="report-issue" />
             <ReportIssueSuccess path="report-issue/:issueId" />
