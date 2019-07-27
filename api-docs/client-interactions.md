@@ -21,22 +21,13 @@ GET /api/clients/:id/interactions/:id
 ```json
 {
   "id": 1,
-  "title": "SNAP",
-  "subtitle": "Nutrition Program",
+  "title": "Nutrition Program - SNAP",
   "interactionType": "walk-in",
-  "referral": false,
-  "establishedGoal": null,
   "notes": "Application successfully filled out. Decision pending.",
   "startTime": "2019-05-06T05:00:00.000Z",
   "endTime": "2019-05-06T06:00:00.000Z",
   "location": "CU Office",
   "referenceServices": ["Citizenship", "Financial Coach"],
-  "followUp": {
-    "requested": true,
-    "preferredTime": "morning",
-    "preferredDay": ["Monday", "Wednesday"],
-    "contactMethod": "call"
-  },
   "canModify": true,
   "isDeleted": false,
   "createdBy": {
@@ -64,23 +55,13 @@ GET /api/clients/:id/interactions/
   "interactions": [
     {
       "id": 1,
-      "program": {
-        "title": "SNAP",
-        "subtitle": "Nutrition Program"
-      },
+      "title": "Nutrition Program - SNAP",
       "interactionType": "by phone",
       "notes": "Application successfully filled out. Decision pending.",
       "startTime": "2019-05-06T05:00:00.000Z",
       "endTime": "2019-05-06T06:00:00.000Z",
       "location": null,
       "referenceServices": ["Supermarket Visit"],
-      "followUp": {
-        "requested": true,
-        "reason": "Would like to discussion their options if denied.",
-        "preferredDay": ["Monday", "Wednesday"],
-        "preferredTime": "morning",
-        "contactMethod": "call"
-      },
       "canModify": true,
       "isDeleted": false,
       "createdBy": {
@@ -93,25 +74,13 @@ GET /api/clients/:id/interactions/
     },
     {
       "id": 2,
-      "program": {
-        "title": "Financial Counseling",
-        "subtitle": "Financial Coach Referal",
-        "referral": true,
-        "establishedGoal": "Save $1000"
-      },
+      "title": "Financial Counseling - Financial Coach Referal",
       "interactionType": "in person",
       "notes": "Appointment setup with financial coach. Client would like to save up enough for a down payment on a car better suited for their work.",
       "startTime": "2019-05-06T05:00:00.000Z",
       "endTime": "2019-05-06T06:00:00.000Z",
       "location": "CU Office",
       "referenceServices": ["DACA", "Youth Group"],
-      "followUp": {
-        "requested": false,
-        "reason": null,
-        "preferredDay": null,
-        "preferredTime": null,
-        "contactMethod": null
-      },
       "canModify": true,
       "isDeleted": false,
       "createdBy": {
@@ -136,25 +105,13 @@ POST /api/clients/:id/interactions
 
 ```json
 {
-  "program": {
-    "title": "Financial Counseling",
-    "subtitle": "Financial Coach Referal",
-    "referral": true,
-    "establishedGoal": "Save $1000"
-  },
+  "title": "Financial Counseling - Financial Coach Referal",
   "interactionType": "in person",
   "notes": "Appointment setup with financial coach. Client would like to save up enough for a down payment on a car better suited for their work.",
   "startTime": "2019-05-06T05:00:00.000Z",
   "endTime": "2019-05-06T06:00:00.000Z",
   "location": "CU Office",
   "referenceServices": ["DACA", "Youth Group"],
-  "followUp": {
-    "requested": true,
-    "reason": "Would like to discuss additional financial coaching resources specific to small business owners.",
-    "preferredDay": ["Monday", "Wednesday"],
-    "preferredTime": "morning",
-    "contactMethod": "call"
-  },
   "canModify": true,
   "isDeleted": false,
   "createdBy": {
@@ -169,72 +126,11 @@ POST /api/clients/:id/interactions
 
 **_Notes_**
 
-- `program` is an enum with the following possible object values:
-
-  ```json
-  [
-    {
-      "title": "Preventive Health",
-      "subtitle": [
-        "VDS daily services",
-        "VDS mobile",
-        "VDS Sabath",
-        "Mobile Health Services",
-        "Other"
-      ]
-    },
-    {
-      "title": "Nutrition",
-      "subtitle": ["Nutrition", "Supermarket visit", "Cooking class", "SNAP"]
-    },
-    {
-      "title": "Immigration",
-      "subtitle": ["Citizenship", "Family Petition", "DACA", "Other"]
-    },
-    {
-      "title": "Financial Counseling",
-      "referral": false,
-      "establishedGoal": null
-    },
-    {
-      "title": "Worker Rights"
-    },
-    {
-      "title": "Youth Group"
-    },
-    {
-      "title": "Community Organization",
-      "subtitle": ["Volunteering", "Promoter", "Internship"]
-    },
-    {
-      "title": "Family Support Services",
-      "subtitle": [
-        "LDS Vouchers",
-        "Faxes",
-        "References outside of CU",
-        "Other"
-      ],
-      "outsideReferences": null,
-      "other": null
-    }
-  ]
-  ```
-
-- `program.outsideReferences` will be `null` if the `program.subtitle` "References outside of CU" has not been selected
-
-- `program.other` will be `null` if the `program.subtitle` "Other" is not selected.
+- `program` is an enum with the following possible string values `Preventive Health - VDS daily services`, `Preventive Health - VDS mobile`, `Preventive Health - VDS Sabath`, `Preventive Health - Mobile Health Services`, `Preventive Health - Other`, `Nutrition - Nutrition`, `Nutrition - Supermarket visit`, `Nutrition - Cooking class`, `Nutrition - SNAP`, `Immigration - Citizenship`, `Immigration - Family Petition`, `Immigration - DACA`, `Immigration - Other`, `Financial Counseling`, `Worker Rights`, `Youth Group`, `Community Organization - Volunteering`, `Community Organization - Promoter`, `Community Organization - Internship`, `Family Support Services - LDS Vouchers`, `Family Support Services - Faxes`, `Family Support Services - References outside of CU`, `Family Support Services - Other`
 
 - `interactionType` is an enum with the possible values of `in person`, `by phone`, `workshop/talk`, `one on one/light touch`, `consultation`
 
 - `referenceServices` is an enum with the possible values of `citizenship`, `family petition`, `workers' rights/safety`, `DACA`, `youth group`, `promoters/leadership classes`, `SNAP/food stamps`, `evidence of chronic diseases`, `nutrition`, `supermarket visit`, `food demonstartion`, `community organization/advocacy`, `financial education/advising`, `financial coach`, `family support services`, `outside referral`, or `other`
-
-- If `followUp.requested` is false `followUp.reason`, `followUp.preferredDay`, `followUp.preferredTime`, `followUp.contactMethod` will be `null`.
-
-- `followUp.preferredDay` is an enum with the possible values of `Monday`, `Tuesday`, `Wednesday`, `Thursday`, `Friday`, `Saturday`, and `Sunday`
-
-- `followUp.prefferredTime` is an enum with the possible values of `morning`, `afternoon`, or `evening`
-
-- `followUp.contactMethod` is an enum with the possible values of `call`, `text`, or `email`
 
 ### Response
 
@@ -250,21 +146,11 @@ PATCH /api/clients/:id/interactions/:id
 
 ```json
 {
-  "program": {
-    "title": "SNAP",
-    "subtitle": "Nutrition Program"
-  },
+  "title": "SNAP - Nutrition Program",
   "interactionType": "by phone",
   "notes": "Application successfully filled out. Decision pending.",
   "startTime": "2019-05-06T05:00:00.000Z",
   "endTime": "2019-05-06T06:00:00.000Z",
-  "followUp": {
-    "requested": true,
-    "reason": "Would like to discussion their options if denied.",
-    "preferredDay": ["Monday", "Wednesday"],
-    "preferredTime": "morning",
-    "contactMethod": "call"
-  },
   "location": null,
   "canModify": true,
   "isDeleted": false,
