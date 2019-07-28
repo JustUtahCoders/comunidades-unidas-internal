@@ -21,7 +21,7 @@ ALTER TABLE services
   ADD FOREIGN KEY programIdFk(programId) REFERENCES programs(id);
 
 UPDATE services SET programId = (
-  SELECT id from programs WHERE programName = "Preventive Health"
+  SELECT id from programs WHERE programName = "Immigration"
 ) WHERE serviceName = "Citizenship";
 
 UPDATE services SET programId = (
