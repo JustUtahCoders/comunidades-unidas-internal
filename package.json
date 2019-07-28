@@ -76,7 +76,7 @@
     "db-migrate": "^0.11.6",
     "db-migrate-mysql": "^1.1.10",
     "eslint": "^6.1.0",
-    "eslint-config-react-important-stuff": "^1.1.0",
+    "eslint-config-ts-react-important-stuff": "^1.0.0",
     "file-loader": "^4.1.0",
     "fork-ts-checker-webpack-plugin": "^1.4.3",
     "husky": "^3.0.1",

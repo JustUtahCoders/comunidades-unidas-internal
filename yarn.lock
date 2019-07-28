@@ -2547,6 +2547,13 @@ eslint-config-react-important-stuff@^1.1.0:
     eslint-plugin-jsx-a11y "^6.2.1"
     eslint-plugin-react-hooks "^1.6.0"
 
+eslint-config-ts-react-important-stuff@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-ts-react-important-stuff/-/eslint-config-ts-react-important-stuff-1.0.0.tgz#5e82633ba7306bd6104956576431a4b4b7b71dcf"
+  integrity sha512-8mCEJcGaIBAizicxt8LrzJfiiiWM5CeCBRu5a546NavNbQfqHmM+giIqNyT/cb7JcrjPTMqhFrSp5JiS4mwN/Q==
+  dependencies:
+    eslint-config-react-important-stuff "^1.1.0"
+
 eslint-plugin-jsx-a11y@^6.2.1:
   version "6.2.3"
   resolved "https://registry.yarnpkg.com/eslint-plugin-jsx-a11y/-/eslint-plugin-jsx-a11y-6.2.3.tgz#b872a09d5de51af70a97db1eea7dc933043708aa"

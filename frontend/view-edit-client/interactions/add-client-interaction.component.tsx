@@ -22,8 +22,6 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
   const [tempInteractionIds, setTempInteractionIds] = React.useState([0]);
   const scope = useCss(css);
 
-  console.log(tempInteractionIds);
-
   React.useEffect(() => {
     const abortController = new AbortController();
 
