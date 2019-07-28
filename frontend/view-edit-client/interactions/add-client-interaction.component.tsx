@@ -19,8 +19,10 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
 
   const firstInputRef = React.useRef(null);
   const [servicesResponse, setServicesResponse] = React.useState(null);
-  const [numInteractions, setNumInteractions] = React.useState(1);
+  const [tempInteractionIds, setTempInteractionIds] = React.useState([0]);
   const scope = useCss(css);
+
+  console.log(tempInteractionIds);
 
   React.useEffect(() => {
     const abortController = new AbortController();
@@ -46,17 +48,15 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
             nextThingToFocusRef={firstInputRef}
           />
         )}
-        {Array(numInteractions)
-          .fill(null)
-          .map((item, index) => (
-            <SingleInteractionSlat
-              servicesResponse={servicesResponse}
-              interactionIndex={index}
-              removeInteraction={removeInteraction}
-              key={index}
-              ref={index === 0 ? firstInputRef : null}
-            />
-          ))}
+        {tempInteractionIds.map((item, index) => (
+          <SingleInteractionSlat
+            servicesResponse={servicesResponse}
+            interactionIndex={index}
+            removeInteraction={() => removeInteraction(item)}
+            key={item}
+            ref={index === 0 ? firstInputRef : null}
+          />
+        ))}
         <div className="add-another">
           <button
             type="button"
@@ -82,7 +82,10 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
   }
 
   function addAnotherInteraction() {
-    setNumInteractions(numInteractions + 1);
+    setTempInteractionIds([
+      ...tempInteractionIds,
+      tempInteractionIds[tempInteractionIds.length - 1] + 1
+    ]);
   }
 
   function cancel() {
@@ -95,8 +98,10 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
     }
   }
 
-  function removeInteraction() {
-    setNumInteractions(numInteractions - 1);
+  function removeInteraction(interactionId) {
+    setTempInteractionIds(
+      tempInteractionIds.filter(id => id !== interactionId)
+    );
   }
 }
 

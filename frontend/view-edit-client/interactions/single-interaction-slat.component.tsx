@@ -39,7 +39,7 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
 const css = `
 & .single-client-interaction {
   padding: .8rem .6rem;
-  background-color: blanchedalmond;
+  background-color: var(--colored-well);
   border-radius: .5rem;
   margin-top: 1.6rem;
 }

@@ -28,6 +28,7 @@ const css = `
   --medium-gray: #afafaf;
   --very-dark-gray: #3C464D;
   --brand-color: rgba(184, 17, 17, 1);
+  --colored-well: blanchedalmond;
 }
 
 body {
