@@ -32,8 +32,8 @@ export default function Home(props: HomeProps) {
         />
         <HomeCard
           iconUrl={recordVisitUrl}
-          title="Add a client visit"
-          link="add-client-visit"
+          title="Add a client interaction"
+          link="add-client-interaction"
         />
         <HomeCard
           iconUrl={reportIssueUrl}

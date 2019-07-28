@@ -13,6 +13,7 @@ import ClientHome from "./client-home/client-home.component";
 import ClientHistory from "./client-history/client-history.component";
 import ClientAddNewInfo from "./add-new/client-add-new-info.component";
 import AddCaseNote from "./case-notes/add-case-note.component";
+import AddClientInteraction from "./interactions/add-client-interaction.component";
 
 export default function ViewClient(props: ViewClientProps) {
   const [client, setClient] = React.useState<SingleClient>(null);
@@ -87,6 +88,7 @@ export default function ViewClient(props: ViewClientProps) {
         <ClientHistory path="history" {...childProps} />
         <ClientAddNewInfo path="add-info" {...childProps} />
         <AddCaseNote path="add-case-note" {...childProps} />
+        <AddClientInteraction path="add-client-interaction" {...childProps} />
       </Router>
     </>
   );
