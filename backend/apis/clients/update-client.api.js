@@ -98,162 +98,152 @@ app.patch("/api/clients/:id", (req, res, next) => {
 
   const clientId = Number(req.params.id);
 
-  pool.getConnection((err, connection) => {
-    if (err) {
-      return databaseError(req, res, err, connection);
+  getClientById(req.params.id, (selectErr, oldClient) => {
+    if (selectErr) {
+      return databaseError(req, res, err);
     }
 
-    getClientById(connection, req.params.id, (selectErr, oldClient) => {
-      if (selectErr) {
-        return databaseError(req, res, err, connection);
-      }
+    const fullClient = Object.assign({}, oldClient, req.body);
 
-      const fullClient = Object.assign({}, oldClient, req.body);
+    const queries = [];
 
-      const queries = [];
+    const clientChanged = atLeastOne(
+      req.body,
+      "firstName",
+      "lastName",
+      "birthday",
+      "gender"
+    );
 
-      const clientChanged = atLeastOne(
-        req.body,
-        "firstName",
-        "lastName",
-        "birthday",
-        "gender"
-      );
+    if (clientChanged) {
+      queries.push(
+        mysql.format(
+          `
+        UPDATE clients
+        SET
+          firstName = ?,
+          lastName = ?,
+          birthday = ?,
+          gender = ?,
+          modifiedBy = ?
+        WHERE id = ?;
 
-      if (clientChanged) {
-        queries.push(
-          mysql.format(
-            `
-          UPDATE clients
-          SET
-            firstName = ?,
-            lastName = ?,
-            birthday = ?,
-            gender = ?,
-            modifiedBy = ?
-          WHERE id = ?;
-
-          ${insertActivityLogQuery({
-            clientId,
-            title: "Basic information was updated",
-            logType: "clientUpdated:basicInformation",
-            addedBy: req.session.passport.user.id
-          })}
-        `,
-            [
-              fullClient.firstName,
-              fullClient.lastName,
-              fullClient.birthday,
-              fullClient.gender,
-              req.session.passport.user.id,
-              clientId
-            ]
-          )
-        );
-      }
-
-      const contactInfoChanged = atLeastOne(
-        req.body,
-        "phone",
-        "smsConsent",
-        "email",
-        "address.street",
-        "address.city",
-        "address.state",
-        "address.zip",
-        "housingStatus"
-      );
-
-      if (contactInfoChanged) {
-        queries.push(
-          insertContactInformationQuery(
-            clientId,
-            fullClient,
+        ${insertActivityLogQuery({
+          clientId,
+          title: "Basic information was updated",
+          logType: "clientUpdated:basicInformation",
+          addedBy: req.session.passport.user.id
+        })}
+      `,
+          [
+            fullClient.firstName,
+            fullClient.lastName,
+            fullClient.birthday,
+            fullClient.gender,
             req.session.passport.user.id,
-            true
-          )
-        );
-      }
+            clientId
+          ]
+        )
+      );
+    }
 
-      const demographicsInfoChanged = atLeastOne(
-        req.body,
-        "civilStatus",
-        "householdIncome",
-        "dependents",
-        "currentlyEmployed",
-        "weeklyEmployedHours",
-        "employmentSector",
-        "payInterval",
-        "countryOfOrigin",
-        "dateOfUSArrival",
-        "homeLanguage",
-        "englishProficiency",
-        "isStudent",
-        "eligibleToVote",
-        "registeredToVote"
+    const contactInfoChanged = atLeastOne(
+      req.body,
+      "phone",
+      "smsConsent",
+      "email",
+      "address.street",
+      "address.city",
+      "address.state",
+      "address.zip",
+      "housingStatus"
+    );
+
+    if (contactInfoChanged) {
+      queries.push(
+        insertContactInformationQuery(
+          clientId,
+          fullClient,
+          req.session.passport.user.id,
+          true
+        )
+      );
+    }
+
+    const demographicsInfoChanged = atLeastOne(
+      req.body,
+      "civilStatus",
+      "householdIncome",
+      "dependents",
+      "currentlyEmployed",
+      "weeklyEmployedHours",
+      "employmentSector",
+      "payInterval",
+      "countryOfOrigin",
+      "dateOfUSArrival",
+      "homeLanguage",
+      "englishProficiency",
+      "isStudent",
+      "eligibleToVote",
+      "registeredToVote"
+    );
+
+    if (demographicsInfoChanged) {
+      queries.push(
+        insertDemographicsInformationQuery(
+          clientId,
+          fullClient,
+          req.session.passport.user.id,
+          true
+        )
+      );
+    }
+
+    const intakeDataChanged = atLeastOne(
+      req.body,
+      "clientSource",
+      "couldVolunteer",
+      "dateOfIntake"
+    );
+
+    if (intakeDataChanged) {
+      queries.push(
+        insertIntakeDataQuery(
+          clientId,
+          fullClient,
+          req.session.passport.user.id
+        )
       );
 
-      if (demographicsInfoChanged) {
-        queries.push(
-          insertDemographicsInformationQuery(
-            clientId,
-            fullClient,
-            req.session.passport.user.id,
-            true
-          )
-        );
-      }
-
-      const intakeDataChanged = atLeastOne(
-        req.body,
-        "clientSource",
-        "couldVolunteer",
-        "dateOfIntake"
+      queries.push(
+        insertIntakeServicesQuery({
+          clientId: clientId,
+          intakeServices: fullClient.intakeServices,
+          userId: req.session.passport.user.id
+        })
       );
+    }
 
-      if (intakeDataChanged) {
-        queries.push(
-          insertIntakeDataQuery(
-            clientId,
-            fullClient,
-            req.session.passport.user.id
-          )
-        );
+    if (queries.length === 0) {
+      res.send({
+        client: oldClient
+      });
 
-        queries.push(
-          insertIntakeServicesQuery({
-            clientId: clientId,
-            intakeServices: fullClient.intakeServices,
-            userId: req.session.passport.user.id
-          })
-        );
+      return;
+    }
+
+    pool.query(queries.join("\n"), (patchErr, result) => {
+      if (patchErr) {
+        return databaseError(req, res, err);
       }
 
-      if (queries.length === 0) {
-        connection.release();
-
-        res.send({
-          client: oldClient
-        });
-
-        return;
-      }
-
-      connection.query(queries.join("\n"), (patchErr, result) => {
-        if (patchErr) {
+      getClientById(req.params.id, (selectErr, client) => {
+        if (selectErr) {
           return databaseError(req, res, err, connection);
         }
 
-        getClientById(connection, req.params.id, (selectErr, client) => {
-          if (selectErr) {
-            return databaseError(req, res, err, connection);
-          }
-
-          connection.release();
-
-          res.send({
-            client
-          });
+        res.send({
+          client
         });
       });
     });

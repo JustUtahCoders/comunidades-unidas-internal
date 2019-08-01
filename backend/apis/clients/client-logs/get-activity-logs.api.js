@@ -16,39 +16,31 @@ app.get("/api/clients/:clientId/logs", (req, res, next) => {
     return invalidRequest(res, validationErrors);
   }
 
-  pool.getConnection((err, connection) => {
+  const getLogsQuery = mysql.format(
+    `
+    SELECT
+      clientLogs.id, clientLogs.title, clientLogs.description, clientLogs.logType, clientLogs.dateAdded,
+      users.id createdById, users.firstName createdByFirstName, users.lastName createdByLastName
+    FROM clientLogs JOIN users
+    ON clientLogs.addedBy = users.id
+    WHERE clientLogs.clientId = ?
+    ORDER BY clientLogs.dateAdded DESC, clientLogs.logType DESC
+    LIMIT 200
+  `,
+    [req.params.clientId]
+  );
+
+  pool.query(getLogsQuery, (err, logs) => {
     if (err) {
-      return databaseError(req, res, err, connection);
+      return databaseError(req, res, err);
     }
 
-    const getLogsQuery = mysql.format(
-      `
-      SELECT
-        clientLogs.id, clientLogs.title, clientLogs.description, clientLogs.logType, clientLogs.dateAdded,
-        users.id createdById, users.firstName createdByFirstName, users.lastName createdByLastName
-      FROM clientLogs JOIN users
-      ON clientLogs.addedBy = users.id
-      WHERE clientLogs.clientId = ?
-      ORDER BY clientLogs.dateAdded DESC, clientLogs.logType DESC
-      LIMIT 200
-    `,
-      [req.params.clientId]
-    );
-
-    connection.query(getLogsQuery, (err, logs) => {
-      if (err) {
-        return databaseError(req, res, err, connection);
-      }
-
-      if (logs.length === 0) {
-        notFound(res, `Client ${req.params.clientId}`);
-      } else {
-        res.send({
-          logs: logs.map(createResponseLogObject)
-        });
-      }
-
-      connection.release();
-    });
+    if (logs.length === 0) {
+      notFound(res, `Client ${req.params.clientId}`);
+    } else {
+      res.send({
+        logs: logs.map(createResponseLogObject)
+      });
+    }
   });
 });

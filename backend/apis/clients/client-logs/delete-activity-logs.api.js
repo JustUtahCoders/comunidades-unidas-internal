@@ -19,71 +19,58 @@ app.delete("/api/clients/:clientId/logs/:logId", (req, res) => {
   const clientId = Number(req.params.clientId);
   const logId = Number(req.params.logId);
 
-  pool.getConnection((err, connection) => {
+  const inClause = modifiableLogTypes.map(logType => `'${logType}'`).join(", ");
+
+  const deleteLogsQuery = mysql.format(
+    `
+    DELETE FROM clientLogs WHERE id = ? AND clientId = ? AND addedBy = ? AND logType IN (${inClause});
+  `,
+    [logId, clientId, req.session.passport.user.id]
+  );
+
+  pool.query(deleteLogsQuery, (err, result) => {
     if (err) {
-      return databaseError(req, res, err, connection);
+      return databaseError(req, res, err);
     }
 
-    const inClause = modifiableLogTypes
-      .map(logType => `'${logType}'`)
-      .join(", ");
+    if (result.affectedRows > 0) {
+      res.status(204).end();
+    } else {
+      const getLogQuery = mysql.format(
+        `
+        SELECT * FROM clientLogs WHERE id = ? AND clientId = ?;
+        `,
+        [logId, clientId]
+      );
 
-    const deleteLogsQuery = mysql.format(
-      `
-      DELETE FROM clientLogs WHERE id = ? AND clientId = ? AND addedBy = ? AND logType IN (${inClause});
-    `,
-      [logId, clientId, req.session.passport.user.id]
-    );
+      pool.query(getLogQuery, (err, result) => {
+        if (err) {
+          return databaseError(req, res, err);
+        }
 
-    connection.query(deleteLogsQuery, (err, result) => {
-      if (err) {
-        return databaseError(req, res, err, connection);
-      }
-
-      if (result.affectedRows > 0) {
-        res.status(204).end();
-        connection.release();
-      } else {
-        const getLogQuery = mysql.format(
-          `
-          SELECT * FROM clientLogs WHERE id = ? AND clientId = ?;
-          `,
-          [logId, clientId]
-        );
-
-        connection.query(getLogQuery, (err, result) => {
-          if (err) {
-            return databaseError(req, res, err, connection);
-          }
-
-          if (result.length === 0) {
+        if (result.length === 0) {
+          invalidRequest(
+            res,
+            `No client log with id '${logId}' for client '${clientId}'.`
+          );
+        } else {
+          const row = result[0];
+          if (row.addedBy !== req.session.passport.user.id) {
             invalidRequest(
               res,
-              `No client log with id '${logId}' for client '${clientId}'.`
+              `Cannot delete log entry that you didn't create.`
             );
+          } else if (
+            !modifiableLogTypes.some(logType => logType === row.logType)
+          ) {
+            invalidRequest(res, `Log type '${row.logType}' cannot be deleted.`);
           } else {
-            const row = result[0];
-            if (row.addedBy !== req.session.passport.user.id) {
-              invalidRequest(
-                res,
-                `Cannot delete log entry that you didn't create.`
-              );
-            } else if (
-              !modifiableLogTypes.some(logType => logType === row.logType)
-            ) {
-              invalidRequest(
-                res,
-                `Log type '${row.logType}' cannot be deleted.`
-              );
-            } else {
-              res.status(500).send({
-                error: "Unknown error while deleting client log entry"
-              });
-            }
+            res.status(500).send({
+              error: "Unknown error while deleting client log entry"
+            });
           }
-          connection.release();
-        });
-      }
-    });
+        }
+      });
+    }
   });
 });

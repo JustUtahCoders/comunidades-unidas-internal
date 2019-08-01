@@ -15,7 +15,7 @@ require("./run-database-migrations");
 
 exports.app = app;
 exports.pool = mysql.createPool({
-  connectionLimit: 20,
+  connectionLimit: 40,
   host: process.env.RDS_HOSTNAME || "localhost",
   user: process.env.RDS_USERNAME || "root",
   password: process.env.RDS_PASSWORD || "password",
@@ -23,6 +23,24 @@ exports.pool = mysql.createPool({
   port: process.env.RDS_PORT || "3306",
   multipleStatements: true
 });
+
+const getConnection = exports.pool.getConnection;
+
+exports.pool.getConnection = function(errback) {
+  const startTime = new Date().getTime();
+  return getConnection.call(exports.pool, (err, connection) => {
+    const endTime = new Date().getTime();
+    console.log(
+      `Getting a db connection took ${endTime -
+        startTime} milliseconds. Connection info: ${
+        exports.pool._freeConnections.length
+      } ${exports.pool._allConnections.length} ${
+        exports.pool._acquiringConnections.length
+      }`
+    );
+    errback(err, connection);
+  });
+};
 
 exports.invalidRequest = function invalidRequest(res, msg) {
   res.status(400).send({ error: msg });
