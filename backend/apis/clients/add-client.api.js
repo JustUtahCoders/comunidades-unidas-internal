@@ -175,8 +175,6 @@ app.post("/api/clients", (req, res, next) => {
             const intakeDataId = intakeDataResult.insertId;
 
             if (req.body.intakeServices.length === 0) {
-              connection.commit();
-
               returnTheClient();
 
               return;
@@ -208,24 +206,28 @@ app.post("/api/clients", (req, res, next) => {
                 return databaseError(req, res, err, connection);
               }
 
-              connection.commit();
               returnTheClient();
             });
           });
         });
 
         function returnTheClient() {
-          getClientById(connection, clientId, (err, client) => {
-            if (err) {
-              return databaseError(req, res, err, connection);
-            }
+          getClientById(
+            clientId,
+            (err, client) => {
+              if (err) {
+                return databaseError(req, res, err, connection);
+              }
 
-            connection.release();
+              connection.commit();
+              connection.release();
 
-            res.send({
-              client
-            });
-          });
+              res.send({
+                client
+              });
+            },
+            connection
+          );
         }
       });
     });
