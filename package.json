@@ -21,6 +21,12 @@
     "test": "jest",
     "typescript": "tsc"
   },
+  "browserslist": [
+    "last 5 Chrome major versions",
+    "last 3 Safari major versions",
+    "last 5 Firefox major versions",
+    "last 2 Edge major versions"
+  ],
   "husky": {
     "hooks": {
       "pre-commit": "yarn lint && yarn typescript && pretty-quick --staged && yarn test"
@@ -62,6 +68,7 @@
     "@babel/core": "^7.5.5",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-modules-commonjs": "^7.5.0",
+    "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
     "@zeit/ncc": "^0.20.4",
