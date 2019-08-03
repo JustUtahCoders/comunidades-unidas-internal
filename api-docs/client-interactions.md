@@ -27,7 +27,6 @@ GET /api/clients/:id/interactions/:id
   "startTime": "2019-05-06T05:00:00.000Z",
   "endTime": "2019-05-06T06:00:00.000Z",
   "location": "CU Office",
-  "referenceServices": ["Citizenship", "Financial Coach"],
   "canModify": true,
   "isDeleted": false,
   "createdBy": {
