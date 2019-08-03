@@ -23,7 +23,7 @@ GET /api/clients/:id/interactions/:id
   "id": 1,
   "title": "Nutrition Program - SNAP",
   "interactionType": "walk-in",
-  "notes": "Application successfully filled out. Decision pending.",
+  "description": "Application successfully filled out. Decision pending.",
   "startTime": "2019-05-06T05:00:00.000Z",
   "endTime": "2019-05-06T06:00:00.000Z",
   "location": "CU Office",
@@ -133,7 +133,26 @@ POST /api/clients/:id/interactions
 
 ### Response
 
-The response object is exactly the same as the response object inside of the client log.
+```json
+{
+  "id": 1,
+  "title": "Nutrition Program - SNAP",
+  "interactionType": "walk-in",
+  "description": "Application successfully filled out. Decision pending.",
+  "startTime": "2019-05-06T05:00:00.000Z",
+  "endTime": "2019-05-06T06:00:00.000Z",
+  "location": "CU Office",
+  "canModify": true,
+  "isDeleted": false,
+  "createdBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  }
+}
+```
 
 ## Modify a Client Interaction
 
@@ -151,8 +170,6 @@ PATCH /api/clients/:id/interactions/:id
   "startTime": "2019-05-06T05:00:00.000Z",
   "endTime": "2019-05-06T06:00:00.000Z",
   "location": null,
-  "canModify": true,
-  "isDeleted": false,
   "createdBy": {
     "userId": 1,
     "firstName": "Joel",
@@ -166,6 +183,7 @@ PATCH /api/clients/:id/interactions/:id
 **_Note_**
 
 - You can omit properties that you do not want to update.
+- The "canModify" and "isDeleted" properties cannot be modified.
 
 ### Response
 
@@ -176,7 +194,7 @@ The response to updating the information is the same as the response for `GET /a
 ### Request
 
 ```http
-PATCH /api/clients/:id/interactions/:id/delete
+DELETE /api/clients/:id/interactions/:id
 ```
 
 ```json
