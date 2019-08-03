@@ -57,10 +57,10 @@ GET /api/clients/:id/interactions/
       "title": "Nutrition Program - SNAP",
       "interactionType": "by phone",
       "notes": "Application successfully filled out. Decision pending.",
-      "startTime": "2019-05-06T05:00:00.000Z",
-      "endTime": "2019-05-06T06:00:00.000Z",
+      "date": "2019-05-06T05:00:00.000Z",
+      "duration": "1:00:00",
+      "location": "CU Office",
       "location": null,
-      "referenceServices": ["Supermarket Visit"],
       "canModify": true,
       "isDeleted": false,
       "createdBy": {
@@ -76,10 +76,9 @@ GET /api/clients/:id/interactions/
       "title": "Financial Counseling - Financial Coach Referal",
       "interactionType": "in person",
       "notes": "Appointment setup with financial coach. Client would like to save up enough for a down payment on a car better suited for their work.",
-      "startTime": "2019-05-06T05:00:00.000Z",
-      "endTime": "2019-05-06T06:00:00.000Z",
+      "date": "2019-05-06T05:00:00.000Z",
+      "duration": "1:00:00",
       "location": "CU Office",
-      "referenceServices": ["DACA", "Youth Group"],
       "canModify": true,
       "isDeleted": false,
       "createdBy": {
@@ -107,10 +106,9 @@ POST /api/clients/:id/interactions
   "title": "Financial Counseling - Financial Coach Referal",
   "interactionType": "in person",
   "notes": "Appointment setup with financial coach. Client would like to save up enough for a down payment on a car better suited for their work.",
-  "startTime": "2019-05-06T05:00:00.000Z",
-  "endTime": "2019-05-06T06:00:00.000Z",
+  "date": "2019-05-06T05:00:00.000Z",
+  "duration": "1:00:00",
   "location": "CU Office",
-  "referenceServices": ["DACA", "Youth Group"],
   "canModify": true,
   "isDeleted": false,
   "createdBy": {
@@ -129,8 +127,6 @@ POST /api/clients/:id/interactions
 
 - `interactionType` is an enum with the possible values of `in person`, `by phone`, `workshop/talk`, `one on one/light touch`, `consultation`
 
-- `referenceServices` is an enum with the possible values of `citizenship`, `family petition`, `workers' rights/safety`, `DACA`, `youth group`, `promoters/leadership classes`, `SNAP/food stamps`, `evidence of chronic diseases`, `nutrition`, `supermarket visit`, `food demonstartion`, `community organization/advocacy`, `financial education/advising`, `financial coach`, `family support services`, `outside referral`, or `other`
-
 ### Response
 
 ```json
@@ -139,8 +135,8 @@ POST /api/clients/:id/interactions
   "title": "Nutrition Program - SNAP",
   "interactionType": "walk-in",
   "description": "Application successfully filled out. Decision pending.",
-  "startTime": "2019-05-06T05:00:00.000Z",
-  "endTime": "2019-05-06T06:00:00.000Z",
+  "date": "2019-05-06T05:00:00.000Z",
+  "duration": "1:00:00",
   "location": "CU Office",
   "canModify": true,
   "isDeleted": false,
@@ -167,8 +163,8 @@ PATCH /api/clients/:id/interactions/:id
   "title": "SNAP - Nutrition Program",
   "interactionType": "by phone",
   "notes": "Application successfully filled out. Decision pending.",
-  "startTime": "2019-05-06T05:00:00.000Z",
-  "endTime": "2019-05-06T06:00:00.000Z",
+  "date": "2019-05-06T05:00:00.000Z",
+  "duration": "1:00:00",
   "location": null,
   "createdBy": {
     "userId": 1,
