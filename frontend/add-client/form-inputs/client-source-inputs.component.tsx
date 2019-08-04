@@ -90,9 +90,9 @@ export const clientSources = {
   promotionalMaterial: "Promotional Material",
   consulate: "Consulate",
   friend: "Friend",
-  previousClient: "C.U. client",
-  employee: "C.U. employee",
-  sms: "Text message",
+  previousClient: "C.U. Client",
+  employee: "C.U. Employee",
+  sms: "Text Message",
   radio: "Radio",
   tv: "TV"
 };
