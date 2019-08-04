@@ -94,7 +94,7 @@ export const clientSources = {
   employee: "C.U. employee",
   sms: "Text message",
   radio: "Radio",
-  tv: "tv"
+  tv: "TV"
 };
 
 type ClientSourceInputsProps = {
