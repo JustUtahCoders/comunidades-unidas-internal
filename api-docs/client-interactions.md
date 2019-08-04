@@ -22,6 +22,7 @@ GET /api/clients/:id/interactions/:id
 {
   "id": 1,
   "title": "Nutrition Program - SNAP",
+  "serviceId": 7,
   "interactionType": "walk-in",
   "description": "Application successfully filled out. Decision pending.",
   "date": "2019-05-06T05:00:00.000Z",
@@ -55,6 +56,7 @@ GET /api/clients/:id/interactions/
     {
       "id": 1,
       "title": "Nutrition Program - SNAP",
+      "serviceId": 7,
       "interactionType": "by phone",
       "notes": "Application successfully filled out. Decision pending.",
       "date": "2019-05-06T05:00:00.000Z",
@@ -74,6 +76,7 @@ GET /api/clients/:id/interactions/
     {
       "id": 2,
       "title": "Financial Counseling - Financial Coach Referal",
+      "serviceId": 13,
       "interactionType": "in person",
       "notes": "Appointment setup with financial coach. Client would like to save up enough for a down payment on a car better suited for their work.",
       "date": "2019-05-06T05:00:00.000Z",
@@ -104,6 +107,7 @@ POST /api/clients/:id/interactions
 ```json
 {
   "title": "Financial Counseling - Financial Coach Referal",
+  "serviceId": 13,
   "interactionType": "in person",
   "notes": "Appointment setup with financial coach. Client would like to save up enough for a down payment on a car better suited for their work.",
   "date": "2019-05-06T05:00:00.000Z",
@@ -123,8 +127,7 @@ POST /api/clients/:id/interactions
 
 **_Notes_**
 
-- `program` is an enum with the following possible string values `Preventive Health - VDS daily services`, `Preventive Health - VDS mobile`, `Preventive Health - VDS Sabath`, `Preventive Health - Mobile Health Services`, `Preventive Health - Other`, `Nutrition - Nutrition`, `Nutrition - Supermarket visit`, `Nutrition - Cooking class`, `Nutrition - SNAP`, `Immigration - Citizenship`, `Immigration - Family Petition`, `Immigration - DACA`, `Immigration - Other`, `Financial Counseling`, `Worker Rights`, `Youth Group`, `Community Organization - Volunteering`, `Community Organization - Promoter`, `Community Organization - Internship`, `Family Support Services - LDS Vouchers`, `Family Support Services - Faxes`, `Family Support Services - References outside of CU`, `Family Support Services - Other`
-
+- `serviceId` list can be found `GET /api/services` and more information can be found on the CU Services database can be found in `api-docs/list-services.md`
 - `interactionType` is an enum with the possible values of `in person`, `by phone`, `workshop/talk`, `one on one/light touch`, `consultation`
 
 ### Response
@@ -133,6 +136,7 @@ POST /api/clients/:id/interactions
 {
   "id": 1,
   "title": "Nutrition Program - SNAP",
+  "serviceId": 7,
   "interactionType": "walk-in",
   "description": "Application successfully filled out. Decision pending.",
   "date": "2019-05-06T05:00:00.000Z",
@@ -161,6 +165,7 @@ PATCH /api/clients/:id/interactions/:id
 ```json
 {
   "title": "SNAP - Nutrition Program",
+  "serviceId": 7,
   "interactionType": "by phone",
   "notes": "Application successfully filled out. Decision pending.",
   "date": "2019-05-06T05:00:00.000Z",
