@@ -83,7 +83,11 @@ UPDATE intakeServices
 DELETE FROM services WHERE serviceName = "Community Engagement And Organizing";
 
 ALTER TABLE services
-  MODIFY COLUMN programId INT NOT NULL;
+  DROP FOREIGN KEY programIdFk;
+
+ALTER TABLE services
+  MODIFY COLUMN programId INT NOT NULL,
+  ADD FOREIGN KEY programIdFk(programId) REFERENCES programs(id);
 
 -- Insert new services
 INSERT INTO services (serviceName, serviceDesc, programId) VALUES
