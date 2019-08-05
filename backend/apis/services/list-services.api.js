@@ -23,7 +23,7 @@ app.get("/api/services", (req, res, next) => {
 
     res.send({
       services: services.map(s => ({
-        id: s.id,
+        id: s.serviceId,
         serviceName: s.serviceName,
         serviceDescription: s.serviceDesc,
         programId: s.programId,
