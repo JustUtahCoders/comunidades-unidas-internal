@@ -99,7 +99,7 @@ export type CUService = {
   serviceName: string;
   serviceDescription: string;
   programId: string;
-  programDescription: string;
+  programName: string;
 };
 
 export type CUProgram = {

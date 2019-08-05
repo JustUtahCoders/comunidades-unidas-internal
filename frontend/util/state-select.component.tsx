@@ -77,4 +77,4 @@ export const stateNameToAbbreviation = {
 
 const statesArray = toPairs(stateNameToAbbreviation)
   .map(val => ({ key: val[1], label: val[0] }))
-  .sort((first, second) => first.label > second.label);
+  .sort((first, second) => (first.label > second.label ? 1 : 0));
