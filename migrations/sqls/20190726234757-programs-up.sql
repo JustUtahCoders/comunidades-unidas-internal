@@ -68,11 +68,12 @@ UPDATE services SET programId = (
   SELECT id from programs WHERE programName = "Financial Education / Coaching"
 ) WHERE serviceName = "Financial Education";
 
+UPDATE services SET programId = (
+  SELECT id from programs WHERE programName = "Financial Education / Coaching"
+) WHERE serviceName = "Leadership Classes";
+
 UPDATE services
-  SET serviceName = "Leadership Development - Monthly Meetings",
-    programId = (
-      SELECT id from programs WHERE programName = "Financial Education / Coaching"
-    )
+  SET serviceName = "Leadership Development - Monthly Meetings"
   WHERE serviceName = "Leadership Classes";
 
 UPDATE intakeServices
