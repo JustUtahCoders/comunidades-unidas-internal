@@ -6,7 +6,8 @@ import easyFetch from "../util/easy-fetch";
 
 export default function ReportIssue({
   title = "Report an issue",
-  missingFeature
+  missingFeature,
+  hideHeader
 }: ReportIssueProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -38,7 +39,7 @@ export default function ReportIssue({
 
   return (
     <>
-      <PageHeader title={title} />
+      {!hideHeader && <PageHeader title={title} />}
       {showForm()}
     </>
   );
@@ -162,4 +163,5 @@ type ReportIssueProps = {
   path?: string;
   title?: string;
   missingFeature?: boolean;
+  hideHeader?: boolean;
 };

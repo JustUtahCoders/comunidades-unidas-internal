@@ -8,40 +8,32 @@ const {
 } = require("../utils/transform-utils");
 
 app.get("/api/clients/:id", (req, res, next) => {
-  pool.getConnection((err, connection) => {
+  const validationErrors = checkValid(req.params, validId("id"));
+
+  if (validationErrors.length > 0) {
+    return invalidRequest(res, validationErrors);
+  }
+
+  getClientById(req.params.id, (err, client) => {
     if (err) {
-      return databaseError(req, res, err, connection);
+      return databaseError(req, res, err);
     }
 
-    const validationErrors = checkValid(req.params, validId("id"));
-
-    if (validationErrors.length > 0) {
-      return invalidRequest(res, validationErrors);
+    if (client) {
+      res.send({
+        client
+      });
+    } else {
+      res.status(404).send({
+        errors: [`Could not find client with id ${req.params.id}`]
+      });
     }
-
-    getClientById(connection, req.params.id, (err, client) => {
-      if (err) {
-        return databaseError(req, res, err, connection);
-      }
-
-      connection.release();
-
-      if (client) {
-        res.send({
-          client
-        });
-      } else {
-        res.status(404).send({
-          errors: [`Could not find client with id ${req.params.id}`]
-        });
-      }
-    });
   });
 });
 
 exports.getClientById = getClientById;
 
-function getClientById(connection, clientId, cbk) {
+function getClientById(clientId, cbk, connection) {
   clientId = Number(clientId);
 
   const getClient = mysql.format(
@@ -118,7 +110,7 @@ function getClientById(connection, clientId, cbk) {
     [clientId, clientId]
   );
 
-  connection.query(getClient, (err, data, fields) => {
+  (connection || pool).query(getClient, (err, data, fields) => {
     if (err) {
       return cbk(err, data, fields);
     }

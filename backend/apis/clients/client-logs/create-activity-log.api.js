@@ -32,49 +32,41 @@ app.post("/clients/:clientId/logs", (req, res) => {
     return invalidRequest(res, validationErrors);
   }
 
-  pool.getConnection((err, connection) => {
+  const user = req.session.passport.user;
+
+  const sql = mysql.format(
+    `
+    INSERT INTO clientLogs
+    (clientId, title, description, logType, addedBy)
+    VALUES
+    (?, ?, ?, ?, ?)
+  `,
+    [
+      req.params.clientId,
+      req.body.title,
+      req.body.description,
+      req.body.logType,
+      user.id
+    ]
+  );
+
+  pool.query(sql, (err, result) => {
     if (err) {
-      return databaseError(req, res, err, connection);
+      return databaseError(req, res, err);
     }
 
-    const user = req.session.passport.user;
-
-    const sql = mysql.format(
-      `
-      INSERT INTO clientLogs
-      (clientId, title, description, logType, addedBy)
-      VALUES
-      (?, ?, ?, ?, ?)
-    `,
-      [
-        req.params.clientId,
-        req.body.title,
-        req.body.description,
-        req.body.logType,
-        user.id
-      ]
+    res.send(
+      createResponseLogObject({
+        id: result.id,
+        title: req.body.title,
+        description: req.body.description,
+        logType: req.body.logType,
+        isDeleted: false,
+        createdById: user.id,
+        createdByFirstName: user.firstName,
+        createdByLastName: user.lastName,
+        dateAdded: new Date()
+      })
     );
-
-    connection.query(sql, (err, result) => {
-      if (err) {
-        return databaseError(req, res, err, connection);
-      }
-
-      res.send(
-        createResponseLogObject({
-          id: result.id,
-          title: req.body.title,
-          description: req.body.description,
-          logType: req.body.logType,
-          isDeleted: false,
-          createdById: user.id,
-          createdByFirstName: user.firstName,
-          createdByLastName: user.lastName,
-          dateAdded: new Date()
-        })
-      );
-
-      connection.release();
-    });
   });
 });

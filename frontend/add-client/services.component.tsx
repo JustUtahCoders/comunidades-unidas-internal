@@ -7,7 +7,7 @@ import IntakeServicesInputs from "./form-inputs/intake-services-inputs.component
 import { mediaMobile } from "../styleguide.component";
 
 export default function Services(props: StepComponentProps) {
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState<CUService[]>([]);
   const intakeServicesRef = React.useRef(null);
   const scope = useCss(css);
 
@@ -88,3 +88,22 @@ ${mediaMobile} {
   }
 }
 `;
+
+export type CUServicesList = {
+  services: CUService[];
+  programs: CUProgram[];
+};
+
+export type CUService = {
+  id: number;
+  serviceName: string;
+  serviceDescription: string;
+  programId: string;
+  programDescription: string;
+};
+
+export type CUProgram = {
+  id: number;
+  programName: string;
+  programDescription: string;
+};
