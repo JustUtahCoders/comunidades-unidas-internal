@@ -69,7 +69,10 @@ UPDATE services SET programId = (
 ) WHERE serviceName = "Financial Education";
 
 UPDATE services
-  SET serviceName = "Leadership Development - Monthly Meetings"
+  SET serviceName = "Leadership Development - Monthly Meetings",
+    programId = (
+      SELECT id from programs WHERE programName = "Financial Education / Coaching"
+    )
   WHERE serviceName = "Leadership Classes";
 
 UPDATE intakeServices
