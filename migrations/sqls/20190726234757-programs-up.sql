@@ -11,7 +11,6 @@ INSERT INTO programs (programName, programDescription) VALUES
   ("Immigration", "Immigration"),
   ("Financial Education / Coaching", "Financial Advising / Coaching"),
   ("Workers' Rights", "Workers' Rights"),
-  ("Youth Groups", "Youth Groups"),
   ("Family Support", "Family Support Services"),
   ("Community Engagement and Organizing", "Community Engagement and Organizing")
 ;
@@ -37,7 +36,7 @@ UPDATE services SET programId = (
 ) WHERE serviceName = "DACA";
 
 UPDATE services SET programId = (
-  SELECT id from programs WHERE programName = "Youth Groups"
+  SELECT id from programs WHERE programName = "Community Engagement and Organizing"
 ) WHERE serviceName = "Youth Groups";
 
 UPDATE services SET programId = (
@@ -46,7 +45,8 @@ UPDATE services SET programId = (
 
 UPDATE services SET programId = (
   SELECT id from programs WHERE programName = "Preventive Health"
-) WHERE serviceName = "Chronic Disease Testing";
+), serviceName = "Chronic Disease Screenings"
+WHERE serviceName = "Chronic Disease Testing";
 
 UPDATE services SET programId = (
   SELECT id from programs WHERE programName = "Nutrition / CRYS / SNAP"
@@ -68,43 +68,48 @@ UPDATE services SET programId = (
   SELECT id from programs WHERE programName = "Financial Education / Coaching"
 ) WHERE serviceName = "Financial Education";
 
--- Split Community Engagement into three services
-INSERT INTO services (serviceName, serviceDesc, programId) VALUES
-  (
-    "Leadership Classes - Volunteer",
-    "Community Engagement and Organizing classes for volunteers",
-    (SELECT id from programs WHERE programName = "Community Engagement and Organizing")
-  );
-
-INSERT INTO services (serviceName, serviceDesc, programId) VALUES
-  (
-    "Leadership Classes - Promoter",
-    "Community Engagement and Organizing classes for promoters",
-    (SELECT id from programs WHERE programName = "Community Engagement And Organizing")
-  );
-
-INSERT INTO services (serviceName, serviceDesc, programId) VALUES
-  (
-    "Community Organizing Internship",
-    "Internship for community organizing",
-    (SELECT id from programs WHERE programName = "Community Engagement And Organizing")
-  );
+UPDATE services
+  SET serviceName = "Leadership Development - Monthly Meetings"
+  WHERE serviceName = "Leadership Classes";
 
 UPDATE intakeServices
-  SET serviceId = (SELECT id FROM services WHERE serviceName = "Leadership Classes - Volunteer")
-  WHERE serviceId = (SELECT id FROM services WHERE serviceName = "Leadership Classes");
-
-UPDATE intakeServices
-  SET serviceId = (SELECT id FROM services WHERE serviceName = "Leadership Classes - Volunteer")
+  SET serviceId = (SELECT id FROM services WHERE serviceName = "Leadership Development - Monthly Meetings")
   WHERE serviceId = (SELECT id FROM services WHERE serviceName = "Community Engagement And Organizing");
 
 DELETE FROM services WHERE serviceName = "Community Engagement And Organizing";
-DELETE FROM services WHERE serviceName = "Leadership Classes";
 
 ALTER TABLE services
   MODIFY COLUMN programId INT NOT NULL;
 
 -- Insert new services
+INSERT INTO services (serviceName, serviceDesc, programId) VALUES
+  (
+    "Chronic Care Guidance",
+    "Chronic Care Guidance",
+    (SELECT id from programs WHERE programName = "Preventive Health")
+  );
+
+INSERT INTO services (serviceName, serviceDesc, programId) VALUES
+  (
+    "Tobacco Prevention and Cessation",
+    "Tobacco Prevention and Cessation",
+    (SELECT id from programs WHERE programName = "Preventive Health")
+  );
+
+INSERT INTO services (serviceName, serviceDesc, programId) VALUES
+  (
+    "HIV / PrEP",
+    "HIV / PrEP",
+    (SELECT id from programs WHERE programName = "Preventive Health")
+  );
+
+INSERT INTO services (serviceName, serviceDesc, programId) VALUES
+  (
+    "Youth Groups / Leadership Development",
+    "Youth Groups / Leadership Development",
+    (SELECT id from programs WHERE programName = "Preventive Health")
+  );
+
 INSERT INTO services (serviceName, serviceDesc, programId) VALUES
   (
     "VDS Daily Attention",
