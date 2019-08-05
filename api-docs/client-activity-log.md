@@ -103,6 +103,12 @@ The response object is exactly the same as the response object inside of the cli
 DELETE /api/clients/:clientId/logs/logId
 ```
 
+```json
+{
+  "isDeleted": true
+}
+```
+
 ### Response
 
 An HTTP 204 status is returned if the deletion was successful.
