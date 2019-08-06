@@ -1,20 +1,35 @@
 import React from "react";
 import { useCss } from "kremling";
-import { CUServicesList } from "../../add-client/services.component";
+import { CUServicesList, CUService } from "../../add-client/services.component";
+import { groupBy } from "lodash-es";
+import dayjs from "dayjs";
+import TimeDurationInput from "../../util/time-duration-input.component";
 
 export default React.forwardRef<any, SingleClientInteractionProps>(
   function SingleClientInteraction(props, ref) {
     const scope = useCss(css);
+    const [selectedService, setSelectedService] = React.useState<CUService>(
+      null
+    );
+    const [interactionDate, setInteractionDate] = React.useState(
+      dayjs().format("YYYY-MM-DD")
+    );
+    const [duration, setDuration] = React.useState({});
 
     const services = props.servicesResponse
       ? props.servicesResponse.services
       : [];
 
+    const groupedServices = groupBy(services, "programName");
+
+    console.log("duration", duration);
+
     return (
       <div className="single-client-interaction" {...scope}>
         <div className="header">
           <h3 className="interaction-number">
-            Interaction {props.interactionIndex + 1}
+            #{props.interactionIndex + 1}{" "}
+            {selectedService ? selectedService.serviceName : "(No service yet)"}
           </h3>
           {props.interactionIndex > 0 && (
             <button
@@ -26,11 +41,57 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
             </button>
           )}
         </div>
-        <select ref={ref}>
-          {services.map(service => (
-            <option key={service.id}>{service.serviceName}</option>
-          ))}
-        </select>
+        <div className="inputs">
+          <div>
+            <label id={`interaction-service-${props.interactionIndex}`}>
+              Service provided:{" "}
+            </label>
+            <select
+              ref={ref}
+              value={selectedService ? selectedService.id : ""}
+              onChange={evt =>
+                setSelectedService(
+                  services.find(
+                    service => service.id === Number(evt.target.value)
+                  )
+                )
+              }
+              aria-labelledby={`interaction-service-${props.interactionIndex}`}
+              required
+            >
+              {Object.entries(groupedServices).map(
+                ([programName, services]) => (
+                  <optgroup key={programName} label={programName}>
+                    {services.map(service => (
+                      <option key={service.id} value={service.id}>
+                        {service.serviceName}
+                      </option>
+                    ))}
+                  </optgroup>
+                )
+              )}
+            </select>
+          </div>
+          <div>
+            <label id={`interaction-date-${props.interactionIndex}`}>
+              Date of service:
+            </label>
+            <input
+              type="date"
+              required
+              value={interactionDate}
+              onChange={evt => setInteractionDate(evt.target.value)}
+            />
+          </div>
+          <div>
+            <TimeDurationInput
+              initialValue="00:30:00"
+              index={props.interactionIndex}
+              setValue={setDuration}
+              required
+            />
+          </div>
+        </div>
       </div>
     );
   }
@@ -56,6 +117,16 @@ const css = `
 
 & .header button {
   cursor: pointer;
+}
+
+& .inputs > * {
+  display: flex;
+  align-items: center;
+  margin: .4rem 0;
+}
+
+& .inputs label {
+  margin-right: 1.6rem;
 }
 `;
 
