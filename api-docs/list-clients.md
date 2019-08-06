@@ -4,7 +4,7 @@ API is provided to query a list of clients from the database.
 
 ## Request
 
-GET /api/clients?name=Mario%20Luigi&zip=84107&page=1
+GET /api/clients?name=Mario%20Luigi&zip=84107&page=1&phone=8015558888&id=2
 
 Notes:
 
@@ -12,7 +12,8 @@ Notes:
 - Values for the query should be URL encoded
 - "page" query parameter defaults to 1
 - "name" can be partial
-- If "name" and "zip" are not provided the top 100 rows will be returned ordered by lastName, firstName
+- "phone" can be partial
+- If no search terms are not provided the top 100 rows will be returned ordered by lastName, firstName
 
 ## Response
 
