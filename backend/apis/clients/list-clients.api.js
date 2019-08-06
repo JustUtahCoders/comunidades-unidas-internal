@@ -6,7 +6,7 @@ const {
   nullableNonEmptyString,
   nullableValidId
 } = require("../utils/validation-utils");
-const { responseFullName } = require("../utils/transform-utils");
+const { responseFullName, requestPhone } = require("../utils/transform-utils");
 
 app.get("/api/clients", (req, res, next) => {
   const validationErrors = checkValid(
@@ -51,9 +51,7 @@ app.get("/api/clients", (req, res, next) => {
 
   if (req.query.phone) {
     whereClause += `AND ct.primaryPhone LIKE ? `;
-    whereClauseValues.push(
-      "%" + req.query.phone.replace(/-\s\(\)\+/g, "") + "%"
-    );
+    whereClauseValues.push("%" + requestPhone(req.query.phone) + "%");
   }
 
   let queryString = `
