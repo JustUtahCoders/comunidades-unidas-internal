@@ -13,7 +13,7 @@ Notes:
 - "page" query parameter defaults to 1
 - "name" can be partial
 - "phone" can be partial
-- If no search terms are not provided the top 100 rows will be returned ordered by lastName, firstName
+- If no search terms are provided, the top 100 rows will be returned ordered by lastName, firstName
 
 ## Response
 
