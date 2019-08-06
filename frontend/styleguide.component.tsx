@@ -36,6 +36,14 @@ body {
   margin: 0;
 }
 
+.caption {
+  font-size: 1.4rem;
+}
+
+.bold {
+  font-weight: bold;
+}
+
 :root * {
   box-sizing: border-box;
 }

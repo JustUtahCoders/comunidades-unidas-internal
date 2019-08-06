@@ -2,13 +2,19 @@ const { app, databaseError, pool, invalidRequest } = require("../../server");
 const mysql = require("mysql");
 const {
   checkValid,
+  nullableValidInteger,
   nullableNonEmptyString,
-  nullableValidInteger
+  nullableValidId
 } = require("../utils/validation-utils");
 const { responseFullName } = require("../utils/transform-utils");
 
 app.get("/api/clients", (req, res, next) => {
-  const validationErrors = checkValid(req.query, nullableValidInteger("page"));
+  const validationErrors = checkValid(
+    req.query,
+    nullableValidInteger("page"),
+    nullableValidId(),
+    nullableNonEmptyString("phone")
+  );
 
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
@@ -34,8 +40,20 @@ app.get("/api/clients", (req, res, next) => {
   }
 
   if (req.query.zip) {
-    whereClause += `AND ct.zip = ?`;
+    whereClause += `AND ct.zip = ? `;
     whereClauseValues.push(req.query.zip);
+  }
+
+  if (req.query.id) {
+    whereClause += `AND cl.id = ? `;
+    whereClauseValues.push(req.query.id);
+  }
+
+  if (req.query.phone) {
+    whereClause += `AND ct.primaryPhone LIKE ? `;
+    whereClauseValues.push(
+      "%" + req.query.phone.replace(/-\s\(\)\+/g, "") + "%"
+    );
   }
 
   let queryString = `

@@ -36,6 +36,35 @@ describe(`client-search-dsl.helpers`, () => {
       expect(result.parse.name).toBe("Freddie Mercury");
       expect(result.parse.zip).toBe("84095");
     });
+
+    it(`can parse a zip, phone, name, and id`, () => {
+      const result = parseSearch(
+        "Freddie Mercury zip:84095 phone:1234567890 id:12"
+      );
+      expect(result.isValid).toBe(true);
+      expect(result.errors).toEqual([]);
+      expect(result.parse.name).toBe("Freddie Mercury");
+      expect(result.parse.zip).toBe("84095");
+      expect(result.parse.phone).toBe("1234567890");
+      expect(result.parse.id).toBe("12");
+    });
+
+    it(`can parse a string and force certain values`, () => {
+      const result = parseSearch("Yoshi zip:84103", { id: "7" });
+      expect(result.isValid).toBe(true);
+      expect(result.errors).toEqual([]);
+      expect(result.parse.name).toBe("Yoshi");
+      expect(result.parse.zip).toBe("84103");
+      expect(result.parse.id).toBe("7");
+    });
+
+    it(`omits empty forced values from the parse`, () => {
+      const result = parseSearch("Yoshi", { id: "" });
+      expect(result.isValid).toBe(true);
+      expect(result.errors).toEqual([]);
+      expect(result.parse.name).toBe("Yoshi");
+      expect(result.parse.id).not.toBeDefined();
+    });
   });
 
   describe(`serializeSearch`, () => {

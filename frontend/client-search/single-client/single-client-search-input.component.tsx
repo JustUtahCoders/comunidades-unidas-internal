@@ -30,7 +30,9 @@ export default React.forwardRef<
     if (debouncedClientName.trim().length > 0) {
       const abortController = new AbortController();
 
-      easyFetch(`/api/clients?name=${encodeURIComponent(state.clientName)}`, {
+      const queryParamName = isNaN(Number(state.clientName)) ? "name" : "id";
+
+      easyFetch(`/api/clients?${queryParamName}=${state.clientName}`, {
         signal: abortController.signal
       })
         .then(results => {
