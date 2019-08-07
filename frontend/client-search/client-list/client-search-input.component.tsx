@@ -62,7 +62,7 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
           <form
             className="advanced-search"
             {...scope}
-            autoComplete="password"
+            autoComplete="new-password"
             onSubmit={handleSubmit}
           >
             <div className="header">
