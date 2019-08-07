@@ -17,7 +17,7 @@ VALUES
   ("Green Card Renewal", "Green Card Renewal", (
     SELECT id FROM programs WHERE programName = "Immigration"
   )),
-  ("I-821 Temporary Protected Status (TPS)", "I-821 Temporary Protected Status", (
+  ("I-821 Temporary Protected Status (TPS)", "I-821 Temporary Protected Status (TPS)", (
     SELECT id FROM programs WHERE programName = "Immigration"
   )),
   ("I-765 Application for Employment Authorization", "I-765 Application for Employment Authorization", (
