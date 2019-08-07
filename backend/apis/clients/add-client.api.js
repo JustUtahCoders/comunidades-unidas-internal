@@ -92,7 +92,7 @@ app.post("/api/clients", (req, res, next) => {
     );
 
     if (validityErrors.length > 0) {
-      return invalidRequest(res, validityErrors);
+      return invalidRequest(res, validityErrors, connection);
     }
 
     connection.beginTransaction(err => {

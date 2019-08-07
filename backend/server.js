@@ -42,7 +42,10 @@ exports.pool.getConnection = function(errback) {
   });
 };
 
-exports.invalidRequest = function invalidRequest(res, msg) {
+exports.invalidRequest = function invalidRequest(res, msg, connection) {
+  if (connection) {
+    connection.release();
+  }
   res.status(400).send({ error: msg });
 };
 
