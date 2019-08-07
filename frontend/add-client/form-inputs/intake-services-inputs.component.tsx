@@ -1,4 +1,5 @@
 import React from "react";
+import { groupBy } from "lodash-es";
 
 export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
   function IntakeServicesInputs(props, ref) {
@@ -13,23 +14,30 @@ export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
       };
     });
 
+    const groupedServices = groupBy<Service>(props.services, "programName");
+
     return (
       <div>
         <div className="vertical-options">
-          {props.services.map(service => (
-            <label key={service.id}>
-              <input
-                type="checkbox"
-                name="services"
-                value={service.id}
-                checked={checkedServices.some(
-                  checkedService => checkedService === service.id
-                )}
-                onChange={handleChange}
-                autoFocus
-              />
-              <span>{service.serviceName}</span>
-            </label>
+          {Object.entries(groupedServices).map(([programName, services]) => (
+            <div key={programName}>
+              <h4>{programName}</h4>
+              {services.map(service => (
+                <label key={service.id}>
+                  <input
+                    type="checkbox"
+                    name="services"
+                    value={service.id}
+                    checked={checkedServices.some(
+                      checkedService => checkedService === service.id
+                    )}
+                    onChange={handleChange}
+                    autoFocus
+                  />
+                  <span>{service.serviceName}</span>
+                </label>
+              ))}
+            </div>
           ))}
         </div>
       </div>
@@ -58,6 +66,7 @@ type IntakeServicesInputsProps = {
 type Service = {
   id: number;
   serviceName: string;
+  programName: string;
 };
 
 type ServicesRef = {
