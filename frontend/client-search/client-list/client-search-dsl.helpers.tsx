@@ -1,8 +1,17 @@
 import queryString from "query-string";
 
-const allowedKeys = ["zip"];
+export const allowedSearchFields = {
+  id: "Client ID",
+  zip: "ZIP Code",
+  phone: "Phone"
+};
 
-export function parseSearch(value: string): SearchParse {
+const allowedKeys = Object.keys(allowedSearchFields);
+
+export function parseSearch(
+  value: string,
+  forcedValues: SearchParseValues = {}
+): SearchParse {
   if (value.startsWith("?")) {
     value = value.slice(1);
   }
@@ -34,6 +43,14 @@ export function parseSearch(value: string): SearchParse {
     return result;
   }, initialParsedValue);
 
+  Object.assign(parse, forcedValues);
+
+  Object.keys(parse).forEach(key => {
+    if (!parse[key]) {
+      delete parse[key];
+    }
+  });
+
   return {
     isValid: errors.length === 0,
     errors,
@@ -44,7 +61,7 @@ export function parseSearch(value: string): SearchParse {
 export function serializeSearch(parse: SearchParseValues): string {
   return Object.keys(parse)
     .reduce((acc, key) => {
-      if (allowedKeys.includes(key)) {
+      if (allowedKeys.includes(key) && parse[key]) {
         return `${acc} ${key}:${parse[key]}`;
       } else {
         return acc;
@@ -76,4 +93,6 @@ export type SearchParse = {
 export type SearchParseValues = {
   name?: string;
   zip?: string;
+  phone?: string;
+  id?: string;
 };

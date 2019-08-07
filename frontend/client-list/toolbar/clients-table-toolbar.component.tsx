@@ -8,46 +8,55 @@ import { mediaDesktop, mediaMobile } from "../../styleguide.component";
 
 export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
   const scope = useCss(css);
+  const advancedSearchRef = React.useRef(null);
 
   const lastPage = Math.ceil(props.numClients / props.pageSize);
 
   return (
-    <div className="desktop-table-toolbar" {...scope}>
-      <div className="left">
-        <ClientSearchInput
-          autoFocus
-          performSearch={performSearch}
-          initialValueFromQueryParams
-          disabled={props.fetchingClient}
-        />
-      </div>
-      {lastPage !== 0 && (
-        <div>
-          <div>
-            {(props.page - 1) * props.pageSize + 1} -{" "}
-            {Math.min(props.page * props.pageSize, props.numClients)} of{" "}
-            {props.numClients.toLocaleString()}
-          </div>
-          <button className="icon" onClick={goBack} disabled={props.page === 1}>
-            <img
-              src={backIcon}
-              alt="Go back one page"
-              title="Go back one page"
-            />
-          </button>
-          <button
-            className="icon"
-            onClick={goForward}
-            disabled={props.page === lastPage}
-          >
-            <img
-              src={nextIcon}
-              alt="Go forward one page"
-              title="Go forward one page"
-            />
-          </button>
+    <div className="clients-table-toolbar" {...scope}>
+      <div className="desktop-table-toolbar">
+        <div className="left">
+          <ClientSearchInput
+            autoFocus
+            performSearch={performSearch}
+            initialValueFromQueryParams
+            disabled={props.fetchingClient}
+            advancedSearchRef={advancedSearchRef}
+          />
         </div>
-      )}
+        {lastPage !== 0 && (
+          <div>
+            <div>
+              {(props.page - 1) * props.pageSize + 1} -{" "}
+              {Math.min(props.page * props.pageSize, props.numClients)} of{" "}
+              {props.numClients.toLocaleString()}
+            </div>
+            <button
+              className="icon"
+              onClick={goBack}
+              disabled={props.page === 1}
+            >
+              <img
+                src={backIcon}
+                alt="Go back one page"
+                title="Go back one page"
+              />
+            </button>
+            <button
+              className="icon"
+              onClick={goForward}
+              disabled={props.page === lastPage}
+            >
+              <img
+                src={nextIcon}
+                alt="Go forward one page"
+                title="Go forward one page"
+              />
+            </button>
+          </div>
+        )}
+      </div>
+      <div ref={advancedSearchRef} />
     </div>
   );
 
@@ -65,8 +74,11 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
 }
 
 const css = `
-& .desktop-table-toolbar {
+& .clients-table-toolbar {
   background-color: white;
+}
+
+& .desktop-table-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;

@@ -29,6 +29,7 @@ exports.nullableValidDate = nullable(_validDate);
 exports.validDate = checkDefined(_validDate);
 
 exports.validId = checkDefined(_validId);
+exports.nullableValidId = nullable(_validId);
 
 exports.nullableValidPhone = nullable(_validPhone);
 exports.validPhone = checkDefined(_validPhone);
