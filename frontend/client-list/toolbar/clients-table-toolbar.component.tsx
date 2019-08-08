@@ -76,18 +76,18 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
 const css = `
 & .clients-table-toolbar {
   background-color: white;
+  position: sticky;
+  top: 0;
+  left: 23.6rem;
+  padding: 0 1.4rem;
+  width: 100%;
+  z-index: 100;
 }
 
 & .desktop-table-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1.4rem;
-  position: sticky;
-  top: 0;
-  left: 23.6rem;
-  width: 100%;
-  z-index: 100;
 }
 
 ${mediaDesktop} {
