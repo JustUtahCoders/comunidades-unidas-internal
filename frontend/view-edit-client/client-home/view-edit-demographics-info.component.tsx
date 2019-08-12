@@ -46,7 +46,9 @@ export default function ViewEditDemographicsInfo(
           props.clientUpdated(data.client);
         })
         .catch(err => {
-          console.error(err);
+          setTimeout(() => {
+            throw err;
+          });
         });
     }
   }, [apiStatus.isUpdating]);

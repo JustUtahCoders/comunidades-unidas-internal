@@ -14,7 +14,11 @@ export default function CityInput(props) {
   useEffect(() => {
     import("./city-data.js")
       .then(m => setStatesToCities(m.citiesForStates))
-      .catch(err => console.error(err));
+      .catch(err =>
+        setTimeout(() => {
+          throw err;
+        })
+      );
   }, []);
 
   useEffect(() => {

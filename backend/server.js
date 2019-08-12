@@ -46,6 +46,7 @@ exports.invalidRequest = function invalidRequest(res, msg, connection) {
   if (connection) {
     connection.release();
   }
+  console.log(msg);
   res.status(400).send({ error: msg });
 };
 

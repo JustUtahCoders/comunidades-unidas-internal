@@ -58,7 +58,9 @@ export default function CheckDuplicate(props: StepComponentProps) {
         }
       })
       .catch(function(err) {
-        console.log(err);
+        setTimeout(() => {
+          throw err;
+        });
       });
   }
 }
