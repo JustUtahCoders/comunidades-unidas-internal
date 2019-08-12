@@ -39,6 +39,14 @@ window.addEventListener("unhandledrejection", function(event) {
 
 function prepopulateError(data) {
   const state = { prepopulatedDescription: data };
-  window.history.pushState(state, document.title, "/report-issue");
+  try {
+    window.history.pushState(state, document.title, "/report-issue");
+  } catch (err) {
+    window.history.pushState(
+      { prepopulatedDescription: data.toString() },
+      document.title,
+      "/report-issue"
+    );
+  }
   window.dispatchEvent(new PopStateEvent("popstate", { state }));
 }
