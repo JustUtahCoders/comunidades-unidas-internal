@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS clientInteractions (
         'oneOnOneLightTouch',
         'consultation'
     ) NOT NULL,
-    dateofInteraction DATE DEFAULT CURRENT_DATE NOT NULL,
+    dateOfInteraction DATE DEFAULT CURRENT_DATE NOT NULL,
     duration TIME DEFAULT '0:00:00' NOT NULL,
     location ENUM (
         'CUOffice',
