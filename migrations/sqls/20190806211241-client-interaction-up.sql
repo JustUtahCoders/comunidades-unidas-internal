@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS clientInteractions (
     clientId INT NOT NULL,
     serviceId INT NOT NULL,
     interactionType ENUM (
-        'inPesron',
+        'inPerson',
         'byPhone',
         'workshopTalk',
         'oneOnOneLightTouch',
