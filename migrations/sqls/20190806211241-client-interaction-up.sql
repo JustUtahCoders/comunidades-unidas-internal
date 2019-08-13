@@ -9,22 +9,7 @@ CREATE TABLE IF NOT EXISTS clientInteractions (
         'oneOnOneLightTouch',
         'consultation'
     ) NOT NULL,
-    date DATE DEFAULT CURRENT_DATE NOT NULL,
-    title ENUM (
-        'Client interaction created for Preventive Health: Chronic Disease Screenings',
-        'Client interaction created for Nutrition / CRYS / SNAP: SNAP',
-        'Client interaction created for Nutrition / CRYS / SNAP: Nutrition',
-        'Client interaction created for Nutrition / CRYS / SNAP: Grocery Store Tour',
-        'Client interaction created for Nutrition / CRYS / SNAP: Cooking Classes',
-        'Client interaction created for Immigration: Citizenship',
-        'Client interaction created for Immigration: Family Petition',
-        'Client interaction created for Immigration: DACA',
-        'Client interaction created for Financial Education: Financial Coach',
-        'Client interaction created for Financial Education: Financial Education',
-        'Client interaction created for Workers' Rights: Workers' Rights and Safety',
-        'Client interaction created for Community Engagement and Organizing: Leadership Development',
-        'Client interaction created for Community Engagement and Organizing: Youth Groups'
-    ),
+    dateOfInteraction DATE,
     duration TIME DEFAULT '0:00:00' NOT NULL,
     location ENUM (
         'CUOffice',
@@ -51,7 +36,7 @@ ALTER TABLE clientLogs
             'clientUpdated:demographics',
             'clientUpdated:intakeData',
             'caseNote',
-            'clientInteractionCreated',
-            'clientInteractionUpdated',
-            'clientInteractionDeleted'
-        ) NOT NULL
+            'clientInteraction:created',
+            'clientInteraction:updated',
+            'clientInteraction:deleted'
+        ) NOT NULL;   

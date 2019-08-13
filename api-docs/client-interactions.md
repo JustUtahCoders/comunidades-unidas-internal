@@ -25,12 +25,19 @@ GET /api/clients/:id/interactions/:id
   "serviceId": 7,
   "interactionType": "walkIn",
   "description": "Application successfully filled out. Decision pending.",
-  "date": "2019-05-06",
+  "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
   "location": "CUOffice",
   "canModify": true,
   "isDeleted": false,
   "createdBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
+  "lastUpdatedBy": {
     "userId": 1,
     "firstName": "Joel",
     "lastName": "Denning",
@@ -59,12 +66,19 @@ GET /api/clients/:id/interactions/
       "serviceId": 7,
       "interactionType": "byPhone",
       "description": "Application successfully filled out. Decision pending.",
-      "date": "2019-05-06",
+      "dateOfInteraction": "2019-05-06",
       "duration": "1:00:00",
       "location": null,
       "canModify": true,
       "isDeleted": false,
       "createdBy": {
+        "userId": 1,
+        "firstName": "Joel",
+        "lastName": "Denning",
+        "fullName": "Joel Denning",
+        "timestamp": "2019-05-06T06:00:00.000Z"
+      },
+      "lastUpdatedBy": {
         "userId": 1,
         "firstName": "Joel",
         "lastName": "Denning",
@@ -78,12 +92,19 @@ GET /api/clients/:id/interactions/
       "serviceId": 13,
       "interactionType": "inPerson",
       "description": "Appointment setup with financial coach. Client would like to save up enough for a down payment on a car better suited for their work.",
-      "date": "2019-05-06",
+      "dateofInteraction": "2019-05-06",
       "duration": "1:00:00",
       "location": "CUOffice",
       "canModify": true,
       "isDeleted": false,
       "createdBy": {
+        "userId": 1,
+        "firstName": "Joel",
+        "lastName": "Denning",
+        "fullName": "Joel Denning",
+        "timestamp": "2019-05-06T06:00:00.000Z"
+      },
+      "lastUpdatedBy": {
         "userId": 1,
         "firstName": "Joel",
         "lastName": "Denning",
@@ -109,12 +130,19 @@ POST /api/clients/:id/interactions
   "serviceId": 13,
   "interactionType": "inPerson",
   "description": "Appointment setup with financial coach. Client would like to save up enough for a down payment on a car better suited for their work.",
-  "date": "2019-05-06",
+  "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
   "location": "CUOffice",
   "canModify": true,
   "isDeleted": false,
   "createdBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
+  "lastUpdatedBy": {
     "userId": 1,
     "firstName": "Joel",
     "lastName": "Denning",
@@ -139,12 +167,19 @@ POST /api/clients/:id/interactions
   "serviceId": 7,
   "interactionType": "walkIn",
   "description": "Application successfully filled out. Decision pending.",
-  "date": "2019-05-06",
+  "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
   "location": "CUOffice",
   "canModify": true,
   "isDeleted": false,
   "createdBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
+  "lastUpdatedBy": {
     "userId": 1,
     "firstName": "Joel",
     "lastName": "Denning",
@@ -168,10 +203,17 @@ PATCH /api/clients/:id/interactions/:id
   "serviceId": 7,
   "interactionType": "byPhone",
   "description": "Application successfully filled out. Decision pending.",
-  "date": "2019-05-06",
+  "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
   "location": null,
   "createdBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
+  "lastUpdatedBy": {
     "userId": 1,
     "firstName": "Joel",
     "lastName": "Denning",
