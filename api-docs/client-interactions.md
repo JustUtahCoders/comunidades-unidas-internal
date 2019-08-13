@@ -2,6 +2,12 @@
 
 The client interactions document direct encounters with the clients.
 
+Here is the list of the valid interaction types:
+
+- `clientInteractionCreated`,
+- `clientInteractionUpdated`,
+- `clientInteractionDeleted`,
+
 ## Get a single Client Interaction
 
 ### Request
