@@ -55,4 +55,3 @@ ALTER TABLE clientLogs
             'clientInteractionUpdated',
             'clientInteractionDeleted'
         ) NOT NULL
-    
