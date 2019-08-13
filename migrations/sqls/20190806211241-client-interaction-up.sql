@@ -10,6 +10,21 @@ CREATE TABLE IF NOT EXISTS clientInteractions (
         'consultation'
     ) NOT NULL,
     date DATE DEFAULT CURRENT_DATE NOT NULL,
+    title ENUM (
+        'Client interaction created - Preventive Health: Chronic Disease Screenings',
+        'Client interaction created - Nutrition / CRYS / SNAP: SNAP',
+        'Client interaction created - Nutrition / CRYS / SNAP: Nutrition',
+        'Client interaction created - Nutrition / CRYS / SNAP: Grocery Store Tour',
+        'Client interaction created - Nutrition / CRYS / SNAP: Cooking Classes',
+        'Client interaction created - Immigration: Citizenship',
+        'Client interaction created - Immigration: Family Petition',
+        'Client interaction created - Immigration: DACA',
+        'Client interaction created - Financial Education: Financial Coach',
+        'Client interaction created - Financial Education: Financial Education',
+        'Client interaction created - Workers' Rights: Workers' Rights and Safety',
+        'Client interaction created - Community Engagement and Organizing: Leadership Development',
+        'Client interaction created - Community Engagement and Organizing: Youth Groups'
+    ),
     duration TIME DEFAULT '0:00:00' NOT NULL,
     location ENUM (
         'CUOffice',
