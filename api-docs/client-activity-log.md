@@ -6,12 +6,15 @@ detailId, canModify, and isDeleted flag.
 
 Here is the list of valid log types:
 
-- `clientCreated`,
-- `clientUpdated:basicInformation`,
-- `clientUpdated:contactInformation`,
-- `clientUpdated:demographics`,
-- `clientUpdated:intakeData`,
-- `caseNote`,
+- 'clientCreated',
+- 'clientUpdated:basicInformation',
+- 'clientUpdated:contactInformation',
+- 'clientUpdated:demographics',
+- 'clientUpdated:intakeData',
+- 'caseNote',
+- 'clientInteractionCreated',
+- 'clientInteractionUpdated',
+- 'clientInteractionDeleted'
 
 The `detailId` refers to an id for a different resource that you may request if you
 want additional information about this log entry.

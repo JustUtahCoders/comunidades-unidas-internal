@@ -23,14 +23,21 @@ GET /api/clients/:id/interactions/:id
   "id": 1,
   "title": "Nutrition Program - SNAP",
   "serviceId": 7,
-  "interactionType": "walk-in",
+  "interactionType": "walkIn",
   "description": "Application successfully filled out. Decision pending.",
-  "date": "2019-05-06",
+  "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
-  "location": "CU Office",
+  "location": "CUOffice",
   "canModify": true,
   "isDeleted": false,
   "createdBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
+  "lastUpdatedBy": {
     "userId": 1,
     "firstName": "Joel",
     "lastName": "Denning",
@@ -57,14 +64,21 @@ GET /api/clients/:id/interactions/
       "id": 1,
       "title": "Nutrition Program - SNAP",
       "serviceId": 7,
-      "interactionType": "by phone",
-      "notes": "Application successfully filled out. Decision pending.",
-      "date": "2019-05-06",
+      "interactionType": "byPhone",
+      "description": "Application successfully filled out. Decision pending.",
+      "dateOfInteraction": "2019-05-06",
       "duration": "1:00:00",
       "location": null,
       "canModify": true,
       "isDeleted": false,
       "createdBy": {
+        "userId": 1,
+        "firstName": "Joel",
+        "lastName": "Denning",
+        "fullName": "Joel Denning",
+        "timestamp": "2019-05-06T06:00:00.000Z"
+      },
+      "lastUpdatedBy": {
         "userId": 1,
         "firstName": "Joel",
         "lastName": "Denning",
@@ -76,14 +90,21 @@ GET /api/clients/:id/interactions/
       "id": 2,
       "title": "Financial Counseling - Financial Coach Referal",
       "serviceId": 13,
-      "interactionType": "in person",
-      "notes": "Appointment setup with financial coach. Client would like to save up enough for a down payment on a car better suited for their work.",
-      "date": "2019-05-06",
+      "interactionType": "inPerson",
+      "description": "Appointment setup with financial coach. Client would like to save up enough for a down payment on a car better suited for their work.",
+      "dateofInteraction": "2019-05-06",
       "duration": "1:00:00",
-      "location": "CU Office",
+      "location": "CUOffice",
       "canModify": true,
       "isDeleted": false,
       "createdBy": {
+        "userId": 1,
+        "firstName": "Joel",
+        "lastName": "Denning",
+        "fullName": "Joel Denning",
+        "timestamp": "2019-05-06T06:00:00.000Z"
+      },
+      "lastUpdatedBy": {
         "userId": 1,
         "firstName": "Joel",
         "lastName": "Denning",
@@ -107,14 +128,21 @@ POST /api/clients/:id/interactions
 {
   "title": "Financial Counseling - Financial Coach Referal",
   "serviceId": 13,
-  "interactionType": "in person",
-  "notes": "Appointment setup with financial coach. Client would like to save up enough for a down payment on a car better suited for their work.",
-  "date": "2019-05-06",
+  "interactionType": "inPerson",
+  "description": "Appointment setup with financial coach. Client would like to save up enough for a down payment on a car better suited for their work.",
+  "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
-  "location": "CU Office",
+  "location": "CUOffice",
   "canModify": true,
   "isDeleted": false,
   "createdBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
+  "lastUpdatedBy": {
     "userId": 1,
     "firstName": "Joel",
     "lastName": "Denning",
@@ -127,7 +155,8 @@ POST /api/clients/:id/interactions
 **_Notes_**
 
 - `serviceId` list can be found `GET /api/services` and more information can be found on the CU Services database can be found in `api-docs/list-services.md`
-- `interactionType` is an enum with the possible values of `in person`, `by phone`, `workshop/talk`, `one on one/light touch`, `consultation`
+- `interactionType` is an enum with the possible values of `inPerson`, `byPhone`, `workshopTalk`, `oneOnOneLightTouch`, `consultation`
+- `location` is an enum with the possible values of `CUOffice`, `consulate`, and `communityEvent`
 
 ### Response
 
@@ -136,14 +165,21 @@ POST /api/clients/:id/interactions
   "id": 1,
   "title": "Nutrition Program - SNAP",
   "serviceId": 7,
-  "interactionType": "walk-in",
+  "interactionType": "walkIn",
   "description": "Application successfully filled out. Decision pending.",
-  "date": "2019-05-06",
+  "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
-  "location": "CU Office",
+  "location": "CUOffice",
   "canModify": true,
   "isDeleted": false,
   "createdBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
+  "lastUpdatedBy": {
     "userId": 1,
     "firstName": "Joel",
     "lastName": "Denning",
@@ -165,12 +201,19 @@ PATCH /api/clients/:id/interactions/:id
 {
   "title": "SNAP - Nutrition Program",
   "serviceId": 7,
-  "interactionType": "by phone",
-  "notes": "Application successfully filled out. Decision pending.",
-  "date": "2019-05-06",
+  "interactionType": "byPhone",
+  "description": "Application successfully filled out. Decision pending.",
+  "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
   "location": null,
   "createdBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
+  "lastUpdatedBy": {
     "userId": 1,
     "firstName": "Joel",
     "lastName": "Denning",
