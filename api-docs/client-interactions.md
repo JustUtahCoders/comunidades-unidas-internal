@@ -36,7 +36,14 @@ GET /api/clients/:id/interactions/:id
     "lastName": "Denning",
     "fullName": "Joel Denning",
     "timestamp": "2019-05-06T06:00:00.000Z"
-  }
+  },
+  "lastUpdatedBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
 }
 ```
 
@@ -70,7 +77,14 @@ GET /api/clients/:id/interactions/
         "lastName": "Denning",
         "fullName": "Joel Denning",
         "timestamp": "2019-05-06T06:00:00.000Z"
-      }
+      },
+      "lastUpdatedBy": {
+        "userId": 1,
+        "firstName": "Joel",
+        "lastName": "Denning",
+        "fullName": "Joel Denning",
+        "timestamp": "2019-05-06T06:00:00.000Z"
+      },
     },
     {
       "id": 2,
@@ -89,7 +103,14 @@ GET /api/clients/:id/interactions/
         "lastName": "Denning",
         "fullName": "Joel Denning",
         "timestamp": "2019-05-06T06:00:00.000Z"
-      }
+      },
+      "lastUpdatedBy": {
+        "userId": 1,
+        "firstName": "Joel",
+        "lastName": "Denning",
+        "fullName": "Joel Denning",
+        "timestamp": "2019-05-06T06:00:00.000Z"
+      },
     }
   ]
 }
@@ -120,7 +141,14 @@ POST /api/clients/:id/interactions
     "lastName": "Denning",
     "fullName": "Joel Denning",
     "timestamp": "2019-05-06T06:00:00.000Z"
-  }
+  },
+  "lastUpdatedBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
 }
 ```
 
@@ -150,7 +178,14 @@ POST /api/clients/:id/interactions
     "lastName": "Denning",
     "fullName": "Joel Denning",
     "timestamp": "2019-05-06T06:00:00.000Z"
-  }
+  },
+  "lastUpdatedBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
 }
 ```
 
@@ -177,7 +212,14 @@ PATCH /api/clients/:id/interactions/:id
     "lastName": "Denning",
     "fullName": "Joel Denning",
     "timestamp": "2019-05-06T06:00:00.000Z"
-  }
+  },
+  "lastUpdatedBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
 }
 ```
 
