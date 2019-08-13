@@ -11,6 +11,9 @@ Here is the list of valid log types:
 - `clientUpdated:contactInformation`,
 - `clientUpdated:demographics`,
 - `clientUpdated:intakeData`,
+- `clientInteractionCreated`,
+- `clientInteractionUpdated`,
+- `clientInteractionDeleted`,
 - `caseNote`,
 
 The `detailId` refers to an id for a different resource that you may request if you
