@@ -51,8 +51,7 @@ ALTER TABLE clientLogs
             'clientUpdated:demographics',
             'clientUpdated:intakeData',
             'caseNote',
-            'clientInteractionCreated',
-            'clientInteractionUpdated',
-            'clientInteractionDeleted'
-        ) NOT NULL
-    
+            'clientInteraction:created',
+            'clientInteraction:updated',
+            'clientInteraction:deleted'
+        ) NOT NULL;   
