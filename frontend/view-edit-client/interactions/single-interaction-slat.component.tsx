@@ -3,6 +3,7 @@ import { useCss } from "kremling";
 import { CUServicesList } from "../../add-client/services.component";
 import { groupBy } from "lodash-es";
 import dayjs from "dayjs";
+// import TimeDurationInput, { TimeDuration } from "../../util/time-duration-input.component";
 
 export default React.forwardRef<any, SingleClientInteractionProps>(
   function SingleClientInteraction(props, ref) {
@@ -15,6 +16,7 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
     const [dateOfInteraction, setDateOfInteraction] = React.useState(
       dayjs().format("YYYY-MM-DD")
     );
+    // const [duration, setDuration] = React.useState<TimeDuration>({})
 
     const services = props.servicesResponse
       ? props.servicesResponse.services
@@ -80,6 +82,7 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
             onChange={evt => setDateOfInteraction(evt.target.value)}
             aria-labelledby={`interaction-date-${props.interactionIndex}`}
           />
+          {/* <TimeDurationInput  /> */}
         </div>
       </div>
     );
