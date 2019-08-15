@@ -8,7 +8,6 @@ const modifiableInteractionTypes = [
 
 exports.insertClientInteractionsQuery = function(params) {
   if (params.detailIdIsLastInsertId) {
-    //client interactions don't have the detailId, what should this be based around in it's place?
     return mysql.format(
       `
 				INSERT INTO clientInteractions (clientId, title, serviceId, interactionType, description, dateOfInteraction, duraction, createdBy, detailId)
