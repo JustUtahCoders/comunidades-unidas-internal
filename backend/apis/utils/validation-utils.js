@@ -28,6 +28,9 @@ exports.nonEmptyString = checkDefined(_nonEmptyString);
 exports.nullableValidDate = nullable(_validDate);
 exports.validDate = checkDefined(_validDate);
 
+exports.nullableValidTime = nullable(_validTime);
+exports.validTime = checkDefined(_validTime);
+
 exports.validId = checkDefined(_validId);
 exports.nullableValidId = nullable(_validId);
 
@@ -66,6 +69,13 @@ function _validDate(propertyName) {
     /^[0-9]{4}-[01][0-9]-[0123][0-9]$/.test(val) && !isNaN(new Date(val))
       ? null
       : `Property ${propertyName} must be a string date of format YYYY-MM-DD. Received '${val}'`;
+}
+
+function _validTime(propertyName) {
+  return val =>
+    /^[0-1][0-9]:[0-5][0-9]:[0-5][0-9]$/.test(val) && !isNaN(new Time(val))
+      ? null
+      : `Property ${propertyName} must be a string time of format HH:MM:SS. Recieved '${val}'`;
 }
 
 function _nonEmptyString(propertyName) {
