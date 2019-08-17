@@ -217,6 +217,10 @@ function getBackgroundColor(logType: LogType) {
     case LogType["clientUpdated:demographics"]:
     case LogType["clientUpdated:intakeData"]:
       return "lightblue";
+    case LogType["clientInteraction:created"]:
+    case LogType["clientInteraction:updated"]:
+    case LogType["clientInteraction:deleted"]:
+      return "yellow";
     default:
       return "black";
   }
@@ -322,7 +326,10 @@ export enum LogType {
   "clientUpdated:contactInformation" = "clientUpdated:contactInformation",
   "clientUpdated:demographics" = "clientUpdated:demographics",
   "clientUpdated:intakeData" = "clientUpdated:intakeData",
-  "caseNote" = "caseNote"
+  "caseNote" = "caseNote",
+  "clientInteraction:created" = "clientInteraction:created",
+  "clientInteraction:updated" = "clientInteraction:updated",
+  "clientInteraction:deleted" = "clientInteraction:deleted"
 }
 
 const allFiltersOn: ClientHistoryFilterOptions = Object.keys(LogType).reduce(
@@ -335,12 +342,21 @@ const allFiltersOn: ClientHistoryFilterOptions = Object.keys(LogType).reduce(
 
 function getInitialLogState(): LogState {
   const localStorageFilters = localStorage.getItem("cu:client-history-filters");
+  let filters;
+  if (localStorageFilters) {
+    filters = JSON.parse(localStorageFilters);
+    Object.keys(LogType).forEach(logType => {
+      if (!filters.hasOwnProperty(logType)) {
+        filters[logType] = true;
+      }
+    });
+  } else {
+    filters = allFiltersOn;
+  }
   return {
     allLogs: [],
     filteredLogs: [],
-    filters: localStorageFilters
-      ? JSON.parse(localStorageFilters)
-      : allFiltersOn
+    filters
   };
 }
 
