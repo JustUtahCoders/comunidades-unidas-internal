@@ -73,7 +73,7 @@ function _validDate(propertyName) {
 
 function _validTime(propertyName) {
   return val =>
-    /^[0-1][0-9]:[0-5][0-9]:[0-5][0-9]$/.test(val) && !isNaN(new Time(val))
+    /^[0-1][0-9]:[0-5][0-9]:[0-5][0-9]$/.test(val)
       ? null
       : `Property ${propertyName} must be a string time of format HH:MM:SS. Recieved '${val}'`;
 }
