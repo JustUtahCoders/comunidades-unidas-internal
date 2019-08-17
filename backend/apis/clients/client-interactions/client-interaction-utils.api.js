@@ -1,11 +1,6 @@
 const mysql = require("mysql");
 const { responseFullName } = require("../../utils/transform-utils");
 
-const modifiableInteractionTypes = [
-  "clientInteraction:created",
-  "clientInteraction:updated"
-];
-
 exports.createResponseInteractionObject = function createResponseInteractionObject(
   log
 ) {
@@ -15,7 +10,7 @@ exports.createResponseInteractionObject = function createResponseInteractionObje
     serviceId: log.serviceId,
     interationType: log.interactionType,
     description: log.description,
-    dateOfInteraction: log.dataOfDescription,
+    dateOfInteraction: log.dateOfInteraction,
     duration: log.duration,
     canModify: modifiableInteractionTypes.some(
       interactionType => interactionType === log.interactionType
