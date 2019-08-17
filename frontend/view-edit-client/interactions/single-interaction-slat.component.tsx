@@ -54,21 +54,37 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
           <label id={`provided-service-${props.interactionIndex}`}>
             Service:
           </label>
-          <select
-            ref={ref}
-            value={selectedService || ""}
-            onChange={evt => setSelectedService(evt.target.value)}
-            aria-labelledby={`provided-service-${props.interactionIndex}`}
-            className="services-select"
-          >
-            {Object.keys(groupedServices).map(programName => (
-              <optgroup label={programName} key={programName}>
-                {groupedServices[programName].map(service => (
-                  <option key={service.id}>{service.serviceName}</option>
-                ))}
-              </optgroup>
-            ))}
-          </select>
+          <div>
+            <select
+              ref={ref}
+              value={selectedService || ""}
+              onChange={evt => setSelectedService(Number(evt.target.value))}
+              aria-labelledby={`provided-service-${props.interactionIndex}`}
+              className="services-select"
+            >
+              {Object.keys(groupedServices).map(programName => (
+                <optgroup label={programName} key={programName}>
+                  {groupedServices[programName].map(service => (
+                    <option key={service.id} value={service.id}>
+                      {service.serviceName}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+            {selectedService &&
+              services.length > 0 &&
+              selectedService ===
+                (
+                  services.find(s => s.serviceName === "Financial Coach") || {
+                    id: null
+                  }
+                ).id && (
+                <div className="caption">
+                  Please add the established goals into the description field.
+                </div>
+              )}
+          </div>
           <label id={`interaction-type-${props.interactionIndex}`}>Type:</label>
           <select
             value={selectedInteractionType || ""}
