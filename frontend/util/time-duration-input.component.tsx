@@ -44,11 +44,11 @@ function createDuration(hours, minutes): TimeDuration {
   return {
     hours,
     minutes,
-    stringValue: withTrailingZeros(hours) + ":" + withTrailingZeros(minutes)
+    stringValue: withLeadingZeros(hours) + ":" + withLeadingZeros(minutes)
   };
 }
 
-function withTrailingZeros(num) {
+function withLeadingZeros(num) {
   let result = String(num);
   while (result.length < 2) {
     result = "0" + result;
