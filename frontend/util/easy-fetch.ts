@@ -17,7 +17,11 @@ export default function easyFetch(url: string, opts?: any) {
 
   return window.fetch(url, opts).then(response => {
     if (response.ok) {
-      return response.json();
+      if (response.status === 204) {
+        return null;
+      } else {
+        return response.json();
+      }
     } else {
       return response
         .json()
