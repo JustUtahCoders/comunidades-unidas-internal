@@ -23,7 +23,7 @@ app.get("/api/clients/:clientId/logs", (req, res, next) => {
       users.id createdById, users.firstName createdByFirstName, users.lastName createdByLastName
     FROM clientLogs JOIN users
     ON clientLogs.addedBy = users.id
-    WHERE clientLogs.clientId = ?
+    WHERE clientLogs.clientId = ? AND isDeleted = false
     ORDER BY clientLogs.dateAdded DESC, clientLogs.logType DESC
     LIMIT 200
   `,
