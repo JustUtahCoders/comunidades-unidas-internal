@@ -2,10 +2,6 @@ import React from "react";
 import { useCss } from "kremling";
 
 export default function TimeDurationInput(props: TimeDurationInputProps) {
-  const [internalValue, setInternalValue] = React.useState({
-    hours: 0,
-    minutes: 30
-  });
   const scope = useCss(css);
 
   return (
@@ -13,35 +9,51 @@ export default function TimeDurationInput(props: TimeDurationInputProps) {
       <input
         type="number"
         required={props.required}
-        value={internalValue.hours}
+        value={props.duration.hours}
         onChange={changeHours}
         aria-labelledby={props.labelId}
         min={0}
         max={100}
       />
-      <span className="descr">hour{internalValue.hours !== 1 ? "s" : ""}</span>
+      <span className="descr">hour{props.duration.hours !== 1 ? "s" : ""}</span>
       <input
         type="number"
         required={props.required}
-        value={internalValue.minutes}
+        value={props.duration.minutes}
         onChange={changeMinutes}
         aria-labelledby={props.labelId}
         min={0}
         max={59}
       />
       <span className="descr">
-        minute{internalValue.minutes !== 1 ? "s" : ""}
+        minute{props.duration.minutes !== 1 ? "s" : ""}
       </span>
     </span>
   );
 
   function changeHours(evt) {
-    setInternalValue({ ...internalValue, hours: Number(evt.target.value) });
+    props.setDuration(createDuration(evt.target.value, props.duration.minutes));
   }
 
   function changeMinutes(evt) {
-    setInternalValue({ ...internalValue, minutes: Number(evt.target.value) });
+    props.setDuration(createDuration(props.duration.hours, evt.target.value));
   }
+}
+
+function createDuration(hours, minutes): TimeDuration {
+  return {
+    hours,
+    minutes,
+    stringValue: withTrailingZeros(hours) + ":" + withTrailingZeros(minutes)
+  };
+}
+
+function withTrailingZeros(num) {
+  let result = String(num);
+  while (result.length < 2) {
+    result = "0" + result;
+  }
+  return result;
 }
 
 const css = `
@@ -55,8 +67,8 @@ const css = `
 `;
 
 type TimeDurationInputProps = {
-  initialValue: string;
-  setValue(duration: TimeDuration): any;
+  duration: TimeDuration;
+  setDuration(duration: TimeDuration): any;
   labelId: string;
   required?: boolean;
 };
