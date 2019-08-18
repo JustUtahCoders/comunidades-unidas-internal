@@ -8,13 +8,10 @@ exports.createResponseInteractionObject = function createResponseInteractionObje
     id: log.id,
     title: log.title,
     serviceId: log.serviceId,
-    interationType: log.interactionType,
+    interactionType: log.interactionType,
     description: log.description,
     dateOfInteraction: log.dateOfInteraction,
     duration: log.duration,
-    canModify: modifiableInteractionTypes.some(
-      interactionType => interactionType === log.interactionType
-    ),
     isDeleted: Boolean(log.isDeleted),
     createdBy: {
       userId: log.createdById,

@@ -28,7 +28,6 @@ GET /api/clients/:id/interactions/:id
   "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
   "location": "CUOffice",
-  "canModify": true,
   "isDeleted": false,
   "createdBy": {
     "userId": 1,
@@ -69,7 +68,6 @@ GET /api/clients/:id/interactions/
       "dateOfInteraction": "2019-05-06",
       "duration": "1:00:00",
       "location": null,
-      "canModify": true,
       "isDeleted": false,
       "createdBy": {
         "userId": 1,
@@ -95,7 +93,6 @@ GET /api/clients/:id/interactions/
       "dateofInteraction": "2019-05-06",
       "duration": "1:00:00",
       "location": "CUOffice",
-      "canModify": true,
       "isDeleted": false,
       "createdBy": {
         "userId": 1,
@@ -133,7 +130,6 @@ POST /api/clients/:id/interactions
   "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
   "location": "CUOffice",
-  "canModify": true,
   "isDeleted": false,
   "createdBy": {
     "userId": 1,
@@ -170,7 +166,6 @@ POST /api/clients/:id/interactions
   "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
   "location": "CUOffice",
-  "canModify": true,
   "isDeleted": false,
   "createdBy": {
     "userId": 1,
