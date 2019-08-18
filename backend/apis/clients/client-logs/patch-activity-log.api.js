@@ -66,6 +66,10 @@ app.patch(`/api/clients/:clientId/logs/:logId`, (req, res) => {
         );
       }
 
+      if (existingLog.idOfUpdatedLog) {
+        return invalidRequest(res, `You may not modify an outdated client log`);
+      }
+
       const updateSql = mysql.format(
         `
         INSERT INTO clientLogs

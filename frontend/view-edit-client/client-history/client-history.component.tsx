@@ -8,6 +8,7 @@ import { SingleClient } from "../view-client.component";
 import ClientHistoryFilters from "./client-history-filters.component";
 import EditLog from "./edit-log.component";
 import ViewOutdatedLog from "./view-outdated-log.component";
+import { partial } from "lodash-es";
 
 export default function ClientHistory(props: ClientHistoryProps) {
   const [logState, dispatchLogState] = React.useReducer(
@@ -235,7 +236,7 @@ function logReducer(state: LogState, action: LogActions): LogState {
         ...state,
         filters: changeFilterAction.newFilters,
         filteredLogs: state.allLogs.filter(
-          log => changeFilterAction.newFilters[log.logType]
+          partial(filterLogs, changeFilterAction.newFilters)
         )
       };
       localStorage.setItem(
@@ -250,7 +251,7 @@ function logReducer(state: LogState, action: LogActions): LogState {
         isFetching: false,
         allLogs: setLogsAction.newLogs,
         filteredLogs: setLogsAction.newLogs.filter(
-          log => state.filters[log.logType]
+          partial(filterLogs, state.filters)
         )
       };
     case LogActionTypes.modifyLog:
@@ -282,6 +283,12 @@ function logReducer(state: LogState, action: LogActions): LogState {
     default:
       throw Error();
   }
+}
+
+function filterLogs(filters, log) {
+  const validType = filters[log.logType];
+  const validOther = filters.showOutdated ? true : !log.idOfUpdatedLog;
+  return validType && validOther;
 }
 
 type LogActions =
@@ -453,6 +460,10 @@ export type ClientHistoryFilterOptions = {
   "clientUpdated:demographics": boolean;
   "clientUpdated:intakeData": boolean;
   caseNote: boolean;
+  "clientInteraction:created": boolean;
+  "clientInteraction:updated": boolean;
+  "clientInteraction:deleted": boolean;
+  showOutdated: boolean;
 };
 
 export enum LogType {
@@ -481,7 +492,7 @@ function getInitialLogState(): LogState {
   if (localStorageFilters) {
     filters = JSON.parse(localStorageFilters);
     Object.keys(LogType).forEach(logType => {
-      if (!filters.hasOwnProperty(logType)) {
+      if (!filters.hasOwnProperty(logType) && logType !== "showOutdated") {
         filters[logType] = true;
       }
     });
