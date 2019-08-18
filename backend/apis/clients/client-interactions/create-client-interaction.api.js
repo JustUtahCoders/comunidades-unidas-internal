@@ -46,19 +46,26 @@ app.post("/clients/:clientId/interactions", (req, res) => {
   const sql = mysql.format(
     `
       INSERT INTO clientInteractions
-      (clientId, serviceId, title, interactionType, description, dateOfInteraction, duration, location, createdBy)
+      (clientId, serviceId, interactionType, dateOfInteraction, duration, location, createdBy)
       VALUES
-      (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (?, ?, ?, ?, ?, ?, ?, ?, ?);
+      INSERT INTO clientLogs
+      (clientId, title, description, logType, addedBy, detailId)
+      VALUES (?, ?, ?, ?, ?, LAST_INSERT_ID());
     `,
     [
       req.params.clientId,
-      req.body.title,
-      req.params.serviceId,
+      req.body.serviceId,
       req.body.interactionType,
-      req.body.description,
       req.body.dateOfInteraction,
       req.body.duration,
       req.body.location,
+      req.body.createdBy,
+      req.body.title,
+      req.body.description,
+      req.body.logType,
+      req.body.addedBy,
+      req.body.detailId,
       user.id
     ]
   );
@@ -71,10 +78,8 @@ app.post("/clients/:clientId/interactions", (req, res) => {
     res.send(
       createResponseInteractionObject({
         id: result.id,
-        title: req.body.title,
         serviceId: req.body.serviceId,
         interactionType: req.body.interactionType,
-        description: req.body.description,
         dateOfInteraction: req.body.dateOfInteraction,
         duration: req.body.duration,
         location: req.body.location,
@@ -82,17 +87,6 @@ app.post("/clients/:clientId/interactions", (req, res) => {
         createdById: user.id,
         createdByFirstName: user.firstName,
         createdByLastName: user.lastName,
-        dateAdded: new Date()
-      }),
-      createResponseLogObject({
-        id: result.id,
-        title: req.body.title,
-        description: req.body.description,
-        logType: req.body.logType,
-        isDeleted: false,
-        createdById: user.id,
-        createdByFirstName: user.firstName,
-        createdByLastName: user.lastname,
         dateAdded: new Date()
       })
     );
