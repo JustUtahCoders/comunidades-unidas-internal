@@ -24,7 +24,7 @@ export default function ClientHistoryFilters(props: ClientHistoryFiltersProps) {
   return (
     <div {...scope} className="client-history-filters">
       <button className="primary" onClick={togglePopup}>
-        Filter history
+        Filter
       </button>
       {popupOpen && (
         <div
