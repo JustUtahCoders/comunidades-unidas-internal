@@ -1,6 +1,6 @@
 import React from "react";
 import { useCss } from "kremling";
-import { CUServicesList } from "../../add-client/services.component";
+import { CUServicesList, CUService } from "../../add-client/services.component";
 import { groupBy } from "lodash-es";
 import dayjs from "dayjs";
 import TimeDurationInput, {
@@ -11,7 +11,9 @@ import FullRichTextEditorComponent from "../../rich-text/full-rich-text-editor.c
 export default React.forwardRef<any, SingleClientInteractionProps>(
   function SingleClientInteraction(props, ref) {
     const scope = useCss(css);
-    const [selectedService, setSelectedService] = React.useState(null);
+    const [selectedService, setSelectedService] = React.useState<CUService>(
+      null
+    );
     const [
       selectedInteractionType,
       setSelectedInteractionType
@@ -41,7 +43,7 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
 
       function interactionGetter() {
         return {
-          serviceId: selectedService,
+          serviceId: selectedService.id,
           interactionType: selectedInteractionType,
           dateOfInteraction,
           duration: duration.stringValue,
@@ -69,7 +71,7 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         <div className="header">
           <h3 className="interaction-number">
             #{props.interactionIndex + 1}
-            {selectedService ? ` ${selectedService}` : ""}
+            {selectedService ? ` ${selectedService.serviceName}` : ""}
           </h3>
           {props.interactionIndex > 0 && (
             <button
@@ -85,28 +87,41 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
           <label id={`provided-service-${props.interactionIndex}`}>
             Service:
           </label>
-          <select
-            ref={ref}
-            value={selectedService || ""}
-            onChange={evt => setSelectedService(evt.target.value)}
-            aria-labelledby={`provided-service-${props.interactionIndex}`}
-            className="services-select"
-            name={`provided-service-${props.interactionIndex}`}
-            required
-          >
-            <option value="" disabled hidden>
-              Choose here
-            </option>
-            {Object.keys(groupedServices).map(programName => (
-              <optgroup label={programName} key={programName}>
-                {groupedServices[programName].map(service => (
-                  <option key={service.id} value={service.id}>
-                    {service.serviceName}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </select>
+          <div>
+            <select
+              ref={ref}
+              value={selectedService ? selectedService.id : ""}
+              onChange={evt =>
+                setSelectedService(
+                  services.find(s => s.id === Number(evt.target.value))
+                )
+              }
+              aria-labelledby={`provided-service-${props.interactionIndex}`}
+              className="services-select"
+              name={`provided-service-${props.interactionIndex}`}
+              required
+            >
+              <option value="" disabled hidden>
+                Choose here
+              </option>
+              {Object.keys(groupedServices).map(programName => (
+                <optgroup label={programName} key={programName}>
+                  {groupedServices[programName].map(service => (
+                    <option key={service.id} value={service.id}>
+                      {service.serviceName}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+            {selectedService &&
+              services.length > 0 &&
+              selectedService.serviceName === "Financial Coach" && (
+                <div className="caption">
+                  Please add the established goals into the description field.
+                </div>
+              )}
+          </div>
           <label id={`interaction-type-${props.interactionIndex}`}>Type:</label>
           <select
             value={selectedInteractionType || ""}

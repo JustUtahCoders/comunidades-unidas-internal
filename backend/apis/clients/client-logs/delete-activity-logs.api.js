@@ -22,9 +22,7 @@ app.delete("/api/clients/:clientId/logs/:logId", (req, res) => {
   const inClause = modifiableLogTypes.map(logType => `'${logType}'`).join(", ");
 
   const deleteLogsQuery = mysql.format(
-    `
-    DELETE FROM clientLogs WHERE id = ? AND clientId = ? AND addedBy = ? AND logType IN (${inClause});
-  `,
+    `UPDATE clientLogs SET isDeleted = true WHERE id = ? AND clientId = ? AND addedBy = ? AND logType IN (${inClause})`,
     [logId, clientId, req.session.passport.user.id]
   );
 
