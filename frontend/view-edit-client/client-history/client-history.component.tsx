@@ -7,6 +7,7 @@ import { Link } from "@reach/router";
 import { SingleClient } from "../view-client.component";
 import ClientHistoryFilters from "./client-history-filters.component";
 import EditLog from "./edit-log.component";
+import ViewOutdatedLog from "./view-outdated-log.component";
 
 export default function ClientHistory(props: ClientHistoryProps) {
   const [logState, dispatchLogState] = React.useReducer(
@@ -88,15 +89,19 @@ export default function ClientHistory(props: ClientHistoryProps) {
             />
           </div>
           <div className="timeline-right">
-            <h4 className="title">
+            <h4 className={a("title").m("outdated", log.idOfUpdatedLog)}>
               {getTitle(log)} by {log.createdBy.fullName}.
             </h4>
-            {log.logType === "caseNote" && <i>{log.title}</i>}
-            {log.description && (
-              <div
-                dangerouslySetInnerHTML={{ __html: log.description }}
-                className="client-log-description"
-              />
+            {!log.idOfUpdatedLog && (
+              <>
+                {log.logType === "caseNote" && <i>{log.title}</i>}
+                {log.description && (
+                  <div
+                    dangerouslySetInnerHTML={{ __html: log.description }}
+                    className="client-log-description"
+                  />
+                )}
+              </>
             )}
           </div>
         </div>
@@ -129,6 +134,28 @@ export default function ClientHistory(props: ClientHistoryProps) {
             })
           }
           clientId={props.clientId}
+        />
+      )}
+      {logState.logToView && (
+        <ViewOutdatedLog
+          log={logState.logToView}
+          close={() => {
+            dispatchLogState({
+              type: LogActionTypes.doneViewingOutdatedLog
+            });
+          }}
+          viewUpdatedVersion={() => {
+            const updatedLog = logState.allLogs.find(
+              l => l.id === logState.logToView.idOfUpdatedLog
+            );
+            if (!updatedLog) {
+              throw Error(
+                `Cannot find the updated log with id '${logState.logToView.idOfUpdatedLog}' for log with id ${logState.logToView.id}`
+              );
+            }
+
+            logClicked(updatedLog);
+          }}
         />
       )}
     </div>
@@ -185,10 +212,17 @@ export default function ClientHistory(props: ClientHistoryProps) {
 
   function logClicked(log) {
     if (log.canModify) {
-      dispatchLogState({
-        type: LogActionTypes.modifyLog,
-        log
-      });
+      if (log.idOfUpdatedLog) {
+        dispatchLogState({
+          type: LogActionTypes.viewOutdatedLog,
+          log
+        });
+      } else {
+        dispatchLogState({
+          type: LogActionTypes.modifyLog,
+          log
+        });
+      }
     }
   }
 }
@@ -223,7 +257,8 @@ function logReducer(state: LogState, action: LogActions): LogState {
       const modifyLogAction = action as ModifyLogAction;
       return {
         ...state,
-        logToModify: modifyLogAction.log
+        logToModify: modifyLogAction.log,
+        logToView: null
       };
     case LogActionTypes.doneModifyingLog:
       const doneModifyingLogAction = action as DoneModifyingLogAction;
@@ -231,6 +266,18 @@ function logReducer(state: LogState, action: LogActions): LogState {
         ...state,
         isFetching: doneModifyingLogAction.wasModified,
         logToModify: null
+      };
+    case LogActionTypes.viewOutdatedLog:
+      const viewOutdatedLogAction = action as ViewOutdatedLogAction;
+      return {
+        ...state,
+        logToView: viewOutdatedLogAction.log,
+        logToModify: null
+      };
+    case LogActionTypes.doneViewingOutdatedLog:
+      return {
+        ...state,
+        logToView: null
       };
     default:
       throw Error();
@@ -241,7 +288,9 @@ type LogActions =
   | ChangeFilterAction
   | SetLogsAction
   | ModifyLogAction
-  | DoneModifyingLogAction;
+  | DoneModifyingLogAction
+  | ViewOutdatedLogAction
+  | DoneViewingOutdatedLogAction;
 
 type ChangeFilterAction = {
   type: LogActionTypes;
@@ -263,11 +312,22 @@ type DoneModifyingLogAction = {
   wasModified: boolean;
 };
 
+type ViewOutdatedLogAction = {
+  type: LogActionTypes;
+  log: ClientLog;
+};
+
+type DoneViewingOutdatedLogAction = {
+  type: LogActionTypes;
+};
+
 enum LogActionTypes {
   "newLogs" = "newLogs",
   "newFilters" = "newFilters",
   "modifyLog" = "modifyLog",
-  "doneModifyingLog" = "doneModifyingLog"
+  "doneModifyingLog" = "doneModifyingLog",
+  "viewOutdatedLog" = "viewOutdatedLog",
+  "doneViewingOutdatedLog" = "doneViewingOutdatedLog"
 }
 
 function getBackgroundColor(logType: LogType) {
@@ -362,6 +422,10 @@ const css = `
 & .title {
   margin: 0;
 }
+
+& .outdated {
+  text-decoration: line-through;
+}
 `;
 
 export type ClientLog = {
@@ -371,6 +435,8 @@ export type ClientLog = {
   logType: LogType;
   canModify: boolean;
   isDeleted: boolean;
+  idOfUpdatedLog: number | null;
+  detailId: number | null;
   createdBy: {
     userId: number;
     firstName: string;
@@ -425,6 +491,7 @@ function getInitialLogState(): LogState {
   return {
     isFetching: true,
     logToModify: null,
+    logToView: null,
     allLogs: [],
     filteredLogs: [],
     filters
@@ -436,6 +503,7 @@ type LogState = {
   filteredLogs: Array<ClientLog>;
   filters: ClientHistoryFilterOptions;
   logToModify: ClientLog | null;
+  logToView: ClientLog | null;
   isFetching: boolean;
 };
 
