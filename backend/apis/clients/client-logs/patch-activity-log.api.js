@@ -67,14 +67,13 @@ app.patch(`/api/clients/:clientId/logs/:logId`, (req, res) => {
       }
 
       const updateSql = mysql.format(
-        `UPDATE clientLogs SET title = ?, description = ? WHERE clientId = ? AND id = ? AND isDeleted = false AND addedBy = ? AND dateAdded = ?`,
+        `UPDATE clientLogs SET title = ?, description = ? WHERE clientId = ? AND id = ? AND isDeleted = false AND addedBy = ?`,
         [
           req.body.title || existingLog.title,
           req.body.description || existingLog.description,
           req.params.clientId,
           req.params.logId,
-          req.session.passport.user.id,
-          new Date()
+          req.session.passport.user.id
         ]
       );
 

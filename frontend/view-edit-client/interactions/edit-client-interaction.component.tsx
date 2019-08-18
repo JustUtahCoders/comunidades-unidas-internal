@@ -20,8 +20,6 @@ export default function EditClientInteraction({
   >(null);
   const [originalInteraction, setOriginalInteraction] = React.useState(null);
 
-  log.detailId = 1234;
-
   React.useEffect(() => {
     const abortController = new AbortController();
 
