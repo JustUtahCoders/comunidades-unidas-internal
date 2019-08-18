@@ -89,7 +89,6 @@ app.patch(`/api/clients/:clientId/logs/:logId`, (req, res) => {
         if (err) {
           return databaseError(req, res, err);
         }
-        console.log("result", result);
 
         return res.status(204).end();
       });
