@@ -42,8 +42,8 @@ export default React.forwardRef(function FullRichTextEditor(
           <RichTextImage />
         </div>
         <RichTextEditor
+          placeholder={props.placeholder}
           initialHTML={props.initialHTML}
-          placeholder="Case note description"
           ref={richTextEditorRef}
           className="editor"
         />
@@ -66,9 +66,11 @@ const css = `
   border: 1px solid var(--medium-gray);
   border-radius: .4rem;
   min-height: 10rem;
+  background-color: white;
 }
 `;
 
 type FullRichTextEditorProps = {
+  placeholder: string;
   initialHTML?: string;
 };

@@ -9,13 +9,14 @@ export default React.forwardRef<
   React.MutableRefObject<SingleClientSearchInputRef>,
   SingleClientSearchInputProps
 >(function SingleClientSearchInput(
-  { autoFocus, nextThingToFocusRef },
+  { autoFocus, nextThingToFocusRef, required = true },
   singleClientSearchInputRef
 ) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const scope = useCss(css);
   const debouncedClientName = useDebounce(state.clientName, 200);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
     if (singleClientSearchInputRef) {
@@ -63,6 +64,18 @@ export default React.forwardRef<
     }
   }, [state.clientId, nextThingToFocusRef.current]);
 
+  React.useEffect(() => {
+    if (
+      state.potentialClients.length <= 0 &&
+      !state.clientId &&
+      state.clientName.trim().length !== 0
+    ) {
+      inputRef.current.setCustomValidity("Please choose a client");
+    } else {
+      inputRef.current.setCustomValidity("");
+    }
+  }, [state.clientId, state.potentialClients, state.clientName]);
+
   return (
     <div {...scope} className="single-client-search">
       <div>
@@ -78,6 +91,8 @@ export default React.forwardRef<
           }
           aria-labelledby="single-client-search"
           onKeyDown={handleKeyDown}
+          required={required}
+          ref={inputRef}
         />
         {state.clientId && <img src={userIconUrl} className="client-icon" />}
       </span>
@@ -243,6 +258,7 @@ type SetClientAction = {
 type SingleClientSearchInputProps = {
   autoFocus?: boolean;
   nextThingToFocusRef?: React.RefObject<HTMLElement>;
+  required?: boolean;
 };
 
 type SingleClientSearchInputRef = {

@@ -92,7 +92,10 @@ export default function AddCaseNote({
           <div>
             <label>Case note description</label>
           </div>
-          <FullRichTextEditor ref={fullEditorRef} />
+          <FullRichTextEditor
+            ref={fullEditorRef}
+            placeholder="Case note description"
+          />
         </div>
         <div>
           <a className="secondary button" href="javascript:history.back()">

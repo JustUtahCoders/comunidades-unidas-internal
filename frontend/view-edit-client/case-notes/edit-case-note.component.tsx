@@ -53,6 +53,7 @@ export default function EditCaseNote({
         <FullRichTextEditorComponent
           ref={fullEditorRef}
           initialHTML={log.description}
+          placeholder="Edit case note"
         />
       </div>
     </div>
