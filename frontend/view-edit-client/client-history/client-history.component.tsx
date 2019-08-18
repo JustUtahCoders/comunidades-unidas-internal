@@ -129,6 +129,7 @@ export default function ClientHistory(props: ClientHistoryProps) {
             })
           }
           clientId={props.clientId}
+          clientFullName={props.client.fullName}
         />
       )}
     </div>
@@ -371,6 +372,7 @@ export type ClientLog = {
   logType: LogType;
   canModify: boolean;
   isDeleted: boolean;
+  detailId: number | null;
   createdBy: {
     userId: number;
     firstName: string;

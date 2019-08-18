@@ -4,12 +4,37 @@ import { useCss } from "kremling";
 export default function TimeDurationInput(props: TimeDurationInputProps) {
   const scope = useCss(css);
 
+  React.useEffect(() => {
+    if (
+      props.duration.stringValue &&
+      !props.duration.hours &&
+      !props.duration.minutes
+    ) {
+      const stringTimeParser = /^([0-9][0-9]?):([0-9]{2}):([0-9]{2})$/g;
+      const match = stringTimeParser.exec(props.duration.stringValue);
+      if (!match) {
+        throw Error(
+          `TimeDurationInput was given an invalid stringValue prop '${props.duration.stringValue}'`
+        );
+      }
+      props.setDuration({
+        hours: Number(match[1]),
+        minutes: Number(match[2]),
+        stringValue: props.duration.stringValue
+      });
+    }
+  }, [props.duration, props.setDuration]);
+
   return (
     <span {...scope}>
       <input
         type="number"
         required={props.required}
-        value={props.duration.hours}
+        value={
+          props.duration.hours === null || isNaN(props.duration.hours)
+            ? ""
+            : props.duration.hours
+        }
         onChange={changeHours}
         aria-labelledby={props.labelId}
         min={0}
@@ -19,7 +44,11 @@ export default function TimeDurationInput(props: TimeDurationInputProps) {
       <input
         type="number"
         required={props.required}
-        value={props.duration.minutes}
+        value={
+          props.duration.minutes === null || isNaN(props.duration.minutes)
+            ? ""
+            : props.duration.minutes
+        }
         onChange={changeMinutes}
         aria-labelledby={props.labelId}
         min={0}
@@ -44,7 +73,8 @@ function createDuration(hours, minutes): TimeDuration {
   return {
     hours,
     minutes,
-    stringValue: withLeadingZeros(hours) + ":" + withLeadingZeros(minutes)
+    stringValue:
+      withLeadingZeros(hours) + ":" + withLeadingZeros(minutes) + ":00"
   };
 }
 
