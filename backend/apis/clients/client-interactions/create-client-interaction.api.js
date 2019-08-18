@@ -14,7 +14,8 @@ const {
   validEnum,
   nonEmptyString,
   validDate,
-  validTime
+  validTime,
+  validInteger
 } = require("../../utils/validation-utils");
 
 const { createResponseInteractionObject } = require("./interaction-log.utils");
@@ -24,9 +25,9 @@ const { createResponseLogObject } = require("./activity-log.utils");
 app.post("/clients/:clientId/interactions", (req, res) => {
   const validationErrors = [
     ...checkValid(req.params, validId("clientId")),
-    ...checkValid(req.params, validId("serviceId")),
     ...checkValid(
       req.body,
+      validInteger("serviceId"),
       validEnum("title"),
       validEnum("interactionType"),
       nonEmptyString("description"),
