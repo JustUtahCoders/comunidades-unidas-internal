@@ -50,14 +50,14 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
       return databaseError(req, res, err);
     }
 
-    const serviceName = getServiceResult[0].serviceName;
-
-    if (!serviceName) {
+    if (getServiceResult.length !== 1) {
       return invalidRequest(
         res,
         `No CU service exists with id '${req.body.serviceId}'`
       );
     }
+
+    const serviceName = getServiceResult[0].serviceName;
 
     const insertSql = mysql.format(
       `
