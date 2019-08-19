@@ -61,7 +61,7 @@ exports.getInteraction = function getInteraction(
       )
       ORDER BY l.dateAdded DESC
     `,
-    [interactionId, interactionId]
+    [interactionId]
   );
 
   pool.query(sql, (err, result) => {
