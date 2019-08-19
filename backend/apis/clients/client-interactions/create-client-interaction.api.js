@@ -5,9 +5,7 @@ const {
   invalidRequest,
   notFound
 } = require("../../../server");
-
 const mysql = require("mysql");
-
 const {
   checkValid,
   validId,
@@ -17,12 +15,14 @@ const {
   validTime,
   validInteger
 } = require("../../utils/validation-utils");
+const {
+  createResponseInteractionObject
+} = require("./client-interaction.utils");
+const {
+  createResponseLogObject
+} = require("../client-logs/activity-log.utils");
 
-const { createResponseInteractionObject } = require("./interaction-log.utils");
-
-const { createResponseLogObject } = require("./activity-log.utils");
-
-app.post("/clients/:clientId/interactions", (req, res) => {
+app.post("/api/clients/:clientId/interactions", (req, res) => {
   const validationErrors = [
     ...checkValid(req.params, validId("clientId")),
     ...checkValid(
@@ -72,6 +72,8 @@ app.post("/clients/:clientId/interactions", (req, res) => {
 
   pool.query(sql, (err, result) => {
     if (err) {
+      console.log("testing 2");
+      console.log(req.body);
       return databaseError(req, res, err);
     }
 
