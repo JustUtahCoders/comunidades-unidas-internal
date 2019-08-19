@@ -42,9 +42,7 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
           }
     );
     const [selectedLocation, setSelectedLocation] = React.useState(
-      props.initialInteraction
-        ? props.initialInteraction.location
-        : interactionLocations.CUOffice
+      props.initialInteraction ? props.initialInteraction.location : "CUOffice"
     );
     const descrRef = React.useRef(null);
 
@@ -293,7 +291,7 @@ export const interactionTypes = {
 
 export const interactionLocations = {
   CUOffice: "CU Office",
-  consulate: "Consulate",
+  consulateOffice: "Consulate Office",
   communityEvent: "Community Event"
 };
 
