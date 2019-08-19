@@ -9,7 +9,8 @@ import EditClientInteraction from "../interactions/edit-client-interaction.compo
 const editLogComponents = {
   caseNote: EditCaseNote,
   ["clientInteraction:created"]: EditClientInteraction,
-  ["clientInteraction:updated"]: EditClientInteraction
+  ["clientInteraction:updated"]: EditClientInteraction,
+  ["clientInteraction:serviceProvided"]: EditClientInteraction
 };
 
 export default function EditLog({

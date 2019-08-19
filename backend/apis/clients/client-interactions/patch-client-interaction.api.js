@@ -134,6 +134,46 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
           );
         }
 
+        if (req.body.dateOfInteraction) {
+          queries.push(
+            mysql.format(
+              `
+              INSERT INTO clientLogs
+              (clientId, title, description, logType, addedBy, dateAdded, detailId)
+              VALUES (?, ?, ?, ?, ?, ?, ?);
+            `,
+              [
+                clientId,
+                `${serviceName} was provided`,
+                null,
+                "clientInteraction:serviceProvided",
+                req.session.passport.user.id,
+                req.body.dateOfInteraction,
+                existingInteraction.id
+              ]
+            )
+          );
+
+          queries.push(
+            mysql.format(
+              `
+            WITH oldLog AS (
+              SELECT id FROM clientLogs
+              WHERE logType = 'clientInteraction:serviceProvided'
+                AND detailId = ?
+              ORDER BY id DESC
+              LIMIT 1, 1
+            )
+
+            UPDATE clientLogs
+            SET idOfUpdatedLog = LAST_INSERT_ID()
+            WHERE id = (SELECT id FROM oldLog);
+          `,
+              [existingInteraction.id]
+            )
+          );
+        }
+
         const sql = queries.join("\n");
 
         pool.query(sql, (err, result) => {
