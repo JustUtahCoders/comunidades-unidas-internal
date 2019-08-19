@@ -9,6 +9,5 @@ ALTER TABLE clientLogs
             'caseNote',
             'clientInteraction:created',
             'clientInteraction:updated',
-            'clientInteraction:deleted',
-            'clientInteraction:serviceProvided'
+            'clientInteraction:deleted'
         ) NOT NULL;   
