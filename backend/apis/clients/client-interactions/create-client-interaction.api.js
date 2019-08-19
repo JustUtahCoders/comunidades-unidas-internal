@@ -9,9 +9,7 @@ const {
   validTime,
   validInteger
 } = require("../../utils/validation-utils");
-const {
-  createResponseInteractionObject
-} = require("./client-interaction.utils");
+const { getInteraction } = require("./client-interaction.utils");
 
 app.post("/api/clients/:clientId/interactions", (req, res) => {
   const validationErrors = [
@@ -30,7 +28,7 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
       nonEmptyString("description"),
       validDate("dateOfInteraction"),
       validTime("duration"),
-      validEnum("location", "CUOffice", "consulate", "communityEvent")
+      validEnum("location", "CUOffice", "consulateOffice", "communityEvent")
     )
   ];
 
@@ -79,7 +77,7 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
         user.id,
         user.id,
         req.params.clientId,
-        `Client interaction added for service ${serviceName}`,
+        `${serviceName} service provided`,
         req.body.description,
         "clientInteraction:created",
         user.id,
@@ -92,25 +90,16 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
         return databaseError(req, res, err);
       }
 
-      res.send(
-        createResponseInteractionObject({
-          id: result[0].insertId,
-          serviceId: req.body.serviceId,
-          interactionType: req.body.interactionType,
-          dateOfInteraction: req.body.dateOfInteraction,
-          duration: req.body.duration,
-          location: req.body.location,
-          description: req.body.description,
-          isDeleted: false,
-          createdById: user.id,
-          createdByFirstName: user.firstName,
-          createdByLastName: user.lastName,
-          dateAdded: new Date(),
-          lastUpdatedById: user.id,
-          lastUpdatedByFirstName: user.firstName,
-          lastUpdatedByLastName: user.lastName,
-          dateUpdated: new Date()
-        })
+      getInteraction(
+        result[0].insertId,
+        Number(req.params.clientId),
+        (err, interaction) => {
+          if (err) {
+            return err(req, res);
+          }
+
+          res.send(interaction);
+        }
       );
     });
   });

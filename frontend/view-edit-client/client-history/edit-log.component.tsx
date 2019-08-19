@@ -37,7 +37,7 @@ export default function EditLog({
         .then(() => {
           showGrowl({
             type: GrowlType.success,
-            message: `${startCase(log.logType)} was updated`
+            message: `${getInteractionType()} was updated`
           });
           close(true);
         })
@@ -57,7 +57,7 @@ export default function EditLog({
         .then(() => {
           showGrowl({
             type: GrowlType.success,
-            message: `${startCase(log.logType)} was deleted`
+            message: `${getInteractionType()} was deleted`
           });
           close(true);
         })
