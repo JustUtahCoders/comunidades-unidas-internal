@@ -135,6 +135,7 @@ export default function ClientHistory(props: ClientHistoryProps) {
             })
           }
           clientId={props.clientId}
+          clientFullName={props.client.fullName}
         />
       )}
       {logState.logToView && (

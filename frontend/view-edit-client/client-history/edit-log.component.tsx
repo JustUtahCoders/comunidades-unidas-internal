@@ -1,15 +1,23 @@
 import React from "react";
-import { ClientLog } from "./client-history.component";
+import { ClientLog, LogType } from "./client-history.component";
 import { startCase } from "lodash-es";
 import Modal from "../../util/modal.component";
 import EditCaseNote from "../case-notes/edit-case-note.component";
 import { showGrowl, GrowlType } from "../../growls/growls.component";
+import EditClientInteraction from "../interactions/edit-client-interaction.component";
 
 const editLogComponents = {
-  caseNote: EditCaseNote
+  caseNote: EditCaseNote,
+  ["clientInteraction:created"]: EditClientInteraction,
+  ["clientInteraction:updated"]: EditClientInteraction
 };
 
-export default function EditLog({ log, close, clientId }: EditLogProps) {
+export default function EditLog({
+  log,
+  close,
+  clientId,
+  clientFullName
+}: EditLogProps) {
   const actionsRef = React.useRef<EditLogActions>({
     save: () => Promise.resolve(),
     delete: () => Promise.resolve()
@@ -70,7 +78,7 @@ export default function EditLog({ log, close, clientId }: EditLogProps) {
 
   return (
     <Modal
-      headerText={`Edit ${startCase(log.logType)}`}
+      headerText={`Edit ${getInteractionType()} for ${clientFullName}`}
       primaryAction={saveLog}
       primaryText="Save"
       secondaryAction={deleteLog}
@@ -87,6 +95,15 @@ export default function EditLog({ log, close, clientId }: EditLogProps) {
 
   function deleteLog() {
     setStatus(EditLogState.deleting);
+  }
+
+  function getInteractionType() {
+    return startCase(
+      log.logType
+        .replace(":created", "")
+        .replace(":updated", "")
+        .replace(":deleted", "")
+    );
   }
 }
 
@@ -106,6 +123,7 @@ type EditLogProps = {
   log: ClientLog;
   close(wasDeleted?: boolean): any;
   clientId: string;
+  clientFullName: string;
 };
 
 enum EditLogState {

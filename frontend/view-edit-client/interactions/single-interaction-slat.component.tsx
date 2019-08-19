@@ -1,5 +1,5 @@
 import React from "react";
-import { useCss } from "kremling";
+import { useCss, a } from "kremling";
 import { CUServicesList, CUService } from "../../add-client/services.component";
 import { groupBy } from "lodash-es";
 import dayjs from "dayjs";
@@ -17,17 +17,34 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
     const [
       selectedInteractionType,
       setSelectedInteractionType
-    ] = React.useState("inPerson");
-    const [dateOfInteraction, setDateOfInteraction] = React.useState(
-      dayjs().format("YYYY-MM-DD")
+    ] = React.useState(
+      props.initialInteraction
+        ? props.initialInteraction.interactionType
+        : "inPerson"
     );
-    const [duration, setDuration] = React.useState<TimeDuration>({
-      hours: 0,
-      minutes: 30,
-      stringValue: "00:30"
-    });
+    const [dateOfInteraction, setDateOfInteraction] = React.useState(
+      (props.initialInteraction
+        ? dayjs(props.initialInteraction.dateOfInteraction)
+        : dayjs()
+      ).format("YYYY-MM-DD")
+    );
+    const [duration, setDuration] = React.useState<TimeDuration>(
+      props.initialInteraction
+        ? {
+            stringValue: props.initialInteraction.duration,
+            hours: null,
+            minutes: null
+          }
+        : {
+            hours: 0,
+            minutes: 30,
+            stringValue: "00:30:00"
+          }
+    );
     const [selectedLocation, setSelectedLocation] = React.useState(
-      interactionLocations.CUOffice
+      props.initialInteraction
+        ? props.initialInteraction.location
+        : interactionLocations.CUOffice
     );
     const descrRef = React.useRef(null);
 
@@ -43,7 +60,7 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
 
       function interactionGetter() {
         return {
-          serviceId: selectedService.id,
+          serviceId: selectedService ? selectedService.id : null,
           interactionType: selectedInteractionType,
           dateOfInteraction,
           duration: duration.stringValue,
@@ -66,13 +83,31 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
       }
     }, [selectedInteractionType]);
 
+    React.useEffect(() => {
+      if (props.servicesResponse && !selectedService) {
+        const serviceId = props.initialInteraction
+          ? props.initialInteraction.serviceId
+          : null;
+        setSelectedService(
+          serviceId
+            ? props.servicesResponse.services.find(s => s.id === serviceId)
+            : null
+        );
+      }
+    }, [props.servicesResponse, props.initialInteraction, selectedService]);
+
     return (
-      <div className="single-client-interaction" {...scope}>
+      <div
+        className={a("single-client-interaction").m("in-well", props.inWell)}
+        {...scope}
+      >
         <div className="header">
-          <h3 className="interaction-number">
-            #{props.interactionIndex + 1}
-            {selectedService ? ` ${selectedService.serviceName}` : ""}
-          </h3>
+          {props.inWell && (
+            <h3 className="interaction-number">
+              #{props.interactionIndex + 1}
+              {selectedService ? ` ${selectedService.serviceName}` : ""}
+            </h3>
+          )}
           {props.interactionIndex > 0 && (
             <button
               type="button"
@@ -182,6 +217,11 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
           <FullRichTextEditorComponent
             ref={descrRef}
             placeholder="Describe this interaction with the client"
+            initialHTML={
+              props.initialInteraction
+                ? props.initialInteraction.description
+                : null
+            }
           />
         </div>
       </div>
@@ -196,9 +236,12 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
 const css = `
 & .single-client-interaction {
   padding: .8rem .6rem;
+  margin-top: 1.6rem;
+}
+
+& .single-client-interaction.in-well {
   background-color: var(--colored-well);
   border-radius: .5rem;
-  margin-top: 1.6rem;
 }
 
 & .interaction-number {
@@ -235,7 +278,7 @@ const css = `
   min-width: 100%;
 }
 
-& button.icon:hover {
+& .in-well button.icon:hover {
   background-color: #ffd08a;
 }
 `;
@@ -260,6 +303,8 @@ type SingleClientInteractionProps = {
   removeInteraction(): any;
   addInteractionGetter(index: number, getter: InteractionGetter): any;
   removeInteractionGetter(index: number): any;
+  inWell?: boolean;
+  initialInteraction?: InteractionSlatData;
 };
 
 export type InteractionGetter = () => InteractionSlatData;

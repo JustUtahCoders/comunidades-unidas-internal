@@ -102,6 +102,7 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
         )}
         {tempInteractionIds.map((item, index) => (
           <SingleInteractionSlat
+            inWell
             addInteractionGetter={(index, getter) => {
               const newGetters = [...interactionGetters];
               newGetters[index] = getter;

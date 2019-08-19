@@ -22,7 +22,7 @@ GET /api/clients/:id/interactions/:id
 {
   "id": 1,
   "serviceId": 7,
-  "interactionType": "walkIn",
+  "interactionType": "inPerson",
   "description": "Application successfully filled out. Decision pending.",
   "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
@@ -141,7 +141,7 @@ POST /api/clients/:id/interactions
 {
   "id": 1,
   "serviceId": 7,
-  "interactionType": "walkIn",
+  "interactionType": "byPhone",
   "description": "Application successfully filled out. Decision pending.",
   "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
