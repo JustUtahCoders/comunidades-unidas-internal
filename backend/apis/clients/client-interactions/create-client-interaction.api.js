@@ -4,7 +4,7 @@ const {
   checkValid,
   validId,
   validEnum,
-  nonEmptyString,
+  nullableNonEmptyString,
   validDate,
   validTime,
   validInteger
@@ -25,7 +25,7 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
         "oneOnOneLightTouch",
         "consultation"
       ),
-      nonEmptyString("description"),
+      nullableNonEmptyString("description"),
       validDate("dateOfInteraction"),
       validTime("duration"),
       validEnum("location", "CUOffice", "consulateOffice", "communityEvent")
@@ -77,7 +77,7 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
         user.id,
         user.id,
         req.params.clientId,
-        `${serviceName} service provided`,
+        `${serviceName} service added`,
         req.body.description,
         "clientInteraction:created",
         user.id,

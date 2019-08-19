@@ -1,4 +1,5 @@
 import { showGrowl, GrowlType } from "./growls.component";
+import { navigate } from "@reach/router";
 
 window.addEventListener("error", function(evt: ErrorEvent) {
   showGrowl({
@@ -40,13 +41,11 @@ window.addEventListener("unhandledrejection", function(event) {
 function prepopulateError(data) {
   const state = { prepopulatedDescription: data };
   try {
-    window.history.pushState(state, document.title, "/report-issue");
+    navigate("/report-issue", { state });
   } catch (err) {
-    window.history.pushState(
-      { prepopulatedDescription: data.toString() },
-      document.title,
-      "/report-issue"
-    );
+    navigate("/report-issue", {
+      state: { prepopulatedDescription: data.toString() }
+    });
   }
   window.dispatchEvent(new PopStateEvent("popstate", { state }));
 }

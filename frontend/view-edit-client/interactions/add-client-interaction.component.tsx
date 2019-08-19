@@ -8,6 +8,7 @@ import SingleInteractionSlat, {
 } from "./single-interaction-slat.component";
 import { useCss } from "kremling";
 import { showGrowl, GrowlType } from "../../growls/growls.component";
+import { navigate } from "@reach/router";
 
 export default function AddClientInteraction(props: AddClientInteractionProps) {
   if (!localStorage.getItem("client-interactions")) {
@@ -68,11 +69,7 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
             type: GrowlType.success,
             message: "Client interactions were created"
           });
-          window.history.pushState(
-            window.history.state,
-            document.title,
-            `/clients/${clientId}/history`
-          );
+          navigate(`/clients/${clientId}/history`);
         })
         .catch(err => {
           setTimeout(() => {

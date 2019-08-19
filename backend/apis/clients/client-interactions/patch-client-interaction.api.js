@@ -105,7 +105,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
           queries.push(
             insertActivityLogQuery({
               clientId,
-              title: `${serviceName} service provided`,
+              title: `${serviceName} service added`,
               description:
                 req.body.description || existingInteraction.description,
               logType: "clientInteraction:updated",

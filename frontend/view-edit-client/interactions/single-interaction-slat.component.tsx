@@ -57,13 +57,18 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
       return () => props.removeInteractionGetter(props.interactionIndex);
 
       function interactionGetter() {
+        let description = descrRef.current.getHTML();
+        if (description.trim().length === 0) {
+          description = null;
+        }
+
         return {
           serviceId: selectedService ? selectedService.id : null,
           interactionType: selectedInteractionType,
           dateOfInteraction,
           duration: duration.stringValue,
           location: selectedLocation,
-          description: descrRef.current.getHTML()
+          description
         };
       }
     }, [
