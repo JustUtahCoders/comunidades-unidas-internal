@@ -1,10 +1,4 @@
-const {
-  app,
-  databaseError,
-  pool,
-  invalidRequest,
-  notFound
-} = require("../../../server");
+const { app, databaseError, pool, invalidRequest } = require("../../../server");
 const mysql = require("mysql");
 const {
   checkValid,
@@ -18,22 +12,25 @@ const {
 const {
   createResponseInteractionObject
 } = require("./client-interaction.utils");
-const {
-  createResponseLogObject
-} = require("../client-logs/activity-log.utils");
 
-app.post("/clients/:clientId/interactions", (req, res) => {
+app.post("/api/clients/:clientId/interactions", (req, res) => {
   const validationErrors = [
     ...checkValid(req.params, validId("clientId")),
     ...checkValid(
       req.body,
       validInteger("serviceId"),
-      nonEmptyString("title"),
-      validEnum("interactionType"),
+      validEnum(
+        "interactionType",
+        "inPerson",
+        "byPhone",
+        "workshopTalk",
+        "oneOnOneLightTouch",
+        "consultation"
+      ),
       nonEmptyString("description"),
       validDate("dateOfInteraction"),
       validTime("duration"),
-      validEnum("location")
+      validEnum("location", "CUOffice", "consulate", "communityEvent")
     )
   ];
 
@@ -43,54 +40,78 @@ app.post("/clients/:clientId/interactions", (req, res) => {
 
   const user = req.session.passport.user;
 
-  const sql = mysql.format(
-    `
-      INSERT INTO clientInteractions
-      (clientId, serviceId, interactionType, dateOfInteraction, duration, location, createdBy)
-      VALUES
-      (?, ?, ?, ?, ?, ?, ?, ?, ?);
-      INSERT INTO clientLogs
-      (clientId, title, description, logType, addedBy, detailId)
-      VALUES (?, ?, ?, ?, ?, LAST_INSERT_ID());
-    `,
-    [
-      req.params.clientId,
-      req.body.serviceId,
-      req.body.interactionType,
-      req.body.dateOfInteraction,
-      req.body.duration,
-      req.body.location,
-      req.body.createdBy,
-      req.body.title,
-      req.body.description,
-      req.body.logType,
-      req.body.addedBy,
-      req.body.detailId,
-      user.id
-    ]
+  const getServiceSql = mysql.format(
+    `SELECT serviceName FROM services WHERE id = ?`,
+    [req.body.serviceId]
   );
 
-  pool.query(sql, (err, result) => {
+  pool.query(getServiceSql, (err, getServiceResult) => {
     if (err) {
-      console.log("testing 2");
-      console.log(req.body);
       return databaseError(req, res, err);
     }
 
-    res.send(
-      createResponseInteractionObject({
-        id: result.id,
-        serviceId: req.body.serviceId,
-        interactionType: req.body.interactionType,
-        dateOfInteraction: req.body.dateOfInteraction,
-        duration: req.body.duration,
-        location: req.body.location,
-        isDeleted: false,
-        createdById: user.id,
-        createdByFirstName: user.firstName,
-        createdByLastName: user.lastName,
-        dateAdded: new Date()
-      })
+    const serviceName = getServiceResult[0].serviceName;
+
+    if (!serviceName) {
+      return invalidRequest(
+        res,
+        `No CU service exists with id '${req.body.serviceId}'`
+      );
+    }
+
+    const insertSql = mysql.format(
+      `
+        INSERT INTO clientInteractions
+        (clientId, serviceId, interactionType, dateOfInteraction, duration, location, addedBy, modifiedBy)
+        VALUES
+        (?, ?, ?, ?, ?, ?, ?, ?);
+        INSERT INTO clientLogs
+        (clientId, title, description, logType, addedBy, detailId)
+        VALUES (?, ?, ?, ?, ?, LAST_INSERT_ID());
+      `,
+      [
+        req.params.clientId,
+        req.body.serviceId,
+        req.body.interactionType,
+        req.body.dateOfInteraction,
+        req.body.duration,
+        req.body.location,
+        user.id,
+        user.id,
+        req.params.clientId,
+        `Client interaction added for service ${serviceName}`,
+        req.body.description,
+        "clientInteraction:created",
+        user.id,
+        req.body.detailId
+      ]
     );
+
+    pool.query(insertSql, (err, result) => {
+      if (err) {
+        return databaseError(req, res, err);
+      }
+
+      res.send(
+        createResponseInteractionObject({
+          id: result[0].insertId,
+          serviceId: req.body.serviceId,
+          interactionType: req.body.interactionType,
+          dateOfInteraction: req.body.dateOfInteraction,
+          duration: req.body.duration,
+          location: req.body.location,
+          description: req.body.description,
+          isDeleted: false,
+          createdById: user.id,
+          createdByFirstName: user.firstName,
+          createdByLastName: user.lastName,
+          dateAdded: new Date(),
+          lastUpdatedById: user.id,
+          lastUpdatedByFirstName: user.firstName,
+          lastUpdatedByLastName: user.lastName,
+          dateUpdated: new Date()
+        })
+      );
+    });
   });
 });

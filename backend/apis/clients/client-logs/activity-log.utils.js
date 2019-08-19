@@ -1,7 +1,11 @@
 const mysql = require("mysql");
 const { responseFullName } = require("../../utils/transform-utils");
 
-const modifiableLogTypes = ["caseNote"];
+const modifiableLogTypes = [
+  "caseNote",
+  "clientInteraction:created",
+  "clientInteraction:updated"
+];
 
 exports.modifiableLogTypes = modifiableLogTypes;
 
