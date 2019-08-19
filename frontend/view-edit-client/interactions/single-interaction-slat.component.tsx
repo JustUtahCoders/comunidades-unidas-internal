@@ -68,7 +68,7 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
           dateOfInteraction,
           duration: duration.stringValue,
           location: selectedLocation,
-          description: null
+          description
         };
       }
     }, [

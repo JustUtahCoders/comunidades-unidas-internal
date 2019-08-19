@@ -3,7 +3,7 @@ const {
   responseDateWithoutTime
 } = require("../../utils/transform-utils");
 const mysql = require("mysql");
-const { pool, invalidRequest } = require("../../../server");
+const { pool, invalidRequest, databaseError } = require("../../../server");
 
 function createResponseInteractionObject(log) {
   return {
@@ -42,7 +42,7 @@ exports.getInteraction = function getInteraction(
 ) {
   const sql = mysql.format(
     `
-      SELECT l.description, i.id, i.clientId, i.serviceId, s.serviceName,
+      SELECT l.description, l.id logId, i.id, i.clientId, i.serviceId, s.serviceName,
         i.interactionType, i.dateOfInteraction, i.duration,
         i.location, i.dateAdded, i.addedBy createdById, i.dateModified dateUpdated, i.modifiedBy lastUpdatedById,
         addedByUsers.firstName createdByFirstName, addedByUsers.lastName createdByLastName,
@@ -54,15 +54,14 @@ exports.getInteraction = function getInteraction(
         JOIN users modifiedByUsers ON modifiedByUsers.id = i.modifiedBy
         JOIN services s ON s.id = i.serviceId
       WHERE (
-        i.id = ? AND
-        l.logType IN ("clientInteraction:created", "clientInteraction:deleted") AND
-        l.isDeleted = false AND
-        i.isDeleted = false
+        i.id = ?
+          AND l.logType IN ("clientInteraction:created", "clientInteraction:updated")
+          AND l.isDeleted = false
+          AND i.isDeleted = false
       )
       ORDER BY l.dateAdded DESC
-      LIMIT 1
     `,
-    [interactionId]
+    [interactionId, interactionId]
   );
 
   pool.query(sql, (err, result) => {

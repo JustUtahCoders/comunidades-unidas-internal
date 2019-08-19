@@ -77,7 +77,7 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
         user.id,
         user.id,
         req.params.clientId,
-        `${serviceName} service provided`,
+        `${serviceName} service added`,
         req.body.description,
         "clientInteraction:created",
         user.id,
