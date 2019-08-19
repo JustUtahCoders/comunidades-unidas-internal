@@ -91,6 +91,7 @@ require("./apis/clients/client-logs/create-activity-log.api");
 require("./apis/clients/client-interactions/create-client-interaction.api");
 require("./apis/clients/client-interactions/get-client-interaction.api");
 require("./apis/clients/client-interactions/patch-client-interaction.api");
+require("./apis/clients/client-interactions/delete-client-interaction.api");
 require("./apis/clients/client-logs/patch-activity-log.api");
 require("./apis/default-404.api.js");
 require("./index-html.js");
