@@ -44,6 +44,9 @@ export default function easyFetch(url: string, opts?: any) {
   });
 }
 
+// @ts-ignore
+window.debugFetch = easyFetch;
+
 class FetchError extends Error {
   body?: string;
   status?: number;
