@@ -47,6 +47,7 @@ exports.createResponseLogObject = function createResponseLogObject(log) {
     canModify: modifiableLogTypes.some(logType => logType === log.logType),
     isDeleted: Boolean(log.isDeleted),
     detailId: log.detailId,
+    idOfUpdatedLog: log.idOfUpdatedLog,
     createdBy: {
       userId: log.createdById,
       firstName: log.createdByFirstName,

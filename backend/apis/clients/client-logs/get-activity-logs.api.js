@@ -19,7 +19,7 @@ app.get("/api/clients/:clientId/logs", (req, res, next) => {
   const getLogsQuery = mysql.format(
     `
     SELECT
-      clientLogs.id, clientLogs.title, clientLogs.description, clientLogs.logType, clientLogs.dateAdded, clientLogs.detailId,
+      clientLogs.id, clientLogs.title, clientLogs.description, clientLogs.logType, clientLogs.dateAdded, clientLogs.detailId, clientLogs.idOfUpdatedLog,
       users.id createdById, users.firstName createdByFirstName, users.lastName createdByLastName
     FROM clientLogs JOIN users
     ON clientLogs.addedBy = users.id

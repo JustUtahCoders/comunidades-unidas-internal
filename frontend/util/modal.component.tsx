@@ -90,14 +90,14 @@ ${mediaMobile} {
 ${mediaDesktop} {
   & .modal-dialog {
     position: fixed;
-    top: 20%;
+    top: 10vh;
     left: calc(50% - 26rem);
     width: 52rem;
     border-radius: .3rem;
   }
 
   & .modal-body {
-    height: calc(30% - 14rem);
+    max-height: calc(80vh - 14rem);
     overflow-y: auto;
   }
 }

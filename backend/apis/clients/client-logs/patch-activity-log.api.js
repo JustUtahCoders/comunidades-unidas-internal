@@ -66,14 +66,26 @@ app.patch(`/api/clients/:clientId/logs/:logId`, (req, res) => {
         );
       }
 
+      if (existingLog.idOfUpdatedLog) {
+        return invalidRequest(res, `You may not modify an outdated client log`);
+      }
+
       const updateSql = mysql.format(
-        `UPDATE clientLogs SET title = ?, description = ? WHERE clientId = ? AND id = ? AND isDeleted = false AND addedBy = ?`,
+        `
+        INSERT INTO clientLogs
+        (clientId, title, description, logType, addedBy)
+        VALUES
+        (?, ?, ?, ?, ?);
+
+        UPDATE clientLogs SET idOfUpdatedLog = LAST_INSERT_ID() WHERE id = ?;
+        `,
         [
+          req.params.clientId,
           req.body.title || existingLog.title,
           req.body.description || existingLog.description,
-          req.params.clientId,
-          req.params.logId,
-          req.session.passport.user.id
+          existingLog.logType,
+          req.session.passport.user.id,
+          existingLog.id
         ]
       );
 
@@ -82,13 +94,7 @@ app.patch(`/api/clients/:clientId/logs/:logId`, (req, res) => {
           return databaseError(req, res, err);
         }
 
-        if (result.affectedRows !== 1) {
-          const err = `Backend query to db didn't actually update a db row for patching client log with clientId ${req.params.clientId} and id ${req.params.logId}`;
-          console.error(err);
-          return res.status(500).send({ error: err });
-        } else {
-          return res.status(204).end();
-        }
+        return res.status(204).end();
       });
     }
   });
