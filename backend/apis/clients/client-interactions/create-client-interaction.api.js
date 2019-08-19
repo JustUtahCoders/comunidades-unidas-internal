@@ -22,13 +22,13 @@ const {
   createResponseLogObject
 } = require("../client-logs/activity-log.utils");
 
-app.post("/api/clients/:clientId/interactions", (req, res) => {
+app.post("/clients/:clientId/interactions", (req, res) => {
   const validationErrors = [
     ...checkValid(req.params, validId("clientId")),
     ...checkValid(
       req.body,
       validInteger("serviceId"),
-      validEnum("title"),
+      nonEmptyString("title"),
       validEnum("interactionType"),
       nonEmptyString("description"),
       validDate("dateOfInteraction"),
