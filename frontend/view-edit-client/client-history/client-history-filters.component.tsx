@@ -45,7 +45,9 @@ export default function ClientHistoryFilters(props: ClientHistoryFiltersProps) {
                   />
                   <span>
                     {startCase(
-                      LogType[logTypeKey].replace("clientUpdated:", "")
+                      LogType[logTypeKey]
+                        .replace("clientUpdated:", "")
+                        .replace("Provided", "")
                     )}
                   </span>
                 </label>

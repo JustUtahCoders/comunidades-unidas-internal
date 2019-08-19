@@ -4,7 +4,8 @@ const { responseFullName } = require("../../utils/transform-utils");
 const modifiableLogTypes = [
   "caseNote",
   "clientInteraction:created",
-  "clientInteraction:updated"
+  "clientInteraction:updated",
+  "clientInteraction:serviceProvided"
 ];
 
 exports.modifiableLogTypes = modifiableLogTypes;

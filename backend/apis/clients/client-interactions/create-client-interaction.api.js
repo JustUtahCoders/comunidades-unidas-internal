@@ -63,9 +63,16 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
         (clientId, serviceId, interactionType, dateOfInteraction, duration, location, addedBy, modifiedBy)
         VALUES
         (?, ?, ?, ?, ?, ?, ?, ?);
+
+        SET @interactionId := LAST_INSERT_ID();
+
         INSERT INTO clientLogs
         (clientId, title, description, logType, addedBy, detailId)
-        VALUES (?, ?, ?, ?, ?, LAST_INSERT_ID());
+        VALUES (?, ?, ?, ?, ?, @interactionId);
+
+        INSERT INTO clientLogs
+        (clientId, title, description, logType, addedBy, dateAdded, detailId)
+        VALUES (?, ?, ?, ?, ?, ?, @interactionId);
       `,
       [
         req.params.clientId,
@@ -81,7 +88,12 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
         req.body.description,
         "clientInteraction:created",
         user.id,
-        req.body.detailId
+        req.params.clientId,
+        `${serviceName} service was provided`,
+        null,
+        "clientInteraction:serviceProvided",
+        user.id,
+        req.body.dateOfInteraction
       ]
     );
 

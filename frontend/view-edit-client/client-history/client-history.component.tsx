@@ -353,6 +353,8 @@ function getBackgroundColor(logType: LogType) {
     case LogType["clientInteraction:updated"]:
     case LogType["clientInteraction:deleted"]:
       return "yellow";
+    case LogType["clientInteraction:serviceProvided"]:
+      return "orange";
     default:
       return "black";
   }
@@ -464,6 +466,7 @@ export type ClientHistoryFilterOptions = {
   "clientInteraction:created": boolean;
   "clientInteraction:updated": boolean;
   "clientInteraction:deleted": boolean;
+  "clientInteraction:serviceProvided": boolean;
   showOutdated: boolean;
 };
 
@@ -476,7 +479,8 @@ export enum LogType {
   "caseNote" = "caseNote",
   "clientInteraction:created" = "clientInteraction:created",
   "clientInteraction:updated" = "clientInteraction:updated",
-  "clientInteraction:deleted" = "clientInteraction:deleted"
+  "clientInteraction:deleted" = "clientInteraction:deleted",
+  "clientInteraction:serviceProvided" = "clientInteraction:serviceProvided"
 }
 
 const allFiltersOn: ClientHistoryFilterOptions = Object.keys(LogType).reduce(
