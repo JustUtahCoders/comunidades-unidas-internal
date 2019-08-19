@@ -3,8 +3,11 @@ import PageHeader from "../../page-header.component";
 import ReportIssue from "../../report-issue/report-issue.component";
 import SingleClientSearchInputComponent from "../../client-search/single-client/single-client-search-input.component";
 import easyFetch from "../../util/easy-fetch";
-import SingleInteractionSlat from "./single-interaction-slat.component";
+import SingleInteractionSlat, {
+  InteractionGetter
+} from "./single-interaction-slat.component";
 import { useCss } from "kremling";
+import { showGrowl, GrowlType } from "../../growls/growls.component";
 
 export default function AddClientInteraction(props: AddClientInteractionProps) {
   if (!localStorage.getItem("client-interactions")) {
@@ -20,7 +23,15 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
   const firstInputRef = React.useRef(null);
   const [servicesResponse, setServicesResponse] = React.useState(null);
   const [tempInteractionIds, setTempInteractionIds] = React.useState([0]);
+  const [interactionGetters, setInteractionGetters] = React.useState<
+    Array<InteractionGetter>
+  >([]);
+  const [savingInteraction, setSavingInteraction] = React.useState(false);
+  const clientSearchRef = React.useRef(null);
   const scope = useCss(css);
+  const clientId = clientSearchRef.current
+    ? clientSearchRef.current.clientId
+    : props.clientId;
 
   React.useEffect(() => {
     const abortController = new AbortController();
@@ -36,6 +47,48 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
     return () => abortController.abort();
   }, []);
 
+  React.useEffect(() => {
+    if (savingInteraction) {
+      const interactions = interactionGetters.map(getter => getter());
+
+      const abortControllers = [...Array(interactions.length)].map(
+        () => new AbortController()
+      );
+
+      Promise.all(
+        interactions.map(interaction =>
+          easyFetch(`/api/clients/${clientId}/interactions`, {
+            method: "POST",
+            body: interaction
+          })
+        )
+      )
+        .then(() => {
+          showGrowl({
+            type: GrowlType.success,
+            message: "Client interactions were created"
+          });
+          window.history.pushState(
+            window.history.state,
+            document.title,
+            `/clients/${clientId}/history`
+          );
+        })
+        .catch(err => {
+          setTimeout(() => {
+            throw err;
+          });
+        })
+        .finally(() => {
+          setSavingInteraction(false);
+        });
+
+      return () => {
+        abortControllers.forEach(ac => ac.abort());
+      };
+    }
+  }, [savingInteraction, interactionGetters, clientId]);
+
   return (
     <>
       {props.isGlobalAdd && <PageHeader title="Add a client interaction" />}
@@ -44,10 +97,23 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
           <SingleClientSearchInputComponent
             autoFocus
             nextThingToFocusRef={firstInputRef}
+            ref={clientSearchRef}
           />
         )}
         {tempInteractionIds.map((item, index) => (
           <SingleInteractionSlat
+            inWell
+            addInteractionGetter={(index, getter) => {
+              const newGetters = [...interactionGetters];
+              newGetters[index] = getter;
+              setInteractionGetters(newGetters);
+            }}
+            removeInteractionGetter={index => {
+              const newGetters = interactionGetters.filter(
+                (g, i) => i !== index
+              );
+              setInteractionGetters(newGetters);
+            }}
             servicesResponse={servicesResponse}
             interactionIndex={index}
             removeInteraction={() => removeInteraction(item)}
@@ -60,12 +126,18 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
             type="button"
             className="secondary"
             onClick={addAnotherInteraction}
+            disabled={savingInteraction}
           >
             Add another interaction
           </button>
         </div>
         <div className="actions">
-          <button type="button" className="secondary" onClick={cancel}>
+          <button
+            type="button"
+            className="secondary"
+            onClick={cancel}
+            disabled={savingInteraction}
+          >
             Cancel
           </button>
           <button className="primary">Save</button>
@@ -76,7 +148,7 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    alert("handleSubmit not yet implemented");
+    setSavingInteraction(true);
   }
 
   function addAnotherInteraction() {
@@ -117,4 +189,5 @@ const css = `
 type AddClientInteractionProps = {
   path: string;
   isGlobalAdd?: boolean;
+  clientId?: string;
 };

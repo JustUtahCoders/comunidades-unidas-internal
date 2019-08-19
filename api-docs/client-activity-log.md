@@ -44,6 +44,7 @@ GET /api/clients/:id/logs
       "logType": "clientCreated",
       "canModify": false,
       "isDeleted": false,
+      "detailId": null,
       "createdBy": {
         "userId": 1,
         "firstName": "Joel",
@@ -59,6 +60,7 @@ GET /api/clients/:id/logs
       "logType": "caseNote",
       "canModify": true,
       "isDeleted": false,
+      "detailId": 123,
       "createdBy": {
         "userId": 1,
         "firstName": "Joel",
@@ -70,6 +72,12 @@ GET /api/clients/:id/logs
   ]
 }
 ```
+
+### Notes
+
+- `detailId` refers to the id of a separate object that contains more information. For example,
+  a client interaction shows up in the client log, but also has a separate object that gives more
+  info about the interaction. The `detailId` is the id of the client interaction object.
 
 ## Adding entries to the client log
 

@@ -89,6 +89,8 @@ require("./apis/clients/client-logs/get-activity-logs.api");
 require("./apis/clients/client-logs/delete-activity-logs.api");
 require("./apis/clients/client-logs/create-activity-log.api");
 require("./apis/clients/client-interactions/create-client-interaction.api");
+require("./apis/clients/client-logs/patch-activity-log.api");
+require("./apis/default-404.api.js");
 require("./index-html.js");
 
 process.on("uncaughtException", function(err) {

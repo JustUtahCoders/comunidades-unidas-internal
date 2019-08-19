@@ -24,7 +24,7 @@ export default function ClientHistoryFilters(props: ClientHistoryFiltersProps) {
   return (
     <div {...scope} className="client-history-filters">
       <button className="primary" onClick={togglePopup}>
-        Filter history
+        Filter
       </button>
       {popupOpen && (
         <div
@@ -33,12 +33,13 @@ export default function ClientHistoryFilters(props: ClientHistoryFiltersProps) {
           onClick={evt => evt.stopPropagation()}
         >
           <form onSubmit={handleSubmit}>
+            <div className="caption">Event Type:</div>
             {Object.keys(LogType).map(logTypeKey => (
               <div key={logTypeKey} className="filter-option">
                 <label>
                   <input
                     type="checkbox"
-                    checked={props.filters[logTypeKey]}
+                    checked={Boolean(props.filters[logTypeKey])}
                     value={logTypeKey}
                     onChange={changeFilter}
                   />
@@ -50,6 +51,20 @@ export default function ClientHistoryFilters(props: ClientHistoryFiltersProps) {
                 </label>
               </div>
             ))}
+            <div className="caption" style={{ marginTop: ".8rem" }}>
+              Other options:
+            </div>
+            <div className="filter-option">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={Boolean(props.filters.showOutdated)}
+                  value="showOutdated"
+                  onChange={changeFilter}
+                />
+                <span>Show outdated events</span>
+              </label>
+            </div>
             <button
               type="submit"
               className="secondary"
@@ -88,7 +103,7 @@ const css = `
 
 & .filter-popup {
   padding: 1.6rem;
-  width: 30rem;
+  width: 31rem;
 }
 
 & .filter-option {

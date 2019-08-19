@@ -21,9 +21,8 @@ GET /api/clients/:id/interactions/:id
 ```json
 {
   "id": 1,
-  "title": "Nutrition Program - SNAP",
   "serviceId": 7,
-  "interactionType": "walkIn",
+  "interactionType": "inPerson",
   "description": "Application successfully filled out. Decision pending.",
   "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
@@ -61,7 +60,6 @@ GET /api/clients/:id/interactions/
   "interactions": [
     {
       "id": 1,
-      "title": "Nutrition Program - SNAP",
       "serviceId": 7,
       "interactionType": "byPhone",
       "description": "Application successfully filled out. Decision pending.",
@@ -86,7 +84,6 @@ GET /api/clients/:id/interactions/
     },
     {
       "id": 2,
-      "title": "Financial Counseling - Financial Coach Referal",
       "serviceId": 13,
       "interactionType": "inPerson",
       "description": "Appointment setup with financial coach. Client would like to save up enough for a down payment on a car better suited for their work.",
@@ -123,28 +120,12 @@ POST /api/clients/:id/interactions
 
 ```json
 {
-  "title": "Financial Counseling - Financial Coach Referal",
   "serviceId": 13,
   "interactionType": "inPerson",
   "description": "Appointment setup with financial coach. Client would like to save up enough for a down payment on a car better suited for their work.",
   "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
-  "location": "CUOffice",
-  "isDeleted": false,
-  "createdBy": {
-    "userId": 1,
-    "firstName": "Joel",
-    "lastName": "Denning",
-    "fullName": "Joel Denning",
-    "timestamp": "2019-05-06T06:00:00.000Z"
-  },
-  "lastUpdatedBy": {
-    "userId": 1,
-    "firstName": "Joel",
-    "lastName": "Denning",
-    "fullName": "Joel Denning",
-    "timestamp": "2019-05-06T06:00:00.000Z"
-  }
+  "location": "CUOffice"
 }
 ```
 
@@ -159,9 +140,8 @@ POST /api/clients/:id/interactions
 ```json
 {
   "id": 1,
-  "title": "Nutrition Program - SNAP",
   "serviceId": 7,
-  "interactionType": "walkIn",
+  "interactionType": "byPhone",
   "description": "Application successfully filled out. Decision pending.",
   "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
@@ -194,34 +174,19 @@ PATCH /api/clients/:id/interactions/:id
 
 ```json
 {
-  "title": "SNAP - Nutrition Program",
   "serviceId": 7,
   "interactionType": "byPhone",
   "description": "Application successfully filled out. Decision pending.",
   "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
-  "location": null,
-  "createdBy": {
-    "userId": 1,
-    "firstName": "Joel",
-    "lastName": "Denning",
-    "fullName": "Joel Denning",
-    "timestamp": "2019-05-06T06:00:00.000Z"
-  },
-  "lastUpdatedBy": {
-    "userId": 1,
-    "firstName": "Joel",
-    "lastName": "Denning",
-    "fullName": "Joel Denning",
-    "timestamp": "2019-05-06T06:00:00.000Z"
-  }
+  "location": null
 }
 ```
 
 **_Note_**
 
 - You can omit properties that you do not want to update.
-- The "canModify" and "isDeleted" properties cannot be modified.
+- The "isDeleted" properties cannot be modified.
 
 ### Response
 

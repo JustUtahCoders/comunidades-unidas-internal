@@ -2,46 +2,88 @@ import React from "react";
 import { useCss } from "kremling";
 
 export default function TimeDurationInput(props: TimeDurationInputProps) {
-  const [internalValue, setInternalValue] = React.useState({
-    hours: 0,
-    minutes: 30
-  });
   const scope = useCss(css);
+
+  React.useEffect(() => {
+    if (
+      props.duration.stringValue &&
+      !props.duration.hours &&
+      !props.duration.minutes
+    ) {
+      const stringTimeParser = /^([0-9][0-9]?):([0-9]{2}):([0-9]{2})$/g;
+      const match = stringTimeParser.exec(props.duration.stringValue);
+      if (!match) {
+        throw Error(
+          `TimeDurationInput was given an invalid stringValue prop '${props.duration.stringValue}'`
+        );
+      }
+      props.setDuration({
+        hours: Number(match[1]),
+        minutes: Number(match[2]),
+        stringValue: props.duration.stringValue
+      });
+    }
+  }, [props.duration, props.setDuration]);
 
   return (
     <span {...scope}>
       <input
         type="number"
         required={props.required}
-        value={internalValue.hours}
+        value={
+          props.duration.hours === null || isNaN(props.duration.hours)
+            ? ""
+            : props.duration.hours
+        }
         onChange={changeHours}
         aria-labelledby={props.labelId}
         min={0}
         max={100}
       />
-      <span className="descr">hour{internalValue.hours !== 1 ? "s" : ""}</span>
+      <span className="descr">hour{props.duration.hours !== 1 ? "s" : ""}</span>
       <input
         type="number"
         required={props.required}
-        value={internalValue.minutes}
+        value={
+          props.duration.minutes === null || isNaN(props.duration.minutes)
+            ? ""
+            : props.duration.minutes
+        }
         onChange={changeMinutes}
         aria-labelledby={props.labelId}
         min={0}
         max={59}
       />
       <span className="descr">
-        minute{internalValue.minutes !== 1 ? "s" : ""}
+        minute{props.duration.minutes !== 1 ? "s" : ""}
       </span>
     </span>
   );
 
   function changeHours(evt) {
-    setInternalValue({ ...internalValue, hours: Number(evt.target.value) });
+    props.setDuration(createDuration(evt.target.value, props.duration.minutes));
   }
 
   function changeMinutes(evt) {
-    setInternalValue({ ...internalValue, minutes: Number(evt.target.value) });
+    props.setDuration(createDuration(props.duration.hours, evt.target.value));
   }
+}
+
+function createDuration(hours, minutes): TimeDuration {
+  return {
+    hours,
+    minutes,
+    stringValue:
+      withLeadingZeros(hours) + ":" + withLeadingZeros(minutes) + ":00"
+  };
+}
+
+function withLeadingZeros(num) {
+  let result = String(num);
+  while (result.length < 2) {
+    result = "0" + result;
+  }
+  return result;
 }
 
 const css = `
@@ -55,8 +97,8 @@ const css = `
 `;
 
 type TimeDurationInputProps = {
-  initialValue: string;
-  setValue(duration: TimeDuration): any;
+  duration: TimeDuration;
+  setDuration(duration: TimeDuration): any;
   labelId: string;
   required?: boolean;
 };

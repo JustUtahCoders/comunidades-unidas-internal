@@ -23,8 +23,23 @@ app.delete("/api/clients/:clientId/logs/:logId", (req, res) => {
 
   const deleteLogsQuery = mysql.format(
     `
-    DELETE FROM clientLogs WHERE id = ? AND clientId = ? AND addedBy = ? AND logType IN (${inClause});
-  `,
+    WITH RECURSIVE allConnectedLogs (id, idOfUpdatedLog) AS (
+      SELECT id, idOfUpdatedLog
+      FROM clientLogs
+      WHERE id = ?
+      UNION ALL
+      SELECT clientLogs.id, clientLogs.idOfUpdatedLog
+      FROM clientLogs JOIN allConnectedLogs ON clientLogs.idOfUpdatedLog = allConnectedLogs.id
+    )
+
+    UPDATE clientLogs
+    SET isDeleted = true
+    WHERE
+      id IN (SELECT id from allConnectedLogs) AND
+      clientId = ? AND
+      addedBy = ? AND
+      logType IN (${inClause})
+    `,
     [logId, clientId, req.session.passport.user.id]
   );
 
