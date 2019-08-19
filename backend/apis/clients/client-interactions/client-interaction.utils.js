@@ -1,16 +1,17 @@
-const mysql = require("mysql");
-const { responseFullName } = require("../../utils/transform-utils");
+const {
+  responseFullName,
+  responseDateWithoutTime
+} = require("../../utils/transform-utils");
 
 exports.createResponseInteractionObject = function createResponseInteractionObject(
   log
 ) {
   return {
     id: log.id,
-    title: log.title,
     serviceId: log.serviceId,
     interactionType: log.interactionType,
     description: log.description,
-    dateOfInteraction: log.dateOfInteraction,
+    dateOfInteraction: responseDateWithoutTime(log.dateOfInteraction),
     duration: log.duration,
     isDeleted: Boolean(log.isDeleted),
     location: log.location,
