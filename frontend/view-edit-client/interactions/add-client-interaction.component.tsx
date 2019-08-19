@@ -11,16 +11,6 @@ import { showGrowl, GrowlType } from "../../growls/growls.component";
 import { navigate } from "@reach/router";
 
 export default function AddClientInteraction(props: AddClientInteractionProps) {
-  if (!localStorage.getItem("client-interactions")) {
-    return (
-      <ReportIssue
-        missingFeature
-        hideHeader={!props.isGlobalAdd}
-        title="Add client interaction"
-      />
-    );
-  }
-
   const firstInputRef = React.useRef(null);
   const [servicesResponse, setServicesResponse] = React.useState(null);
   const [tempInteractionIds, setTempInteractionIds] = React.useState([0]);
