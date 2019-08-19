@@ -3,7 +3,7 @@ const {
   responseDateWithoutTime
 } = require("../../utils/transform-utils");
 const mysql = require("mysql");
-const { pool } = require("../../../server");
+const { pool, invalidRequest } = require("../../../server");
 
 function createResponseInteractionObject(log) {
   return {
@@ -90,7 +90,7 @@ exports.getInteraction = function getInteraction(
       errBack((req, res) => {
         invalidRequest(
           res,
-          `Interaction ${interactionId} is not for client ${clientId}`
+          `Interaction ${interactionId} is not associated with client ${clientId}`
         );
       });
 

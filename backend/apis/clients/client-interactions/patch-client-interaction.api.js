@@ -55,6 +55,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
 
   if (!shouldUpdateInteraction && !shouldUpdateLog) {
     return invalidRequest(
+      res,
       `Patching a client interaction requires one of the following properties in the request body: serviceId, interactionType, dateOfInteraction, duration, location, description`
     );
   }
