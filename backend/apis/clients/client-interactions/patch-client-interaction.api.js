@@ -144,7 +144,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
             `,
               [
                 clientId,
-                `${serviceName} was provided`,
+                `${serviceName} service was provided`,
                 null,
                 "clientInteraction:serviceProvided",
                 req.session.passport.user.id,
