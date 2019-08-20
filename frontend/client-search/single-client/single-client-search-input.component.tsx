@@ -119,7 +119,7 @@ export default React.forwardRef<
                 >
                   {`${potentialClient.fullName} (${dayjs(
                     potentialClient.birthday
-                  ).format("M/D/YYYY")})`}
+                  ).format("M/D/YYYY")}) (#${potentialClient.id})`}
                 </button>
               </li>
             ))}
