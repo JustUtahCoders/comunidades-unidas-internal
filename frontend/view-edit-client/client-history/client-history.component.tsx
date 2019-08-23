@@ -33,6 +33,7 @@ export default function ClientHistory(props: ClientHistoryProps) {
               }
             }))
           });
+          console.log(data);
         })
         .catch(err => {
           setTimeout(() => {
