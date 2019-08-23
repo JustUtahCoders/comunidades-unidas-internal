@@ -68,6 +68,11 @@ export default function AddCaseNote({
         {...scope}
       >
         {!isGlobalAdd && <h3>Add a case note</h3>}
+        <p className="reminder">
+          REMINDER: Casenotes are not intended for documenting client
+          interactions. Please use the client interactions form for visits,
+          phone call appointments, and community event interactions.
+        </p>
         {isGlobalAdd && (
           <SingleClientSearchInput
             autoFocus
@@ -130,6 +135,17 @@ const css = `
 
 & h3 {
   margin-top: 0;
+}
+
+& .reminder {
+  font-size: 1.35rem;
+  font-style: italic;
+  line-height: 2rem;
+  color: var(--brand-color);
+  border: rgba(255, 0, 255, 0.35) 1px solid;
+  border-radius: 0.4rem;
+  padding: 1rem 2rem 1rem 1rem;
+  background-color: rgba(255, 0, 0, .05);
 }
 `;
 
