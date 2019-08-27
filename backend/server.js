@@ -82,6 +82,7 @@ require("./apis/clients/add-client.api");
 require("./apis/clients/client-duplicates.api");
 require("./apis/clients/get-client.api");
 require("./apis/clients/update-client.api");
+require("./apis/clients/delete-client.api");
 require("./apis/services/list-services.api");
 require("./apis/clients/list-clients.api");
 require("./apis/clients/client-audit.api");
@@ -93,6 +94,7 @@ require("./apis/clients/client-interactions/get-client-interaction.api");
 require("./apis/clients/client-interactions/patch-client-interaction.api");
 require("./apis/clients/client-interactions/delete-client-interaction.api");
 require("./apis/clients/client-logs/patch-activity-log.api");
+
 require("./apis/default-404.api.js");
 require("./index-html.js");
 
