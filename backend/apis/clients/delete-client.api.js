@@ -26,18 +26,18 @@ app.delete("/api/clients/:clientId", (req, res) => {
 
     const sql = mysql.format(
       `
-				UPDATE clients
-				SET isDeleted = true
-				WHERE id = ?;
+                UPDATE clients
+                SET isDeleted = true
+                WHERE id = ?;
 
-				${insertActivityLogQuery({
-          clientId: clientId,
-          title: `Client was deleted`,
-          description: null,
-          logType: "clientDeleted",
-          addedBy: userId
-        })}
-			`,
+                ${insertActivityLogQuery({
+                  clientId: clientId,
+                  title: `Client was deleted`,
+                  description: null,
+                  logType: "clientDeleted",
+                  addedBy: userId
+                })}
+            `,
       [clientId]
     );
 
