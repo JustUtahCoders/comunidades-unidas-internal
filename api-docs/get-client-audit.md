@@ -51,8 +51,7 @@ GET /api/clients/:id/audits
         "lastName": "Mercury",
         "timestamp": "2019-05-31T11:09:24.000Z"
       }
-    },
-    "isDeleted": false
+    }
   }
 }
 ```
