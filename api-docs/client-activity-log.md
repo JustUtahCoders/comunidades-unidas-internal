@@ -11,6 +11,7 @@ Here is the list of valid log types:
 - 'clientUpdated:contactInformation',
 - 'clientUpdated:demographics',
 - 'clientUpdated:intakeData',
+- 'clientDeleted',
 - 'caseNote',
 - 'clientInteractionCreated',
 - 'clientInteractionUpdated',

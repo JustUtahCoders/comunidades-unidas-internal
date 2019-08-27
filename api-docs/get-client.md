@@ -56,6 +56,7 @@ GET /clients/:id
         "serviceDescription": "Gain United States citizenship"
       }
     ],
+    "isDeleted": false,
     "createdBy": {
       "userId": 1,
       "firstName": "Joel",
