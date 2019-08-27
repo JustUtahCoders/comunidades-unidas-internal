@@ -40,6 +40,7 @@ function getClientById(clientId, cbk, connection) {
     `
     SELECT
       clients.id as clientId,
+      clients.isDeleted,
       clients.firstName,
       clients.lastName,
       clients.gender,
@@ -96,7 +97,7 @@ function getClientById(clientId, cbk, connection) {
       ) intake ON intake.clientId = clients.id
       INNER JOIN users created ON created.id = clients.addedBy
       INNER JOIN users modified ON modified.id = clients.modifiedBy
-      WHERE clients.id = ?;
+      WHERE clients.id = ? AND isDeleted = false;
 
     SELECT serviceId, serviceName
     FROM
@@ -126,6 +127,7 @@ function getClientById(clientId, cbk, connection) {
 
     const client = {
       id: c.clientId,
+      isDeleted: responseBoolean(c.isDeleted),
       firstName: c.firstName,
       lastName: c.lastName,
       fullName: responseFullName(c.firstName, c.lastName),

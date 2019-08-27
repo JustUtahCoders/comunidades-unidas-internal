@@ -8,12 +8,6 @@ In order to allow for restoration of data in the event of an accidental delete, 
 DELETE /api/clients/:clientId
 ```
 
-```json
-{
-  "isDeleted": true
-}
-```
-
 **Notes**
 
 - `isDeleted` is a boolean.
