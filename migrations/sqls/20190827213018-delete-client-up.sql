@@ -1,6 +1,6 @@
 ALTER TABLE clients
-	ADD COLUMN
-		isDeleted BOOLEAN NOT NULL DEFAULT FALSE;
+    ADD COLUMN
+        isDeleted BOOLEAN NOT NULL DEFAULT FALSE;
 
 ALTER TABLE clientLogs
     MODIFY COLUMN
@@ -10,7 +10,7 @@ ALTER TABLE clientLogs
             'clientUpdated:contactInformation',
             'clientUpdated:demographics',
             'clientUpdated:intakeData',
-			'clientDeleted',
+            'clientDeleted',
             'caseNote',
             'clientInteraction:created',
             'clientInteraction:updated',

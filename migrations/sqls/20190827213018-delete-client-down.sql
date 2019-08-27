@@ -1,6 +1,6 @@
 ALTER TABLE clients
-	DROP COLUMN
-		isDeleted;
+    DROP COLUMN
+        isDeleted;
 
 ALTER TABLE clientLogs
     MODIFY COLUMN
