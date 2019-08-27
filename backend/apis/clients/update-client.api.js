@@ -103,6 +103,12 @@ app.patch("/api/clients/:id", (req, res, next) => {
       return databaseError(req, res, err);
     }
 
+    if (!oldClient) {
+      return res
+        .status(404)
+        .send({ error: `Client ${clientId} does not exist` });
+    }
+
     const fullClient = Object.assign({}, oldClient, req.body);
 
     const queries = [];

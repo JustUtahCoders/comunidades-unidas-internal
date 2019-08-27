@@ -6,7 +6,11 @@ const {
   nullableNonEmptyString,
   nullableValidId
 } = require("../utils/validation-utils");
-const { responseFullName, requestPhone } = require("../utils/transform-utils");
+const {
+  responseFullName,
+  requestPhone,
+  responseBoolean
+} = require("../utils/transform-utils");
 
 app.get("/api/clients", (req, res, next) => {
   const validationErrors = checkValid(
@@ -31,7 +35,7 @@ app.get("/api/clients", (req, res, next) => {
 
   const pageSize = 100;
 
-  let whereClause = `WHERE 1=1 `;
+  let whereClause = `WHERE isDeleted = false`;
   let whereClauseValues = [];
 
   if (req.query.name) {
@@ -56,7 +60,7 @@ app.get("/api/clients", (req, res, next) => {
 
   let queryString = `
     SELECT SQL_CALC_FOUND_ROWS
-      cl.id, cl.firstName, cl.lastName, cl.birthday, ct.email,
+      cl.id, cl.firstName, cl.lastName, cl.birthday, cl.isDeleted, ct.email, 
       ct.zip, ct.primaryPhone, cl.addedBy as addedById, us.firstName as addedByFirstName,
       us.lastname as addedByLastName, cl.dateAdded
     FROM 
@@ -102,6 +106,7 @@ app.get("/api/clients", (req, res, next) => {
     res.send({
       clients: clientRows.map(row => ({
         id: row.id,
+        isDeleted: responseBoolean(row.isDeleted),
         firstName: row.firstName,
         lastName: row.lastName,
         fullName: responseFullName(row.firstName, row.lastName),
