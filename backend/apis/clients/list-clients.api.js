@@ -71,7 +71,7 @@ app.get("/api/clients", (req, res, next) => {
             SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
             FROM contactInformation GROUP BY clientId
           ) latestCt
-          ON latestCt.latestDateAdded = innerCt.dateAdded
+          ON latestCt.latestDateAdded = innerCt.dateAdded AND latestCt.clientId = innerCt.clientId;
       ) ct ON cl.id = ct.clientId
     JOIN 
       users us ON cl.addedBy = us.id 
