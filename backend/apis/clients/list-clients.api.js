@@ -35,7 +35,7 @@ app.get("/api/clients", (req, res, next) => {
 
   const pageSize = 100;
 
-  let whereClause = `WHERE isDeleted = false`;
+  let whereClause = `WHERE isDeleted = false `;
   let whereClauseValues = [];
 
   if (req.query.name) {
