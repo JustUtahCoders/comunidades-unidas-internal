@@ -29,7 +29,7 @@ export default function ClientSection(props: ClientSectionProps) {
         className="unstyled client-section-header"
         onClick={toggleExpandAndStore}
       >
-        <h3>{props.title}</h3>
+        <h1>{props.title}</h1>
         {props.auditSection && (
           <div className="audit-info">
             <AuditSummarySection auditSection={props.auditSection} />
@@ -53,6 +53,10 @@ type ClientSectionProps = {
 };
 
 const css = `
+& h1 {
+  font-size: 2.1rem;
+}
+
 & button.unstyled.client-section-header {
   padding: 1.6rem 3.2rem;
   width: 100%;

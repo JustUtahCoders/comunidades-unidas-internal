@@ -23,7 +23,7 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
     <div className="list-duplicates" {...scope}>
       <div className="hints-and-instructions">
         <div>
-          <img src={usersUrl} className="hint-icon" />
+          <img src={usersUrl} className="hint-icon" alt="Duplicate users" />
         </div>
         <div className="instruction">
           The database has records matching {props.duplicateWarning.firstName}

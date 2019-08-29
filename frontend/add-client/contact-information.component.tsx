@@ -14,7 +14,7 @@ export default function ContactInformation(props: StepComponentProps) {
     <>
       <div className="hints-and-instructions" {...scope}>
         <div>
-          <img src={homeUrl} className="hint-icon" />
+          <img src={homeUrl} className="hint-icon" alt="Home address icon" />
         </div>
         <div className="instruction">
           Ok. Now, lets add a contact and address for{" "}

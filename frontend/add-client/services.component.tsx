@@ -25,7 +25,7 @@ export default function Services(props: StepComponentProps) {
     <div {...scope}>
       <div className="hints-and-instructions">
         <div>
-          <img src={agendaIconUrl} className="hint-icon" />
+          <img src={agendaIconUrl} className="hint-icon" alt="Agenda icon" />
         </div>
         <div className="instruction">
           What services are they interested in today?

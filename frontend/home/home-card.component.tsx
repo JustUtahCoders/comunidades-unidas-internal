@@ -14,7 +14,7 @@ export default function HomeCard(props: HomeCardProps) {
   return (
     <div className="card-container" {...scope}>
       <Link className="home-card unstyled" to={props.link}>
-        <img src={props.iconUrl} className="icon" />
+        <img src={props.iconUrl} className="icon" alt="" />
         <div className="title">{props.title}</div>
       </Link>
     </div>
