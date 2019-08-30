@@ -1,5 +1,6 @@
 import React from "react";
 import { groupBy } from "lodash-es";
+import { useCss } from "kremling";
 
 export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
   function IntakeServicesInputs(props, ref) {
@@ -16,12 +17,18 @@ export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
 
     const groupedServices = groupBy<Service>(props.services, "programName");
 
+    const scope = useCss(css);
+
     return (
-      <div>
-        <div className="vertical-options">
+      <div {...scope}>
+        <div
+          className="vertical-options"
+          role="group"
+          aria-label="Comunidades Unidas Services list"
+        >
           {Object.entries(groupedServices).map(([programName, services]) => (
             <div key={programName}>
-              <h4>{programName}</h4>
+              <h1>{programName}</h1>
               {services.map(service => (
                 <label key={service.id}>
                   <input
@@ -57,6 +64,12 @@ export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
     }
   }
 );
+
+const css = `
+& h1 {
+  font-size: 1.8rem;
+}
+`;
 
 type IntakeServicesInputsProps = {
   services: Service[];

@@ -10,7 +10,11 @@ export default function ClientSource(props: StepComponentProps) {
     <>
       <div className="hints-and-instructions">
         <div>
-          <img src={targetIconUrl} className="hint-icon" />
+          <img
+            src={targetIconUrl}
+            className="hint-icon"
+            alt="Icon of a target"
+          />
         </div>
         <div className="instruction">
           Let's track how this client heard about Comunidades Unidas.

@@ -9,7 +9,7 @@ export default function Finished(props: StepComponentProps) {
     <>
       <div className="hints-and-instructions">
         <div>
-          <img src={successIconUrl} className="hint-icon" />
+          <img src={successIconUrl} className="hint-icon" alt="All done icon" />
         </div>
         <div className="instruction">
           {props.clientState.firstName} {props.clientState.lastName} is now in

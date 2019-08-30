@@ -133,8 +133,8 @@ export default function DemographicInformationInputs(
         </label>
       </div>
       <div>
-        <label>
-          <span>Is the client eligible to vote?</span>
+        <div role="group" aria-labelledby="is-eligible-to-vote">
+          <span id="is-eligible-to-vote">Is the client eligible to vote?</span>
           <div className="radio-options">
             <div>
               <label>
@@ -164,12 +164,14 @@ export default function DemographicInformationInputs(
               </label>
             </div>
           </div>
-        </label>
+        </div>
       </div>
       {eligibleToVote ? (
         <div>
-          <label>
-            <span>Would they like to register to vote?</span>
+          <div role="group" aria-labelledby="desire-to-register-vote">
+            <span id="desire-to-register-vote">
+              Would they like to register to vote?
+            </span>
             <div className="radio-options">
               <div>
                 <label>
@@ -196,14 +198,14 @@ export default function DemographicInformationInputs(
                 </label>
               </div>
             </div>
-          </label>
+          </div>
         </div>
       ) : (
         <div />
       )}
       <div>
-        <label>
-          <span>Are they a student?</span>
+        <div role="group" aria-labelledby="is-student">
+          <span id="is-student">Are they a student?</span>
           <div className="radio-options">
             <div>
               <label>
@@ -230,7 +232,7 @@ export default function DemographicInformationInputs(
               </label>
             </div>
           </div>
-        </label>
+        </div>
       </div>
       <div>
         <label>
