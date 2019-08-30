@@ -150,7 +150,7 @@ export type SingleClient = {
   lastUpdatedBy?: ClientUserRelationship;
 };
 
-type IntakeService = {
+export type IntakeService = {
   id: number;
   serviceName: string;
   serviceDescription: string;

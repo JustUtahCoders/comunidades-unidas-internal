@@ -81,12 +81,14 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
               </tr>
             </tbody>
           </table>
-          <button
-            className="secondary edit-button"
-            onClick={() => setEditing(true)}
-          >
-            Edit
-          </button>
+          {props.editable && (
+            <button
+              className="secondary edit-button"
+              onClick={() => setEditing(true)}
+            >
+              Edit
+            </button>
+          )}
         </>
       )}
     </ClientSection>
@@ -97,6 +99,10 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
     dispatchApiStatus({ type: "update", newClientData });
   }
 }
+
+ViewEditBasicInfo.defaultProps = {
+  editable: true
+};
 
 function updatingReducer(state, action) {
   switch (action.type) {
@@ -111,6 +117,7 @@ function updatingReducer(state, action) {
 
 type ViewEditBasicInfoProps = {
   client: SingleClient;
-  clientUpdated(client: SingleClient): void;
-  auditSummary: AuditSummary;
+  clientUpdated?(client: SingleClient): void;
+  auditSummary?: AuditSummary;
+  editable?: boolean;
 };

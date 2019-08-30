@@ -1,10 +1,21 @@
 import React from "react";
-import { Step, StepComponentProps } from "./add-client.component";
+import {
+  Step,
+  StepComponentProps,
+  ClientSources
+} from "./add-client.component";
 import successIconUrl from "../../icons/148705-essential-collection/svg/success.svg";
 import easyFetch from "../util/easy-fetch";
+import ViewEditBasicInfo from "../view-edit-client/client-home/view-edit-basic-info.component";
+import { SingleClient } from "../view-edit-client/view-client.component";
+import { useCss } from "kremling";
+import ViewEditContactInfo from "../view-edit-client/client-home/view-edit-contact-info.component";
+import ViewEditDemographicsInfo from "../view-edit-client/client-home/view-edit-demographics-info.component";
+import ViewEditIntakeInfo from "../view-edit-client/client-home/view-edit-intake-info.component";
 
 export default function Confirm(props: StepComponentProps) {
   const [saving, setSaving] = React.useState(false);
+  const scope = useCss(css);
 
   React.useEffect(() => {
     if (saving) {
@@ -46,7 +57,7 @@ export default function Confirm(props: StepComponentProps) {
           eligibleToVote: d.eligibleToVote,
           clientSource: d.clientSource,
           couldVolunteer: d.couldVolunteer,
-          intakeServices: d.intakeServices
+          intakeServices: d.intakeServices.map(service => service.id)
         }
       })
         .then(function(data) {
@@ -64,8 +75,47 @@ export default function Confirm(props: StepComponentProps) {
     }
   }, [saving, props.clientState]);
 
+  const c = props.clientState;
+
+  const viewableClient: SingleClient = {
+    id: Number(c.id),
+    firstName: c.firstName,
+    lastName: c.lastName,
+    fullName: `${c.firstName} ${c.lastName}`.trim(),
+    birthday: c.birthday,
+    gender: c.gender,
+    phone: c.phone,
+    smsConsent: c.smsConsent,
+    homeAddress: {
+      city: c.city,
+      state: c.state,
+      street: c.streetAddress,
+      zip: c.zip
+    },
+    email: c.email,
+    civilStatus: c.civilStatus,
+    countryOfOrigin: c.countryOfOrigin,
+    dateOfUSArrival: c.dateOfUSArrival,
+    homeLanguage: c.homeLanguage,
+    englishProficiency: c.englishLevel,
+    currentlyEmployed: c.currentlyEmployed,
+    employmentSector: c.employmentSector,
+    payInterval: c.payInterval,
+    weeklyEmployedHours: c.weeklyEmployedHours,
+    householdIncome: c.householdIncome,
+    householdSize: c.householdSize,
+    dependents: c.juvenileDependents,
+    housingStatus: c.housing,
+    isStudent: c.isStudent,
+    eligibleToVote: c.eligibleToVote,
+    registeredToVote: c.registerToVote,
+    clientSource: ClientSources[c.clientSource],
+    couldVolunteer: c.couldVolunteer,
+    intakeServices: c.intakeServices
+  };
+
   return (
-    <>
+    <div {...scope}>
       <div className="hints-and-instructions">
         <div>
           <img src={successIconUrl} className="hint-icon" alt="Success icon" />
@@ -75,6 +125,10 @@ export default function Confirm(props: StepComponentProps) {
           {props.clientState.lastName} to database.
         </div>
       </div>
+      <ViewEditBasicInfo client={viewableClient} editable={false} />
+      <ViewEditContactInfo client={viewableClient} editable={false} />
+      <ViewEditDemographicsInfo client={viewableClient} editable={false} />
+      <ViewEditIntakeInfo client={viewableClient} editable={false} />
       <form onSubmit={handleSubmit}>
         <div className="actions">
           <button
@@ -89,7 +143,7 @@ export default function Confirm(props: StepComponentProps) {
           </button>
         </div>
       </form>
-    </>
+    </div>
   );
 
   function handleSubmit(evt) {
@@ -97,3 +151,9 @@ export default function Confirm(props: StepComponentProps) {
     setSaving(true);
   }
 }
+
+const css = `
+& .card {
+  border: .1rem solid lightgray;
+}
+`;

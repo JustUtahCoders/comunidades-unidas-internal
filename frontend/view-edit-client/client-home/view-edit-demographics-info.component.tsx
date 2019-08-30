@@ -272,6 +272,10 @@ export default function ViewEditDemographicsInfo(
   }
 }
 
+ViewEditDemographicsInfo.defaultProps = {
+  editable: true
+};
+
 function updatingReducer(state, action: UpdateAction) {
   switch (action.type) {
     case UpdateActionType.update:
@@ -292,8 +296,9 @@ const css = `
 
 type ViewEditDemographicsInfoProps = {
   client: SingleClient;
-  clientUpdated(client: SingleClient): void;
-  auditSummary: AuditSummary;
+  clientUpdated?(client: SingleClient): void;
+  auditSummary?: AuditSummary;
+  editable?: boolean;
 };
 
 type UpdateAction = {

@@ -8,6 +8,9 @@ import ClientSourceInputsComponent, {
 import IntakeDateInput from "../../add-client/form-inputs/intake-date-input.component";
 import easyFetch from "../../util/easy-fetch";
 import IntakeServicesInputs from "../../add-client/form-inputs/intake-services-inputs.component";
+import checkedUrl from "../../../icons/148705-essential-collection/svg/checked-1.svg";
+import closeUrl from "../../../icons/148705-essential-collection/svg/close.svg";
+import { useCss } from "kremling";
 
 export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
   const { client } = props;
@@ -20,6 +23,7 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
   });
   const [services, setServices] = React.useState([]);
   const intakeServicesRef = React.useRef(null);
+  const scope = useCss(css);
 
   React.useEffect(() => {
     const abortController = new AbortController();
@@ -76,9 +80,7 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
               <IntakeServicesInputs
                 ref={intakeServicesRef}
                 services={services}
-                checkedServices={client.intakeServices.map(
-                  service => service.id
-                )}
+                checkedServices={client.intakeServices}
               />
             </label>
           </div>
@@ -102,7 +104,7 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
         </form>
       ) : (
         <>
-          <table className="client-table">
+          <table className="client-table" {...scope}>
             <tbody>
               <tr>
                 <td>Intake Date:</td>
@@ -113,6 +115,10 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
                 <td>
                   {clientSources[client.clientSource] || client.clientSource}
                 </td>
+              </tr>
+              <tr>
+                <td>Could volunteer:</td>
+                <td>{couldVolunteer()}</td>
               </tr>
               <tr>
                 <td>Services interested in:</td>
@@ -143,14 +149,60 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
       dateOfIntake: intakeDateInputRef.current.value,
       couldVolunteer: clientSourceRef.current.couldVolunteer,
       clientSource: clientSourceRef.current.clientSource,
-      intakeServices: intakeServicesRef.current.checkedServices
+      intakeServices: intakeServicesRef.current.checkedServices.map(
+        service => service.id
+      )
     };
     dispatchApiStatus({
       type: "do-patch",
       newClientData
     });
   }
+
+  function couldVolunteer() {
+    if (client.couldVolunteer) {
+      return (
+        <div className="could-volunteer">
+          Yes{" "}
+          <img
+            src={checkedUrl}
+            alt="Could volunteer for CU"
+            title="Could volunteer for CU"
+            className="could-volunteer-icon"
+          />
+        </div>
+      );
+    } else {
+      return (
+        <div className="could-volunteer">
+          No{" "}
+          <img
+            src={closeUrl}
+            alt="Could not volunteer for CU"
+            title="Could not volunteer for CU"
+            className="could-volunteer-icon"
+          />
+        </div>
+      );
+    }
+  }
 }
+
+const css = `
+& .could-volunteer {
+  display: flex;
+  align-items: center;
+}
+
+& .could-volunteer-icon {
+  width: 1.6rem;
+  margin-left: .8rem;
+}
+`;
+
+ViewEditIntakeInfo.defaultProps = {
+  editable: true
+};
 
 function apiStatusReducer(state, action) {
   switch (action.type) {
@@ -165,6 +217,6 @@ function apiStatusReducer(state, action) {
 
 type ViewEditIntakeInfoProps = {
   client: SingleClient;
-  clientUpdated(client: SingleClient): void;
-  auditSummary: AuditSummary;
+  clientUpdated?(client: SingleClient): void;
+  auditSummary?: AuditSummary;
 };
