@@ -31,6 +31,7 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
                 checked={selectAll}
                 onChange={evt => setSelectAll(evt.target.checked)}
                 name="select-all"
+                aria-label="Select all clients"
               />
             </th>
             <th>ID</th>
@@ -41,7 +42,10 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
             <th>Created</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody
+          role="group"
+          aria-label="Select one or more clients for batch actions"
+        >
           {props.clients.length === 0 && !props.fetchingClients && (
             <tr className="empty-state">
               <td colSpan={7}>
@@ -58,6 +62,7 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
                 <input
                   type="checkbox"
                   name="client-checked"
+                  aria-label={`Select ${client.fullName}`}
                   value={client.id}
                   onClick={evt => evt.stopPropagation()}
                 />

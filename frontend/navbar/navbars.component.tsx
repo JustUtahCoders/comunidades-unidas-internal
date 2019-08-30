@@ -30,7 +30,7 @@ export default function Navbars(props: NavbarsProps) {
         hideSidebar={() => setForceSidebar(false)}
       />
       <div className="navbar-margin" {...scope}>
-        <div className="main-content">{props.children}</div>
+        <main className="main-content">{props.children}</main>
       </div>
     </>
   );

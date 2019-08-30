@@ -275,12 +275,13 @@ ${mediaDesktop} {
   max-width: 35rem;
 }
 
-& label {
+& label, & [role=group] {
   display: flex;
   align-items: center;
 }
 
-& form > div > label > span {
+& form > div > label > span,
+& form > div > [role=group] > span {
   display: inline-block;
   width: 14rem;
   text-align: right;

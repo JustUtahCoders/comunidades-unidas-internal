@@ -9,7 +9,11 @@ export default function DemographicInformation(props: StepComponentProps) {
     <>
       <div className="hints-and-instructions">
         <div>
-          <img src={demographicIconUrl} className="hint-icon" />
+          <img
+            src={demographicIconUrl}
+            className="hint-icon"
+            alt="Paper document icon"
+          />
         </div>
         <div className="instruction">
           Almost done, now add demographic information for{" "}

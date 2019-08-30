@@ -47,7 +47,7 @@ export default function ClientHistory(props: ClientHistoryProps) {
   return (
     <div {...scope} className="card">
       <div className="client-history-header">
-        <h3>Client history</h3>
+        <h1>Client history</h1>
         <ClientHistoryFilters
           filters={logState.filters}
           setFilters={updateFilters}
@@ -90,9 +90,9 @@ export default function ClientHistory(props: ClientHistoryProps) {
             />
           </div>
           <div className="timeline-right">
-            <h4 className={a("title").m("outdated", log.idOfUpdatedLog)}>
+            <h2 className={a("title").m("outdated", log.idOfUpdatedLog)}>
               {getTitle(log)} by {log.createdBy.fullName}.
-            </h4>
+            </h2>
             {!log.idOfUpdatedLog && (
               <>
                 {log.logType === "caseNote" && <i>{log.title}</i>}
@@ -367,8 +367,9 @@ const css = `
   margin-bottom: 3.2rem;
 }
 
-& .client-history-header > h3 {
+& .client-history-header > h1 {
   margin: 0;
+  font-size: 2.1rem;
 }
 
 & .client-history-timeline {
@@ -431,6 +432,7 @@ const css = `
 
 & .title {
   margin: 0;
+  font-size: 1.8rem;
 }
 
 & .outdated {
