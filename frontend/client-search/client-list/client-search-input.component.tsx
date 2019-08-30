@@ -39,6 +39,8 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
           className="search-input"
           autoFocus={props.autoFocus}
           ref={inputRef}
+          aria-label="Search for clients"
+          placeholder="Search for clients"
         />
         {!showingAdvancedSearch && (
           <>
@@ -66,7 +68,7 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
             onSubmit={handleSubmit}
           >
             <div className="header">
-              <h4>Advanced search</h4>
+              <h1>Advanced search</h1>
               <div className="caption">
                 When searching multiple fields,{" "}
                 <span className="bold">all of the fields must match</span>.
@@ -199,7 +201,8 @@ const css = `
   padding: 1.4rem;
 }
 
-& .advanced-search h4 {
+& .advanced-search h1 {
+  font-size: 2.4rem;
   margin: 0;
 }
 

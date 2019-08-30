@@ -21,8 +21,8 @@ export default function Sidebar(props: SidebarProps) {
       className={always("sidebar").maybe("force-show", props.forceShow)}
       onClick={evt => evt.stopPropagation()}
     >
-      <ul className="navbar-links">
-        <div>
+      <div className="navbar-links">
+        <ul>
           <li>
             <Link
               to=""
@@ -90,8 +90,8 @@ export default function Sidebar(props: SidebarProps) {
               <div>Report an issue</div>
             </Link>
           </li>
-        </div>
-        <div>
+        </ul>
+        <ul>
           <li>
             <a href="/logout" className="nav-link">
               <div className="switch-account">
@@ -100,8 +100,8 @@ export default function Sidebar(props: SidebarProps) {
               </div>
             </a>
           </li>
-        </div>
-      </ul>
+        </ul>
+      </div>
     </nav>
   );
 

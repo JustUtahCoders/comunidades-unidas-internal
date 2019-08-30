@@ -9,7 +9,11 @@ export default function CheckDuplicate(props: StepComponentProps) {
     <>
       <div className="hints-and-instructions">
         <div>
-          <img src={user2Url} className="hint-icon" />
+          <img
+            src={user2Url}
+            className="hint-icon"
+            alt="Check for duplicate users"
+          />
         </div>
         <div className="instruction">
           Let's first check if this person already exists in the database.
