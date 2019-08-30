@@ -10,12 +10,7 @@ export default function BasicInformationInputs(
   const [birthday, setBirthday] = React.useState(
     props.client.birthday || "1990-01-01"
   );
-  const [gender, setGender] = React.useState(() =>
-    getInitialGender(props.client.gender)
-  );
-  const [otherGender, setOtherGender] = React.useState(() =>
-    getInitialOtherGender(props.client.gender)
-  );
+  const [gender, setGender] = React.useState(props.client.gender || "female");
 
   return (
     <form onSubmit={handleSubmit} autoComplete="off">
@@ -67,23 +62,11 @@ export default function BasicInformationInputs(
             <option value="female">Female</option>
             <option value="male">Male</option>
             <option value="nonbinary">Non-binary</option>
+            <option value="transgender">Transgender</option>
             <option value="other">Other</option>
           </select>
         </label>
       </div>
-      {gender === "other" && (
-        <div>
-          <label>
-            <span>Other gender</span>
-            <input
-              type="text"
-              value={otherGender}
-              onChange={evt => setOtherGender(evt.target.value)}
-              required
-            />
-          </label>
-        </div>
-      )}
       {props.children}
     </form>
   );
@@ -92,7 +75,7 @@ export default function BasicInformationInputs(
     return props.handleSubmit(evt, {
       firstName,
       lastName,
-      gender: gender === "other" ? otherGender : gender,
+      gender,
       birthday
     });
   }
@@ -110,26 +93,3 @@ type BasicInfoClient = {
   gender?: string;
   birthday?: string;
 };
-
-const genderOptions = {
-  female: "Female",
-  male: "Male",
-  nonbinary: "Nonbinary",
-  other: "Other"
-};
-
-function getInitialGender(val) {
-  if (val) {
-    return Object.keys(genderOptions).includes(val) ? val : "other";
-  } else {
-    return "female";
-  }
-}
-
-function getInitialOtherGender(val) {
-  if (val) {
-    return Object.keys(genderOptions).includes(val) ? "" : val;
-  } else {
-    return "";
-  }
-}

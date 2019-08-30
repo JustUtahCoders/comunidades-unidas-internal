@@ -4,6 +4,7 @@ import { SingleClient, AuditSummary } from "../view-client.component";
 import dayjs from "dayjs";
 import BasicInformationInputs from "../../add-client/form-inputs/basic-information-inputs.component";
 import easyFetch from "../../util/easy-fetch";
+import { capitalize } from "lodash-es";
 
 export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
   const [editing, setEditing] = React.useState(false);
@@ -77,7 +78,7 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
               </tr>
               <tr>
                 <td>Gender:</td>
-                <td>{client.gender}</td>
+                <td>{capitalize(client.gender)}</td>
               </tr>
             </tbody>
           </table>
