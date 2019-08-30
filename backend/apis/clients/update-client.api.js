@@ -240,12 +240,12 @@ app.patch("/api/clients/:id", (req, res, next) => {
 
     pool.query(queries.join("\n"), (patchErr, result) => {
       if (patchErr) {
-        return databaseError(req, res, err);
+        return databaseError(req, res, patchErr);
       }
 
       getClientById(req.params.id, (selectErr, client) => {
         if (selectErr) {
-          return databaseError(req, res, err, connection);
+          return databaseError(req, res, selectErr, connection);
         }
 
         res.send({
