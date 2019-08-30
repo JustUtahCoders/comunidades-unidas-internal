@@ -1,12 +1,13 @@
 import React from "react";
 import { groupBy } from "lodash-es";
+import { IntakeService } from "../../view-edit-client/view-client.component";
 import { useCss } from "kremling";
 
 export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
   function IntakeServicesInputs(props, ref) {
-    const [checkedServices, setCheckedServices] = React.useState(
-      props.checkedServices || []
-    );
+    const [checkedServices, setCheckedServices] = React.useState<
+      IntakeService[]
+    >(props.checkedServices || []);
 
     React.useEffect(() => {
       // @ts-ignore
@@ -36,10 +37,9 @@ export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
                     name="services"
                     value={service.id}
                     checked={checkedServices.some(
-                      checkedService => checkedService === service.id
+                      checkedService => checkedService.id === service.id
                     )}
                     onChange={handleChange}
-                    autoFocus
                   />
                   <span>{service.serviceName}</span>
                 </label>
@@ -54,10 +54,13 @@ export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
       const serviceId = Number(evt.target.value);
       let newCheckedServices;
       if (evt.target.checked) {
-        newCheckedServices = [...checkedServices, serviceId];
+        newCheckedServices = [
+          ...checkedServices,
+          props.services.find(service => service.id === serviceId)
+        ];
       } else {
         newCheckedServices = checkedServices.filter(
-          service => service !== serviceId
+          service => service.id !== serviceId
         );
       }
       setCheckedServices(newCheckedServices);
@@ -73,7 +76,7 @@ const css = `
 
 type IntakeServicesInputsProps = {
   services: Service[];
-  checkedServices: number[];
+  checkedServices: IntakeService[];
 };
 
 type Service = {

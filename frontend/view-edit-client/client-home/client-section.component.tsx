@@ -13,7 +13,7 @@ export default function ClientSection(props: ClientSectionProps) {
       : true
   );
 
-  const scope = useCss(css);
+  const scope = useCss(getCss());
 
   const toggleExpandAndStore = () => {
     localStorage.setItem(
@@ -52,65 +52,67 @@ type ClientSectionProps = {
   };
 };
 
-const css = `
-& h1 {
-  font-size: 2.1rem;
-}
+function getCss() {
+  return `
+    & h1 {
+      font-size: 2.1rem;
+    }
 
-& button.unstyled.client-section-header {
-  padding: 1.6rem 3.2rem;
-  width: 100%;
-}
+    & button.unstyled.client-section-header {
+      padding: 1.6rem 3.2rem;
+      width: 100%;
+    }
 
-& button.unstyled.client-section-header:hover {
-  background-color: var(--light-gray);
-}
+    & button.unstyled.client-section-header:hover {
+      background-color: var(--light-gray);
+    }
 
-& .client-section-content {
-  padding: 1.6rem 3.2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
+    & .client-section-content {
+      padding: 1.6rem 3.2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
 
-& button.icon {
-  margin-left: 1.6rem;
-}
+    & button.icon {
+      margin-left: 1.6rem;
+    }
 
-& .edit-button {
-  margin-top: 1.6rem;
-}
+    & .edit-button {
+      margin-top: 1.6rem;
+    }
 
-& .audit-info {
-  font-style: italic;
-  font-size: 1.2rem;
-  text-align: center;
-}
+    & .audit-info {
+      font-style: italic;
+      font-size: 1.2rem;
+      text-align: center;
+    }
 
-& table.client-table {
-  width: 100%;
-  table-layout: fixed;
-}
+    & table.client-table {
+      width: 100%;
+      table-layout: fixed;
+    }
 
-& table.client-table td:first-child {
-  text-align: right;
-  padding-right: 1.2rem;
-  width: 50%;
-  max-width: 50%;
-}
+    & table.client-table td:first-child {
+      text-align: right;
+      padding-right: 1.2rem;
+      width: 50%;
+      max-width: 50%;
+    }
 
-& table.client-table td:last-child {
-  padding-left: 1.2rem;
-}
+    & table.client-table td:last-child {
+      padding-left: 1.2rem;
+    }
 
-& table.client-table tr:not(:first-child) td {
-  padding-top: .4rem;
-}
+    & table.client-table tr:not(:first-child) td {
+      padding-top: .4rem;
+    }
 
-& table.client-table tr:not(:last-child) td {
-  padding-bottom: .4rem;
-}
+    & table.client-table tr:not(:last-child) td {
+      padding-bottom: .4rem;
+    }
 
-${addClientCss}
-`;
+    ${addClientCss}
+  `;
+}

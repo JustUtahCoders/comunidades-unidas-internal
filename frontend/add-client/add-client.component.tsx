@@ -17,6 +17,7 @@ import Finished from "./finished.component";
 
 import { mediaMobile, mediaDesktop } from "../styleguide.component";
 import { WeeklyEmployedHours } from "./form-inputs/demographic-information-inputs.component";
+import { IntakeService } from "../view-edit-client/view-client.component";
 
 export default function AddClient(props: AddClientProps) {
   const scope = useCss(css);
@@ -142,7 +143,7 @@ export type ClientState = {
   clientSource?: ClientSources | string;
   couldVolunteer?: boolean;
   // Intake services
-  intakeServices?: number[];
+  intakeServices?: IntakeService[];
 };
 
 export type StepComponentProps = {

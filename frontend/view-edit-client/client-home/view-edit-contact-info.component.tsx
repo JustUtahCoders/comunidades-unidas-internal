@@ -147,7 +147,7 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
     if (client.smsConsent) {
       return (
         <div className="sms-consent">
-          Wants{" "}
+          Yes{" "}
           <img
             src={checkedUrl}
             alt="wants text messages"
@@ -180,6 +180,10 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
   }
 }
 
+ViewEditContactInfo.defaultProps = {
+  editable: true
+};
+
 function updatingReducer(state, action: UpdateAction) {
   switch (action.type) {
     case "update":
@@ -198,8 +202,9 @@ type UpdateAction = {
 
 type ViewEditContactInfoProps = {
   client: SingleClient;
-  clientUpdated(newClient: SingleClient): void;
-  auditSummary: AuditSummary;
+  clientUpdated?(newClient: SingleClient): void;
+  auditSummary?: AuditSummary;
+  editable?: boolean;
 };
 
 const css = `
