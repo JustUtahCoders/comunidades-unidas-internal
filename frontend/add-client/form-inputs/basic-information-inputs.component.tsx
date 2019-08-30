@@ -62,6 +62,7 @@ export default function BasicInformationInputs(
             <option value="female">Female</option>
             <option value="male">Male</option>
             <option value="nonbinary">Non-binary</option>
+            <option value="transgender">Transgender</option>
             <option value="other">Other</option>
           </select>
         </label>
