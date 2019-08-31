@@ -85,6 +85,11 @@ function reduceApiState(state: ApiState, action: ApiStateAction) {
         ...state,
         status: ApiStateStatus.shouldFetch
       };
+    case ActionTypes.apiError:
+      return {
+        ...state,
+        status: ApiStateStatus.fetched
+      };
     default:
       throw Error();
   }
@@ -98,12 +103,23 @@ function useClientsApi(apiState, dispatchApiState) {
         ...apiState.search,
         page: apiState.page
       });
-      easyFetch(`/api/clients?${query}`).then(data => {
-        dispatchApiState({
-          type: ActionTypes.fetched,
-          apiData: data
+      easyFetch(`/api/clients?${query}`)
+        .then(data => {
+          dispatchApiState({
+            type: ActionTypes.fetched,
+            apiData: data
+          });
+        })
+        .catch(err => {
+          dispatchApiState({
+            type: ActionTypes.apiError,
+            err
+          });
+
+          setTimeout(() => {
+            throw err;
+          });
         });
-      });
 
       return () => abortController.abort();
     }
@@ -189,7 +205,8 @@ enum ActionTypes {
   newSearch = "newSearch",
   newQueryParams = "newQueryParams",
   fetching = "fetching",
-  fetched = "fetched"
+  fetched = "fetched",
+  apiError = "apiError"
 }
 
 type ApiStateAction =
@@ -197,7 +214,8 @@ type ApiStateAction =
   | NewSearchAction
   | NewParamsAction
   | FetchingAction
-  | FetchedAction;
+  | FetchedAction
+  | ApiErrorAction;
 
 type NewPageAction = {
   type: ActionTypes.newPage;
@@ -223,6 +241,11 @@ type FetchingAction = {
 type FetchedAction = {
   type: ActionTypes.fetched;
   apiData: ClientApiData;
+};
+
+type ApiErrorAction = {
+  type: ActionTypes.apiError;
+  err: any;
 };
 
 type ClientListProps = {

@@ -16,8 +16,9 @@ app.get("/api/clients", (req, res, next) => {
   const validationErrors = checkValid(
     req.query,
     nullableValidInteger("page"),
-    nullableValidId(),
-    nullableNonEmptyString("phone")
+    nullableValidId("id"),
+    nullableNonEmptyString("phone"),
+    nullableValidId("program")
   );
 
   if (validationErrors.length > 0) {
@@ -58,6 +59,28 @@ app.get("/api/clients", (req, res, next) => {
     whereClauseValues.push("%" + requestPhone(req.query.phone) + "%");
   }
 
+  let joinIntakeServices = "";
+  if (req.query.program) {
+    joinIntakeServices = `
+      JOIN 
+      (
+        SELECT id intakeDId, clientId
+        FROM
+          intakeData innerIntakeD
+          JOIN
+          (
+            SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
+            FROM intakeData GROUP BY clientId
+          ) latestIntakeD
+          ON latestIntakeD.latestDateAdded = innerIntakeD.dateAdded AND latestIntakeD.latestClientId = innerIntakeD.clientId
+      ) intakeD ON cl.id = intakeD.clientId
+    `;
+    whereClause += `
+      AND (SELECT COUNT(*) FROM intakeServices WHERE intakeDataId = intakeDId AND intakeServices.serviceId IN (SELECT id FROM services WHERE programId = ?)) > 0
+    `;
+    whereClauseValues.push(req.query.program);
+  }
+
   let queryString = `
     SELECT SQL_CALC_FOUND_ROWS
       cl.id, cl.firstName, cl.lastName, cl.birthday, cl.isDeleted, ct.email, 
@@ -79,6 +102,7 @@ app.get("/api/clients", (req, res, next) => {
       ) ct ON cl.id = ct.clientId
     JOIN 
       users us ON cl.addedBy = us.id 
+    ${joinIntakeServices}
     ${whereClause}
     
     ORDER BY cl.lastName, cl.firstName DESC LIMIT ?, ?;
@@ -93,6 +117,8 @@ app.get("/api/clients", (req, res, next) => {
     mysqlOffset,
     pageSize
   ]);
+
+  console.log(getClientList);
 
   pool.query(getClientList, function(err, result, fields) {
     if (err) {

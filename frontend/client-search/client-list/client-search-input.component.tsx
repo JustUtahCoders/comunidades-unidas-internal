@@ -9,6 +9,7 @@ import {
   allowedSearchFields,
   serializeSearch
 } from "./client-search-dsl.helpers";
+import easyFetch from "../../util/easy-fetch";
 
 export default function ClientSearchInput(props: ClientSearchInputProps) {
   const scope = useCss(css);
@@ -20,10 +21,24 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
     getInitialSearch()
   );
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const [programs, setPrograms] = React.useState([]);
 
   React.useEffect(() => {
     inputRef.current.setCustomValidity(search.parseResult.errors.join(", "));
   }, [search]);
+
+  React.useEffect(() => {
+    const abortController = new AbortController();
+    easyFetch(`/api/services`, { signal: abortController.signal })
+      .then(json => {
+        setPrograms(json.programs);
+      })
+      .catch(err => {
+        setTimeout(() => {
+          throw err;
+        });
+      });
+  }, []);
 
   return (
     <div className="search-container" {...scope}>
@@ -83,20 +98,38 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
                 onChange={evt => updateAdvancedSearch("name", evt.target.value)}
               />
               {Object.entries(allowedSearchFields).map(
-                ([fieldKey, fieldName]) => (
-                  <React.Fragment key={fieldKey}>
-                    <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
-                    <input
-                      aria-labelledby={"advanced-search-" + fieldKey}
-                      type="text"
-                      value={search.parseResult.parse[fieldKey] || ""}
-                      onChange={evt =>
-                        updateAdvancedSearch(fieldKey, evt.target.value)
-                      }
-                      placeholder={getPlaceholder(fieldKey)}
-                    />
-                  </React.Fragment>
-                )
+                ([fieldKey, fieldName]) =>
+                  fieldKey !== "program" ? (
+                    <React.Fragment key={fieldKey}>
+                      <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
+                      <input
+                        aria-labelledby={"advanced-search-" + fieldKey}
+                        type="text"
+                        value={search.parseResult.parse[fieldKey] || ""}
+                        onChange={evt =>
+                          updateAdvancedSearch(fieldKey, evt.target.value)
+                        }
+                        placeholder={getPlaceholder(fieldKey)}
+                      />
+                    </React.Fragment>
+                  ) : (
+                    <React.Fragment key={fieldKey}>
+                      <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
+                      <select
+                        value={search.parseResult.parse[fieldKey]}
+                        onChange={evt => {
+                          updateAdvancedSearch(fieldKey, evt.target.value);
+                        }}
+                      >
+                        <option value="">No program selected</option>
+                        {programs.map(program => (
+                          <option key={program.id} value={program.id}>
+                            {program.programName}
+                          </option>
+                        ))}
+                      </select>
+                    </React.Fragment>
+                  )
               )}
             </div>
             <button
