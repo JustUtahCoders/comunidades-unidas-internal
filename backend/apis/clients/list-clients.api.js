@@ -61,7 +61,7 @@ app.get("/api/clients", (req, res, next) => {
     whereClauseValues.push("%" + requestPhone(req.query.phone) + "%");
   }
 
-  let columnsToOrder = `cl.lastName DESC, cl.firstName`;
+  let columnsToOrder = `cl.lastName DESC, cl.firstName DESC`;
   if (req.query.sortField) {
     columnsToOrder = `cl.${req.query.sortField}`;
   }
