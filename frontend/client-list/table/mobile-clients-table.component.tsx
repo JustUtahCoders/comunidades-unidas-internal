@@ -20,6 +20,10 @@ export default function MobileClientsTable(props: ClientsTableProps) {
             <table className="client-table">
               <tbody>
                 <tr>
+                  <td>ID:</td>
+                  <td>{client.id}</td>
+                </tr>
+                <tr>
                   <td>Name:</td>
                   <td>{client.fullName || ""}</td>
                 </tr>
@@ -37,7 +41,7 @@ export default function MobileClientsTable(props: ClientsTableProps) {
                 </tr>
                 <tr>
                   <td>Email:</td>
-                  <td>{client.email || ""}</td>
+                  <td>{client.email || "(No email)"}</td>
                 </tr>
               </tbody>
             </table>
