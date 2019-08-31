@@ -118,8 +118,6 @@ app.get("/api/clients", (req, res, next) => {
     pageSize
   ]);
 
-  console.log(getClientList);
-
   pool.query(getClientList, function(err, result, fields) {
     if (err) {
       return databaseError(req, res, err);
