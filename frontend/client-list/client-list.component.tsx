@@ -36,6 +36,9 @@ export default function ClientList(props: ClientListProps) {
         clients={apiState.apiData.clients}
         fetchingClients={fetchingClient}
         page={apiState.page}
+        newSortOrder={newSortOrder}
+        sortField={apiState.sortField}
+        sortOrder={apiState.sortOrder}
       />
     </>
   );
@@ -51,6 +54,14 @@ export default function ClientList(props: ClientListProps) {
     dispatchApiState({
       type: ActionTypes.newSearch,
       search
+    });
+  }
+
+  function newSortOrder(sortField: SortField, sortOrder: SortOrder) {
+    dispatchApiState({
+      type: ActionTypes.newSort,
+      sortField,
+      sortOrder
     });
   }
 }
@@ -85,6 +96,13 @@ function reduceApiState(state: ApiState, action: ApiStateAction) {
         ...state,
         status: ApiStateStatus.shouldFetch
       };
+    case ActionTypes.newSort:
+      return {
+        ...state,
+        status: ApiStateStatus.shouldFetch,
+        sortField: action.sortField,
+        sortOrder: action.sortOrder
+      };
     default:
       throw Error();
   }
@@ -96,6 +114,8 @@ function useClientsApi(apiState, dispatchApiState) {
       const abortController = new AbortController();
       const query = queryString.stringify({
         ...apiState.search,
+        sortField: apiState.sortField,
+        sortOrder: apiState.sortOrder,
         page: apiState.page
       });
       easyFetch(`/api/clients?${query}`).then(data => {
@@ -159,6 +179,8 @@ function useFrontendUrlParams(apiState, dispatchApiState) {
   React.useEffect(() => {
     const queryParams = queryString.stringify({
       page: apiState.page,
+      sortField: apiState.sortField,
+      sortOrder: apiState.sortOrder,
       ...apiState.search
     });
 
@@ -175,7 +197,27 @@ type ApiState = {
   apiData: ClientApiData;
   page: number;
   search: SearchParseValues;
+  sortField: SortField;
+  sortOrder: SortOrder;
 };
+
+export enum SortField {
+  id = "id",
+  firstName = "firstName",
+  lastName = "lastName",
+  birthday = "birthday"
+}
+
+export enum SortOrder {
+  ascending = "asc",
+  descending = "desc"
+}
+
+export function reversedSortOrder(oldOrder: SortOrder) {
+  return oldOrder === SortOrder.ascending
+    ? SortOrder.descending
+    : SortOrder.ascending;
+}
 
 enum ApiStateStatus {
   uninitialized = "uninitialized",
@@ -189,7 +231,8 @@ enum ActionTypes {
   newSearch = "newSearch",
   newQueryParams = "newQueryParams",
   fetching = "fetching",
-  fetched = "fetched"
+  fetched = "fetched",
+  newSort = "newSort"
 }
 
 type ApiStateAction =
@@ -197,7 +240,14 @@ type ApiStateAction =
   | NewSearchAction
   | NewParamsAction
   | FetchingAction
-  | FetchedAction;
+  | FetchedAction
+  | NewSortAction;
+
+type NewSortAction = {
+  type: ActionTypes.newSort;
+  sortField: SortField;
+  sortOrder: SortOrder;
+};
 
 type NewPageAction = {
   type: ActionTypes.newPage;
@@ -267,8 +317,20 @@ function getInitialState(): ApiState {
     }
   }
 
+  let sortField = queryParams.sortField as SortField;
+  if (!SortField[sortField]) {
+    sortField = SortField.lastName;
+  }
+
+  let sortOrder = queryParams.sortOrder as SortOrder;
+  if (!Object.values(SortOrder).includes(sortOrder)) {
+    sortOrder = SortOrder.ascending;
+  }
+
   const search = { ...queryParams };
   delete search.page;
+  delete search.sortField;
+  delete search.sortOrder;
 
   return {
     status: ApiStateStatus.uninitialized,
@@ -282,6 +344,8 @@ function getInitialState(): ApiState {
       clients: []
     },
     page,
-    search
+    search,
+    sortField,
+    sortOrder
   };
 }
