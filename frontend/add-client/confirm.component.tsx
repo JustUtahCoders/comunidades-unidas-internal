@@ -27,8 +27,8 @@ export default function Confirm(props: StepComponentProps) {
         signal: abortController.signal,
         body: {
           dateOfIntake: d.dateOfIntake,
-          firstName: d.firstName,
-          lastName: d.lastName,
+          firstName: d.firstName.trim(),
+          lastName: d.lastName.trim(),
           birthday: d.birthday,
           gender: d.gender,
           phone: d.phone,
