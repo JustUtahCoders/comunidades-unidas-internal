@@ -66,7 +66,7 @@ app.get("/api/clients", (req, res, next) => {
     columnsToOrder = `cl.${req.query.sortField}`;
   }
 
-  const sortOrder = req.query.sortOrder || "DESC";
+  const sortOrder = req.query.sortOrder === "desc" ? "DESC" : "ASC";
 
   let queryString = `
     SELECT SQL_CALC_FOUND_ROWS
