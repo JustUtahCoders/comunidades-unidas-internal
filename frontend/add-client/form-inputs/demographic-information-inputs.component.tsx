@@ -523,7 +523,8 @@ export enum CivilStatus {
   married = "married",
   commonLawMarriage = "commonLawMarriage",
   divorced = "divorced",
-  widowed = "widowed"
+  widowed = "widowed",
+  separated = "separated"
 }
 
 export const civilStatuses = {
@@ -531,7 +532,8 @@ export const civilStatuses = {
   [CivilStatus.married]: "Married",
   [CivilStatus.commonLawMarriage]: "Common Law Marriage",
   [CivilStatus.divorced]: "Divorced",
-  [CivilStatus.widowed]: "Widowed"
+  [CivilStatus.widowed]: "Widowed",
+  [CivilStatus.separated]: "Separated"
 };
 
 export enum WeeklyEmployedHours {
