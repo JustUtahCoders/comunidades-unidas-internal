@@ -205,6 +205,7 @@ const css = `
   display: block !important;
   width: 100% !important;
   height: 6rem !important;
+  cursor: pointer;
 }
 
 & .clients-table th button:hover {
