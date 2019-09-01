@@ -210,7 +210,8 @@ app.patch("/api/clients/:id", (req, res, next) => {
       req.body,
       "clientSource",
       "couldVolunteer",
-      "dateOfIntake"
+      "dateOfIntake",
+      "intakeServices"
     );
 
     if (intakeDataChanged) {
@@ -223,11 +224,14 @@ app.patch("/api/clients/:id", (req, res, next) => {
       );
 
       queries.push(
-        insertIntakeServicesQuery({
-          clientId: clientId,
-          intakeServices: fullClient.intakeServices,
-          userId: req.session.passport.user.id
-        })
+        insertIntakeServicesQuery(
+          {
+            clientId: clientId,
+            intakeServices: fullClient.intakeServices,
+            userId: req.session.passport.user.id
+          },
+          true
+        )
       );
     }
 

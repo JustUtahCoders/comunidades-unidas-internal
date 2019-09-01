@@ -9,7 +9,7 @@ export default React.forwardRef<
   React.MutableRefObject<SingleClientSearchInputRef>,
   SingleClientSearchInputProps
 >(function SingleClientSearchInput(
-  { autoFocus, nextThingToFocusRef, required = true },
+  { autoFocus, nextThingToFocusRef, required = true, clientChanged },
   singleClientSearchInputRef
 ) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
@@ -26,6 +26,12 @@ export default React.forwardRef<
       };
     }
   });
+
+  React.useEffect(() => {
+    if (clientChanged) {
+      clientChanged();
+    }
+  }, [state.clientId, clientChanged]);
 
   React.useEffect(() => {
     if (debouncedClientName.trim().length > 0) {
@@ -259,6 +265,7 @@ type SingleClientSearchInputProps = {
   autoFocus?: boolean;
   nextThingToFocusRef?: React.RefObject<HTMLElement>;
   required?: boolean;
+  clientChanged?: () => any;
 };
 
 type SingleClientSearchInputRef = {

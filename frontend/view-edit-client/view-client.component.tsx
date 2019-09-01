@@ -19,22 +19,18 @@ export default function ViewClient(props: ViewClientProps) {
   const [client, setClient] = React.useState<SingleClient>(null);
   const [error, setError] = React.useState(null);
   const [auditSummary, setAuditSummary] = React.useState<AuditSummary>(null);
+  const [clientIsStale, setClientIsStale] = React.useState(false);
   const clientId = props.clientId;
 
   React.useEffect(() => {
-    const abortController = new AbortController();
-
-    easyFetch(`/api/clients/${clientId}`, { signal: abortController.signal })
-      .then(data => {
-        setClient(data.client);
-      })
-      .catch(err => {
-        console.error(err);
-        setError(err);
-      });
-
-    return () => abortController.abort();
+    return fetchClient();
   }, [clientId]);
+
+  React.useEffect(() => {
+    if (clientIsStale) {
+      return fetchClient();
+    }
+  }, [clientIsStale]);
 
   React.useEffect(() => {
     if (client) {
@@ -55,7 +51,13 @@ export default function ViewClient(props: ViewClientProps) {
     }
   }, [client]);
 
-  const childProps = { client, setClient, auditSummary, clientId };
+  const childProps = {
+    client,
+    setClient,
+    auditSummary,
+    clientId,
+    refetchClient: () => setClientIsStale(true)
+  };
 
   return (
     <>
@@ -107,6 +109,24 @@ export default function ViewClient(props: ViewClientProps) {
 
   function getLinkProps({ isCurrent }) {
     return isCurrent ? { className: "active" } : null;
+  }
+
+  function fetchClient() {
+    const abortController = new AbortController();
+
+    easyFetch(`/api/clients/${clientId}`, { signal: abortController.signal })
+      .then(data => {
+        setClient(data.client);
+      })
+      .catch(err => {
+        console.error(err);
+        setError(err);
+      })
+      .finally(() => {
+        setClientIsStale(false);
+      });
+
+    return () => abortController.abort();
   }
 }
 
