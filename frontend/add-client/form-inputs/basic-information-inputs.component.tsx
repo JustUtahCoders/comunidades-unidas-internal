@@ -1,4 +1,5 @@
 import React from "react";
+import { capitalize } from "lodash-es";
 
 export default function BasicInformationInputs(
   props: BasicInformationInputsProps
@@ -73,8 +74,8 @@ export default function BasicInformationInputs(
 
   function handleSubmit(evt) {
     return props.handleSubmit(evt, {
-      firstName,
-      lastName,
+      firstName: capitalize(firstName.trim()),
+      lastName: capitalize(lastName.trim()),
       gender,
       birthday
     });
