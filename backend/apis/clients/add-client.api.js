@@ -52,7 +52,8 @@ app.post("/api/clients", (req, res, next) => {
         "married",
         "commonLawMarriage",
         "divorced",
-        "widowed"
+        "widowed",
+        "separated"
       ),
       validCountry("countryOfOrigin"),
       nullableValidDate("dateOfUSArrival"),

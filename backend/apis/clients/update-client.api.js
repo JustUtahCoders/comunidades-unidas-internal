@@ -49,7 +49,8 @@ app.patch("/api/clients/:id", (req, res, next) => {
       "married",
       "commonLawMarriage",
       "divorced",
-      "widowed"
+      "widowed",
+      "separated"
     ),
     nullableValidCountry("countryOfOrigin"),
     nullableValidDate("dateOfUSArrival"),
