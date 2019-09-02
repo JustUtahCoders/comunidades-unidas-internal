@@ -4,7 +4,8 @@ const {
   checkValid,
   nullableValidInteger,
   nullableNonEmptyString,
-  nullableValidId
+  nullableValidId,
+  nullableValidEnum
 } = require("../utils/validation-utils");
 const {
   responseFullName,
@@ -17,7 +18,9 @@ app.get("/api/clients", (req, res, next) => {
     req.query,
     nullableValidInteger("page"),
     nullableValidId(),
-    nullableNonEmptyString("phone")
+    nullableNonEmptyString("phone"),
+    nullableValidEnum("sortField", "id", "firstName", "lastName", "birthday"),
+    nullableValidEnum("sortOrder", "asc", "desc")
   );
 
   if (validationErrors.length > 0) {
@@ -58,6 +61,13 @@ app.get("/api/clients", (req, res, next) => {
     whereClauseValues.push("%" + requestPhone(req.query.phone) + "%");
   }
 
+  let columnsToOrder = `cl.lastName DESC, cl.firstName DESC`;
+  if (req.query.sortField) {
+    columnsToOrder = `cl.${req.query.sortField}`;
+  }
+
+  const sortOrder = req.query.sortOrder === "desc" ? "DESC" : "ASC";
+
   let queryString = `
     SELECT SQL_CALC_FOUND_ROWS
       cl.id, cl.firstName, cl.lastName, cl.birthday, cl.isDeleted, ct.email, 
@@ -80,8 +90,8 @@ app.get("/api/clients", (req, res, next) => {
     JOIN 
       users us ON cl.addedBy = us.id 
     ${whereClause}
-    
-    ORDER BY cl.lastName, cl.firstName DESC LIMIT ?, ?;
+    ORDER BY ${columnsToOrder} ${sortOrder}
+    LIMIT ?, ?;
     
     SELECT FOUND_ROWS();
   `;
