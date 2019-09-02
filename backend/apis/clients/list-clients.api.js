@@ -17,8 +17,9 @@ app.get("/api/clients", (req, res, next) => {
   const validationErrors = checkValid(
     req.query,
     nullableValidInteger("page"),
-    nullableValidId(),
+    nullableValidId("id"),
     nullableNonEmptyString("phone"),
+    nullableValidId("program"),
     nullableValidEnum("sortField", "id", "firstName", "lastName", "birthday"),
     nullableValidEnum("sortOrder", "asc", "desc")
   );
@@ -61,6 +62,28 @@ app.get("/api/clients", (req, res, next) => {
     whereClauseValues.push("%" + requestPhone(req.query.phone) + "%");
   }
 
+  let joinIntakeServices = "";
+  if (req.query.program) {
+    joinIntakeServices = `
+      JOIN 
+      (
+        SELECT id intakeDId, clientId
+        FROM
+          intakeData innerIntakeD
+          JOIN
+          (
+            SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
+            FROM intakeData GROUP BY clientId
+          ) latestIntakeD
+          ON latestIntakeD.latestDateAdded = innerIntakeD.dateAdded AND latestIntakeD.latestClientId = innerIntakeD.clientId
+      ) intakeD ON cl.id = intakeD.clientId
+    `;
+    whereClause += `
+      AND (SELECT COUNT(*) FROM intakeServices WHERE intakeDataId = intakeDId AND intakeServices.serviceId IN (SELECT id FROM services WHERE programId = ?)) > 0
+    `;
+    whereClauseValues.push(req.query.program);
+  }
+
   let columnsToOrder = `cl.lastName DESC, cl.firstName DESC`;
   if (req.query.sortField) {
     columnsToOrder = `cl.${req.query.sortField}`;
@@ -89,6 +112,7 @@ app.get("/api/clients", (req, res, next) => {
       ) ct ON cl.id = ct.clientId
     JOIN 
       users us ON cl.addedBy = us.id 
+    ${joinIntakeServices}
     ${whereClause}
     ORDER BY ${columnsToOrder} ${sortOrder}
     LIMIT ?, ?;

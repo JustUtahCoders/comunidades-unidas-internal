@@ -96,6 +96,11 @@ function reduceApiState(state: ApiState, action: ApiStateAction) {
         ...state,
         status: ApiStateStatus.shouldFetch
       };
+    case ActionTypes.apiError:
+      return {
+        ...state,
+        status: ApiStateStatus.fetched
+      };
     case ActionTypes.newSort:
       return {
         ...state,
@@ -118,12 +123,23 @@ function useClientsApi(apiState, dispatchApiState) {
         sortOrder: apiState.sortOrder,
         page: apiState.page
       });
-      easyFetch(`/api/clients?${query}`).then(data => {
-        dispatchApiState({
-          type: ActionTypes.fetched,
-          apiData: data
+      easyFetch(`/api/clients?${query}`)
+        .then(data => {
+          dispatchApiState({
+            type: ActionTypes.fetched,
+            apiData: data
+          });
+        })
+        .catch(err => {
+          dispatchApiState({
+            type: ActionTypes.apiError,
+            err
+          });
+
+          setTimeout(() => {
+            throw err;
+          });
         });
-      });
 
       return () => abortController.abort();
     }
@@ -232,6 +248,7 @@ enum ActionTypes {
   newQueryParams = "newQueryParams",
   fetching = "fetching",
   fetched = "fetched",
+  apiError = "apiError",
   newSort = "newSort"
 }
 
@@ -241,6 +258,7 @@ type ApiStateAction =
   | NewParamsAction
   | FetchingAction
   | FetchedAction
+  | ApiErrorAction
   | NewSortAction;
 
 type NewSortAction = {
@@ -273,6 +291,11 @@ type FetchingAction = {
 type FetchedAction = {
   type: ActionTypes.fetched;
   apiData: ClientApiData;
+};
+
+type ApiErrorAction = {
+  type: ActionTypes.apiError;
+  err: any;
 };
 
 type ClientListProps = {

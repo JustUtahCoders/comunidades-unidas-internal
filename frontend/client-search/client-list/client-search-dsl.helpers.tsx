@@ -3,7 +3,8 @@ import queryString from "query-string";
 export const allowedSearchFields = {
   id: "Client ID",
   zip: "ZIP Code",
-  phone: "Phone"
+  phone: "Phone",
+  program: "Interest in Program"
 };
 
 const allowedKeys = Object.keys(allowedSearchFields);
