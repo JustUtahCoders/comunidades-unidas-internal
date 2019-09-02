@@ -203,12 +203,14 @@ export default function ViewEditDemographicsInfo(
               )}
             </tbody>
           </table>
-          <button
-            className="secondary edit-button"
-            onClick={() => setEditing(true)}
-          >
-            Edit
-          </button>
+          {props.editable && (
+            <button
+              className="secondary edit-button"
+              onClick={() => setEditing(true)}
+            >
+              Edit
+            </button>
+          )}
         </>
       )}
     </ClientSection>
