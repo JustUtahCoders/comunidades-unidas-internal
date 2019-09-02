@@ -125,7 +125,7 @@ The response object is the same as if you do a `GET /api/clients/:id`
 **Notes**
 
 - `created.timestamp` and `lastUpdated.timestamp` are unix timestamps
-- The possible values for `civilStatus` are `single`, `married`, `commonLawMarriage`, `divorced`, and `widowed`.
+- The possible values for `civilStatus` are `single`, `married`, `commonLawMarriage`, `divorced`, `widowed`, and `separated`.
 
 ### Validation Error
 

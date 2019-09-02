@@ -3,6 +3,7 @@ import dateFormat from "dateformat";
 import PhoneInput from "../../util/phone-input.component";
 import StateSelect from "../../util/state-select.component";
 import CityInput from "../../util/city-input.component";
+import { capitalize } from "lodash-es";
 
 export default React.forwardRef(function ContactInformationInputs(
   props: ContactInformationInputsProps,
@@ -148,12 +149,12 @@ export default React.forwardRef(function ContactInformationInputs(
     const data: ContactInformationFormClient = {
       phone,
       smsConsent,
-      streetAddress,
-      city,
+      streetAddress: capitalize(streetAddress.trim()),
+      city: capitalize(streetAddress.trim()),
       state,
       zip,
       housing,
-      email: email || null
+      email: email ? email.toLowerCase() : null
     };
 
     if (props.showDateOfIntake) {

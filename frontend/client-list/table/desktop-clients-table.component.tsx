@@ -1,10 +1,16 @@
 import React from "react";
 import { ClientsTableProps } from "./clients-table.component";
-import { useCss } from "kremling";
+import { useCss, a } from "kremling";
 import { Link } from "@reach/router";
 import { formatPhone } from "../../util/formatters";
 import dateformat from "dateformat";
 import targetImg from "../../../icons/148705-essential-collection/svg/target.svg";
+import {
+  SortField,
+  reversedSortOrder,
+  SortOrder
+} from "../client-list.component";
+import { startCase } from "lodash-es";
 
 export default function DesktopClientsTable(props: ClientsTableProps) {
   const scope = useCss(css);
@@ -34,9 +40,31 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
                 aria-label="Select all clients"
               />
             </th>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Birthday</th>
+            <th>
+              <button
+                className="unstyled"
+                onClick={sortColumnClicked(SortField.id)}
+              >
+                ID{sortableColumnIcon(SortField.id)}
+              </button>
+            </th>
+            <th>
+              <button className="unstyled" onClick={sortNameClicked}>
+                {props.sortField === SortField.firstName ||
+                props.sortField === SortField.lastName
+                  ? startCase(props.sortField)
+                  : "Name"}
+                {sortableColumnIcon(SortField.firstName, SortField.lastName)}
+              </button>
+            </th>
+            <th>
+              <button
+                className="unstyled"
+                onClick={sortColumnClicked(SortField.birthday)}
+              >
+                Birthday{sortableColumnIcon(SortField.birthday)}
+              </button>
+            </th>
             <th>Phone</th>
             <th>ZIP</th>
             <th>Created</th>
@@ -112,6 +140,47 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
     const checkboxEl = evt.target.querySelector('input[type="checkbox"]');
     checkboxEl.checked = !checkboxEl.checked;
   }
+
+  function sortColumnClicked(sortField: SortField) {
+    return () => {
+      if (props.sortField === sortField) {
+        props.newSortOrder(sortField, reversedSortOrder(props.sortOrder));
+      } else {
+        props.newSortOrder(sortField, SortOrder.ascending);
+      }
+    };
+  }
+
+  function sortNameClicked() {
+    if (props.sortField === SortField.firstName) {
+      if (props.sortOrder === SortOrder.ascending) {
+        props.newSortOrder(SortField.firstName, SortOrder.descending);
+      } else {
+        props.newSortOrder(SortField.lastName, SortOrder.ascending);
+      }
+    } else if (props.sortField === SortField.lastName) {
+      if (props.sortOrder === SortOrder.ascending) {
+        props.newSortOrder(SortField.lastName, SortOrder.descending);
+      } else {
+        props.newSortOrder(SortField.firstName, SortOrder.ascending);
+      }
+    } else {
+      props.newSortOrder(SortField.lastName, SortOrder.ascending);
+    }
+  }
+
+  function sortableColumnIcon(...sortFields: SortField[]) {
+    return (
+      <span
+        className={a("sort-icon").m(
+          "visible",
+          sortFields.includes(props.sortField)
+        )}
+      >
+        {props.sortOrder === SortOrder.ascending ? "\u2191" : "\u2193"}
+      </span>
+    );
+  }
 }
 
 const css = `
@@ -130,6 +199,17 @@ const css = `
   top: 6rem;
   background-color: var(--very-light-gray);
   box-shadow: 0 .2rem .2rem var(--medium-gray);
+}
+
+& .clients-table th button {
+  display: block !important;
+  width: 100% !important;
+  height: 6rem !important;
+  cursor: pointer;
+}
+
+& .clients-table th button:hover {
+  background-color: var(--medium-gray);
 }
 
 & .clients-table thead {
@@ -191,5 +271,13 @@ const css = `
 
 & .clients-table tbody tr.empty-state:hover td {
   background-color: white;
+}
+
+& .sort-icon {
+  visibility: hidden
+}
+
+& .visible {
+  visibility: visible;
 }
 `;

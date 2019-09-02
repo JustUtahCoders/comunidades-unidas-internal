@@ -1,6 +1,5 @@
 import React from "react";
 import PageHeader from "../../page-header.component";
-import ReportIssue from "../../report-issue/report-issue.component";
 import SingleClientSearchInputComponent from "../../client-search/single-client/single-client-search-input.component";
 import easyFetch from "../../util/easy-fetch";
 import SingleInteractionSlat, {
@@ -9,6 +8,10 @@ import SingleInteractionSlat, {
 import { useCss } from "kremling";
 import { showGrowl, GrowlType } from "../../growls/growls.component";
 import { navigate } from "@reach/router";
+import UpdateInterestedServices from "./update-interested-services.component";
+import { SingleClient } from "../view-client.component";
+import { useForceUpdate } from "../../util/use-force-update";
+import { differenceBy } from "lodash-es";
 
 export default function AddClientInteraction(props: AddClientInteractionProps) {
   const firstInputRef = React.useRef(null);
@@ -18,8 +21,10 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
     Array<InteractionGetter>
   >([]);
   const [savingInteraction, setSavingInteraction] = React.useState(false);
+  const interestedServicesRef = React.useRef(null);
   const clientSearchRef = React.useRef(null);
   const scope = useCss(css);
+  const forceUpdate = useForceUpdate();
   const clientId = clientSearchRef.current
     ? clientSearchRef.current.clientId
     : props.clientId;
@@ -40,6 +45,27 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
 
   React.useEffect(() => {
     if (savingInteraction) {
+      const newIntakeServices = interestedServicesRef.current.getNewInterestedServices();
+      const oldIntakeServices = interestedServicesRef.current.getOldInterestedServices();
+      const intakeServicesChanged =
+        newIntakeServices.length !== oldIntakeServices.length ||
+        differenceBy(newIntakeServices, oldIntakeServices, "id").length > 0;
+      const intakeAbortController = new AbortController();
+
+      const intakeServicesPromise = intakeServicesChanged
+        ? easyFetch(`/api/clients/${clientId}`, {
+            signal: intakeAbortController.signal,
+            method: "PATCH",
+            body: {
+              intakeServices: newIntakeServices.map(s => s.id)
+            }
+          }).then(() => {
+            if (props.refetchClient) {
+              props.refetchClient();
+            }
+          })
+        : Promise.resolve();
+
       const interactions = interactionGetters.map(getter => getter());
 
       const abortControllers = [...Array(interactions.length)].map(
@@ -47,12 +73,14 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
       );
 
       Promise.all(
-        interactions.map(interaction =>
-          easyFetch(`/api/clients/${clientId}/interactions`, {
-            method: "POST",
-            body: interaction
-          })
-        )
+        interactions
+          .map(interaction =>
+            easyFetch(`/api/clients/${clientId}/interactions`, {
+              method: "POST",
+              body: interaction
+            })
+          )
+          .concat(intakeServicesPromise)
       )
         .then(() => {
           showGrowl({
@@ -72,6 +100,7 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
 
       return () => {
         abortControllers.forEach(ac => ac.abort());
+        intakeAbortController.abort();
       };
     }
   }, [savingInteraction, interactionGetters, clientId]);
@@ -80,10 +109,14 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
     <>
       {props.isGlobalAdd && <PageHeader title="Add a client interaction" />}
       <form className="card" onSubmit={handleSubmit} {...scope}>
+        {!props.isGlobalAdd && (
+          <h2 style={{ marginTop: 0 }}>Add an interaction</h2>
+        )}
         {props.isGlobalAdd && (
           <SingleClientSearchInputComponent
             autoFocus
             nextThingToFocusRef={firstInputRef}
+            clientChanged={clientChanged}
             ref={clientSearchRef}
           />
         )}
@@ -118,6 +151,11 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
             Add another interaction
           </button>
         </div>
+        <UpdateInterestedServices
+          clientToFetch={props.client ? null : clientId}
+          client={props.client}
+          ref={interestedServicesRef}
+        />
         <div className="actions">
           <button
             type="button"
@@ -160,6 +198,10 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
       tempInteractionIds.filter(id => id !== interactionId)
     );
   }
+
+  function clientChanged() {
+    forceUpdate();
+  }
 }
 
 const css = `
@@ -170,6 +212,7 @@ const css = `
 & .actions {
   display: flex;
   justify-content: center;
+  margin-top: 1.6rem;
 }
 `;
 
@@ -177,4 +220,6 @@ type AddClientInteractionProps = {
   path: string;
   isGlobalAdd?: boolean;
   clientId?: string;
+  client?: SingleClient;
+  refetchClient?: () => any;
 };
