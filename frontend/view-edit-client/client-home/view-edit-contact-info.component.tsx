@@ -132,12 +132,14 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
               </tr>
             </tbody>
           </table>
-          <button
-            className="secondary edit-button"
-            onClick={() => setIsEditing(true)}
-          >
-            Edit
-          </button>
+          {props.editable && (
+            <button
+              className="secondary edit-button"
+              onClick={() => setIsEditing(true)}
+            >
+              Edit
+            </button>
+          )}
         </>
       )}
     </ClientSection>
