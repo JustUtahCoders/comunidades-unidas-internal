@@ -106,7 +106,8 @@ function reduceApiState(state: ApiState, action: ApiStateAction) {
         ...state,
         status: ApiStateStatus.shouldFetch,
         sortField: action.sortField,
-        sortOrder: action.sortOrder
+        sortOrder: action.sortOrder,
+        page: 1
       };
     default:
       throw Error();
