@@ -25,6 +25,7 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
   const clientSearchRef = React.useRef(null);
   const scope = useCss(css);
   const forceUpdate = useForceUpdate();
+  const clientChanged = React.useCallback(forceUpdate, []);
   const clientId = clientSearchRef.current
     ? clientSearchRef.current.clientId
     : props.clientId;
@@ -197,10 +198,6 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
     setTempInteractionIds(
       tempInteractionIds.filter(id => id !== interactionId)
     );
-  }
-
-  function clientChanged() {
-    forceUpdate();
   }
 }
 

@@ -84,12 +84,12 @@ app.get("/api/clients", (req, res, next) => {
     whereClauseValues.push(req.query.program);
   }
 
-  let columnsToOrder = `cl.lastName DESC, cl.firstName DESC`;
-  if (req.query.sortField) {
-    columnsToOrder = `cl.${req.query.sortField}`;
-  }
-
   const sortOrder = req.query.sortOrder === "desc" ? "DESC" : "ASC";
+
+  let columnsToOrder = `cl.lastName ${sortOrder}, cl.firstName ${sortOrder}`;
+  if (req.query.sortField) {
+    columnsToOrder = `cl.${req.query.sortField} ${sortOrder}`;
+  }
 
   let queryString = `
     SELECT SQL_CALC_FOUND_ROWS
@@ -114,7 +114,7 @@ app.get("/api/clients", (req, res, next) => {
       users us ON cl.addedBy = us.id 
     ${joinIntakeServices}
     ${whereClause}
-    ORDER BY ${columnsToOrder} ${sortOrder}
+    ORDER BY ${columnsToOrder}
     LIMIT ?, ?;
     
     SELECT FOUND_ROWS();
@@ -127,6 +127,8 @@ app.get("/api/clients", (req, res, next) => {
     mysqlOffset,
     pageSize
   ]);
+
+  console.log(getClientList);
 
   pool.query(getClientList, function(err, result, fields) {
     if (err) {
