@@ -15,6 +15,7 @@ import { startCase } from "lodash-es";
 export default function DesktopClientsTable(props: ClientsTableProps) {
   const scope = useCss(css);
   const [selectAll, setSelectAll] = React.useState(false);
+  const [isSelected, setIsSelected] = React.useState({});
 
   React.useEffect(() => {
     const checkboxEls = document.querySelectorAll(
@@ -25,6 +26,8 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
       checkboxEls[i].checked = selectAll;
     }
   }, [selectAll, props.clients]);
+
+  console.log(isSelected);
 
   return (
     <div className="table-container" {...scope}>
@@ -92,7 +95,8 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
                   name="client-checked"
                   aria-label={`Select ${client.fullName}`}
                   value={client.id}
-                  onClick={evt => evt.stopPropagation()}
+                  checked={isSelected[client.id] === true ? true : false}
+                  onChange={() => handleCheckBoxChange(client.id, client)}
                 />
               </td>
               <td>
@@ -180,6 +184,31 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
         {props.sortOrder === SortOrder.ascending ? "\u2191" : "\u2193"}
       </span>
     );
+  }
+
+  function handleCheckBoxChange(id, data) {
+    console.log("ID SELECTED");
+    console.log(id);
+    console.log("DATA OF CLIENT SELECTED");
+    console.log(data);
+    console.log("CURRENT STATE OF isSelected");
+    console.log(isSelected);
+    console.log("CURRENT STATE OF selectedClients");
+    console.log(props.selectedClients);
+
+    const newIsSelected = isSelected;
+
+    if (isSelected[id] === true) {
+      delete newIsSelected[id];
+      console.log("STATE OF NEW SELECTED AFTER DELETE");
+      console.log(newIsSelected);
+      setIsSelected(newIsSelected);
+    } else {
+      newIsSelected[id] = true;
+      console.log("STATE OF NEW SELECTED AFTER ADD");
+      console.log(newIsSelected);
+      setIsSelected(newIsSelected);
+    }
   }
 }
 

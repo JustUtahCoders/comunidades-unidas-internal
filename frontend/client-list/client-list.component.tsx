@@ -10,6 +10,7 @@ import Modal from "../util/modal.component";
 
 export default function ClientList(props: ClientListProps) {
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
+  const [modalOptions, setModalOptions] = React.useState({});
   const [selectedClients, setSelectedClients] = React.useState([]);
 
   useFullWidth();
@@ -37,7 +38,10 @@ export default function ClientList(props: ClientListProps) {
         fetchingClient={fetchingClient}
         selectedClients={selectedClients}
         setSelectedClients={setSelectedClients}
+        modalIsOpen={modalIsOpen}
         setModalIsOpen={setModalIsOpen}
+        modalOptions={modalOptions}
+        setModalOptions={setModalOptions}
       />
       <ClientsTable
         clients={apiState.apiData.clients}
@@ -49,6 +53,17 @@ export default function ClientList(props: ClientListProps) {
         selectedClients={selectedClients}
         setSelectedClients={setSelectedClients}
       />
+      {modalIsOpen ? (
+        <Modal
+          close={() => setModalIsOpen(false)}
+          headerText={"Testing Modal"}
+          primaryText={"Is this working?"}
+          primaryAction={() => setModalIsOpen(false)}
+          children={null}
+        />
+      ) : (
+        <></>
+      )}
     </>
   );
 

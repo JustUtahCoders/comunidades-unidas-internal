@@ -8,10 +8,9 @@ import { SearchParseValues } from "../../client-search/client-list/client-search
 import { mediaDesktop, mediaMobile } from "../../styleguide.component";
 
 export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
-  const [bulkActionMenuIsOpen, setBulkActionMenuIsOpen] = React.useState(false);
-
   const scope = useCss(css);
   const advancedSearchRef = React.useRef(null);
+  const [bulkActionMenuIsOpen, setBulkActionMenuIsOpen] = React.useState(false);
 
   const lastPage = Math.ceil(props.numClients / props.pageSize);
 
@@ -32,7 +31,12 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
                 onClick={() => setBulkActionMenuIsOpen(!bulkActionMenuIsOpen)}
               >
                 <div className="bulk-action-menu-dropdown">
-                  <button>Delete Selected Clients</button>
+                  <button
+                    className="menu-button"
+                    onClick={() => props.setModalIsOpen(true)}
+                  >
+                    Delete Selected Clients
+                  </button>
                 </div>
               </div>
             ) : (
@@ -94,6 +98,11 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
   function performSearch(searchParse: SearchParseValues) {
     props.setSearch(searchParse);
   }
+
+  function openModal() {
+    props.setModalIsOpen(true);
+    console.log(props.modalIsOpen);
+  }
 }
 
 const css = `
@@ -140,6 +149,10 @@ const css = `
   align-items: flex-start;
 }
 
+& .menu-button {
+  background-color: transparent;
+}
+
 ${mediaDesktop} {
   & .desktop-table-toolbar {
     flex-direction: row;
@@ -172,7 +185,10 @@ type ClientsTableToolbarProps = {
   setPage(pageNum: number): void;
   setSearch(searchParse: SearchParseValues): any;
   fetchingClient: boolean;
-  selectedClients: object;
+  selectedClients: any;
   setSelectedClients: (client: object) => any;
+  modalIsOpen: boolean;
   setModalIsOpen: any;
+  modalOptions: object;
+  setModalOptions: (modalOptions: object) => any;
 };
