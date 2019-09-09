@@ -25,4 +25,6 @@ export type ClientsTableProps = {
   newSortOrder: (sortField: SortField, sortOrder: SortOrder) => any;
   sortField: SortField;
   sortOrder: SortOrder;
+  selectedClients: object;
+  setSelectedClients: (client: object) => any;
 };

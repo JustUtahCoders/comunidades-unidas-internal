@@ -6,8 +6,12 @@ import ClientsTable from "./table/clients-table.component";
 import easyFetch from "../util/easy-fetch";
 import { SearchParseValues } from "../client-search/client-list/client-search-dsl.helpers";
 import queryString from "query-string";
+import Modal from "../util/modal.component";
 
 export default function ClientList(props: ClientListProps) {
+  const [modalIsOpen, setModalIsOpen] = React.useState(false);
+  const [selectedClients, setSelectedClients] = React.useState([]);
+
   useFullWidth();
   const [apiState, dispatchApiState] = React.useReducer(
     reduceApiState,
@@ -31,6 +35,9 @@ export default function ClientList(props: ClientListProps) {
         setPage={newPage}
         setSearch={setSearch}
         fetchingClient={fetchingClient}
+        selectedClients={selectedClients}
+        setSelectedClients={setSelectedClients}
+        setModalIsOpen={setModalIsOpen}
       />
       <ClientsTable
         clients={apiState.apiData.clients}
@@ -39,6 +46,8 @@ export default function ClientList(props: ClientListProps) {
         newSortOrder={newSortOrder}
         sortField={apiState.sortField}
         sortOrder={apiState.sortOrder}
+        selectedClients={selectedClients}
+        setSelectedClients={setSelectedClients}
       />
     </>
   );

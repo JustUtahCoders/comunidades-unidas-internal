@@ -2,11 +2,14 @@ import React from "react";
 import { useCss } from "kremling";
 import backIcon from "../../../icons/148705-essential-collection/svg/back.svg";
 import nextIcon from "../../../icons/148705-essential-collection/svg/next.svg";
+import kabobIcon from "../../../icons/148705-essential-collection/svg/more-1.svg";
 import ClientSearchInput from "../../client-search/client-list/client-search-input.component";
 import { SearchParseValues } from "../../client-search/client-list/client-search-dsl.helpers";
 import { mediaDesktop, mediaMobile } from "../../styleguide.component";
 
 export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
+  const [bulkActionMenuIsOpen, setBulkActionMenuIsOpen] = React.useState(false);
+
   const scope = useCss(css);
   const advancedSearchRef = React.useRef(null);
 
@@ -16,6 +19,26 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
     <div className="clients-table-toolbar" {...scope}>
       <div className="desktop-table-toolbar">
         <div className="left">
+          <div className="bulk-action-container">
+            <img
+              alt="kabob icon"
+              className="bulk-action-icon"
+              onClick={() => setBulkActionMenuIsOpen(!bulkActionMenuIsOpen)}
+              src={kabobIcon}
+            />
+            {bulkActionMenuIsOpen === true ? (
+              <div
+                className="bulk-action-menu-modal"
+                onClick={() => setBulkActionMenuIsOpen(!bulkActionMenuIsOpen)}
+              >
+                <div className="bulk-action-menu-dropdown">
+                  <button>Delete Selected Clients</button>
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
           <ClientSearchInput
             autoFocus
             performSearch={performSearch}
@@ -90,6 +113,33 @@ const css = `
   align-items: center;
 }
 
+& .bulk-action-icon {
+  height: 2rem;
+  margin: 0 1rem 0 -0.5rem;
+}
+
+& .bulk-action-menu-modal {
+  position: absolute;
+  top: 9vh;
+  left: 0;
+  display: flex;
+  height: 78.5vh;
+  width: 82.5vw;
+  justify-contents: flex-start;
+  align-items: flex-start;
+}
+
+& .bulk-action-menu-dropdown {
+  padding: 1rem 2rem 1rem 2rem;
+  background-color: var(--very-light-gray);
+  box-shadow: 0 .2rem .2rem var(--medium-gray), 
+              0 .3rem .6rem var(--very-dark-gray);
+  display: flex;
+  flex-direction: column;
+  justify-contents: space-between;
+  align-items: flex-start;
+}
+
 ${mediaDesktop} {
   & .desktop-table-toolbar {
     flex-direction: row;
@@ -122,4 +172,7 @@ type ClientsTableToolbarProps = {
   setPage(pageNum: number): void;
   setSearch(searchParse: SearchParseValues): any;
   fetchingClient: boolean;
+  selectedClients: object;
+  setSelectedClients: (client: object) => any;
+  setModalIsOpen: any;
 };
