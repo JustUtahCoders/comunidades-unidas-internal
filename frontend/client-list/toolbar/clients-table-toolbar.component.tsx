@@ -1,5 +1,6 @@
 import React from "react";
 import { useCss } from "kremling";
+import easyFetch from "../../util/easy-fetch";
 import backIcon from "../../../icons/148705-essential-collection/svg/back.svg";
 import nextIcon from "../../../icons/148705-essential-collection/svg/next.svg";
 import kabobIcon from "../../../icons/148705-essential-collection/svg/more-1.svg";
@@ -33,7 +34,7 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
                 <div className="bulk-action-menu-dropdown">
                   <button
                     className="menu-button"
-                    onClick={() => props.setModalIsOpen(true)}
+                    onClick={() => openModal("deleting")}
                   >
                     Delete Selected Clients
                   </button>
@@ -99,10 +100,54 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
     props.setSearch(searchParse);
   }
 
-  function openModal() {
+  function openModal(option) {
     props.setModalIsOpen(true);
-    console.log(props.modalIsOpen);
+    if (option === "deleting") {
+      props.setModalOptions({
+        headerText: "Delete Selected Client(s)",
+        primaryText: "No",
+        primaryAction: () => props.setModalIsOpen(false),
+        secondaryText: "Yes",
+        secondaryAction: () => deleteSelectedClients(),
+        children: <DeleteConfirmation selectedClients={props.selectedClients} />
+      });
+    }
   }
+
+  function deleteSelectedClients() {
+    for (let i = 0; i < props.selectedClients.length; i++) {
+      easyFetch(`/api/clients/${props.selectedClients[i].id}`, {
+        method: "DELETE"
+      })
+        .then(function() {
+          props.setModalIsOpen(false);
+          props.setModalOptions({});
+          props.setSelectedClients([]);
+          props.setIsSelected({});
+        })
+        .catch(err => {
+          props.setModalIsOpen(false);
+          props.setModalOptions({});
+        });
+    }
+  }
+}
+
+function DeleteConfirmation(props) {
+  console.log(props.selectedClients);
+  const mapSelectedClients = props.selectedClients.map(client => {
+    return (
+      <li>
+        #{client.id} - {client.fullName}
+      </li>
+    );
+  });
+  return (
+    <>
+      <p>Are you sure you want to delete the following selected client(s)?</p>
+      <ul>{mapSelectedClients}</ul>
+    </>
+  );
 }
 
 const css = `
@@ -191,4 +236,6 @@ type ClientsTableToolbarProps = {
   setModalIsOpen: any;
   modalOptions: object;
   setModalOptions: (modalOptions: object) => any;
+  isSelected: object;
+  setIsSelected: (client: object) => any;
 };

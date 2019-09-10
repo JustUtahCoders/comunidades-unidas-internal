@@ -10,8 +10,16 @@ import Modal from "../util/modal.component";
 
 export default function ClientList(props: ClientListProps) {
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
-  const [modalOptions, setModalOptions] = React.useState({});
+  const [modalOptions, setModalOptions] = React.useState({
+    headerText: null,
+    primaryText: null,
+    primaryAction: null,
+    secondaryText: null,
+    secondaryAction: null,
+    children: null
+  });
   const [selectedClients, setSelectedClients] = React.useState([]);
+  const [isSelected, setIsSelected] = React.useState({});
 
   useFullWidth();
   const [apiState, dispatchApiState] = React.useReducer(
@@ -42,6 +50,8 @@ export default function ClientList(props: ClientListProps) {
         setModalIsOpen={setModalIsOpen}
         modalOptions={modalOptions}
         setModalOptions={setModalOptions}
+        isSelected={isSelected}
+        setIsSelected={setIsSelected}
       />
       <ClientsTable
         clients={apiState.apiData.clients}
@@ -52,14 +62,18 @@ export default function ClientList(props: ClientListProps) {
         sortOrder={apiState.sortOrder}
         selectedClients={selectedClients}
         setSelectedClients={setSelectedClients}
+        isSelected={isSelected}
+        setIsSelected={setIsSelected}
       />
       {modalIsOpen ? (
         <Modal
           close={() => setModalIsOpen(false)}
-          headerText={"Testing Modal"}
-          primaryText={"Is this working?"}
-          primaryAction={() => setModalIsOpen(false)}
-          children={null}
+          headerText={modalOptions.headerText}
+          primaryText={modalOptions.primaryText}
+          primaryAction={modalOptions.primaryAction}
+          secondaryText={modalOptions.secondaryText}
+          secondaryAction={modalOptions.secondaryAction}
+          children={modalOptions.children}
         />
       ) : (
         <></>
