@@ -69,6 +69,3 @@ static
 !.elasticbeanstalk/*.global.yml
 
 .env
-
-.unotes
-.vscode
