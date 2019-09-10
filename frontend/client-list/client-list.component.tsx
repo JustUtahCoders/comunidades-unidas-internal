@@ -65,7 +65,7 @@ export default function ClientList(props: ClientListProps) {
         isSelected={isSelected}
         setIsSelected={setIsSelected}
       />
-      {modalIsOpen ? (
+      {modalIsOpen && (
         <Modal
           close={() => setModalIsOpen(false)}
           headerText={modalOptions.headerText}
@@ -75,8 +75,6 @@ export default function ClientList(props: ClientListProps) {
           secondaryAction={modalOptions.secondaryAction}
           children={modalOptions.children}
         />
-      ) : (
-        <></>
       )}
     </>
   );
