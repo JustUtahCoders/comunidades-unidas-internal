@@ -3,22 +3,8 @@ import { ClientSources } from "../add-client.component";
 
 export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
   function ClientSourceInputs(props: ClientSourceInputsProps, ref) {
-    const getInitialClientSource = () => {
-      if (
-        props.client.clientSource &&
-        !ClientSources[props.client.clientSource]
-      ) {
-        return "other";
-      } else if (ClientSources[props.client.clientSource]) {
-        return ClientSources[props.client.clientSource];
-      } else {
-        return "friend";
-      }
-    };
-
-    const [clientSource, setClientSource] = useState(getInitialClientSource());
-    const [otherSource, setOtherSource] = useState(
-      ClientSources[props.client.clientSource] ? "" : props.client.clientSource
+    const [clientSource, setClientSource] = useState(
+      ClientSources[props.client.clientSource || "friend"]
     );
     const [couldVolunteer, setCouldVolunteer] = useState(
       props.client.couldVolunteer || false
@@ -28,7 +14,7 @@ export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
       if (ref) {
         // @ts-ignore
         ref.current = {
-          clientSource: clientSource === "other" ? otherSource : clientSource,
+          clientSource,
           couldVolunteer
         };
       }
@@ -50,23 +36,9 @@ export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
                   {clientSources[clientSource]}
                 </option>
               ))}
-              <option value="other">Other</option>
             </select>
           </label>
         </div>
-        {clientSource === "other" && (
-          <div>
-            <label>
-              <span>Other source</span>
-              <input
-                type="text"
-                value={otherSource}
-                onChange={evt => setOtherSource(evt.target.value)}
-                required
-              />
-            </label>
-          </div>
-        )}
         <div>
           <label>
             <span>Would they like to volunteer for Comunidades Unidas?</span>
@@ -94,7 +66,9 @@ export const clientSources = {
   employee: "C.U. Employee",
   sms: "Text Message",
   radio: "Radio",
-  tv: "TV"
+  tv: "TV",
+  promotora: "Promotora",
+  other: "Other"
 };
 
 type ClientSourceInputsProps = {
