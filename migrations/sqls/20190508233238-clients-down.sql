@@ -1,1 +1,1 @@
-DROP TABLE clients;
+DROP TABLE IF EXISTS clients, contactInformation, demographics, intakeData, services, intakeServices;
