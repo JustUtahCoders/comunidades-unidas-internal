@@ -17,12 +17,15 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
   const [selectAll, setSelectAll] = React.useState(false);
 
   React.useEffect(() => {
-    const checkboxEls = document.querySelectorAll(
-      `input[type="checkbox"][name="client-checked"]`
-    );
-    for (let i = 0; i < checkboxEls.length; i++) {
-      // @ts-ignore
-      checkboxEls[i].checked = selectAll;
+    if (selectAll) {
+      props.setSelectedClients(
+        props.clients.reduce((result, client) => {
+          result[client.id] = client;
+          return result;
+        }, {})
+      );
+    } else {
+      props.setSelectedClients({});
     }
   }, [selectAll, props.clients]);
 
@@ -86,14 +89,14 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
           )}
           {props.clients.map(client => (
             <tr key={client.id}>
-              <td onClick={checkTdClicked}>
+              <td onClick={() => handleCheckBoxChange(client)}>
                 <input
                   type="checkbox"
                   name="client-checked"
                   aria-label={`Select ${client.fullName}`}
                   value={client.id}
-                  checked={props.isSelected[client.id]}
-                  onChange={() => handleCheckBoxChange(client.id, client)}
+                  checked={Boolean(props.selectedClients[client.id])}
+                  onChange={() => {}}
                 />
               </td>
               <td>
@@ -137,11 +140,6 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
     </div>
   );
 
-  function checkTdClicked(evt) {
-    const checkboxEl = evt.target.querySelector('input[type="checkbox"]');
-    checkboxEl.checked = !checkboxEl.checked;
-  }
-
   function sortColumnClicked(sortField: SortField) {
     return () => {
       if (props.sortField === sortField) {
@@ -183,26 +181,14 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
     );
   }
 
-  function handleCheckBoxChange(id, data) {
-    const newIsSelected = props.isSelected;
-    const newSelection = props.selectedClients;
-    if (props.isSelected[id] === true) {
-      delete newIsSelected[id];
-      props.setIsSelected(newIsSelected);
-      const objectPosition = newSelection
-        .map(client => {
-          console.log(client);
-          return client[id].id;
-        })
-        .indexOf(id);
-      newSelection.splice(objectPosition, 1);
-      props.setSelectedClients(newSelection);
+  function handleCheckBoxChange(client) {
+    const newSelectedClients = Object.assign({}, props.selectedClients);
+    if (props.selectedClients[client.id]) {
+      delete newSelectedClients[client.id];
     } else {
-      newIsSelected[id] = true;
-      newSelection.push(data);
-      props.setIsSelected(newIsSelected);
-      props.setSelectedClients(newSelection);
+      newSelectedClients[client.id] = client;
     }
+    props.setSelectedClients(newSelectedClients);
   }
 }
 

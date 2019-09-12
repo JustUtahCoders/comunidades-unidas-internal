@@ -5,7 +5,8 @@ import DesktopClientsTable from "./desktop-clients-table.component";
 import {
   ClientListClient,
   SortField,
-  SortOrder
+  SortOrder,
+  SelectedClients
 } from "../client-list.component";
 
 export default function ClientsTable(props: ClientsTableProps) {
@@ -25,8 +26,6 @@ export type ClientsTableProps = {
   newSortOrder: (sortField: SortField, sortOrder: SortOrder) => any;
   sortField: SortField;
   sortOrder: SortOrder;
-  selectedClients: Array<ClientListClient>;
-  setSelectedClients: (client: object) => any;
-  isSelected: object;
-  setIsSelected: (client: object) => any;
+  selectedClients: SelectedClients;
+  setSelectedClients: (selectedClients: SelectedClients) => any;
 };

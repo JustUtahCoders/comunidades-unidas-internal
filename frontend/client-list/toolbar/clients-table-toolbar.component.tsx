@@ -7,6 +7,7 @@ import kabobIcon from "../../../icons/148705-essential-collection/svg/more-1.svg
 import ClientSearchInput from "../../client-search/client-list/client-search-input.component";
 import { SearchParseValues } from "../../client-search/client-list/client-search-dsl.helpers";
 import { mediaDesktop, mediaMobile } from "../../styleguide.component";
+import { SelectedClients, ClientListClient } from "../client-list.component";
 
 export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
   const scope = useCss(css);
@@ -26,22 +27,19 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
               onClick={() => setBulkActionMenuIsOpen(!bulkActionMenuIsOpen)}
               src={kabobIcon}
             />
-            {bulkActionMenuIsOpen === true ? (
+            {bulkActionMenuIsOpen === true && (
               <div
                 className="bulk-action-menu-modal"
                 onClick={() => setBulkActionMenuIsOpen(!bulkActionMenuIsOpen)}
               >
-                <div className="bulk-action-menu-dropdown">
-                  <button
-                    className="menu-button"
-                    onClick={() => openModal("deleting")}
-                  >
-                    Delete Selected Clients
-                  </button>
+                <div className="popup bulk-action-menu-dropdown">
+                  <ul>
+                    <li onClick={() => openModal("deleting")}>
+                      Delete Selected Clients
+                    </li>
+                  </ul>
                 </div>
               </div>
-            ) : (
-              <></>
             )}
           </div>
           <ClientSearchInput
@@ -101,53 +99,100 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
   }
 
   function openModal(option) {
-    props.setModalIsOpen(true);
-    if (option === "deleting") {
+    if (Object.keys(props.selectedClients).length === 0) {
       props.setModalOptions({
-        headerText: "Delete Selected Client(s)",
-        primaryText: "No",
-        primaryAction: () => props.setModalIsOpen(false),
-        secondaryText: "Yes",
-        secondaryAction: () => deleteSelectedClients(),
-        children: <DeleteConfirmation selectedClients={props.selectedClients} />
+        isOpen: true,
+        headerText: "No Clients Selected",
+        primaryText: "Okay",
+        primaryAction: () =>
+          props.setModalOptions({
+            isOpen: false,
+            headerText: null,
+            primaryText: null,
+            primaryAction: null,
+            secondaryText: null,
+            secondaryAction: null,
+            children: null
+          }),
+        children: (
+          <p>
+            You much select a client from the list before this action can be
+            taken.
+          </p>
+        )
       });
+    } else {
+      if (option === "deleting") {
+        const clientsToDelete = Object.values(
+          props.selectedClients
+        ) as ClientListClient[];
+        const mapSelectedClients = clientsToDelete.map(client => {
+          return (
+            <li key={client.id}>
+              #{client.id} - {client.fullName}
+            </li>
+          );
+        });
+        props.setModalOptions({
+          isOpen: true,
+          headerText: "Delete Selected Client(s)",
+          primaryText: "No",
+          primaryAction: () =>
+            props.setModalOptions({
+              isOpen: false,
+              headerText: null,
+              primaryText: null,
+              primaryAction: null,
+              secondaryText: null,
+              secondaryAction: null,
+              children: null
+            }),
+          secondaryText: "Yes",
+          secondaryAction: () => deleteSelectedClients(),
+          children: (
+            <>
+              <p>
+                Are you sure you want to delete the following selected
+                client(s)?
+              </p>
+              <ul>{mapSelectedClients}</ul>
+            </>
+          )
+        });
+      }
     }
   }
 
   function deleteSelectedClients() {
-    for (let i = 0; i < props.selectedClients.length; i++) {
-      easyFetch(`/api/clients/${props.selectedClients[i].id}`, {
-        method: "DELETE"
-      })
-        .then(function() {
-          props.setModalIsOpen(false);
-          props.setModalOptions({});
-          props.setSelectedClients([]);
-          props.setIsSelected({});
-        })
-        .catch(err => {
-          props.setModalIsOpen(false);
-          props.setModalOptions({});
+    const clientsToDelete = Object.values(props.selectedClients);
+    Promise.all(
+      clientsToDelete.map(client => {
+        return easyFetch(`/api/clients/${client.id}`, {
+          method: "DELETE"
         });
-    }
+      })
+    )
+      .then(function() {
+        () =>
+          props.setModalOptions({
+            isOpen: false,
+            headerText: null,
+            primaryText: null,
+            primaryAction: null,
+            secondaryText: null,
+            secondaryAction: null,
+            children: null
+          });
+        props.setModalOptions({});
+        props.setSelectedClients([]);
+        props.refetchClients();
+      })
+      .catch(err => {
+        setTimeout(() => {
+          throw err;
+        });
+      });
   }
-}
-
-function DeleteConfirmation(props) {
-  console.log(props.selectedClients);
-  const mapSelectedClients = props.selectedClients.map(client => {
-    return (
-      <li>
-        #{client.id} - {client.fullName}
-      </li>
-    );
-  });
-  return (
-    <>
-      <p>Are you sure you want to delete the following selected client(s)?</p>
-      <ul>{mapSelectedClients}</ul>
-    </>
-  );
 }
 
 const css = `
@@ -183,19 +228,8 @@ const css = `
   align-items: flex-start;
 }
 
-& .bulk-action-menu-dropdown {
-  padding: 1rem 2rem 1rem 2rem;
-  background-color: var(--very-light-gray);
-  box-shadow: 0 .2rem .2rem var(--medium-gray), 
-              0 .3rem .6rem var(--very-dark-gray);
-  display: flex;
-  flex-direction: column;
-  justify-contents: space-between;
-  align-items: flex-start;
-}
-
-& .menu-button {
-  background-color: transparent;
+& .popup.bulk-action-menu-dropdown {
+  margin: 0;
 }
 
 ${mediaDesktop} {
@@ -230,12 +264,9 @@ type ClientsTableToolbarProps = {
   setPage(pageNum: number): void;
   setSearch(searchParse: SearchParseValues): any;
   fetchingClient: boolean;
-  selectedClients: any;
-  setSelectedClients: (client: object) => any;
-  modalIsOpen: boolean;
-  setModalIsOpen: any;
+  selectedClients: SelectedClients;
+  setSelectedClients: (selectedClients: SelectedClients) => any;
   modalOptions: object;
   setModalOptions: (modalOptions: object) => any;
-  isSelected: object;
-  setIsSelected: (client: object) => any;
+  refetchClients: () => any;
 };
