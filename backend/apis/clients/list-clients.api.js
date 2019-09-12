@@ -10,7 +10,8 @@ const {
 const {
   responseFullName,
   requestPhone,
-  responseBoolean
+  responseBoolean,
+  responseDateWithoutTime
 } = require("../utils/transform-utils");
 
 app.get("/api/clients", (req, res, next) => {
@@ -128,8 +129,6 @@ app.get("/api/clients", (req, res, next) => {
     pageSize
   ]);
 
-  console.log(getClientList);
-
   pool.query(getClientList, function(err, result, fields) {
     if (err) {
       return databaseError(req, res, err);
@@ -146,7 +145,7 @@ app.get("/api/clients", (req, res, next) => {
         firstName: row.firstName,
         lastName: row.lastName,
         fullName: responseFullName(row.firstName, row.lastName),
-        birthday: row.birthday,
+        birthday: responseDateWithoutTime(row.birthday),
         zip: row.zip,
         phone: row.primaryPhone,
         email: row.email,
