@@ -86,6 +86,7 @@ app.post("/api/clients", (req, res, next) => {
         "sms",
         "radio",
         "tv",
+        "promotora",
         "other"
       ),
       validBoolean("couldVolunteer"),
