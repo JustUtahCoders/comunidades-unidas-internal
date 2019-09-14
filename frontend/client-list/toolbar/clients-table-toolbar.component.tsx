@@ -116,7 +116,7 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
           }),
         children: (
           <p>
-            You much select a client from the list before this action can be
+            You must select a client from the list before this action can be
             taken.
           </p>
         )
