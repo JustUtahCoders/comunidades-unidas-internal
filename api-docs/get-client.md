@@ -5,7 +5,7 @@ To retrieve a specific client, call the following API.
 ## Request
 
 ```http
-GET /clients/:id
+GET /api/clients/:id
 ```
 
 ## Response

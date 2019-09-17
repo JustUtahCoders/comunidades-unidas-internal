@@ -1,6 +1,7 @@
 import React from "react";
 import { ClientsTableProps } from "./clients-table.component";
 import { formatPhone } from "../../util/formatters";
+import dayjs from "dayjs";
 import dateformat from "dateformat";
 import { Link } from "@reach/router";
 import { useCss } from "kremling";
@@ -37,7 +38,7 @@ export default function MobileClientsTable(props: ClientsTableProps) {
                 </tr>
                 <tr>
                   <td>Birthday:</td>
-                  <td>{dateformat(client.birthday, "m/d/yyyy")}</td>
+                  <td>{dayjs(client.birthday).format("M/D/YYYY")}</td>
                 </tr>
                 <tr>
                   <td>Email:</td>

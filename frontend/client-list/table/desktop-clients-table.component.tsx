@@ -4,6 +4,7 @@ import { useCss, a } from "kremling";
 import { Link } from "@reach/router";
 import { formatPhone } from "../../util/formatters";
 import dateformat from "dateformat";
+import dayjs from "dayjs";
 import targetImg from "../../../icons/148705-essential-collection/svg/target.svg";
 import {
   SortField,
@@ -111,7 +112,7 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
               </td>
               <td>
                 <Link to={`/clients/${client.id}`} className="unstyled">
-                  {dateformat(client.birthday, "m/d/yyyy")}
+                  {dayjs(client.birthday).format("M/D/YYYY")}
                 </Link>
               </td>
               <td>
