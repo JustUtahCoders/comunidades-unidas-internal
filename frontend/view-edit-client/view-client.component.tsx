@@ -14,6 +14,12 @@ import ClientHistory from "./client-history/client-history.component";
 import ClientAddNewInfo from "./add-new/client-add-new-info.component";
 import AddCaseNote from "./case-notes/add-case-note.component";
 import AddClientInteraction from "./interactions/add-client-interaction.component";
+import Integrations from "./integrations/integrations.component";
+import { always, useCss } from "kremling";
+import homeImgUrl from "../../icons/148705-essential-collection/svg/home.svg";
+import historyImgUrl from "../../icons/148705-essential-collection/svg/notepad.svg";
+import integrationsImgUrl from "../../icons/148705-essential-collection/svg/cloud-computing-3.svg";
+import addNewImgUrl from "../../icons/148705-essential-collection/svg/add-1.svg";
 
 export default function ViewClient(props: ViewClientProps) {
   const [client, setClient] = React.useState<SingleClient>(null);
@@ -21,6 +27,7 @@ export default function ViewClient(props: ViewClientProps) {
   const [auditSummary, setAuditSummary] = React.useState<AuditSummary>(null);
   const [clientIsStale, setClientIsStale] = React.useState(false);
   const clientId = props.clientId;
+  const scope = useCss(css);
 
   React.useEffect(() => {
     return fetchClient();
@@ -60,30 +67,52 @@ export default function ViewClient(props: ViewClientProps) {
   };
 
   return (
-    <>
+    <div {...scope}>
       <PageHeader title={getHeaderTitle()} withSecondaryNav />
       <StickySecondaryNav>
-        <ul>
-          <li>
-            <Link to={`/clients/${clientId}`} getProps={getLinkProps}>
-              {client
-                ? client.firstName +
-                  `'${client.firstName.endsWith("s") ? "" : `s`}`
-                : "Client"}{" "}
-              info
-            </Link>
-          </li>
-          <li>
-            <Link to={`/clients/${clientId}/history`} getProps={getLinkProps}>
-              History
-            </Link>
-          </li>
-          <li>
-            <Link to={`/clients/${clientId}/add-info`} getProps={getLinkProps}>
-              Add new
-            </Link>
-          </li>
-        </ul>
+        <div className="nav-container">
+          <ul>
+            <li>
+              <Link to={`/clients/${clientId}`} getProps={getLinkProps}>
+                <img
+                  src={homeImgUrl}
+                  alt="Home icon"
+                  title={possessiveClientName() + " home"}
+                />
+              </Link>
+            </li>
+            <li>
+              <Link to={`/clients/${clientId}/history`} getProps={getLinkProps}>
+                <img src={historyImgUrl} alt="Notepad icon" title="History" />
+              </Link>
+            </li>
+            {localStorage.getItem("feature:integrations") && (
+              <li>
+                <Link
+                  to={`/clients/${clientId}/integrations`}
+                  getProps={getLinkProps}
+                >
+                  <img
+                    src={integrationsImgUrl}
+                    alt="Cloud server refresh icon"
+                    title="Integrations"
+                  />
+                </Link>
+              </li>
+            )}
+            <li>
+              <Link
+                to={`/clients/${clientId}/add-info`}
+                getProps={getLinkProps}
+              >
+                <img src={addNewImgUrl} alt="Plus sign icon" title="Add new" />
+              </Link>
+            </li>
+          </ul>
+          <div style={{ padding: "0 1.6rem" }}>
+            {client ? client.firstName : ""}
+          </div>
+        </div>
       </StickySecondaryNav>
       <Router>
         <ClientHome path="/" {...childProps} />
@@ -91,8 +120,9 @@ export default function ViewClient(props: ViewClientProps) {
         <ClientAddNewInfo path="add-info" {...childProps} />
         <AddCaseNote path="add-case-note" {...childProps} />
         <AddClientInteraction path="add-client-interaction" {...childProps} />
+        <Integrations path="integrations" {...childProps} />
       </Router>
-    </>
+    </div>
   );
 
   function getHeaderTitle() {
@@ -108,7 +138,9 @@ export default function ViewClient(props: ViewClientProps) {
   }
 
   function getLinkProps({ isCurrent }) {
-    return isCurrent ? { className: "active" } : null;
+    return {
+      className: always("secondary-nav-link").maybe("active", isCurrent)
+    };
   }
 
   function fetchClient() {
@@ -128,7 +160,29 @@ export default function ViewClient(props: ViewClientProps) {
 
     return () => abortController.abort();
   }
+
+  function possessiveClientName() {
+    if (client) {
+      return client.firstName + (client.firstName.endsWith("s") ? "'" : "'s");
+    } else {
+      return "Client's";
+    }
+  }
 }
+
+const css = `
+& .secondary-nav-link img {
+  height: 40%;
+}
+
+& .nav-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+`;
 
 type ViewClientProps = {
   path?: string;
