@@ -3,10 +3,6 @@ VALUES
 	("Focus Groups", "Focus Groups")
 ;
 
-DELETE FROM services
-WHERE serviceName = "Youth Groups / Leadership Development" AND programeName = "Preventive Health"
-;
-
 INSERT INTO services (serviceName, serviceDesc, programId)
 VALUES
 	(
@@ -24,12 +20,12 @@ VALUES
 	),(
 		"Worker's Safety",
 		"Know the safety protections you are entitled to at work",
-		(SELECT id FROM programs WHERE programName = "Worker's Rights")
+		(SELECT id FROM programs WHERE programName = "Workers' Rights")
 	)
 ;
 
 UPDATE services
-SET serviceName = "Worker's Rights"
+SET serviceName = "Workers Rights"
 WHERE serviceName = "Workers' Rights and Safety"
 ;
 

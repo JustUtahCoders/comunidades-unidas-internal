@@ -69,3 +69,4 @@ static
 !.elasticbeanstalk/*.global.yml
 
 .env
+.vscode
