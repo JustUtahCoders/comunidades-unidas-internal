@@ -24,6 +24,7 @@ GET /api/leads/:id
 {
   "id": 1,
   "dateOfSignup": "2019-09-17",
+  "leadStatus": "pending",
   "firstName": "Joel",
   "lastName": "Denning",
   "fullName": "Joel Denning",
@@ -39,6 +40,7 @@ GET /api/leads/:id
       "serviceDescription": "Gain United States citizenship"
     }
   ],
+  "isDeleted": false,
   "createdBy": {
     "userId": 1,
     "firstName": "Joel",
@@ -80,6 +82,7 @@ GET /api/leads
 ({
   "id": 1,
   "dateOfSignup": "2019-09-17",
+  "leadStatus": "pending",
   "firstName": "Harry",
   "lastName": "Potter",
   "fullName": "Harry Potter",
@@ -114,6 +117,7 @@ GET /api/leads
 {
   "id": 2,
   "dateOfSignup": "2019-09-17",
+  "leadStatus": "pending",
   "firstName": "Hermonie",
   "lastName": "Granger",
   "fullName": "Hermonie Granger",
@@ -148,6 +152,7 @@ GET /api/leads
 {
   "id": 3,
   "dateOfSignup": "2019-09-17",
+  "leadStatus": "pending",
   "firstName": "Ron",
   "lastName": "Weasley",
   "fullName": "Ron Weasley",
@@ -192,6 +197,7 @@ POST /api/leads
 ```json
 {
   "dateOfSignup": "2019-09-17",
+  "leadStatus": "pending",
   "firstName": "Joel",
   "lastName": "Denning",
   "fullName": "Ron Weasley",
@@ -219,6 +225,7 @@ The response object will be the same as if you do a `GET /api/leads/:id`
 {
   "id": 1,
   "dateOfSignup": "2019-09-17",
+  "leadStatus": "pending",
   "firstName": "Joel",
   "lastName": "Denning",
   "fullName": "Joel Denning",
@@ -276,7 +283,8 @@ PATCH /api/leads/:id
 
 ```json
 {
-	"dateOfSignup": "2019-09-17",
+  "dateOfSignup": "2019-09-17",
+  "leadStatus": "pending",
 	"firstName": "Joel",
 	"lastName": "Denning",
 	"fullName": "Joel Denning",
