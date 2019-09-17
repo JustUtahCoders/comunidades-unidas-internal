@@ -36,6 +36,10 @@ body {
   margin: 0;
 }
 
+.medium-size {
+  font-size: 1.6rem;
+}
+
 .caption {
   font-size: 1.4rem;
 }
