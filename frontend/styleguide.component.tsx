@@ -119,12 +119,12 @@ body {
 
   /* Corrects inability to style clickable input types in iOS */
   -webkit-appearance: none;
- }
+}
 
- & button.unstyled::moz-focus-inner {
+& button.unstyled::moz-focus-inner {
   border: 0;
   padding: 0;
- }
+}
 
 & button {
   font-size: 1.8rem;
