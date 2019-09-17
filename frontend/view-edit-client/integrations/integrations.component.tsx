@@ -4,7 +4,6 @@ import { useCss } from "kremling";
 import enabledImgUrl from "../../../icons/148705-essential-collection/svg/success.svg";
 import disabledImgUrl from "../../../icons/148705-essential-collection/svg/error.svg";
 import JuntosPorLaSalud from "./juntos-por-la-salud.component";
-import { any } from "prop-types";
 
 const EditComps = {
   "Juntos Por La Salud": JuntosPorLaSalud

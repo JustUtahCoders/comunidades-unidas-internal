@@ -18,12 +18,15 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
   const [selectAll, setSelectAll] = React.useState(false);
 
   React.useEffect(() => {
-    const checkboxEls = document.querySelectorAll(
-      `input[type="checkbox"][name="client-checked"]`
-    );
-    for (let i = 0; i < checkboxEls.length; i++) {
-      // @ts-ignore
-      checkboxEls[i].checked = selectAll;
+    if (selectAll) {
+      props.setSelectedClients(
+        props.clients.reduce((result, client) => {
+          result[client.id] = client;
+          return result;
+        }, {})
+      );
+    } else {
+      props.setSelectedClients({});
     }
   }, [selectAll, props.clients]);
 
@@ -87,13 +90,14 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
           )}
           {props.clients.map(client => (
             <tr key={client.id}>
-              <td onClick={checkTdClicked}>
+              <td onClick={() => handleCheckBoxChange(client)}>
                 <input
                   type="checkbox"
                   name="client-checked"
                   aria-label={`Select ${client.fullName}`}
                   value={client.id}
-                  onClick={evt => evt.stopPropagation()}
+                  checked={Boolean(props.selectedClients[client.id])}
+                  onChange={() => {}}
                 />
               </td>
               <td>
@@ -137,11 +141,6 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
     </div>
   );
 
-  function checkTdClicked(evt) {
-    const checkboxEl = evt.target.querySelector('input[type="checkbox"]');
-    checkboxEl.checked = !checkboxEl.checked;
-  }
-
   function sortColumnClicked(sortField: SortField) {
     return () => {
       if (props.sortField === sortField) {
@@ -181,6 +180,16 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
         {props.sortOrder === SortOrder.ascending ? "\u2191" : "\u2193"}
       </span>
     );
+  }
+
+  function handleCheckBoxChange(client) {
+    const newSelectedClients = Object.assign({}, props.selectedClients);
+    if (props.selectedClients[client.id]) {
+      delete newSelectedClients[client.id];
+    } else {
+      newSelectedClients[client.id] = client;
+    }
+    props.setSelectedClients(newSelectedClients);
   }
 }
 
