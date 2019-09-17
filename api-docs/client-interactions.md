@@ -186,7 +186,7 @@ PATCH /api/clients/:id/interactions/:id
 **_Note_**
 
 - You can omit properties that you do not want to update.
-- The "isDeleted" properties cannot be modified.
+- The "isDeleted" property cannot be modified.
 
 ### Response
 
