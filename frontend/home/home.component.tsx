@@ -26,14 +26,14 @@ export default function Home(props: HomeProps) {
           link="add-client"
         />
         <HomeCard
-          iconUrl={caseNoteUrl}
-          title="Add a case note"
-          link="add-case-note"
-        />
-        <HomeCard
           iconUrl={recordVisitUrl}
           title="Add a client interaction"
           link="add-client-interaction"
+        />
+        <HomeCard
+          iconUrl={caseNoteUrl}
+          title="Add a case note"
+          link="add-case-note"
         />
         <HomeCard
           iconUrl={reportIssueUrl}
