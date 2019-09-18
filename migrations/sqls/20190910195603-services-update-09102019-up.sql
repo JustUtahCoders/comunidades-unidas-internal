@@ -18,16 +18,13 @@ VALUES
 		"Focus Groups",
 		(SELECT id FROM programs WHERE programName = "Focus Groups")
 	),(
-		"Worker's Safety",
+		"Workers' Safety",
 		"Know the safety protections you are entitled to at work",
 		(SELECT id FROM programs WHERE programName = "Workers' Rights")
 	)
 ;
 
 UPDATE services
-SET serviceName = "Workers Rights"
+SET serviceName = "Workers' Rights"
 WHERE serviceName = "Workers' Rights and Safety"
 ;
-
-
-
