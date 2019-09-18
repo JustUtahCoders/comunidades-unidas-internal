@@ -283,15 +283,15 @@ PATCH /api/leads/:id
 {
   "dateOfSignup": "2019-09-17",
   "leadStatus": "pending",
-	"firstName": "Joel",
-	"lastName": "Denning",
-	"fullName": "Joel Denning",
-	"phone": "5555555555",
-	"smsConsent": true,
-	"zip": "84115",
-	"age": 25,
-	"gender": "male",
-	"intakeServices": [2, 4 6]
+  "firstName": "Joel",
+  "lastName": "Denning",
+  "fullName": "Joel Denning",
+  "phone": "5555555555",
+  "smsConsent": true,
+  "zip": "84115",
+  "age": 25,
+  "gender": "male",
+  "intakeServices": [2, 4 6]
 }
 ```
 
