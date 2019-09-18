@@ -77,7 +77,7 @@ GET /api/leads
 ### Response
 
 ```json
-({
+[{
   "id": 1,
   "dateOfSignup": "2019-09-17",
   "leadStatus": "pending",
