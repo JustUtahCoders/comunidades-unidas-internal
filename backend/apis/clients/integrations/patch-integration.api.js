@@ -21,6 +21,7 @@ const {
   logIntegrationResult
 } = require("./integrations-utils");
 const mysql = require("mysql");
+const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 
 app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
   const validationErrors = [
@@ -42,6 +43,7 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
 
   const clientId = Number(req.params.clientId);
   const integrationId = req.params.integrationId;
+  const userId = req.session.passport.user.id;
 
   getClientById(clientId, (err, client) => {
     if (err) {
@@ -72,7 +74,12 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
 
       performIntegration(finalIntegration)
         .then(integrationResult => {
-          logIntegrationResult(clientId, finalIntegration, integrationResult);
+          logIntegrationResult(
+            clientId,
+            finalIntegration,
+            integrationResult,
+            userId
+          );
 
           let upsertSql;
           if (existingIntegration.length === 1) {
@@ -113,12 +120,26 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
             if (integrationResult.error) {
               internalError(req, res, integrationResult.error);
             } else {
-              res.send({
-                id: finalIntegration.integrationType,
-                name: finalIntegration.name,
-                status: finalIntegration.status,
-                externalId: finalIntegration.externalId,
-                lastSync: finalIntegration.lastSync
+              const clientLogSql = insertActivityLogQuery({
+                clientId,
+                title: `${getIntegrationName(
+                  finalIntegration.integrationType
+                )} integration was ${finalIntegration.status}`,
+                logType: `integration:${finalIntegration.status}`,
+                addedBy: userId
+              });
+              pool.query(clientLogSql, err => {
+                if (err) {
+                  return internalError(req, res, err);
+                }
+
+                res.send({
+                  id: finalIntegration.integrationType,
+                  name: finalIntegration.name,
+                  status: finalIntegration.status,
+                  externalId: finalIntegration.externalId,
+                  lastSync: finalIntegration.lastSync
+                });
               });
             }
           });
