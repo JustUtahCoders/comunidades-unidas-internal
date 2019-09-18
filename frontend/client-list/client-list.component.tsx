@@ -6,8 +6,22 @@ import ClientsTable from "./table/clients-table.component";
 import easyFetch from "../util/easy-fetch";
 import { SearchParseValues } from "../client-search/client-list/client-search-dsl.helpers";
 import queryString from "query-string";
+import Modal from "../util/modal.component";
 
 export default function ClientList(props: ClientListProps) {
+  const [modalOptions, setModalOptions] = React.useState({
+    isOpen: false,
+    headerText: null,
+    primaryText: null,
+    primaryAction: null,
+    secondaryText: null,
+    secondaryAction: null,
+    children: null
+  });
+  const [selectedClients, setSelectedClients] = React.useState<SelectedClients>(
+    {}
+  );
+
   useFullWidth();
   const [apiState, dispatchApiState] = React.useReducer(
     reduceApiState,
@@ -31,6 +45,11 @@ export default function ClientList(props: ClientListProps) {
         setPage={newPage}
         setSearch={setSearch}
         fetchingClient={fetchingClient}
+        selectedClients={selectedClients}
+        setSelectedClients={setSelectedClients}
+        modalOptions={modalOptions}
+        setModalOptions={setModalOptions}
+        refetchClients={refetchClients}
       />
       <ClientsTable
         clients={apiState.apiData.clients}
@@ -39,7 +58,30 @@ export default function ClientList(props: ClientListProps) {
         newSortOrder={newSortOrder}
         sortField={apiState.sortField}
         sortOrder={apiState.sortOrder}
+        selectedClients={selectedClients}
+        setSelectedClients={setSelectedClients}
       />
+      {modalOptions.isOpen === true && (
+        <Modal
+          close={() =>
+            setModalOptions({
+              isOpen: false,
+              headerText: null,
+              primaryText: null,
+              primaryAction: null,
+              secondaryText: null,
+              secondaryAction: null,
+              children: null
+            })
+          }
+          headerText={modalOptions.headerText}
+          primaryText={modalOptions.primaryText}
+          primaryAction={modalOptions.primaryAction}
+          secondaryText={modalOptions.secondaryText}
+          secondaryAction={modalOptions.secondaryAction}
+          children={modalOptions.children}
+        />
+      )}
     </>
   );
 
@@ -62,6 +104,12 @@ export default function ClientList(props: ClientListProps) {
       type: ActionTypes.newSort,
       sortField,
       sortOrder
+    });
+  }
+
+  function refetchClients() {
+    dispatchApiState({
+      type: ActionTypes.shouldFetch
     });
   }
 }
@@ -108,6 +156,11 @@ function reduceApiState(state: ApiState, action: ApiStateAction) {
         sortField: action.sortField,
         sortOrder: action.sortOrder,
         page: 1
+      };
+    case ActionTypes.shouldFetch:
+      return {
+        ...state,
+        status: ApiStateStatus.shouldFetch
       };
     default:
       throw Error();
@@ -209,6 +262,10 @@ function useFrontendUrlParams(apiState, dispatchApiState) {
   }, [apiState]);
 }
 
+export type SelectedClients = {
+  [clientId: number]: ClientListClient;
+};
+
 type ApiState = {
   status: ApiStateStatus;
   apiData: ClientApiData;
@@ -249,6 +306,7 @@ enum ActionTypes {
   newQueryParams = "newQueryParams",
   fetching = "fetching",
   fetched = "fetched",
+  shouldFetch = "shouldFetch",
   apiError = "apiError",
   newSort = "newSort"
 }
@@ -259,8 +317,13 @@ type ApiStateAction =
   | NewParamsAction
   | FetchingAction
   | FetchedAction
-  | ApiErrorAction
-  | NewSortAction;
+  | NewSortAction
+  | ShouldFetchAction
+  | ApiErrorAction;
+
+type ShouldFetchAction = {
+  type: ActionTypes.shouldFetch;
+};
 
 type NewSortAction = {
   type: ActionTypes.newSort;
