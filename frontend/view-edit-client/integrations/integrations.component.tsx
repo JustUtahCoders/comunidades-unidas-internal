@@ -2,8 +2,11 @@ import React from "react";
 import { SingleClient, AuditSummary } from "../view-client.component";
 import { useCss } from "kremling";
 import enabledImgUrl from "../../../icons/148705-essential-collection/svg/success.svg";
-import disabledImgUrl from "../../../icons/148705-essential-collection/svg/error.svg";
+import disabledImgUrl from "../../../icons/148705-essential-collection/svg/minus.svg";
+import brokenImgUrl from "../../../icons/148705-essential-collection/svg/error.svg";
+import timeAgoImgUrl from "../../../icons/148705-essential-collection/svg/cloud-computing-3.svg";
 import JuntosPorLaSalud from "./juntos-por-la-salud.component";
+import { format } from "timeago.js";
 
 const EditComps = {
   "Juntos Por La Salud": JuntosPorLaSalud
@@ -21,8 +24,9 @@ export default function Integrations(props: IntegrationsProps) {
     setIntegrations([
       {
         name: "Juntos Por La Salud",
-        status: IntegrationStatus.disabled,
-        externalId: null
+        status: IntegrationStatus.broken,
+        externalId: null,
+        lastSync: null
       }
     ]);
   }, [props.clientId]);
@@ -35,24 +39,18 @@ export default function Integrations(props: IntegrationsProps) {
         <React.Fragment key={integration.name}>
           <h3 className="header">{integration.name}</h3>
           {props.client && (
-            <p className="status">
-              <img
-                className="status-img"
-                src={
-                  integration.status === IntegrationStatus.enabled
-                    ? enabledImgUrl
-                    : disabledImgUrl
-                }
-                alt="Enabled status icon"
-                title={
-                  integration.status === IntegrationStatus.enabled
-                    ? "Enabled"
-                    : "Disabled"
-                }
-              />
-              Integration{" "}
-              {integration.status === IntegrationStatus.enabled ? "ON" : "OFF"}
-            </p>
+            <div className="status">
+              {getIntegrationStatusText(integration)}
+              <div>
+                <img
+                  src={timeAgoImgUrl}
+                  alt="Hourglass"
+                  className="status-img"
+                />
+                Last sync:{" "}
+                {integration.lastSync ? format(integration.lastSync) : "never"}
+              </div>
+            </div>
           )}
           <button
             type="button"
@@ -98,6 +96,51 @@ export default function Integrations(props: IntegrationsProps) {
   function closeEditModal() {
     setIntegrationToEdit(null);
   }
+
+  function getIntegrationStatusText(integration: Integration) {
+    switch (integration.status) {
+      case IntegrationStatus.enabled:
+        return (
+          <div>
+            <img
+              className="status-img"
+              src={enabledImgUrl}
+              alt="Enabled status icon"
+              title="Integration enabled"
+            />
+            Status: enabled
+          </div>
+        );
+      case IntegrationStatus.disabled:
+        return (
+          <div>
+            <img
+              className="status-img"
+              src={disabledImgUrl}
+              alt="Disabled status icon"
+              title="Integration disabled"
+            />
+            Status: disabled
+          </div>
+        );
+      case IntegrationStatus.broken:
+        return (
+          <div>
+            <img
+              className="status-img"
+              src={brokenImgUrl}
+              alt="Broken status icon"
+              title="Integration broken"
+            />
+            Status: broken
+          </div>
+        );
+      default:
+        throw Error(
+          `Unknown integration status '${integration.status}' for client ${props.clientId}`
+        );
+    }
+  }
 }
 
 const css = `
@@ -109,9 +152,14 @@ const css = `
   height: 1.6rem;
 }
 
-.status {
+& .status {
+  margin: 2.4rem 0;
+}
+
+.status > * {
   display: flex;
   align-items: center;
+  margin-bottom: .8rem;
 }
 
 & .status-img {
@@ -133,11 +181,13 @@ type Integration = {
   name: string;
   status: IntegrationStatus;
   externalId: string | null;
+  lastSync: Date | null;
 };
 
 export enum IntegrationStatus {
   enabled = "enabled",
-  disabled = "disabled"
+  disabled = "disabled",
+  broken = "broken"
 }
 
 export type EditIntegrationProps = {
