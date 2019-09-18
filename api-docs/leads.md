@@ -1,10 +1,8 @@
 # Leads
 
-The leads document direct encounters with leads.
+The leads will document potiental clients sourced from CU events.
 
-Leads are potiental clients.
-
-Here is the list of the valid lead types:
+Here is the list of the valid log types:
 
 - `leadCreated`,
 - `leadUpdated`,
@@ -28,7 +26,7 @@ GET /api/leads/:id
   "firstName": "Joel",
   "lastName": "Denning",
   "fullName": "Joel Denning",
-  "phone": "555-555-5555",
+  "phone": "5555555555",
   "smsConsent": true,
   "zip": "84115",
   "age": 25,
@@ -86,7 +84,7 @@ GET /api/leads
   "firstName": "Harry",
   "lastName": "Potter",
   "fullName": "Harry Potter",
-  "phone": "555-555-5555",
+  "phone": "5555555555",
   "smsConsent": false,
   "zip": "84115",
   "age": 39,
@@ -118,10 +116,10 @@ GET /api/leads
   "id": 2,
   "dateOfSignup": "2019-09-17",
   "leadStatus": "pending",
-  "firstName": "Hermonie",
+  "firstName": "Hermione",
   "lastName": "Granger",
-  "fullName": "Hermonie Granger",
-  "phone": "555-555-5555",
+  "fullName": "Hermione Granger",
+  "phone": "5555555555",
   "smsConsent": true,
   "zip": "84115",
   "age": 40,
@@ -156,7 +154,7 @@ GET /api/leads
   "firstName": "Ron",
   "lastName": "Weasley",
   "fullName": "Ron Weasley",
-  "phone": "555-555-5555",
+  "phone": "5555555555",
   "smsConsent": true,
   "zip": "84115",
   "age": 39,
@@ -200,8 +198,8 @@ POST /api/leads
   "leadStatus": "pending",
   "firstName": "Joel",
   "lastName": "Denning",
-  "fullName": "Ron Weasley",
-  "phone": "555-555-5555",
+  "fullName": "Joel Denning",
+  "phone": "5555555555",
   "smsConsent": false,
   "zip": "84115",
   "age": 25,
@@ -229,7 +227,7 @@ The response object will be the same as if you do a `GET /api/leads/:id`
   "firstName": "Joel",
   "lastName": "Denning",
   "fullName": "Joel Denning",
-  "phone": "555-555-5555",
+  "phone": "5555555555",
   "smsConsent": true,
   "zip": "84115",
   "age": 25,
@@ -288,7 +286,7 @@ PATCH /api/leads/:id
 	"firstName": "Joel",
 	"lastName": "Denning",
 	"fullName": "Joel Denning",
-	"phone": "555-555-5555",
+	"phone": "5555555555",
 	"smsConsent": true,
 	"zip": "84115",
 	"age": 25,
@@ -313,17 +311,6 @@ The response object will be the same as if you do a `GET /api/leads/:id`
 ```http
 DELETE /api/leads/:id
 ```
-
-```json
-{
-  "isDeleted": true
-}
-```
-
-**_Note_**
-
-- No attribute other than `isDeleted` should be updated.
-- `isDeleted` should be `true` to be deleted.
 
 ### Response
 

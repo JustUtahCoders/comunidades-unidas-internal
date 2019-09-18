@@ -200,17 +200,6 @@ The response to updating the information is the same as the response for `GET /a
 DELETE /api/clients/:id/interactions/:id
 ```
 
-```json
-{
-  "isDeleted": true
-}
-```
-
-**_Note_**
-
-- No attribute other than `isDeleted` should be updated.
-- `isDeleted` should be `true` to be deleted.
-
 ### Response
 
 An HTTP 204 status is returned if the deletion was successful.
