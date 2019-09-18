@@ -65,6 +65,14 @@ exports.databaseError = function databaseError(req, res, err, connection) {
   res.status(500).send({ error: msg });
 };
 
+exports.internalError = function internalError(req, res, err) {
+  const msg = process.env.RUNNING_LOCALLY
+    ? `Internal Server Error for backend endpoint '${req.url}'. ${err}`
+    : `Internal Server Error. Run 'eb logs' for more detail`;
+  console.error(err);
+  res.status(500).send({ error: msg });
+};
+
 app.set("views", path.join(__dirname, "/views"));
 app.set("view engine", "ejs");
 app.use("/static", express.static(path.join(__dirname, "../static")));

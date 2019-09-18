@@ -1,4 +1,10 @@
-const { app, databaseError, pool, invalidRequest } = require("../../server");
+const {
+  app,
+  databaseError,
+  pool,
+  invalidRequest,
+  notFound
+} = require("../../server");
 const mysql = require("mysql");
 const { checkValid, validId } = require("../utils/validation-utils");
 const {
@@ -24,9 +30,7 @@ app.get("/api/clients/:id", (req, res, next) => {
         client
       });
     } else {
-      res.status(404).send({
-        errors: [`Could not find client with id ${req.params.id}`]
-      });
+      notFound(res, `Could not find client with id ${req.params.id}`);
     }
   });
 });

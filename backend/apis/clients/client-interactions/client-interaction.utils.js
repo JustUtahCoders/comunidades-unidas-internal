@@ -3,7 +3,12 @@ const {
   responseDateWithoutTime
 } = require("../../utils/transform-utils");
 const mysql = require("mysql");
-const { pool, invalidRequest, databaseError } = require("../../../server");
+const {
+  pool,
+  invalidRequest,
+  databaseError,
+  notFound
+} = require("../../../server");
 
 function createResponseInteractionObject(log) {
   return {
@@ -75,9 +80,7 @@ exports.getInteraction = function getInteraction(
 
     if (result.length === 0) {
       errBack((req, res) => {
-        res
-          .status(404)
-          .send({ error: `No interaction exists with id ${interactionId}` });
+        notFound(res, `No interaction exists with id ${interactionId}`);
       });
 
       return;

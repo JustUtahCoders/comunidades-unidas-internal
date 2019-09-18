@@ -1,7 +1,16 @@
-const { app, databaseError, pool, invalidRequest } = require("../../../server");
+const {
+  app,
+  databaseError,
+  pool,
+  invalidRequest,
+  notFound
+} = require("../../../server");
 const mysql = require("mysql");
 const { checkValid, validId } = require("../../utils/validation-utils");
-const { integrationTypes } = require("./integrations-utils");
+const {
+  getIntegrationTypes,
+  getIntegrationName
+} = require("./integrations-utils");
 const { getClientById } = require("../get-client.api");
 
 app.get(`/api/clients/:clientId/integrations`, (req, res) => {
@@ -19,9 +28,7 @@ app.get(`/api/clients/:clientId/integrations`, (req, res) => {
     }
 
     if (!client) {
-      return res
-        .status(404)
-        .send({ error: `Could not find client with id ${clientId}` });
+      return notFound(res, `Could not find client with id ${clientId}`);
     }
 
     const sql = mysql.format(
@@ -37,13 +44,13 @@ app.get(`/api/clients/:clientId/integrations`, (req, res) => {
       }
 
       res.send(
-        Object.entries(integrationTypes).map(([id, name]) => {
+        getIntegrationTypes().map(id => {
           const { status, lastSync, externalId } = data.find(
             d => d.integrationType === id
           ) || { status: "disabled", lastSync: null, externalId: null };
           return {
             id,
-            name,
+            name: getIntegrationName(id),
             status,
             lastSync,
             externalId
