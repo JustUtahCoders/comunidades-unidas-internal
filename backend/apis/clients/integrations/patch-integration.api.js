@@ -54,8 +54,6 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
         return databaseError(req, res, err);
       }
 
-      console.log("existingIntegration", existingIntegration);
-
       const finalIntegration = {
         id: integrationId,
         name: getIntegrationName(integrationId),
