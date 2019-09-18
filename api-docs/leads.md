@@ -181,7 +181,7 @@ GET /api/leads
     "fullName": "Joel Denning",
     "timestamp": "2019-05-06T06:00:00.000Z"
   }
-})
+}]
 ```
 
 ## Create a single Lead
