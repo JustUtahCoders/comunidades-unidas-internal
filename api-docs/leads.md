@@ -24,9 +24,20 @@ GET /api/leads/:id
   "dateOfSignup": "2019-09-17",
   "leadStatus": "active",
   "contactStage" {
-    "first": true,
-    "second": false,
-    "third": false
+    "first": "2019-05-06T06:00:00.000Z",
+    "second": null,
+    "third": null
+  },
+  "eventSource": {
+    "eventId": 1,
+    "eventName": "Health Fair",
+    "eventDate": "2019-09-16",
+    "eventLocation": "Saint Marks",
+    "relatedProgram": {
+      "id": 7,
+      "programName": "Preventative Health",
+      "programDescription": "Preventative Health"
+    }
   },
   "firstName": "Joel",
   "lastName": "Denning",
@@ -64,9 +75,10 @@ GET /api/leads/:id
 **_Notes_**
 
 - `leadStatus` is an enum with the possible values of `active`, `inactive`, and `converted to client`.
+- `eventSource` is an array of integer event ids
 - `gender` is an enum with possible values of `female`, `male`, `transgender`, `nonbinary`, `other`.
 - `intakeServices` is an array of integers service ids. See (/api-docs/list-services.md).
-- `created.timestamp` and `lastUpdated.timestamp` are ISO timestamps.
+- `contactStage.firstAttempt`, `contactStage.secondAttempt`, `contactStage.thirdAttempt`,`created.timestamp` and `lastUpdated.timestamp` are ISO timestamps. `contactStage.firstAttempt`, `contactStage.secondAttempt`, `contactStage.thirdAttempt` are nullable.
 
 ### Not Found
 
@@ -94,9 +106,14 @@ GET /api/leads
   "dateOfSignup": "2019-09-17",
   "leadStatus": "active",
   "contactStage" {
-    "first": true,
-    "second": false,
-    "third": false
+    "first": "2019-05-06T06:00:00.000Z",
+    "second": null,
+    "third": null
+  },
+  "eventSource": {
+    "eventId": 1,
+    "eventName": "Health Fair",
+    "eventDate": "2019-09-16"
   },
   "firstName": "Harry",
   "lastName": "Potter",
@@ -133,9 +150,14 @@ GET /api/leads
   "dateOfSignup": "2019-09-17",
   "leadStatus": "active",
   "contactStage" {
-    "first": true,
-    "second": false,
-    "third": false
+    "first": "2019-05-06T06:00:00.000Z",
+    "second": null,
+    "third": null
+  },
+  "eventSource": {
+    "eventId": 1,
+    "eventName": "Health Fair",
+    "eventDate": "2019-09-16"
   },
   "firstName": "Hermione",
   "lastName": "Granger",
@@ -172,9 +194,14 @@ GET /api/leads
   "dateOfSignup": "2019-09-17",
   "leadStatus": "active",
   "contactStage" {
-    "first": true,
-    "second": false,
-    "third": false
+    "first": "2019-05-06T06:00:00.000Z",
+    "second": null,
+    "third": null
+  },
+  "eventSource": {
+    "eventId": 1,
+    "eventName": "Health Fair",
+    "eventDate": "2019-09-16"
   },
   "firstName": "Ron",
   "lastName": "Weasley",
@@ -222,10 +249,11 @@ POST /api/leads
   "dateOfSignup": "2019-09-17",
   "leadStatus": "active",
   "contactStage" {
-    "first": true,
-    "second": false,
-    "third": false
+    "first": "2019-05-06T06:00:00.000Z",
+    "second": null,
+    "third": null
   },
+  "eventSource": 1,
   "firstName": "Joel",
   "lastName": "Denning",
   "fullName": "Joel Denning",
@@ -250,9 +278,14 @@ The response object will be the same as if you do a `GET /api/leads/:id`
   "dateOfSignup": "2019-09-17",
   "leadStatus": "active",
   "contactStage" {
-    "first": true,
-    "second": false,
-    "third": false
+    "first": "2019-05-06T06:00:00.000Z",
+    "second": null,
+    "third": null
+  },
+  "eventSource": {
+    "eventId": 1,
+    "eventName": "Health Fair",
+    "eventDate": "2019-09-16"
   },
   "firstName": "Joel",
   "lastName": "Denning",
@@ -310,10 +343,11 @@ PATCH /api/leads/:id
   "dateOfSignup": "2019-09-17",
   "leadStatus": "active",
   "contactStage" {
-    "first": true,
-    "second": false,
-    "third": false
+    "first": "2019-05-06T06:00:00.000Z",
+    "second": null,
+    "third": null
   },
+  "eventSource": 1,
   "firstName": "Joel",
   "lastName": "Denning",
   "fullName": "Joel Denning",
@@ -326,7 +360,7 @@ PATCH /api/leads/:id
 }
 ```
 
-**_Note_**
+**_Notes_**
 
 - You can omit properties that you do not want to update.
 - The "isDeleted" property cannot be modified.
