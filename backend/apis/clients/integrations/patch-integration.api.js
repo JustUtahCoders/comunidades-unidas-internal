@@ -36,7 +36,7 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
 
   getClientById(clientId, (err, client) => {
     if (err) {
-      return databaseError(rewq, res, err);
+      return databaseError(req, res, err);
     }
 
     if (!client) {
