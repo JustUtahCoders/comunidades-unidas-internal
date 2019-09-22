@@ -15,13 +15,15 @@ export default function JuntosPorLaSalud(props: EditIntegrationProps) {
     if (modalStatus === ModalStatus.enabling) {
       // TO-DO call API
       const newIntegration = Object.assign({}, props.integration, {
-        status: IntegrationStatus.enabled
+        status: IntegrationStatus.enabled,
+        lastSync: new Date()
       });
       props.updateIntegration(newIntegration);
     } else if (modalStatus === ModalStatus.disabling) {
       // TO-DO call API
       const newIntegration = Object.assign({}, props.integration, {
-        status: IntegrationStatus.disabled
+        status: IntegrationStatus.disabled,
+        lastSync: new Date()
       });
       props.updateIntegration(newIntegration);
     }
