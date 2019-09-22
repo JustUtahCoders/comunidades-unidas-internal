@@ -22,7 +22,6 @@ exports.performAnyIntegrations = function performAnyIntegrations(
   clientId,
   userId
 ) {
-  console.log("here");
   // These are done in the background and are not part of the synchronous HTTP request.
   // If they fail, we note this in the client log and by changing the integration's status to 'broken'
 
@@ -31,8 +30,6 @@ exports.performAnyIntegrations = function performAnyIntegrations(
     [clientId]
   );
   pool.query(getActiveIntegrationsSql, (err, integrations) => {
-    console.log("here 2");
-    console.log(err, integrations);
     if (err) {
       console.error(err);
       createClientLog({
@@ -86,8 +83,13 @@ exports.performAnyIntegrations = function performAnyIntegrations(
 
 exports.logIntegrationResult = logIntegrationResult;
 
-function logIntegrationResult(clientId, integration, result, userId) {
-  console.log("here 3");
+function logIntegrationResult(
+  clientId,
+  integration,
+  result,
+  userId,
+  statusChanged = false
+) {
   if (result.error) {
     console.error("------------ Integration API error ------------");
     console.error(
@@ -107,15 +109,25 @@ function logIntegrationResult(clientId, integration, result, userId) {
       addedBy: userId
     });
   } else {
-    console.log("here 4");
-    createClientLog({
-      clientId,
-      title: `${getIntegrationName(
-        integration.integrationType
-      )} integration was synced`,
-      logType: "integration:sync",
-      addedBy: userId
-    });
+    if (statusChanged) {
+      createClientLog({
+        clientId,
+        title: `${getIntegrationName(
+          integration.integrationType
+        )} integration was ${integration.status}`,
+        logType: `integration:${integration.status}`,
+        addedBy: userId
+      });
+    } else {
+      createClientLog({
+        clientId,
+        title: `${getIntegrationName(
+          integration.integrationType
+        )} integration was synced`,
+        logType: "integration:sync",
+        addedBy: userId
+      });
+    }
   }
 }
 

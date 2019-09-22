@@ -1,31 +1,52 @@
 import React from "react";
 import {
   EditIntegrationProps,
-  IntegrationStatus
+  IntegrationStatus,
+  IntegrationPatchRequestBody
 } from "./integrations.component";
 import Modal from "../../util/modal.component";
+import easyFetch from "../../util/easy-fetch";
 
 export default function JuntosPorLaSalud(props: EditIntegrationProps) {
-  const [createNewParticipant, setCreateNewParticipant] = React.useState(true);
-  const [participantId, setParticipantId] = React.useState("");
+  const [createNewParticipant, setCreateNewParticipant] = React.useState(
+    !Boolean(props.integration.externalId)
+  );
+  const [participantId, setParticipantId] = React.useState(
+    props.integration.externalId || ""
+  );
   const [modalStatus, setModalStatus] = React.useState<ModalStatus>();
   const submitRef = React.useRef<HTMLButtonElement>();
 
   React.useEffect(() => {
-    if (modalStatus === ModalStatus.enabling) {
-      // TO-DO call API
-      const newIntegration = Object.assign({}, props.integration, {
-        status: IntegrationStatus.enabled,
-        lastSync: new Date()
-      });
-      props.updateIntegration(newIntegration);
-    } else if (modalStatus === ModalStatus.disabling) {
-      // TO-DO call API
-      const newIntegration = Object.assign({}, props.integration, {
-        status: IntegrationStatus.disabled,
-        lastSync: new Date()
-      });
-      props.updateIntegration(newIntegration);
+    if (
+      modalStatus === ModalStatus.enabling ||
+      modalStatus === ModalStatus.disabling
+    ) {
+      const abortController = new AbortController();
+      const requestBody: IntegrationPatchRequestBody = {
+        status:
+          modalStatus === ModalStatus.enabling
+            ? IntegrationStatus.enabled
+            : IntegrationStatus.disabled
+      };
+      if (participantId) {
+        requestBody.externalId = participantId.trim();
+      }
+      easyFetch(
+        `/api/clients/${props.client.id}/integrations/${props.integration.id}`,
+        {
+          signal: abortController.signal,
+          method: "PATCH",
+          body: requestBody
+        }
+      )
+        .then(props.updateIntegration)
+        .catch(err => {
+          setTimeout(() => {
+            throw err;
+          });
+        });
+      return () => abortController.abort();
     }
   }, [modalStatus, props.updateIntegration]);
 
@@ -134,6 +155,11 @@ export default function JuntosPorLaSalud(props: EditIntegrationProps) {
     }
   }
 }
+
+JuntosPorLaSalud.getExternalLink = externalId =>
+  `https://ventanillasjpls.org/Registro/Persona.aspx?params=${btoa(
+    `ViewMode=ReadOnly&PersonaID=${externalId}`
+  )}`;
 
 enum ModalStatus {
   prompting = "prompting",

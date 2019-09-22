@@ -58,10 +58,12 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
       `SELECT * FROM integrations WHERE clientId = ? AND integrationType = ?`,
       [clientId, integrationId]
     );
-    pool.query(getExistingSql, (err, existingIntegration = {}) => {
+    pool.query(getExistingSql, (err, result) => {
       if (err) {
         return databaseError(req, res, err);
       }
+
+      const existingIntegration = result[0] || {};
 
       const finalIntegration = {
         integrationType: integrationId,
@@ -72,17 +74,21 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
           req.body.externalId || existingIntegration.externalId || null
       };
 
+      console.log("existingIntegration", existingIntegration);
+      console.log("finalIntegration", finalIntegration);
+
       performIntegration(finalIntegration)
         .then(integrationResult => {
           logIntegrationResult(
             clientId,
             finalIntegration,
             integrationResult,
-            userId
+            userId,
+            true
           );
 
           let upsertSql;
-          if (existingIntegration.length === 1) {
+          if (existingIntegration) {
             upsertSql = mysql.format(
               `
             UPDATE integrations SET status = ?, lastSync = CURRENT_TIMESTAMP(), externalId = ? WHERE clientId = ? AND integrationType = ?;
@@ -120,26 +126,12 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
             if (integrationResult.error) {
               internalError(req, res, integrationResult.error);
             } else {
-              const clientLogSql = insertActivityLogQuery({
-                clientId,
-                title: `${getIntegrationName(
-                  finalIntegration.integrationType
-                )} integration was ${finalIntegration.status}`,
-                logType: `integration:${finalIntegration.status}`,
-                addedBy: userId
-              });
-              pool.query(clientLogSql, err => {
-                if (err) {
-                  return internalError(req, res, err);
-                }
-
-                res.send({
-                  id: finalIntegration.integrationType,
-                  name: finalIntegration.name,
-                  status: finalIntegration.status,
-                  externalId: finalIntegration.externalId,
-                  lastSync: finalIntegration.lastSync
-                });
+              res.send({
+                id: finalIntegration.integrationType,
+                name: finalIntegration.name,
+                status: finalIntegration.status,
+                externalId: finalIntegration.externalId,
+                lastSync: finalIntegration.lastSync
               });
             }
           });

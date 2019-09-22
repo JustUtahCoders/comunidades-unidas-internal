@@ -93,7 +93,7 @@ export default function ClientHistory(props: ClientHistoryProps) {
           <div className="timeline-right">
             <h2 className={a("title").m("outdated", log.idOfUpdatedLog)}>
               {getTitle(log) +
-                (log.logType.startsWith("integration:")
+                (log.logType.startsWith("integration:") && false
                   ? ""
                   : ` by ${log.createdBy.fullName}`)}
               .
