@@ -7,9 +7,10 @@ import brokenImgUrl from "../../../icons/148705-essential-collection/svg/error.s
 import timeAgoImgUrl from "../../../icons/148705-essential-collection/svg/cloud-computing-3.svg";
 import JuntosPorLaSalud from "./juntos-por-la-salud.component";
 import { format } from "timeago.js";
+import easyFetch from "../../util/easy-fetch";
 
 const EditComps = {
-  "Juntos Por La Salud": JuntosPorLaSalud
+  JPLS: JuntosPorLaSalud
 };
 
 export default function Integrations(props: IntegrationsProps) {
@@ -20,15 +21,17 @@ export default function Integrations(props: IntegrationsProps) {
   );
 
   React.useEffect(() => {
-    // TO-DO call API
-    setIntegrations([
-      {
-        name: "Juntos Por La Salud",
-        status: IntegrationStatus.broken,
-        externalId: null,
-        lastSync: null
-      }
-    ]);
+    const abortController = new AbortController();
+    easyFetch(`/api/clients/${props.clientId}/integrations`, {
+      signal: abortController.signal
+    })
+      .then(setIntegrations)
+      .catch(err => {
+        setTimeout(() => {
+          throw err;
+        });
+      });
+    return () => abortController.abort();
   }, [props.clientId]);
 
   return (
@@ -50,6 +53,15 @@ export default function Integrations(props: IntegrationsProps) {
                 Last sync:{" "}
                 {integration.lastSync ? format(integration.lastSync) : "never"}
               </div>
+              {integration.externalId && (
+                <a
+                  rel="noopener"
+                  target="_blank"
+                  href={getExternalIntegrationLink(integration)}
+                >
+                  View in {integration.name}
+                </a>
+              )}
             </div>
           )}
           <button
@@ -66,7 +78,7 @@ export default function Integrations(props: IntegrationsProps) {
   );
 
   function renderEditModal() {
-    const EditComp = EditComps[integrationToEdit.name];
+    const EditComp = EditComps[integrationToEdit.id];
 
     if (!EditComp) {
       throw Error(
@@ -143,6 +155,18 @@ export default function Integrations(props: IntegrationsProps) {
   }
 }
 
+function getExternalIntegrationLink(integration) {
+  const EditComp = EditComps[integration.id];
+
+  if (!EditComp || !EditComp.getExternalLink) {
+    throw Error(
+      `External link not yet implemented for integration ${integration.id}`
+    );
+  }
+
+  return EditComp.getExternalLink(integration.externalId);
+}
+
 const css = `
 & .header {
   margin: 0;
@@ -178,6 +202,7 @@ type IntegrationsProps = {
 };
 
 type Integration = {
+  id: string;
   name: string;
   status: IntegrationStatus;
   externalId: string | null;
@@ -195,4 +220,9 @@ export type EditIntegrationProps = {
   close: () => any;
   client: SingleClient;
   updateIntegration: (integration: Integration) => any;
+};
+
+export type IntegrationPatchRequestBody = {
+  status?: IntegrationStatus;
+  externalId?: string;
 };

@@ -9,6 +9,7 @@ import ClientHistoryFilters from "./client-history-filters.component";
 import EditLog from "./edit-log.component";
 import ViewOutdatedLog from "./view-outdated-log.component";
 import { partial } from "lodash-es";
+import { any } from "prop-types";
 
 export default function ClientHistory(props: ClientHistoryProps) {
   const [logState, dispatchLogState] = React.useReducer(
@@ -74,7 +75,7 @@ export default function ClientHistory(props: ClientHistoryProps) {
         <div
           className={a("client-history-timeline").m(
             "modifiable",
-            log.canModify
+            log.canModify || log.logType.startsWith("integration:")
           )}
           key={log.id}
           style={{ borderBottom: "1px solid darkgray" }}
@@ -91,7 +92,11 @@ export default function ClientHistory(props: ClientHistoryProps) {
           </div>
           <div className="timeline-right">
             <h2 className={a("title").m("outdated", log.idOfUpdatedLog)}>
-              {getTitle(log)} by {log.createdBy.fullName}.
+              {getTitle(log) +
+                (log.logType.startsWith("integration:") && false
+                  ? ""
+                  : ` by ${log.createdBy.fullName}`)}
+              .
             </h2>
             {!log.idOfUpdatedLog && (
               <>
@@ -225,6 +230,8 @@ export default function ClientHistory(props: ClientHistoryProps) {
           log
         });
       }
+    } else if (log.logType.startsWith("integration:")) {
+      props.navigate(`/clients/${props.clientId}/integrations`);
     }
   }
 }
@@ -355,6 +362,11 @@ function getBackgroundColor(logType: LogType) {
       return "yellow";
     case LogType["clientInteraction:serviceProvided"]:
       return "orange";
+    case LogType["integration:enabled"]:
+    case LogType["integration:disabled"]:
+    case LogType["integration:sync"]:
+    case LogType["integration:broken"]:
+      return "purple";
     default:
       return "black";
   }
@@ -482,7 +494,11 @@ export enum LogType {
   "clientInteraction:created" = "clientInteraction:created",
   "clientInteraction:updated" = "clientInteraction:updated",
   "clientInteraction:deleted" = "clientInteraction:deleted",
-  "clientInteraction:serviceProvided" = "clientInteraction:serviceProvided"
+  "clientInteraction:serviceProvided" = "clientInteraction:serviceProvided",
+  "integration:enabled" = "integration:enabled",
+  "integration:disabled" = "integration:disabled",
+  "integration:broken" = "integration:broken",
+  "integration:sync" = "integration:sync"
 }
 
 const allFiltersOn: ClientHistoryFilterOptions = Object.keys(LogType).reduce(
@@ -529,4 +545,5 @@ type ClientHistoryProps = {
   path: string;
   clientId: string;
   client: SingleClient;
+  navigate?: (path) => any;
 };

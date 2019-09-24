@@ -21,6 +21,7 @@ const {
   logIntegrationResult
 } = require("./integrations-utils");
 const mysql = require("mysql");
+const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 
 app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
   const validationErrors = [
@@ -42,6 +43,7 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
 
   const clientId = Number(req.params.clientId);
   const integrationId = req.params.integrationId;
+  const userId = req.session.passport.user.id;
 
   getClientById(clientId, (err, client) => {
     if (err) {
@@ -56,10 +58,12 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
       `SELECT * FROM integrations WHERE clientId = ? AND integrationType = ?`,
       [clientId, integrationId]
     );
-    pool.query(getExistingSql, (err, existingIntegration = {}) => {
+    pool.query(getExistingSql, (err, result) => {
       if (err) {
         return databaseError(req, res, err);
       }
+
+      const existingIntegration = result[0] || {};
 
       const finalIntegration = {
         integrationType: integrationId,
@@ -72,10 +76,16 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
 
       performIntegration(finalIntegration)
         .then(integrationResult => {
-          logIntegrationResult(clientId, finalIntegration, integrationResult);
+          logIntegrationResult(
+            clientId,
+            finalIntegration,
+            integrationResult,
+            userId,
+            true
+          );
 
           let upsertSql;
-          if (existingIntegration.length === 1) {
+          if (existingIntegration) {
             upsertSql = mysql.format(
               `
             UPDATE integrations SET status = ?, lastSync = CURRENT_TIMESTAMP(), externalId = ? WHERE clientId = ? AND integrationType = ?;

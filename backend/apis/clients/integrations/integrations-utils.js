@@ -1,6 +1,7 @@
 const { pool } = require("../../../server");
 const mysql = require("mysql");
 const integrateJpls = require("./jpls-integration");
+const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 
 const integrationTypes = {
   JPLS: {
@@ -13,19 +14,14 @@ exports.getIntegrationTypes = function getIntegrationTypes() {
   return Object.keys(integrationTypes);
 };
 
-exports.getIntegrationName = function getIntegrationName(type) {
-  const name = integrationTypes[type];
-  if (!name) {
-    throw Error(
-      `No integration name implemented for integration of type '${type}'`
-    );
-  }
-  return name;
-};
+exports.getIntegrationName = getIntegrationName;
 
 exports.performIntegration = performIntegration;
 
-exports.performAnyIntegrations = function performAnyIntegrations(clientId) {
+exports.performAnyIntegrations = function performAnyIntegrations(
+  clientId,
+  userId
+) {
   // These are done in the background and are not part of the synchronous HTTP request.
   // If they fail, we note this in the client log and by changing the integration's status to 'broken'
 
@@ -35,8 +31,13 @@ exports.performAnyIntegrations = function performAnyIntegrations(clientId) {
   );
   pool.query(getActiveIntegrationsSql, (err, integrations) => {
     if (err) {
-      // TO-DO add this error to client log
       console.error(err);
+      createClientLog({
+        clientId,
+        title: `All integrations with third party systems are broken`,
+        logType: "integration:broken",
+        addedBy: userId
+      });
       return;
     }
 
@@ -49,17 +50,31 @@ exports.performAnyIntegrations = function performAnyIntegrations(clientId) {
               [clientId, integration.integrationType],
               err => {
                 if (err) {
-                  // TO-DO add this error to client log
+                  createClientLog({
+                    clientId,
+                    title: `Integration ${getIntegrationName(
+                      integration.integrationType
+                    )} could not be updated to broken status`,
+                    logType: "integration:broken",
+                    addedBy: userId
+                  });
                   console.error(err);
                 }
               }
             );
           }
 
-          logIntegrationResult(clientId, integration, result);
+          logIntegrationResult(clientId, integration, result, userId);
         })
         .catch(err => {
-          // TO-DO add this error to client log
+          createClientLog({
+            clientId,
+            title: `Integration ${getIntegrationName(
+              integration.integrationType
+            )} is broken`,
+            logType: "integration:broken",
+            addedBy: userId
+          });
           console.error(err);
         });
     });
@@ -68,7 +83,13 @@ exports.performAnyIntegrations = function performAnyIntegrations(clientId) {
 
 exports.logIntegrationResult = logIntegrationResult;
 
-function logIntegrationResult(clientId, integration, result) {
+function logIntegrationResult(
+  clientId,
+  integration,
+  result,
+  userId,
+  statusChanged = false
+) {
   if (result.error) {
     console.error("------------ Integration API error ------------");
     console.error(
@@ -79,9 +100,34 @@ function logIntegrationResult(clientId, integration, result) {
     console.error("\nFull logs:");
     console.error(result.fullLogs);
     console.error("-----------------------------------------------");
-    // TO-DO insert into clientLogs table
+    createClientLog({
+      clientId,
+      title: `${getIntegrationName(
+        integration.integrationType
+      )} integration didn't work`,
+      logType: "integration:sync",
+      addedBy: userId
+    });
   } else {
-    // TO-DO insert into clientLogs table
+    if (statusChanged) {
+      createClientLog({
+        clientId,
+        title: `${getIntegrationName(
+          integration.integrationType
+        )} integration was ${integration.status}`,
+        logType: `integration:${integration.status}`,
+        addedBy: userId
+      });
+    } else {
+      createClientLog({
+        clientId,
+        title: `${getIntegrationName(
+          integration.integrationType
+        )} integration was synced`,
+        logType: "integration:sync",
+        addedBy: userId
+      });
+    }
   }
 }
 
@@ -97,4 +143,20 @@ function performIntegration(integration) {
   } else {
     return Promise.resolve({ error: null });
   }
+}
+
+function createClientLog(params) {
+  pool.query(insertActivityLogQuery(params), err => {
+    console.error(err);
+  });
+}
+
+function getIntegrationName(type) {
+  const info = integrationTypes[type];
+  if (!info) {
+    throw Error(
+      `No integration name implemented for integration of type '${type}'`
+    );
+  }
+  return info.name;
 }
