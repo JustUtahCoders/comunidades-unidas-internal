@@ -74,9 +74,6 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
           req.body.externalId || existingIntegration.externalId || null
       };
 
-      console.log("existingIntegration", existingIntegration);
-      console.log("finalIntegration", finalIntegration);
-
       performIntegration(finalIntegration)
         .then(integrationResult => {
           logIntegrationResult(
