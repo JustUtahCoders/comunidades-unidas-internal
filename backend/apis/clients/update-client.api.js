@@ -1,4 +1,10 @@
-const { app, databaseError, pool, invalidRequest } = require("../../server");
+const {
+  app,
+  databaseError,
+  pool,
+  invalidRequest,
+  notFound
+} = require("../../server");
 const mysql = require("mysql");
 const {
   checkValid,
@@ -25,6 +31,7 @@ const {
   insertIntakeDataQuery
 } = require("./insert-client.utils");
 const { insertActivityLogQuery } = require("./client-logs/activity-log.utils");
+const { performAnyIntegrations } = require("./integrations/integrations-utils");
 
 app.patch("/api/clients/:id", (req, res, next) => {
   const paramValidationErrors = checkValid(req.params, validId("id"));
@@ -105,9 +112,7 @@ app.patch("/api/clients/:id", (req, res, next) => {
     }
 
     if (!oldClient) {
-      return res
-        .status(404)
-        .send({ error: `Client ${clientId} does not exist` });
+      return notFound(res, `Client ${clientId} does not exist`);
     }
 
     const fullClient = Object.assign({}, oldClient, req.body);
@@ -252,6 +257,8 @@ app.patch("/api/clients/:id", (req, res, next) => {
         if (selectErr) {
           return databaseError(req, res, selectErr, connection);
         }
+
+        performAnyIntegrations(clientId);
 
         res.send({
           client

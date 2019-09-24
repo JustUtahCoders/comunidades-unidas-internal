@@ -1,4 +1,11 @@
-const { app, pool, invalidRequest, databaseError } = require("../../../server");
+const {
+  app,
+  pool,
+  invalidRequest,
+  databaseError,
+  internalError,
+  notFound
+} = require("../../../server");
 const {
   checkValid,
   validId,
@@ -8,8 +15,10 @@ const {
 } = require("../../utils/validation-utils");
 const { getClientById } = require("../get-client.api");
 const {
-  integrationTypes,
-  getIntegrationName
+  getIntegrationTypes,
+  getIntegrationName,
+  performIntegration,
+  logIntegrationResult
 } = require("./integrations-utils");
 const mysql = require("mysql");
 
@@ -18,7 +27,7 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
     ...checkValid(
       req.params,
       validId("clientId"),
-      validEnum("integrationId", ...Object.keys(integrationTypes))
+      validEnum("integrationId", ...getIntegrationTypes())
     ),
     ...checkValid(
       req.body,
@@ -36,13 +45,11 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
 
   getClientById(clientId, (err, client) => {
     if (err) {
-      return databaseError(req, res, err);
+      return databaseError(rewq, res, err);
     }
 
     if (!client) {
-      return res
-        .status(404)
-        .send({ error: `Could not find client with id ${clientId}` });
+      return notFound(res, `Could not find client with id ${clientId}`);
     }
 
     const getExistingSql = mysql.format(
@@ -55,7 +62,7 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
       }
 
       const finalIntegration = {
-        id: integrationId,
+        integrationType: integrationId,
         name: getIntegrationName(integrationId),
         status: req.body.status || existingIntegration.status || "disabled",
         lastSync: new Date(),
@@ -63,35 +70,62 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
           req.body.externalId || existingIntegration.externalId || null
       };
 
-      let upsertSql;
-      if (existingIntegration.length === 1) {
-        upsertSql = mysql.format(
-          `
-          UPDATE integrations SET status = ?, lastSync = CURRENT_TIMESTAMP(), externalId = ?;
-        `,
-          [finalIntegration.status, finalIntegration.externalId]
-        );
-      } else {
-        upsertSql = mysql.format(
-          `
-          INSERT INTO integrations (clientId, integrationType, status, externalId, lastSync) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP());
-        `,
-          [
-            clientId,
-            integrationId,
-            finalIntegration.status,
-            finalIntegration.externalId
-          ]
-        );
-      }
+      performIntegration(finalIntegration)
+        .then(integrationResult => {
+          logIntegrationResult(clientId, finalIntegration, integrationResult);
 
-      pool.query(upsertSql, (err, result) => {
-        if (err) {
-          return databaseError(req, res, err);
-        }
+          let upsertSql;
+          if (existingIntegration.length === 1) {
+            upsertSql = mysql.format(
+              `
+            UPDATE integrations SET status = ?, lastSync = CURRENT_TIMESTAMP(), externalId = ? WHERE clientId = ? AND integrationType = ?;
+          `,
+              [
+                finalIntegration.status,
+                finalIntegration.externalId,
+                clientId,
+                finalIntegration.integrationType
+              ]
+            );
+          } else {
+            upsertSql = mysql.format(
+              `
+            INSERT INTO integrations (clientId, integrationType, status, externalId, lastSync) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP());
+          `,
+              [
+                clientId,
+                integrationId,
+                finalIntegration.status,
+                finalIntegration.externalId
+              ]
+            );
+          }
 
-        res.send(finalIntegration);
-      });
+          if (integrationResult.error) {
+            finalIntegration.status = "broken";
+          }
+
+          pool.query(upsertSql, (err, result) => {
+            if (err) {
+              return databaseError(req, res, err);
+            }
+
+            if (integrationResult.error) {
+              internalError(req, res, integrationResult.error);
+            } else {
+              res.send({
+                id: finalIntegration.integrationType,
+                name: finalIntegration.name,
+                status: finalIntegration.status,
+                externalId: finalIntegration.externalId,
+                lastSync: finalIntegration.lastSync
+              });
+            }
+          });
+        })
+        .catch(err => {
+          internalError(req, res, err);
+        });
     });
   });
 });
