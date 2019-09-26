@@ -219,7 +219,7 @@ const css = `
 
 & .bulk-action-menu-modal {
   position: absolute;
-  top: 9vh;
+  top: 100%;
   left: 0;
   display: flex;
   height: 78.5vh;
