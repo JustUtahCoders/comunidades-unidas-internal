@@ -89,3 +89,149 @@ If there is no lead with the provided id, you will get a 404 HTTP response, with
   "errors": ["Could not find lead with id 2"]
 }
 ```
+
+## Get all Leads
+
+### Request
+
+```http
+GET /api/leads
+```
+
+### Response
+
+```json
+{
+  "id": 1,
+  "dateOfSignup": "2019-09-17",
+  "leadStatus": "active",
+  "contactStage" {
+    "first": "2019-05-06T06:00:00.000Z",
+    "second": null,
+    "third": null
+  },
+  "eventSource": {
+    "eventId": 1,
+    "eventName": "Health Fair",
+    "eventDate": "2019-09-16"
+  },
+  "firstName": "Harry",
+  "lastName": "Potter",
+  "fullName": "Harry Potter",
+  "phone": "5555555555",
+  "smsConsent": false,
+  "zip": "84115",
+  "age": 39,
+  "gender": "male",
+  "intakeServices": [
+    {
+      "id": 1,
+      "serviceName": "Citizenship",
+      "serviceDescription": "Gain United States citizenship"
+    }
+  ],
+  "isDeleted": false,
+  "createdBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
+  "lastUpdatedBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  }
+},{
+  "id": 2,
+  "dateOfSignup": "2019-09-17",
+  "leadStatus": "active",
+  "contactStage" {
+    "first": "2019-05-06T06:00:00.000Z",
+    "second": null,
+    "third": null
+  },
+  "eventSource": {
+    "eventId": 1,
+    "eventName": "Health Fair",
+    "eventDate": "2019-09-16"
+  },
+  "firstName": "Hermione",
+  "lastName": "Granger",
+  "fullName": "Hermione Granger",
+  "phone": "5555555555",
+  "smsConsent": true,
+  "zip": "84115",
+  "age": 40,
+  "gender": "female",
+  "intakeServices": [
+    {
+      "id": 1,
+      "serviceName": "Citizenship",
+      "serviceDescription": "Gain United States citizenship"
+    }
+  ],
+  "isDeleted": false,
+  "createdBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
+  "lastUpdatedBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  }
+},{
+  "id": 3,
+  "dateOfSignup": "2019-09-17",
+  "leadStatus": "active",
+  "contactStage" {
+    "first": "2019-05-06T06:00:00.000Z",
+    "second": null,
+    "third": null
+  },
+  "eventSource": {
+    "eventId": 1,
+    "eventName": "Health Fair",
+    "eventDate": "2019-09-16"
+  },
+  "firstName": "Ron",
+  "lastName": "Weasley",
+  "fullName": "Ron Weasley",
+  "phone": "5555555555",
+  "smsConsent": true,
+  "zip": "84115",
+  "age": 39,
+  "gender": "male",
+  "intakeServices": [
+    {
+      "id": 1,
+      "serviceName": "Citizenship",
+      "serviceDescription": "Gain United States citizenship"
+    }
+  ],
+  "isDeleted": false,
+  "createdBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
+  "lastUpdatedBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  }
+}
+```
