@@ -84,3 +84,19 @@ GET /api/events
   }
 ]
 ```
+
+## Create Event
+
+```http
+POST /api/events
+```
+
+```json
+{
+  "eventName": "Job Fair",
+  "eventDate": "2019-09-24",
+  "eventLocation": "Salt Lake City Library",
+  "relatedProgram": 9,
+  "totalAttendence": 150
+}
+```
