@@ -329,3 +329,42 @@ Validation errors will respond with HTTP status 400.
   "errors": ["You must provide a firstName"]
 }
 ```
+
+## Modify a Lead
+
+### Request
+
+```http
+PATCH /api/leads/:id
+```
+
+```json
+{
+  "dateOfSignup": "2019-09-17",
+  "leadStatus": "active",
+  "contactStage" {
+    "first": "2019-05-06T06:00:00.000Z",
+    "second": null,
+    "third": null
+  },
+  "eventSource": 1,
+  "firstName": "Joel",
+  "lastName": "Denning",
+  "fullName": "Joel Denning",
+  "phone": "5555555555",
+  "smsConsent": true,
+  "zip": "84115",
+  "age": 25,
+  "gender": "male",
+  "intakeServices": [2, 4 6]
+}
+```
+
+**_Notes_**
+
+- You can omit properties that you do not want to update.
+- The "isDeleted" property cannot be modified.
+
+### Response
+
+The response object will be the same as if you do a `GET /api/leads/:id`
