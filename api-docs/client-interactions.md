@@ -186,7 +186,7 @@ PATCH /api/clients/:id/interactions/:id
 **_Note_**
 
 - You can omit properties that you do not want to update.
-- The "isDeleted" properties cannot be modified.
+- The "isDeleted" property cannot be modified.
 
 ### Response
 
@@ -199,17 +199,6 @@ The response to updating the information is the same as the response for `GET /a
 ```http
 DELETE /api/clients/:id/interactions/:id
 ```
-
-```json
-{
-  "isDeleted": true
-}
-```
-
-**_Note_**
-
-- No attribute other than `isDeleted` should be updated.
-- `isDeleted` should be `true` to be deleted.
 
 ### Response
 
