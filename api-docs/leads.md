@@ -368,3 +368,17 @@ PATCH /api/leads/:id
 ### Response
 
 The response object will be the same as if you do a `GET /api/leads/:id`
+
+## Delete a single Lead
+
+### Request
+
+```http
+DELETE /api/leads/:id
+```
+
+### Response
+
+An HTTP 204 status is returned if the deletion was successful.
+
+An HTTP 400 status is returned if you cannot delete this event.
