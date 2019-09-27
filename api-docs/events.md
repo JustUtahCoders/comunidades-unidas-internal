@@ -100,3 +100,40 @@ POST /api/events
   "totalAttendence": 150
 }
 ```
+
+## Modify an Event
+
+```http
+PATCH /api/events/:id
+```
+
+```json
+{
+  "eventName": "Job Fair",
+  "eventDate": "2019-09-24",
+  "eventLocation": "Salt Lake City Library",
+  "relatedProgram": 9,
+  "totalAttendence": 150
+}
+```
+
+**_Notes_**
+
+- You can omit properties that you do not want to update.
+- The "isDeleted" property cannot be modified.
+
+### Response
+
+#### Success
+
+The response object will be the same as if you do a `GET /api/events/:id`
+
+#### Validation Error
+
+Validation errors will respond with HTTP status 400.
+
+```json
+{
+  "errors": ["You must provide a firstName"]
+}
+```
