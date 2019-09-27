@@ -137,3 +137,17 @@ Validation errors will respond with HTTP status 400.
   "errors": ["You must provide a firstName"]
 }
 ```
+
+## Delete a single Lead
+
+### Request
+
+```http
+DELETE /api/events/:id
+```
+
+### Response
+
+An HTTP 204 status is returned if the deletion was successful.
+
+An HTTP 400 status is returned if you cannot delete this event.
