@@ -235,3 +235,97 @@ GET /api/leads
   }
 }
 ```
+
+## Create a single Lead
+
+### Request
+
+```http
+POST /api/leads
+```
+
+```json
+{
+  "dateOfSignup": "2019-09-17",
+  "leadStatus": "active",
+  "contactStage" {
+    "first": "2019-05-06T06:00:00.000Z",
+    "second": null,
+    "third": null
+  },
+  "eventSource": 1,
+  "firstName": "Joel",
+  "lastName": "Denning",
+  "fullName": "Joel Denning",
+  "phone": "5555555555",
+  "smsConsent": false,
+  "zip": "84115",
+  "age": 25,
+  "gender": "male",
+  "intakeServices": [1, 5, 8]
+}
+```
+
+### Response
+
+#### Success
+
+The response object will be the same as if you do a `GET /api/leads/:id`
+
+```json
+{
+  "id": 1,
+  "dateOfSignup": "2019-09-17",
+  "leadStatus": "active",
+  "contactStage" {
+    "first": "2019-05-06T06:00:00.000Z",
+    "second": null,
+    "third": null
+  },
+  "eventSource": {
+    "eventId": 1,
+    "eventName": "Health Fair",
+    "eventDate": "2019-09-16"
+  },
+  "firstName": "Joel",
+  "lastName": "Denning",
+  "fullName": "Joel Denning",
+  "phone": "5555555555",
+  "smsConsent": true,
+  "zip": "84115",
+  "age": 25,
+  "gender": "male",
+  "intakeServices": [
+    {
+      "id": 1,
+      "serviceName": "Citizenship",
+      "serviceDescription": "Gain United States citizenship"
+    }
+  ],
+  "isDeleted": false,
+  "createdBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
+  "lastUpdatedBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  }
+}
+```
+
+#### Validation Error
+
+Validation errors will respond with HTTP status 400.
+
+```json
+{
+  "errors": ["You must provide a firstName"]
+}
+```
