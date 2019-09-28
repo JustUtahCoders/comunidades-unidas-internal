@@ -31,7 +31,7 @@ GET /api/leads/:id
     "relatedProgram": {
       "id": 7,
       "programName": "Preventive Health",
-      "programDescription": "Preventative Health"
+      "programDescription": "Preventive Health"
     }
   },
   "firstName": "Joel",
