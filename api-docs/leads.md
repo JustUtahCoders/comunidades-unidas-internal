@@ -2,12 +2,6 @@
 
 The leads will document potiental clients sourced from CU events.
 
-Here is the list of the valid log types:
-
-- `leadCreated`,
-- `leadUpdated`,
-- `leadDeleted`
-
 ## Get a single Lead
 
 ### Request
@@ -28,6 +22,7 @@ GET /api/leads/:id
     "second": null,
     "third": null
   },
+  "inactivityReason": null,
   "eventSource": {
     "eventId": 1,
     "eventName": "Health Fair",
@@ -74,7 +69,8 @@ GET /api/leads/:id
 
 **_Notes_**
 
-- `leadStatus` is an enum with the possible values of `active`, `inactive`, and `converted to client`.
+- `leadStatus` is an enum with the possible values of `active`, `inactive`, and `convertedToClient`.
+- `inactivityReason` is an enum with the possible values of `doNotCallRequest`, `threeAttemptsNoResponse`, `wrongNumber`, `noLongerInterested`, and `relocated`.
 - `eventSource` is an array of integer event ids
 - `gender` is an enum with possible values of `female`, `male`, `transgender`, `nonbinary`, `other`.
 - `intakeServices` is an array of integers service ids. See (/api-docs/list-services.md).
