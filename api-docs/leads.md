@@ -23,7 +23,7 @@ GET /api/leads/:id
   "id": 1,
   "dateOfSignup": "2019-09-17",
   "leadStatus": "active",
-  "contactStage" {
+  "contactStage": {
     "first": "2019-05-06T06:00:00.000Z",
     "second": null,
     "third": null
