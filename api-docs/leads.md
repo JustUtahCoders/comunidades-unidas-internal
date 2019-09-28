@@ -35,7 +35,7 @@ GET /api/leads/:id
     "eventLocation": "Saint Marks",
     "relatedProgram": {
       "id": 7,
-      "programName": "Preventative Health",
+      "programName": "Preventive Health",
       "programDescription": "Preventative Health"
     }
   },
