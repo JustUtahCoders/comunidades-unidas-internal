@@ -52,6 +52,297 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
 
     const groupedServices = groupBy(services, "programName");
 
+    const interactionDefaults = {
+      "Chronic Care Guidance": {
+        location: "consulateOffice",
+        type: "inPerson",
+        duration: {
+          hours: 1,
+          minutes: 30,
+          stringValue: "01:30:00"
+        }
+      },
+      "Chronic Disease Screenings": {
+        location: "consulateOffice",
+        type: "inPerson",
+        duration: {
+          hours: 0,
+          minutes: 30,
+          stringValue: "00:30:00"
+        }
+      },
+      Citizenship: {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 2,
+          minutes: 0,
+          stringValue: "02:00:00"
+        }
+      },
+      "Cooking Classes": {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 2,
+          minutes: 0,
+          stringValue: "02:00:00"
+        }
+      },
+      DACA: {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 2,
+          minutes: 0,
+          stringValue: "02:00:00"
+        }
+      },
+      "Family Petition - Adjustment of Status": {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 2,
+          minutes: 0,
+          stringValue: "02:00:00"
+        }
+      },
+      "Family Petition - Consular Processing": {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 1,
+          minutes: 30,
+          stringValue: "01:30:00"
+        }
+      },
+      Faxes: {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 0,
+          minutes: 30,
+          stringValue: "00:30:00"
+        }
+      },
+      "Financial Coach": {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 1,
+          minutes: 0,
+          stringValue: "01:00:00"
+        }
+      },
+      "Financial Education": {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 1,
+          minutes: 0,
+          stringValue: "01:00:00"
+        }
+      },
+      FOIA: {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 2,
+          minutes: 0,
+          stringValue: "02:00:00"
+        }
+      },
+      "General Consultation(Immigration)": {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 0,
+          minutes: 30,
+          stringValue: "00:30:00"
+        }
+      },
+      "Green Card Renewal": {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 2,
+          minutes: 0,
+          stringValue: "02:00:00"
+        }
+      },
+      "Grocery Store Tour": {
+        location: "communityEvent",
+        type: "inPerson",
+        duration: {
+          hours: 1,
+          minutes: 30,
+          stringValue: "01:30:00"
+        }
+      },
+      "HIV / PrEP": {
+        location: "consulateOffice",
+        type: "inPerson",
+        duration: {
+          hours: 1,
+          minutes: 30,
+          stringValue: "01:30:00"
+        }
+      },
+      "I - 94 Request": {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 2,
+          minutes: 0,
+          stringValue: "02:00:00"
+        }
+      },
+      I765: {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 2,
+          minutes: 0,
+          stringValue: "02:00:00"
+        }
+      },
+      "I821 TPS": {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 2,
+          minutes: 0,
+          stringValue: "02:00:00"
+        }
+      },
+      "LDS Vouchers": {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 0,
+          minutes: 30,
+          stringValue: "00:30:00"
+        }
+      },
+      "Leadership Development - Monthly Meetings": {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 2,
+          minutes: 0,
+          stringValue: "02:00:00"
+        }
+      },
+      "Mobile Clinic": {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 1,
+          minutes: 0,
+          stringValue: "01:00:00"
+        }
+      },
+      Nutrition: {
+        location: "communityEvent",
+        type: "inPerson",
+        duration: {
+          hours: 1,
+          minutes: 30,
+          stringValue: "01:30:00"
+        }
+      },
+      "Saturday VDS": {
+        location: "consulateOffice",
+        type: "inPerson",
+        duration: {
+          hours: 6,
+          minutes: 0,
+          stringValue: "06:00:00"
+        }
+      },
+      SNAP: {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 2,
+          minutes: 0,
+          stringValue: "02:00:00"
+        }
+      },
+      "Status Check": {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 2,
+          minutes: 0,
+          stringValue: "02:00:00"
+        }
+      },
+      "Tobacco Prevention and Cessation": {
+        location: "consulateOffice",
+        type: "inPerson",
+        duration: {
+          hours: 1,
+          minutes: 30,
+          stringValue: "01:30:00"
+        }
+      },
+      Translation: {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 0,
+          minutes: 30,
+          stringValue: "00:30:00"
+        }
+      },
+      "VDS Daily Attention": {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 4,
+          minutes: 0,
+          stringValue: "04:00:00"
+        }
+      },
+      "VDS Mobile": {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 4,
+          minutes: 0,
+          stringValue: "04:00:00"
+        }
+      },
+      "Voter Registration": {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 0,
+          minutes: 30,
+          stringValue: "00:30:00"
+        }
+      },
+      "Workers' Rights and Safety": {
+        location: "CUOffice",
+        type: "inPerson",
+        duration: {
+          hours: 1,
+          minutes: 30,
+          stringValue: "01:30:00"
+        }
+      },
+      "Youth Groups": {
+        location: "consulateOffice",
+        type: "inPerson",
+        duration: {
+          hours: 4,
+          minutes: 0,
+          stringValue: "04:00:00"
+        }
+      }
+    };
+
     React.useEffect(() => {
       props.addInteractionGetter(props.interactionIndex, interactionGetter);
       return () => props.removeInteractionGetter(props.interactionIndex);
@@ -98,6 +389,22 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         );
       }
     }, [props.servicesResponse, props.initialInteraction, selectedService]);
+
+    React.useEffect(() => {
+      if (!selectedService) {
+        return;
+      } else {
+        const selectedOption = selectedService.serviceName;
+
+        if (!interactionDefaults[selectedOption]) {
+          return;
+        } else {
+          setSelectedLocation(interactionDefaults[selectedOption].location);
+          setSelectedInteractionType(interactionDefaults[selectedOption].type);
+          setDuration(interactionDefaults[selectedOption].duration);
+        }
+      }
+    }, [selectedService]);
 
     return (
       <div
