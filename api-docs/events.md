@@ -32,7 +32,7 @@ GET /api/event/:id
 
 **_Note_**
 
-- `relatedProgram` is an array of integers program ids. See (/api-docs/list-services.md).
+- `programId` is an array of integers program ids. See (/api-docs/list-services.md).
 
 #### Not Found
 
@@ -74,7 +74,7 @@ GET /api/events
     "eventName": "Job Fair",
     "eventDate": "2019-09-24",
     "eventLocation": "Salt Lake City Library",
-    "relatedProgram": {
+    "programId": {
       "id": 9,
       "programName": "Workers' Rights",
       "programDescription": "Workers' Rights"
