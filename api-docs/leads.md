@@ -33,7 +33,7 @@ GET /api/leads/:id
     "eventName": "Health Fair",
     "eventDate": "2019-09-16",
     "eventLocation": "Saint Marks",
-    "relatedProgram": {
+    "programId": {
       "id": 7,
       "programName": "Preventative Health",
       "programDescription": "Preventative Health"
@@ -113,7 +113,12 @@ GET /api/leads
   "eventSource": {
     "eventId": 1,
     "eventName": "Health Fair",
-    "eventDate": "2019-09-16"
+    "eventDate": "2019-09-16",
+    "programId": {
+      "id": 7,
+      "programName": "Preventative Health",
+      "programDescription": "Preventative Health"
+    }
   },
   "firstName": "Harry",
   "lastName": "Potter",
@@ -157,7 +162,12 @@ GET /api/leads
   "eventSource": {
     "eventId": 1,
     "eventName": "Health Fair",
-    "eventDate": "2019-09-16"
+    "eventDate": "2019-09-16",
+    "programId": {
+      "id": 7,
+      "programName": "Preventative Health",
+      "programDescription": "Preventative Health"
+    }
   },
   "firstName": "Hermione",
   "lastName": "Granger",
@@ -201,7 +211,12 @@ GET /api/leads
   "eventSource": {
     "eventId": 1,
     "eventName": "Health Fair",
-    "eventDate": "2019-09-16"
+    "eventDate": "2019-09-16",
+    "programId": {
+      "id": 7,
+      "programName": "Preventative Health",
+      "programDescription": "Preventative Health"
+    }
   },
   "firstName": "Ron",
   "lastName": "Weasley",
