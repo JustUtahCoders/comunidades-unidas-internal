@@ -20,7 +20,7 @@ GET /api/event/:id
   "eventName": "Heath Fair",
   "eventDate": "2019-09-16",
   "eventLocation": "Saint Marks",
-  "relatedProgram": {
+  "programId": {
     "id": 7,
     "programName": "Preventative Health",
     "programDescription": "Preventative Health"
