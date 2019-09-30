@@ -28,7 +28,7 @@ GET /api/leads/:id
     "eventName": "Health Fair",
     "eventDate": "2019-09-16",
     "eventLocation": "Saint Marks",
-    "relatedProgram": {
+    "programId": {
       "id": 7,
       "programName": "Preventive Health",
       "programDescription": "Preventive Health"
