@@ -22,8 +22,8 @@ GET /api/event/:id
   "eventLocation": "Saint Marks",
   "programId": {
     "id": 7,
-    "programName": "Preventative Health",
-    "programDescription": "Preventative Health"
+    "programName": "Preventive Health",
+    "programDescription": "Preventive Health"
   },
   "totalAttendence": 150,
   "isDeleted": false
