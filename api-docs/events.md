@@ -32,7 +32,7 @@ GET /api/event/:id
 
 **_Note_**
 
-- `relatedProgram` is an array of integers program ids. See (/api-docs/list-services.md).
+- `programId` is an array of integers program ids. See (/api-docs/list-services.md).
 
 #### Not Found
 
