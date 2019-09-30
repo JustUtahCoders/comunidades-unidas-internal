@@ -2,12 +2,6 @@
 
 The leads will document potiental clients sourced from CU events.
 
-Here is the list of the valid log types:
-
-- `leadCreated`,
-- `leadUpdated`,
-- `leadDeleted`
-
 ## Get a single Lead
 
 ### Request
@@ -23,11 +17,12 @@ GET /api/leads/:id
   "id": 1,
   "dateOfSignup": "2019-09-17",
   "leadStatus": "active",
-  "contactStage" {
+  "contactStage": {
     "first": "2019-05-06T06:00:00.000Z",
     "second": null,
     "third": null
   },
+  "inactivityReason": null,
   "eventSource": {
     "eventId": 1,
     "eventName": "Health Fair",
@@ -35,8 +30,8 @@ GET /api/leads/:id
     "eventLocation": "Saint Marks",
     "programId": {
       "id": 7,
-      "programName": "Preventative Health",
-      "programDescription": "Preventative Health"
+      "programName": "Preventive Health",
+      "programDescription": "Preventive Health"
     }
   },
   "firstName": "Joel",
@@ -74,7 +69,8 @@ GET /api/leads/:id
 
 **_Notes_**
 
-- `leadStatus` is an enum with the possible values of `active`, `inactive`, and `converted to client`.
+- `leadStatus` is an enum with the possible values of `active`, `inactive`, and `convertedToClient`.
+- `inactivityReason` is an enum with the possible values of `doNotCallRequest`, `threeAttemptsNoResponse`, `wrongNumber`, `noLongerInterested`, and `relocated`.
 - `eventSource` is an array of integer event ids
 - `gender` is an enum with possible values of `female`, `male`, `transgender`, `nonbinary`, `other`.
 - `intakeServices` is an array of integers service ids. See (/api-docs/list-services.md).
@@ -105,11 +101,12 @@ GET /api/leads
   "id": 1,
   "dateOfSignup": "2019-09-17",
   "leadStatus": "active",
-  "contactStage" {
+  "contactStage": {
     "first": "2019-05-06T06:00:00.000Z",
     "second": null,
     "third": null
   },
+  "inactivityReason": null,
   "eventSource": {
     "eventId": 1,
     "eventName": "Health Fair",
@@ -154,11 +151,12 @@ GET /api/leads
   "id": 2,
   "dateOfSignup": "2019-09-17",
   "leadStatus": "active",
-  "contactStage" {
+  "contactStage": {
     "first": "2019-05-06T06:00:00.000Z",
     "second": null,
     "third": null
   },
+  "inactivityReason": null,
   "eventSource": {
     "eventId": 1,
     "eventName": "Health Fair",
@@ -203,11 +201,12 @@ GET /api/leads
   "id": 3,
   "dateOfSignup": "2019-09-17",
   "leadStatus": "active",
-  "contactStage" {
+  "contactStage": {
     "first": "2019-05-06T06:00:00.000Z",
     "second": null,
     "third": null
   },
+  "inactivityReason": null,
   "eventSource": {
     "eventId": 1,
     "eventName": "Health Fair",
