@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import CountrySelect from "../../util/country-select.component";
 import CurrencyInput from "../../util/currency-input.component";
+import HintPopupModal from "../../util/hint-popup-modal.component";
 
 export default function DemographicInformationInputs(
   props: DemographicInformationInputsProps
@@ -97,12 +98,17 @@ export default function DemographicInformationInputs(
         </label>
       </div>
       <div>
-        <label>
+        <label style={{ position: "relative" }}>
           <span>Approximate annual income</span>
           <CurrencyInput
             setDollars={setHouseholdIncome}
             initialValue={householdIncome}
-            required
+            required={false}
+          />
+          <HintPopupModal
+            left="1.25rem"
+            top="1.75rem"
+            hintMessage="If client has not provided their income information leave this field blank. If they have indicated they have no income input '0'."
           />
         </label>
       </div>
@@ -113,7 +119,6 @@ export default function DemographicInformationInputs(
             type="number"
             value={householdSize}
             onChange={evt => setHouseholdSize(Number(evt.target.value))}
-            required
             min="1"
             max="30"
           />
@@ -126,7 +131,6 @@ export default function DemographicInformationInputs(
             type="number"
             value={juvenileDependents}
             onChange={evt => setJuvenileDependents(Number(evt.target.value))}
-            required
             min={0}
             max={30}
           />
@@ -293,7 +297,6 @@ export default function DemographicInformationInputs(
             <label>
               <span>Pay interval</span>
               <select
-                required
                 value={payInterval}
                 onChange={evt => setPayInterval(PayInterval[evt.target.value])}
               >
@@ -309,7 +312,6 @@ export default function DemographicInformationInputs(
             <label>
               <span>Average weekly hours worked</span>
               <select
-                required
                 onChange={evt =>
                   setWeeklyEmployedHours(WeeklyEmployedHours[evt.target.value])
                 }
