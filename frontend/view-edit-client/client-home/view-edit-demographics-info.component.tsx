@@ -95,7 +95,11 @@ export default function ViewEditDemographicsInfo(
               </tr>
               <tr>
                 <td>Annual income:</td>
-                <td>{currencyFormatter.format(client.householdIncome)}</td>
+                <td>
+                  {client.householdIncome === null
+                    ? "Not Provided"
+                    : currencyFormatter.format(client.householdIncome)}
+                </td>
               </tr>
               <tr>
                 <td>Household size:</td>
