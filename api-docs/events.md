@@ -20,11 +20,6 @@ GET /api/event/:id
   "eventName": "Heath Fair",
   "eventDate": "2019-09-16",
   "eventLocation": "Saint Marks",
-  "programId": {
-    "id": 7,
-    "programName": "Preventive Health",
-    "programDescription": "Preventive Health"
-  },
   "totalAttendence": 150,
   "isDeleted": false
 }
@@ -61,11 +56,6 @@ GET /api/events
     "eventName": "Heath Fair",
     "eventDate": "2019-09-16",
     "eventLocation": "Saint Marks",
-    "programId": {
-      "id": 7,
-      "programName": "Preventive Health",
-      "programDescription": "Preventive Health"
-    },
     "totalAttendence": 150,
     "isDeleted": false
   },
@@ -96,7 +86,6 @@ POST /api/events
   "eventName": "Job Fair",
   "eventDate": "2019-09-24",
   "eventLocation": "Salt Lake City Library",
-  "programId": 9,
   "totalAttendence": 150
 }
 ```
@@ -112,7 +101,6 @@ PATCH /api/events/:id
   "eventName": "Job Fair",
   "eventDate": "2019-09-24",
   "eventLocation": "Salt Lake City Library",
-  "programId": 9,
   "totalAttendence": 150
 }
 ```
