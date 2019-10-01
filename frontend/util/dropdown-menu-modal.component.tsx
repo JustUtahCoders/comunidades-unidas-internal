@@ -45,28 +45,28 @@ export default function DropDownMenuModal(props: DropDownMenuModalProps) {
 
 const css = `
 & .kabob-icon {
-	height: 2rem;
-	margin: 0 1rem 0 -0.5rem;
+  height: 2rem;
+  margin: 0 1rem 0 -0.5rem;
 }
 
 & .dropdown-modal-screen {
-	background-color: transparent;
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 23.5rem;
-	z-index: 999;
+  background-color: transparent;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 23.5rem;
+  z-index: 999;
 }
 
 & .dropdown-dialog-box {
-	margin-top: 1rem;
-	padding: 1rem;
-	z-index: 1000;
+  margin-top: 1rem;
+  padding: 1rem;
+  z-index: 1000;
 }
 
 & .dropdown-dialog-box > ul li:hover {
-	background-color: --light-gray
+  background-color: --light-gray
 }
 `;
 
