@@ -27,12 +27,7 @@ GET /api/leads/:id
     "eventId": 1,
     "eventName": "Health Fair",
     "eventDate": "2019-09-16",
-    "eventLocation": "Saint Marks",
-    "programId": {
-      "id": 7,
-      "programName": "Preventive Health",
-      "programDescription": "Preventive Health"
-    }
+    "eventLocation": "Saint Marks"
   },
   "firstName": "Joel",
   "lastName": "Denning",
@@ -110,12 +105,7 @@ GET /api/leads
   "eventSource": {
     "eventId": 1,
     "eventName": "Health Fair",
-    "eventDate": "2019-09-16",
-    "programId": {
-      "id": 7,
-      "programName": "Preventive Health",
-      "programDescription": "Preventive Health"
-    }
+    "eventDate": "2019-09-16"
   },
   "firstName": "Harry",
   "lastName": "Potter",
@@ -161,12 +151,7 @@ GET /api/leads
   "eventSource": {
     "eventId": 1,
     "eventName": "Health Fair",
-    "eventDate": "2019-09-16",
-    "programId": {
-      "id": 7,
-      "programName": "Preventive Health",
-      "programDescription": "Preventive Health"
-    }
+    "eventDate": "2019-09-16"
   },
   "firstName": "Hermione",
   "lastName": "Granger",
@@ -212,12 +197,7 @@ GET /api/leads
   "eventSource": {
     "eventId": 1,
     "eventName": "Health Fair",
-    "eventDate": "2019-09-16",
-    "programId": {
-      "id": 7,
-      "programName": "Preventive Health",
-      "programDescription": "Preventive Health"
-    }
+    "eventDate": "2019-09-16"
   },
   "firstName": "Ron",
   "lastName": "Weasley",
@@ -302,12 +282,7 @@ The response object will be the same as if you do a `GET /api/leads/:id`
   "eventSource": {
     "eventId": 1,
     "eventName": "Health Fair",
-    "eventDate": "2019-09-16",
-    "programId": {
-      "id": 7,
-      "programName": "Preventive Health",
-      "programDescription": "Preventive Health"
-    }
+    "eventDate": "2019-09-16"
   },
   "firstName": "Joel",
   "lastName": "Denning",
