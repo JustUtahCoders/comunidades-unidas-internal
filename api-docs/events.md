@@ -64,11 +64,6 @@ GET /api/events
     "eventName": "Job Fair",
     "eventDate": "2019-09-24",
     "eventLocation": "Salt Lake City Library",
-    "programId": {
-      "id": 9,
-      "programName": "Workers' Rights",
-      "programDescription": "Workers' Rights"
-    },
     "totalAttendence": 150,
     "isDeleted": false
   }
