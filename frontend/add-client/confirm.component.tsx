@@ -102,7 +102,7 @@ export default function Confirm(props: StepComponentProps) {
     employmentSector: c.employmentSector,
     payInterval: c.payInterval,
     weeklyEmployedHours: c.weeklyEmployedHours,
-    householdIncome: c.householdIncome || null,
+    householdIncome: c.householdIncome,
     householdSize: c.householdSize,
     dependents: c.juvenileDependents,
     housingStatus: c.housing,
