@@ -3,11 +3,11 @@ import { useCss } from "kremling";
 import easyFetch from "../../util/easy-fetch";
 import backIcon from "../../../icons/148705-essential-collection/svg/back.svg";
 import nextIcon from "../../../icons/148705-essential-collection/svg/next.svg";
-import kabobIcon from "../../../icons/148705-essential-collection/svg/more-1.svg";
 import ClientSearchInput from "../../client-search/client-list/client-search-input.component";
 import { SearchParseValues } from "../../client-search/client-list/client-search-dsl.helpers";
 import { mediaDesktop, mediaMobile } from "../../styleguide.component";
 import { SelectedClients, ClientListClient } from "../client-list.component";
+import DropDownMenuModal from "../../util/dropdown-menu-modal.component";
 
 export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
   const scope = useCss(css);
@@ -20,28 +20,14 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
     <div className="clients-table-toolbar" {...scope}>
       <div className="desktop-table-toolbar">
         <div className="left">
-          <div className="bulk-action-container">
-            <img
-              alt="kabob icon"
-              className="bulk-action-icon"
-              onClick={() => setBulkActionMenuIsOpen(!bulkActionMenuIsOpen)}
-              src={kabobIcon}
-            />
-            {bulkActionMenuIsOpen === true && (
-              <div
-                className="bulk-action-menu-modal"
-                onClick={() => setBulkActionMenuIsOpen(!bulkActionMenuIsOpen)}
-              >
-                <div className="popup bulk-action-menu-dropdown">
-                  <ul>
-                    <li onClick={() => openModal("deleting")}>
-                      Delete Selected Clients
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            )}
-          </div>
+          <DropDownMenuModal
+            buttonData={[
+              {
+                buttonText: "Delete Client(s)",
+                buttonAction: () => openModal("deleting")
+              }
+            ]}
+          />
           <ClientSearchInput
             autoFocus
             performSearch={performSearch}
