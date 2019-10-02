@@ -66,7 +66,7 @@ const css = `
 }
 
 & .dropdown-dialog-box > ul li:hover {
-  background-color: --light-gray
+  background-color: --light-gray;
 }
 `;
 
