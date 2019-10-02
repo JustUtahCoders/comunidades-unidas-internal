@@ -6,7 +6,7 @@ services:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
     ports:
-      - 3306:3306
+      - ${RDS_PORT:-3306}:3306
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_PASSWORD: password
