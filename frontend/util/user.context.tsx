@@ -8,8 +8,6 @@ export default function UserContextComponent(props) {
     JSON.parse(window.atob(cookies.get("user")))
   );
 
-  console.log(user);
-
   return (
     <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
   );
