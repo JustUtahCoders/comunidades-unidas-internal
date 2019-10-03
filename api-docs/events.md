@@ -25,10 +25,6 @@ GET /api/event/:id
 }
 ```
 
-**_Note_**
-
-- `programId` is an array of integers program ids. See (/api-docs/list-services.md).
-
 #### Not Found
 
 If there is no lead with the provided id, you will get a 404 HTTP response, with the following error message:
