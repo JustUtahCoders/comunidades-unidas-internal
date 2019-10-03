@@ -21,13 +21,23 @@ GET /api/event/:id
   "eventDate": "2019-09-16",
   "eventLocation": "Saint Marks",
   "totalAttendence": 150,
-  "isDeleted": false
+  "isDeleted": false,
+  "createdBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  },
+  "lastUpdatedBy": {
+    "userId": 1,
+    "firstName": "Joel",
+    "lastName": "Denning",
+    "fullName": "Joel Denning",
+    "timestamp": "2019-05-06T06:00:00.000Z"
+  }
 }
 ```
-
-**_Note_**
-
-- `programId` is an array of integers program ids. See (/api-docs/list-services.md).
 
 #### Not Found
 
