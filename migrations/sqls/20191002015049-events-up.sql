@@ -5,3 +5,8 @@ CREATE TABLE events (
 	totalAttendence INT,
 	isDeleted BOOLEAN DEFAULT false
 );
+
+CREATE TABLE leads (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	dateOfSignUp
+);
