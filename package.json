@@ -59,6 +59,7 @@
     "morgan": "^1.9.1",
     "mysql": "^2.17.1",
     "passport": "^0.4.0",
+    "passport-custom": "^1.1.0",
     "passport-google-oauth20": "^2.0.0",
     "query-string": "^6.8.2",
     "react": "^16.9.0",

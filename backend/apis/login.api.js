@@ -1,8 +1,13 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const { app, pool } = require("../server");
+const CustomStrategy = require("passport-custom").Strategy;
+const { app, pool, databaseError } = require("../server");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
 const mysql = require("mysql");
+const { responseFullName } = require("./utils/transform-utils");
+
+const useGoogleAuth =
+  !process.env.RUNNING_LOCALLY || process.env.USE_GOOGLE_AUTH;
 
 passport.serializeUser((user, done) => {
   done(null, user);
@@ -12,60 +17,95 @@ passport.deserializeUser((user, done) => {
   done(null, user);
 });
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.GOOGLE_CALLBACK_URL
-    },
-    (token, refreshToken, profile, done) => {
+if (useGoogleAuth) {
+  passport.use(
+    new GoogleStrategy(
+      {
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: process.env.GOOGLE_CALLBACK_URL
+      },
+      (token, refreshToken, profile, done) => {
+        pool.query(
+          mysql.format(
+            `
+          INSERT IGNORE INTO users (googleId, firstName, lastName, email, accessLevel)
+          VALUES(?, ?, ?, ?, ?)
+        `,
+            [
+              profile.id,
+              profile.name.givenName,
+              profile.name.familyName,
+              profile.emails[0].value,
+              "Staff" // Start them off as staff, upgrade their access level later
+            ]
+          ),
+          (err, result) => {
+            if (err) {
+              done(err);
+            } else {
+              const getUserQuery = mysql.format(
+                `
+              SELECT * FROM users WHERE googleId = ?
+            `,
+                [profile.id]
+              );
+
+              pool.query(getUserQuery, (err, rows) => {
+                if (err) {
+                  done(err);
+                } else {
+                  done(null, {
+                    id: rows[0].id,
+                    googleProfile: profile,
+                    fullName: responseFullName(
+                      rows[0].firstName,
+                      rows[0].lastName
+                    ),
+                    firstName: rows[0].firstName,
+                    lastName: rows[0].lastName,
+                    email: rows[0].email,
+                    token: token
+                  });
+                }
+              });
+            }
+          }
+        );
+      }
+    )
+  );
+} else {
+  passport.use(
+    new CustomStrategy((req, done) => {
       pool.query(
-        mysql.format(
-          `
-        INSERT IGNORE INTO users (googleId, firstName, lastName, email, accessLevel)
-        VALUES(?, ?, ?, ?, ?)
-      `,
-          [
-            profile.id,
-            profile.name.givenName,
-            profile.name.familyName,
-            profile.emails[0].value,
-            "Staff" // Start them off as staff, upgrade their access level later
-          ]
-        ),
-        (err, result) => {
+        `
+      INSERT IGNORE INTO users
+        (id, googleId, firstName, lastName, email, accessLevel)
+      VALUES
+        (1, 'fakegoogleid', 'Local', 'User', 'localuser@example.com', 'Administrator');
+      
+      SELECT id, firstName, lastName, email, accessLevel FROM users WHERE id = 1;
+    `,
+        (err, results) => {
           if (err) {
             done(err);
           } else {
-            const getUserQuery = mysql.format(
-              `
-            SELECT * FROM users WHERE googleId = ?
-          `,
-              [profile.id]
-            );
-
-            pool.query(getUserQuery, (err, rows) => {
-              if (err) {
-                done(err);
-              } else {
-                done(null, {
-                  id: rows[0].id,
-                  googleProfile: profile,
-                  fullName: rows[0].firstName + " " + rows[0].lastName,
-                  firstName: rows[0].firstName,
-                  lastName: rows[0].lastName,
-                  email: rows[0].email,
-                  token: token
-                });
-              }
+            const user = results[1][0];
+            done(null, {
+              id: user.id,
+              googleProfile: null,
+              fullName: responseFullName(user.firstName, user.lastName),
+              firstName: user.firstName,
+              lastName: user.lastName,
+              email: user.email
             });
           }
         }
       );
-    }
-  )
-);
+    })
+  );
+}
 
 app.use(
   cookieSession({
@@ -80,21 +120,30 @@ app.use(passport.initialize());
 
 app.get(
   "/login",
-  passport.authenticate("google", {
-    scope: ["profile", "email"],
-    includeGrantedScopes: true,
-    hd: "cuutah.org"
-  })
+  useGoogleAuth
+    ? passport.authenticate("google", {
+        scope: ["profile", "email"],
+        includeGrantedScopes: true,
+        hd: "cuutah.org",
+        successRedirect: "/"
+      })
+    : passport.authenticate("custom", {
+        successRedirect: "/"
+      })
 );
 
 app.get(
   "/login/select-account",
-  passport.authenticate("google", {
-    scope: ["profile", "email"],
-    includeGrantedScopes: true,
-    hd: "cuutah.org",
-    prompt: "select_account"
-  })
+  useGoogleAuth
+    ? passport.authenticate("google", {
+        scope: ["profile", "email"],
+        includeGrantedScopes: true,
+        hd: "cuutah.org",
+        prompt: "select_account"
+      })
+    : passport.authenticate("custom", {
+        successRedirect: "/"
+      })
 );
 
 app.get(

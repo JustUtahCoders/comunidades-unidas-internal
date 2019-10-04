@@ -5,7 +5,7 @@ exports.responseDateWithoutTime = date => {
 };
 
 exports.responseFullName = (firstName, lastName) =>
-  `${firstName || ""} ${lastName || ""}`;
+  `${firstName || ""} ${lastName || ""}`.trim();
 
 exports.responseBoolean = val => {
   if (typeof val === "string") {
