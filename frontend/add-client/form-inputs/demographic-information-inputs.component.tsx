@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import CountrySelect from "../../util/country-select.component";
 import CurrencyInput from "../../util/currency-input.component";
-import HintPopupModal from "../../util/hint-popup-modal.component";
 
 export default function DemographicInformationInputs(
   props: DemographicInformationInputsProps
@@ -98,17 +97,12 @@ export default function DemographicInformationInputs(
         </label>
       </div>
       <div>
-        <label style={{ position: "relative" }}>
+        <label>
           <span>Approximate annual income</span>
           <CurrencyInput
             setDollars={setHouseholdIncome}
             initialValue={householdIncome}
-            required={false}
-          />
-          <HintPopupModal
-            left="1.25rem"
-            top="1.75rem"
-            hintMessage="If client has not provided their income information leave this field blank. If they have indicated they have no income input '0'."
+            required
           />
         </label>
       </div>
@@ -341,7 +335,6 @@ export default function DemographicInformationInputs(
           <label>
             <span>Approximate date of U.S. arrival</span>
             <input
-              required
               type={
                 window.navigator.userAgent.toLowerCase().includes("firefox")
                   ? "date"

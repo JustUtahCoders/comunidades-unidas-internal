@@ -13,7 +13,6 @@ const {
   validZip,
   nullableValidEmail,
   nullableValidEnum,
-  nullableValidInteger,
   validEnum,
   validCountry,
   validArray,
@@ -70,7 +69,7 @@ app.post("/api/clients", (req, res, next) => {
         "every-year"
       ),
       nullableValidEnum("weeklyEmployedHours", "0-20", "21-35", "36-40", "41+"),
-      nullableValidInteger("householdIncome"),
+      validInteger("householdIncome"),
       validInteger("householdSize"),
       validBoolean("isStudent"),
       validEnum("housingStatus", "renter", "homeowner", "other"),
