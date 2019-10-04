@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS leads (
   firstContactAttempt DATETIME DEFAULT CURRENT_TIMESTAMP,
   secondContactAttempt DATETIME DEFAULT CURRENT_TIMESTAMP,
   thirdContactAttempt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  inactivityReason ENUM("doNotCallRequest", "threeAttemptsNoResponce", "wrongNumber", "noLongerInterested", "relocated"),
+  inactivityReason ENUM("doNotCallRequest", "threeAttemptsNoResponse", "wrongNumber", "noLongerInterested", "relocated"),
   eventSource INT NOT NULL,
   firstName VARCHAR(255) NOT NULL,
   lastName VARCHAR(255) NOT NULL,
@@ -28,12 +28,14 @@ CREATE TABLE IF NOT EXISTS leads (
   zip VARCHAR(32),
   age INT,
   gender VARCHAR(64),
+  clientId INT UNIQUE,
   isDeleted BOOLEAN NOT NULL DEFAULT FALSE,
   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
   dateModified DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   addedBy int NOT NULL,
   modifiedBy int NOT NULL,
   FOREIGN KEY (eventSource) REFERENCES events(id),
+  FOREIGN KEY (clientId) REFERENCES clients(id),
   FOREIGN KEY (addedBy) REFERENCES users(id),
   FOREIGN KEY (modifiedBy) REFERENCES users(id)
 );
@@ -44,12 +46,4 @@ CREATE TABLE IF NOT EXISTS leadServices (
   serviceId INT NOT NULL,
   FOREIGN KEY (leadId) REFERENCES leads(id),
   FOREIGN KEY (serviceId) REFERENCES services(id)
-);
-
-CREATE TABLE IF NOT EXISTS leadToClient (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  leadId INT,
-  clientId INT,
-  FOREIGN KEY (leadId) REFERENCES leads(id),
-  FOREIGN KEY (clientId) REFERENCES clients(id)
 );
