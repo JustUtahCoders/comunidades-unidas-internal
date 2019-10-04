@@ -113,6 +113,7 @@ export default function DemographicInformationInputs(
             type="number"
             value={householdSize}
             onChange={evt => setHouseholdSize(Number(evt.target.value))}
+            required
             min="1"
             max="30"
           />
@@ -125,6 +126,7 @@ export default function DemographicInformationInputs(
             type="number"
             value={juvenileDependents}
             onChange={evt => setJuvenileDependents(Number(evt.target.value))}
+            required
             min={0}
             max={30}
           />
@@ -291,6 +293,7 @@ export default function DemographicInformationInputs(
             <label>
               <span>Pay interval</span>
               <select
+                required
                 value={payInterval}
                 onChange={evt => setPayInterval(PayInterval[evt.target.value])}
               >
@@ -306,6 +309,7 @@ export default function DemographicInformationInputs(
             <label>
               <span>Average weekly hours worked</span>
               <select
+                required
                 onChange={evt =>
                   setWeeklyEmployedHours(WeeklyEmployedHours[evt.target.value])
                 }

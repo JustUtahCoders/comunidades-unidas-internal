@@ -106,9 +106,7 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
               <tr>
                 <td>Email:</td>
                 <td>
-                  <div>
-                    {client.email === null ? "Not Provided" : client.email}
-                  </div>
+                  <div>{client.email ? "Not Provided" : client.email}</div>
                 </td>
               </tr>
               <tr>
