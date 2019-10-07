@@ -92,7 +92,7 @@ function getEventById(eventId, cbk, connection) {
           event.createdByFirstName,
           event.createdByLastName
         ),
-        timpstamp: event.dateAdded
+        timestamp: event.dateAdded
       },
       lastUpdatedBy: {
         userId: event.modifiedByUserId,
@@ -102,7 +102,7 @@ function getEventById(eventId, cbk, connection) {
           event.modifiedByFirstName,
           event.modifiedByLastName
         ),
-        timpstamp: event.dateModified
+        timestamp: event.dateModified
       }
     };
 
