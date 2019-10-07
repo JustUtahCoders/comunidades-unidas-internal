@@ -67,7 +67,21 @@ GET /api/events
     "eventDate": "2019-09-16",
     "eventLocation": "Saint Marks",
     "totalAttendence": 150,
-    "isDeleted": false
+    "isDeleted": false,
+    "createdBy": {
+      "userId": 1,
+      "firstName": "Joel",
+      "lastName": "Denning",
+      "fullName": "Joel Denning",
+      "timestamp": "2019-05-06T06:00:00.000Z"
+    },
+    "lastUpdatedBy": {
+      "userId": 1,
+      "firstName": "Joel",
+      "lastName": "Denning",
+      "fullName": "Joel Denning",
+      "timestamp": "2019-05-06T06:00:00.000Z"
+    }
   },
   {
     "id": 2,
@@ -75,7 +89,21 @@ GET /api/events
     "eventDate": "2019-09-24",
     "eventLocation": "Salt Lake City Library",
     "totalAttendence": 150,
-    "isDeleted": false
+    "isDeleted": false,
+    "createdBy": {
+      "userId": 1,
+      "firstName": "Joel",
+      "lastName": "Denning",
+      "fullName": "Joel Denning",
+      "timestamp": "2019-05-06T06:00:00.000Z"
+    },
+    "lastUpdatedBy": {
+      "userId": 1,
+      "firstName": "Joel",
+      "lastName": "Denning",
+      "fullName": "Joel Denning",
+      "timestamp": "2019-05-06T06:00:00.000Z"
+    }
   }
 ]
 ```
@@ -91,7 +119,9 @@ POST /api/events
   "eventName": "Job Fair",
   "eventDate": "2019-09-24",
   "eventLocation": "Salt Lake City Library",
-  "totalAttendence": 150
+  "totalAttendence": 150,
+  "createdBy": 1,
+  "lastUpdatedBy": 1
 }
 ```
 
@@ -106,7 +136,9 @@ PATCH /api/events/:id
   "eventName": "Job Fair",
   "eventDate": "2019-09-24",
   "eventLocation": "Salt Lake City Library",
-  "totalAttendence": 150
+  "totalAttendence": 150,
+  "createdBy": 1,
+  "lastUpdatedBy": 1
 }
 ```
 
