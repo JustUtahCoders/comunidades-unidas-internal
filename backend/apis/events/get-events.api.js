@@ -42,25 +42,25 @@ function getEventById(eventId, cbk, connection) {
 
   const getEvent = mysql.format(
     `
-			SELECT
-				events.id as eventId,
-				events.eventName,
-				events.eventDate,
-				events.eventLocation,
-				events.totalAttendence,
-				events.isDeleted,
-				events.dateAdded,
-				events.dateModified,
-				events.addedBy AS createdByUserId,
-				events.modifiedBy AS modifiedByUserId
-				created.firstName AS createdByFirstName,
-				created.lastName AS createdByLastName,
-				modified.firstName AS modifiedByFirstName,
-				modified.lastName AS modifiedByLastName
-			INNER JOIN users created ON created.id = events.addedBy
-			INNER JOIN users modified ON modified.id = events.modifiedBy
-			WHERE events.id = ? AND isDeleted = false;
-		`,
+      SELECT
+        events.id as eventId,
+        events.eventName,
+        events.eventDate,
+        events.eventLocation,
+        events.totalAttendence,
+        events.isDeleted,
+        events.dateAdded,
+        events.dateModified,
+        events.addedBy AS createdByUserId,
+        events.modifiedBy AS modifiedByUserId
+        created.firstName AS createdByFirstName,
+        created.lastName AS createdByLastName,
+        modified.firstName AS modifiedByFirstName,
+        modified.lastName AS modifiedByLastName
+      INNER JOIN users created ON created.id = events.addedBy
+      INNER JOIN users modified ON modified.id = events.modifiedBy
+      WHERE events.id = ? AND isDeleted = false;
+    `,
     [eventId]
   );
 
