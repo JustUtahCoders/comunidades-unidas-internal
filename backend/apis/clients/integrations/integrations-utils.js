@@ -19,9 +19,10 @@ exports.getIntegrationName = getIntegrationName;
 exports.performIntegration = performIntegration;
 
 exports.performAnyIntegrations = function performAnyIntegrations(
-  clientId,
+  client,
   userId
 ) {
+  const clientId = client.id;
   // These are done in the background and are not part of the synchronous HTTP request.
   // If they fail, we note this in the client log and by changing the integration's status to 'broken'
 
@@ -42,7 +43,7 @@ exports.performAnyIntegrations = function performAnyIntegrations(
     }
 
     integrations.forEach(integration => {
-      performIntegration(integration)
+      performIntegration(integration, client)
         .then(result => {
           if (result.error) {
             pool.query(
@@ -131,7 +132,7 @@ function logIntegrationResult(
   }
 }
 
-function performIntegration(integration) {
+function performIntegration(integration, client) {
   if (integration.status === "enabled") {
     const integrationInfo = integrationTypes[integration.integrationType];
     if (!integrationInfo) {
@@ -139,7 +140,7 @@ function performIntegration(integration) {
         `Server not implemented to perform integration with integration type '${integration.integrationType}'`
       );
     }
-    return integrationInfo.integrate(integration);
+    return integrationInfo.integrate(integration, client);
   } else {
     return Promise.resolve({ error: null });
   }
