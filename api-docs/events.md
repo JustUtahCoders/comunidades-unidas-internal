@@ -119,9 +119,7 @@ POST /api/events
   "eventName": "Job Fair",
   "eventDate": "2019-09-24",
   "eventLocation": "Salt Lake City Library",
-  "totalAttendence": 150,
-  "createdBy": 1,
-  "lastUpdatedBy": 1
+  "totalAttendence": 150
 }
 ```
 
@@ -136,9 +134,7 @@ PATCH /api/events/:id
   "eventName": "Job Fair",
   "eventDate": "2019-09-24",
   "eventLocation": "Salt Lake City Library",
-  "totalAttendence": 150,
-  "createdBy": 1,
-  "lastUpdatedBy": 1
+  "totalAttendence": 150
 }
 ```
 
