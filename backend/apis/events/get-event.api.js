@@ -1,4 +1,3 @@
-const mysql = require(mysql);
 const {
   app,
   databaseError,
@@ -6,6 +5,7 @@ const {
   invalidRequest,
   notFound
 } = require("../../server");
+const mysql = require("mysql");
 const { checkValid, validId } = require("../utils/validation-utils");
 const {
   responseFullName,
@@ -35,7 +35,7 @@ app.get("/api/events/:id", (req, res, next) => {
   });
 });
 
-exports.getEventById = this.getEventById;
+exports.getEventById = getEventById;
 
 function getEventById(eventId, cbk, connection) {
   eventId = Number(eventId);
@@ -43,7 +43,7 @@ function getEventById(eventId, cbk, connection) {
   const getEvent = mysql.format(
     `
       SELECT
-        events.id as eventId,
+        events.id AS eventId,
         events.eventName,
         events.eventDate,
         events.eventLocation,
@@ -52,11 +52,12 @@ function getEventById(eventId, cbk, connection) {
         events.dateAdded,
         events.dateModified,
         events.addedBy AS createdByUserId,
-        events.modifiedBy AS modifiedByUserId
+        events.modifiedBy AS modifiedByUserId,
         created.firstName AS createdByFirstName,
         created.lastName AS createdByLastName,
         modified.firstName AS modifiedByFirstName,
         modified.lastName AS modifiedByLastName
+      FROM events
       INNER JOIN users created ON created.id = events.addedBy
       INNER JOIN users modified ON modified.id = events.modifiedBy
       WHERE events.id = ? AND isDeleted = false;
@@ -75,34 +76,28 @@ function getEventById(eventId, cbk, connection) {
       return cbk(err, null);
     }
 
-    const c = bigEventObj[0];
+    const e = bigEventObj;
 
     const event = {
-      id: event.id,
-      eventName: event.eventName,
-      eventDate: event.eventDate,
-      eventLocation: event.eventLocation,
-      totalAttendence: event.totalAttendence,
-      isDelete: event.isDeleted,
+      id: e.eventId,
+      eventName: e.eventName,
+      eventDate: responseDateWithoutTime(e.eventDate),
+      eventLocation: e.eventLocation,
+      totalAttendence: e.totalAttendence,
+      isDeleted: responseBoolean(e.isDeleted),
       createdBy: {
-        userId: event.createdByUserId,
-        firstName: event.createdByFirstName,
-        lastName: event.createdByLastName,
-        fullName: responseFullName(
-          event.createdByFirstName,
-          event.createdByLastName
-        ),
-        timestamp: event.dateAdded
+        userId: e.createdByUserId,
+        firstName: e.createdByFirstName,
+        lastName: e.createdByLastName,
+        fullName: responseFullName(e.createdByFirstName, e.createdByLastName),
+        timestamp: e.dateAdded
       },
       lastUpdatedBy: {
-        userId: event.modifiedByUserId,
-        firstName: event.modifiedByUserFirstName,
-        lastName: event.modifiedByUserLastName,
-        fullName: responseFullName(
-          event.modifiedByFirstName,
-          event.modifiedByLastName
-        ),
-        timestamp: event.dateModified
+        userId: e.modifiedByUserId,
+        firstName: e.modifiedByFirstName,
+        lastName: e.modifiedByLastName,
+        fullName: responseFullName(e.modifiedByFirstName, e.modifiedByLastName),
+        timestamp: e.dateModified
       }
     };
 
