@@ -39,8 +39,7 @@ GET /api/leads/:id
   "leadServices": [
     {
       "id": 1,
-      "serviceName": "Citizenship",
-      "serviceDescription": "Gain United States citizenship"
+      "serviceName": "Citizenship"
     }
   ],
   "clientId": 1,
@@ -119,8 +118,7 @@ GET /api/leads
     "leadServices": [
       {
         "id": 1,
-        "serviceName": "Citizenship",
-        "serviceDescription": "Gain United States citizenship"
+        "serviceName": "Citizenship"
       }
     ],
     "clientId": 1,
@@ -167,8 +165,7 @@ GET /api/leads
     "leadServices": [
       {
         "id": 1,
-        "serviceName": "Citizenship",
-        "serviceDescription": "Gain United States citizenship"
+        "serviceName": "Citizenship"
       }
     ],
     "clientId": 1,
@@ -214,8 +211,7 @@ GET /api/leads
     "leadServices": [
       {
         "id": 1,
-        "serviceName": "Citizenship",
-        "serviceDescription": "Gain United States citizenship"
+        "serviceName": "Citizenship"
       }
     ],
     "clientId": 1,
@@ -302,8 +298,7 @@ The response object will be the same as if you do a `GET /api/leads/:id`
   "leadServices": [
     {
       "id": 1,
-      "serviceName": "Citizenship",
-      "serviceDescription": "Gain United States citizenship"
+      "serviceName": "Citizenship
     }
   ],
   "clientId": 1,
