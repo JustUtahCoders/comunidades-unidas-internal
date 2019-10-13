@@ -11,8 +11,6 @@ app.get("/api/events", (req, res, next) => {
 
     const [events] = results;
 
-    res.send({
-      events
-    });
+    res.send(results);
   });
 });
