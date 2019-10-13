@@ -7,7 +7,7 @@ The list of events will document CU events.
 ### Request
 
 ```http
-GET /api/event/:id
+GET /api/events/:id
 ```
 
 ### Response
