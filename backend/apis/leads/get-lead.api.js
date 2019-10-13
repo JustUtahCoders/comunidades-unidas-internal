@@ -38,116 +38,107 @@ app.get("/api/leads/:id", (req, res, next) => {
 exports.getLeadById = getLeadById;
 
 function getLeadById(leadId, cbk, connection) {
-  const getLead = mysql
-    .format(
-      `
+  leadId = Number(leadId);
+
+  const getLead = mysql.format(
+    `
       SELECT
-        l.id AS leadId,
-        l.dateOfSignUp,
-        l.leadStatus,
-        l.firstContactAttempt,
-        l.secondContactAttempt,
-        l.thirdContactAttempt,
-        l.inactivityReason,
-        l.eventSource AS eventId,
-        e.eventName,
-        e.eventLocation,
-        l.firstName,
-        l.lastName,
-        l.phone,
-        l.smsConsent,
-        l.zip,
-        l.age,
-        l.gender,
-        l.clientId,
-        l.isDeleted,
-        l.dateAdded,
-        l.dateModified,
-        l.addedBy AS createdByUserId,
-        l.modifiedBy AS modifiedByUserId,
-        created.firstName,
-        created.lastName,
-        modified.firstName,
-        modified.lastName
-      FROM leads AS l
-        INNER JOIN events AS e ON e.id = l.eventSource
-        INNER JOIN users AS created ON created.id = l.addedBy
-        INNER JOIN users AS modified ON modified.id = l.modifiedBy
-      WHERE l.id = ? AND l.isDeleted = false;
-
-      SELECT 
-        ls.serviceId,
-        s.serviceName
-      FROM leadServices AS ls
-        JOIN services AS s ON s.id = ls.serviceId
-      WHERE ls.leadId = ?;
+        leads.id AS leadId,
+        leads.dateOfSignUp,
+        leads.firstContactAttempt,
+        leads.secondContactAttempt,
+        leads.thirdContactAttempt,
+        leads.inactivityReason,
+        leads.firstName,
+        leads.lastName,
+        leads.phone,
+        leads.smsConsent,
+        leads.zip,
+        leads.age,
+        leads.gender,
+        leads.clientId,
+        leads.isDeleted,
+        leads.dateAdded,
+        leads.dateModified,
+        leads.addedBy,
+        leads.modifiedBy,
+        created.firstName AS createdByFirstName,
+        created.lastName AS createdByLastName,
+        modified.firstName AS modifiedByFirstName,
+        modified.lastName AS modifiedByLastName,
+        JSON_ARRAYAGG(
+          JSON_OBJECT(
+            "serviceId", leadServices.serviceId,
+            "serviceName", services.serviceName
+          )
+        ) AS leadServices
+      FROM leads
+        INNER JOIN users created 
+          ON created.id = leads.addedBy
+        INNER JOIN users modified 
+          ON modified.id = leads.modifiedBy
+        INNER JOIN leadServices 
+          ON leadServices.leadId = leads.id
+        INNER JOIN services 
+          ON services.id = leadServices.serviceId
+      WHERE leads.id = ? AND leads.isDeleted = false;
     `,
-      [leadId, leadId]
-    )
-    (connection || pool)
-    .query(getLead, (err, data, fields) => {
-      if (err) {
-        return cbk(err, data, fields);
+    [leadId]
+  );
+
+  (connection || pool).query(getLead, (err, data, fields) => {
+    if (err) {
+      return cbk(err, data, fields);
+    }
+
+    const bigLeadObj = data[0];
+
+    if (bigLeadObj.length === 0) {
+      return cbk(err, null);
+    }
+
+    const l = bigLeadObj;
+    const leadServices = JSON.parse(l.leadServices);
+
+    const lead = {
+      id: l.leadId,
+      dateOfSignUp: responseDateWithoutTime(l.dateOfSignUp),
+      leadStatus: l.leadStatus,
+      contactStage: {
+        first: l.firstContactAttempt,
+        second: l.secondContactAttempt,
+        third: l.thirdContactAttempt
+      },
+      inactivityReason: l.inactivityReason,
+      firstName: l.firstName,
+      lastName: l.lastName,
+      phone: l.phone,
+      smsConsent: responseBoolean(l.smsConsent),
+      zip: l.zip,
+      age: l.age,
+      gender: l.gender,
+      leadServices: leadServices.map(service => ({
+        id: service.serviceId,
+        serviceName: service.serviceName
+      })),
+      clientId: l.clientId,
+      isDeleted: responseBoolean(l.isDeleted),
+      createdBy: {
+        userId: l.addedBy,
+        firstName: l.createdByFirstName,
+        lastName: l.createdByLastName,
+        fullName: responseFullName(l.createdByFirstName, l.createdByLastName),
+        timestamp: l.dateAdded
+      },
+      lastUpdatedBy: {
+        userId: l.modifiedBy,
+        firstName: l.modifiedByFirstName,
+        lastName: l.modifiedByLastName,
+        fullName: responseFullName(l.modifiedByFirstName, l.modifiedByLastName),
+        timestamp: l.dateModified
       }
+    };
 
-      const bigLeadObj = data[0];
-      const leadServices = data[1];
-
-      if (bigLeadObj.length === 0) {
-        return cbk(err, null);
-      }
-
-      const l = bigLeadObj[0];
-
-      const lead = {
-        id: l.leadId,
-        dateOfSignUp: responseDateWithoutTime(l.dateOfSignUp),
-        leadStatus: l.leadStatus,
-        contactStage: {
-          first: l.firstContactAttempt,
-          second: l.secondContactAttempt,
-          third: l.thirdContactAttempt
-        },
-        inactivityReason: l.inactivityReason,
-        eventSource: {
-          eventId: l.eventId,
-          eventName: l.eventName,
-          eventLocation: l.eventLocation
-        },
-        firstName: l.firstName,
-        lastName: l.lastName,
-        fullName: responseFullName(l.firstName, l.lastName),
-        phone: l.phone,
-        smsConsent: responseBoolean(l.smsConsent),
-        zip: l.zip,
-        age: l.age,
-        gender: l.gender,
-        leadServices: [
-          leadServices.map(leadService => ({
-            id: leadService.id,
-            serviceName: leadService.serviceName
-          }))
-        ],
-        isDeleted: l.isDeleted,
-        createdBy: {
-          userId: l.createdByUserId,
-          firstName: l.createdByFirstName,
-          lastName: l.createdByLastName,
-          fullName: responseFullName(l.createdByFirstName, l.createdByLastName),
-          timestamp: l.dateAdded
-        },
-        lastUpdatedBy: {
-          userId: l.modifiedByUserId,
-          firstName: l.modifiedByFirstName,
-          lastName: l.modifiedByLastName,
-          fullName: responseFullName(
-            l.modifiedByFirstName,
-            l.modifiedByLastName
-          ),
-          timestamp: l.dateModified
-        }
-      };
-
-      cbk(err, client);
-    });
+    cbk(err, lead);
+  });
 }
