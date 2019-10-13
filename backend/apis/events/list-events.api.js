@@ -9,7 +9,7 @@ app.get("/api/events", (req, res, next) => {
       return databaseError(req, res, err);
     }
 
-    const events = results;
+    const [events] = results;
 
     res.send({
       events
