@@ -5,7 +5,7 @@ const btoa = require("btoa");
 app.use(
   "*",
   (req, res, next) => {
-    if (req.session.passport && req.session.passport.user.firstName) {
+    if (req.session.passport && req.session.passport.user.id) {
       return next();
     } else if (req.url.includes("/api")) {
       res.status(401).send({ error: "You must be logged in to call this API" });

@@ -5,8 +5,7 @@ be used by third party software systems.
 
 ## Authentication and Authorization
 
-There are two methods of authentication: (1) Google OAuth2 and (2) API key. Google OAuth is used for employees of Comunidades Unidas
-and should not be used for integration with other software systems. Instead, an API key should be used for those situations.
+There are three methods of authentication: (1) Google OAuth2, (2) API key, and (3) automatic authentication during local development. Google OAuth is used for employees of Comunidades Unidas and should not be used for integration with other software systems. Instead, an API key should be used for those situations.
 
 ### Obtaining an API key
 

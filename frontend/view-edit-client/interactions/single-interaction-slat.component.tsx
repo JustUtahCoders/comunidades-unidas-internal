@@ -597,7 +597,7 @@ export const interactionTypes = {
   inPerson: "In Person",
   byPhone: "By Phone",
   workshopTalk: "Workshop / Talk",
-  oneOnOneLightTough: "One On One / Light Tough",
+  oneOnOneLightTouch: "One On One / Light Touch",
   consultation: "Consultation"
 };
 

@@ -33,14 +33,20 @@ yarn install
 yarn fix-everything
 ```
 
-Now create a file inside of the comunidades-unidas-internal directory called `.env`. Ask Joel or Leonel for the values to use.
+Now create a file inside of the comunidades-unidas-internal directory called `.env`.
 
 ```sh
-GOOGLE_CLIENT_ID=<insert_id_here>
-GOOGLE_CLIENT_SECRET=<insert_client_secret_here>
-GOOGLE_CALLBACK_URL=http://localhost:8080/api/auth/google/callback
+# Required for local dev
 KEYGRIP_SECRET=123
-GUEST_GITHUB_KEY=<insert_github_key_here>
+
+# Only needed if you're testing specific features
+# Ask Joel or Leonel for the values to use if you need them
+
+# USE_GOOGLE_AUTH=true
+# GOOGLE_CLIENT_ID=<insert_id_here>
+# GOOGLE_CLIENT_SECRET=<insert_client_secret_here>
+# GOOGLE_CALLBACK_URL=http://localhost:8080/api/auth/google/callback
+# GUEST_GITHUB_KEY=<insert_github_key_here>
 ```
 
 Now run the following command:

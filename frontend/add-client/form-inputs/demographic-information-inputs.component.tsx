@@ -339,7 +339,6 @@ export default function DemographicInformationInputs(
           <label>
             <span>Approximate date of U.S. arrival</span>
             <input
-              required
               type={
                 window.navigator.userAgent.toLowerCase().includes("firefox")
                   ? "date"
