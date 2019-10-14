@@ -298,7 +298,7 @@ The response object will be the same as if you do a `GET /api/leads/:id`
   "leadServices": [
     {
       "id": 1,
-      "serviceName": "Citizenship
+      "serviceName": "Citizenship"
     }
   ],
   "clientId": 1,
