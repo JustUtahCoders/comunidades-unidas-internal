@@ -1,14 +1,36 @@
 const { app, databaseError, pool } = require("../../server");
 const mysql = require("mysql");
 const {
+  checkValid,
+  nullableValidInteger
+} = require("../utils/validation-utils");
+const {
   responseFullName,
   responseBoolean,
   responseDateWithoutTime
 } = require("../utils/transform-utils");
 
 app.get("/api/leads", (req, res, next) => {
-  const getLeads = mysql.format(`
-    SELECT
+  const validationErrors = checkValid(req.query, nullableValidInteger("page"));
+
+  if (validationErrors.length > 0) {
+    return invalidRequest(res, validationErrors);
+  }
+
+  const pageSize = 100;
+  const requestPage = parseInt(req.query.page);
+  const zeroBasedPage = req.query.page ? requestPage - 1 : 0;
+  const mysqlOffset = zeroBasedPage * pageSize;
+
+  if (requestPage < 1) {
+    return invalidRequest(
+      res,
+      `Invalid page ${0}. Must be an integer greater than or equal to 1`
+    );
+  }
+
+  const mysqlQuery = `
+    SELECT SQL_CALC_FOUND_ROWS
       leads.id AS leadId,
       leads.dateOfSignUp,
       leads.firstContactAttempt,
@@ -48,8 +70,13 @@ app.get("/api/leads", (req, res, next) => {
       INNER JOIN services 
         ON services.id = leadServices.serviceId
     WHERE leads.isDeleted = false
-    GROUP BY leadServices.leadId;
-  `);
+    GROUP BY leadServices.leadId
+    LIMIT ?, ?;
+
+    SELECT_FOUND_ROWS();
+  `;
+
+  const getLeads = mysql.format(mysqlQuery, [mysqlOffset, pageSize]);
 
   pool.query(getLeads, (err, results) => {
     if (err) {
@@ -107,7 +134,12 @@ app.get("/api/leads", (req, res, next) => {
     });
 
     res.send({
-      leads: mapLeadsData
+      leads: mapLeadsData,
+      pagination: {
+        currentPage: zeroBasedPage + 1,
+        pageSize,
+        numLeads: totalCount
+      }
     });
   });
 });
