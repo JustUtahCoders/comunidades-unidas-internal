@@ -1,5 +1,10 @@
 const { app, databaseError, pool } = require("../../server");
 const mysql = require("mysql");
+const {
+  responseFullName,
+  responseBoolean,
+  responseDateWithoutTime
+} = require("../utils/transform-utils");
 
 app.get("/api/events", (req, res, next) => {
   const getEvents = mysql.format(`
@@ -20,7 +25,8 @@ app.get("/api/events", (req, res, next) => {
       modified.lastName AS modifiedByLastName
     FROM events
     INNER JOIN users created ON created.id = events.addedBy
-    INNER JOIN users modified ON modified.id = events.modifiedBy;
+    INNER JOIN users modified ON modified.id = events.modifiedBy
+    WHERE events.isDeleted = false;
   `);
 
   pool.query(getEvents, (err, results) => {
@@ -28,34 +34,39 @@ app.get("/api/events", (req, res, next) => {
       return databaseError(req, res, err);
     }
 
-    const [events] = results;
-
-    res.send({
-      events: events.map(e => ({
-        id: e.eventId,
-        eventName: e.eventName,
-        eventDate: responseDateWithoutTime(e.eventDate),
-        eventLocation: e.eventLocation,
-        totalAttendence: e.totalAttendence,
-        isDeleted: responseBoolean(e.isDeleted),
+    const mapEventsData = results.map(result => {
+      return {
+        id: result.eventId,
+        eventName: result.eventName,
+        eventDate: responseDateWithoutTime(result.eventDate),
+        eventLocation: result.eventLocation,
+        totalAttendence: result.totalAttendence,
+        isDeleted: responseBoolean(result.isDeleted),
         createdBy: {
-          userId: e.createdByUserId,
-          firstName: e.createdByFirstName,
-          lastName: e.createdByLastName,
-          fullName: responseFullName(e.createdByFirstName, e.createdByLastName),
-          timestamp: e.dateAdded
+          userId: result.createdByUserId,
+          firstName: result.createdByFirstName,
+          lastName: result.createdByLastName,
+          fullName: responseFullName(
+            result.createdByFirstName,
+            result.createdByLastName
+          ),
+          timestamp: result.dateAdded
         },
         lastUpdatedBy: {
-          userId: e.modifiedByUserId,
-          firstName: e.modifiedByFirstName,
-          lastName: e.modifiedByLastName,
+          userId: result.modifiedByUserId,
+          firstName: result.modifiedByFirstName,
+          lastName: result.modifiedByLastName,
           fullName: responseFullName(
-            e.modifiedByFirstName,
-            e.modifiedByLastName
+            result.modifiedByFirstName,
+            result.modifiedByLastName
           ),
-          timestamp: e.dateModified
+          timestamp: result.dateModified
         }
-      }))
+      };
+    });
+
+    res.send({
+      events: mapEventsData
     });
   });
 });
