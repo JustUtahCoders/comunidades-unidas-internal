@@ -15,7 +15,7 @@ GET /api/leads/:id
 ```json
 {
   "id": 1,
-  "dateOfSignup": "2019-09-17",
+  "dateOfSignUp": "2019-09-17",
   "leadStatus": "active",
   "contactStage": {
     "first": "2019-05-06T06:00:00.000Z",
@@ -26,7 +26,6 @@ GET /api/leads/:id
   "eventSource": {
     "eventId": 1,
     "eventName": "Health Fair",
-    "eventDate": "2019-09-16",
     "eventLocation": "Saint Marks"
   },
   "firstName": "Joel",
@@ -37,13 +36,13 @@ GET /api/leads/:id
   "zip": "84115",
   "age": 25,
   "gender": "male",
-  "intakeServices": [
+  "leadServices": [
     {
       "id": 1,
-      "serviceName": "Citizenship",
-      "serviceDescription": "Gain United States citizenship"
+      "serviceName": "Citizenship"
     }
   ],
+  "clientId": 1,
   "isDeleted": false,
   "createdBy": {
     "userId": 1,
@@ -68,7 +67,7 @@ GET /api/leads/:id
 - `inactivityReason` is an enum with the possible values of `doNotCallRequest`, `threeAttemptsNoResponse`, `wrongNumber`, `noLongerInterested`, and `relocated`.
 - `eventSource` is an array of integer event ids
 - `gender` is an enum with possible values of `female`, `male`, `transgender`, `nonbinary`, `other`.
-- `intakeServices` is an array of integers service ids. See (/api-docs/list-services.md).
+- `leadServices` is an array of integers service ids. See (/api-docs/list-services.md).
 - `contactStage.firstAttempt`, `contactStage.secondAttempt`, `contactStage.thirdAttempt`,`created.timestamp` and `lastUpdated.timestamp` are ISO timestamps. `contactStage.firstAttempt`, `contactStage.secondAttempt`, `contactStage.thirdAttempt` are nullable.
 
 ### Not Found
@@ -95,7 +94,7 @@ GET /api/leads
 [
   {
     "id": 1,
-    "dateOfSignup": "2019-09-17",
+    "dateOfSignUp": "2019-09-17",
     "leadStatus": "active",
     "contactStage": {
       "first": "2019-05-06T06:00:00.000Z",
@@ -106,7 +105,7 @@ GET /api/leads
     "eventSource": {
       "eventId": 1,
       "eventName": "Health Fair",
-      "eventDate": "2019-09-16"
+      "eventLocation": "St Marks Hospital"
     },
     "firstName": "Harry",
     "lastName": "Potter",
@@ -116,14 +115,15 @@ GET /api/leads
     "zip": "84115",
     "age": 39,
     "gender": "male",
-    "intakeServices": [
+    "leadServices": [
       {
         "id": 1,
-        "serviceName": "Citizenship",
-        "serviceDescription": "Gain United States citizenship"
+        "serviceName": "Citizenship"
       }
     ],
+    "clientId": 1,
     "isDeleted": false,
+    "clientId": 1,
     "createdBy": {
       "userId": 1,
       "firstName": "Joel",
@@ -141,7 +141,7 @@ GET /api/leads
   },
   {
     "id": 2,
-    "dateOfSignup": "2019-09-17",
+    "dateOfSignUp": "2019-09-17",
     "leadStatus": "active",
     "contactStage": {
       "first": "2019-05-06T06:00:00.000Z",
@@ -152,7 +152,7 @@ GET /api/leads
     "eventSource": {
       "eventId": 1,
       "eventName": "Health Fair",
-      "eventDate": "2019-09-16"
+      "eventLocation": "St Marks Hospital"
     },
     "firstName": "Hermione",
     "lastName": "Granger",
@@ -162,13 +162,13 @@ GET /api/leads
     "zip": "84115",
     "age": 40,
     "gender": "female",
-    "intakeServices": [
+    "leadServices": [
       {
         "id": 1,
-        "serviceName": "Citizenship",
-        "serviceDescription": "Gain United States citizenship"
+        "serviceName": "Citizenship"
       }
     ],
+    "clientId": 1,
     "isDeleted": false,
     "createdBy": {
       "userId": 1,
@@ -187,7 +187,7 @@ GET /api/leads
   },
   {
     "id": 3,
-    "dateOfSignup": "2019-09-17",
+    "dateOfSignUp": "2019-09-17",
     "leadStatus": "active",
     "contactStage": {
       "first": "2019-05-06T06:00:00.000Z",
@@ -198,7 +198,7 @@ GET /api/leads
     "eventSource": {
       "eventId": 1,
       "eventName": "Health Fair",
-      "eventDate": "2019-09-16"
+      "eventLocation": "St Marks Hospital"
     },
     "firstName": "Ron",
     "lastName": "Weasley",
@@ -208,13 +208,13 @@ GET /api/leads
     "zip": "84115",
     "age": 39,
     "gender": "male",
-    "intakeServices": [
+    "leadServices": [
       {
         "id": 1,
-        "serviceName": "Citizenship",
-        "serviceDescription": "Gain United States citizenship"
+        "serviceName": "Citizenship"
       }
     ],
+    "clientId": 1,
     "isDeleted": false,
     "createdBy": {
       "userId": 1,
@@ -244,7 +244,7 @@ POST /api/leads
 
 ```json
 {
-  "dateOfSignup": "2019-09-17",
+  "dateOfSignUp": "2019-09-17",
   "leadStatus": "active",
   "contactStage": {
     "first": "2019-05-06T06:00:00.000Z",
@@ -260,7 +260,8 @@ POST /api/leads
   "zip": "84115",
   "age": 25,
   "gender": "male",
-  "intakeServices": [1, 5, 8]
+  "leadServices": [1, 5, 8],
+  "clientId": 1
 }
 ```
 
@@ -273,7 +274,7 @@ The response object will be the same as if you do a `GET /api/leads/:id`
 ```json
 {
   "id": 1,
-  "dateOfSignup": "2019-09-17",
+  "dateOfSignUp": "2019-09-17",
   "leadStatus": "active",
   "contactStage": {
     "first": "2019-05-06T06:00:00.000Z",
@@ -284,7 +285,7 @@ The response object will be the same as if you do a `GET /api/leads/:id`
   "eventSource": {
     "eventId": 1,
     "eventName": "Health Fair",
-    "eventDate": "2019-09-16"
+    "eventLocation": "St Marks Hospital"
   },
   "firstName": "Joel",
   "lastName": "Denning",
@@ -294,13 +295,13 @@ The response object will be the same as if you do a `GET /api/leads/:id`
   "zip": "84115",
   "age": 25,
   "gender": "male",
-  "intakeServices": [
+  "leadServices": [
     {
       "id": 1,
-      "serviceName": "Citizenship",
-      "serviceDescription": "Gain United States citizenship"
+      "serviceName": "Citizenship"
     }
   ],
+  "clientId": 1,
   "isDeleted": false,
   "createdBy": {
     "userId": 1,
@@ -339,7 +340,7 @@ PATCH /api/leads/:id
 
 ```json
 {
-  "dateOfSignup": "2019-09-17",
+  "dateOfSignUp": "2019-09-17",
   "leadStatus": "active",
   "contactStage": {
     "first": "2019-05-06T06:00:00.000Z",
@@ -355,7 +356,8 @@ PATCH /api/leads/:id
   "zip": "84115",
   "age": 25,
   "gender": "male",
-  "intakeServices": [2, 4 6]
+  "leadServices": [2, 4 6],
+  "clientId": 1
 }
 ```
 
