@@ -112,6 +112,7 @@ function getLeadById(leadId, cbk, connection) {
       inactivityReason: l.inactivityReason,
       firstName: l.firstName,
       lastName: l.lastName,
+      fullName: responseFullName(l.firstName, l.lastName),
       phone: l.phone,
       smsConsent: responseBoolean(l.smsConsent),
       zip: l.zip,
