@@ -73,7 +73,7 @@ app.get("/api/leads", (req, res, next) => {
     GROUP BY leadServices.leadId
     LIMIT ?, ?;
 
-    SELECT_FOUND_ROWS();
+    SELECT FOUND_ROWS();
   `;
 
   const getLeads = mysql.format(mysqlQuery, [mysqlOffset, pageSize]);
@@ -83,7 +83,11 @@ app.get("/api/leads", (req, res, next) => {
       return databaseError(req, res, err);
     }
 
-    const mapLeadsData = results.map(result => {
+    const [leadRowsResults, totalCountRows] = results;
+
+    const totalCount = totalCountRows[0]["FOUND_ROWS()"];
+
+    const mapLeadsData = leadRowsResults.map(result => {
       const leadServices = JSON.parse(result.leadServices);
 
       return {
@@ -138,7 +142,8 @@ app.get("/api/leads", (req, res, next) => {
       pagination: {
         currentPage: zeroBasedPage + 1,
         pageSize,
-        numLeads: totalCount
+        numLeads: totalCount,
+        numPages: Math.ceil(totalCount / pageSize)
       }
     });
   });
