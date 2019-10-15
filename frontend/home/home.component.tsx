@@ -6,6 +6,7 @@ import reportIssueUrl from "../../icons/148705-essential-collection/svg/info.svg
 import recordVisitUrl from "../../icons/148705-essential-collection/svg/hourglass-2.svg";
 import clientListUrl from "../../icons/148705-essential-collection/svg/folder-14.svg";
 import caseNoteUrl from "../../icons/148705-essential-collection/svg/note.svg";
+import leadListUrl from "../../icons/148705-essential-collection/svg/list-1.svg";
 import { useCss } from "kremling";
 
 export default function Home(props: HomeProps) {
@@ -35,6 +36,7 @@ export default function Home(props: HomeProps) {
           title="Add a case note"
           link="add-case-note"
         />
+        <HomeCard iconUrl={leadListUrl} title="Lead list" link="lead-list" />
         <HomeCard
           iconUrl={reportIssueUrl}
           title="Question, issue, or idea"
