@@ -12,3 +12,11 @@ export function formatPhone(phone) {
     return "";
   }
 }
+
+export function formatDateWithoutTime(timestamp) {
+  if (timestamp) {
+    if (timestamp.length === 24) {
+      return `${timestamp.slice(0, 10)}`;
+    }
+  }
+}

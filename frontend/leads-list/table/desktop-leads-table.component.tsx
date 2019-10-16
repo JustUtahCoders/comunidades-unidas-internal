@@ -1,13 +1,44 @@
 import React from "react";
 import { useCss, a } from "kremling";
 import { Link } from "@reach/router";
-import { formatPhone } from "../../util/formatters";
+import { formatPhone, formatDateWithoutTime } from "../../util/formatters";
 import dateformat from "dateformat";
 import dayjs from "dayjs";
 import targetImg from "../../../icons/148705-essential-collection/svg/target.svg";
+import phoneIcon from "../../../icons/148705-essential-collection/svg/telephone-symbol-button.svg";
 
 export default function DesktopLeadsTable(props) {
   const scope = useCss(css);
+
+  const mapLeads = props.leads.map((lead, i) => {
+    return (
+      <tr key={`row-${i}`}>
+        <td>{lead.id}</td>
+        <td>{lead.fullName}</td>
+        <td>{formatPhone(lead.phone)}</td>
+        <td>{lead.age}</td>
+        <td>{lead.zip}</td>
+        <td>
+          {lead.leadStatus === "active"
+            ? lead.contactStage.third !== null
+              ? `3rd call on ${formatDateWithoutTime(lead.contactStage.third)}`
+              : lead.contactStage.second !== null
+              ? `2nd call on ${formatDateWithoutTime(lead.contactStage.second)}`
+              : lead.contactStage.first !== null
+              ? `1st call on ${formatDateWithoutTime(lead.contactStage.first)}`
+              : `no call attempts made`
+            : lead.leadStatus === "inactive"
+            ? lead.inactivityReason !== null
+              ? lead.inactivityReason
+              : "inactive"
+            : lead.leadStatus === "convertedToClient" && "converted to client"}
+        </td>
+        <td>{lead.eventSource.eventName}</td>
+        <td>{lead.eventSource.eventLocation}</td>
+        <td>{lead.dateOfSignUp}</td>
+      </tr>
+    );
+  });
 
   return (
     <div className="table-container" {...scope}>
@@ -19,21 +50,24 @@ export default function DesktopLeadsTable(props) {
             <th>Phone</th>
             <th>Age</th>
             <th>ZIP</th>
-            <th>Attempts</th>
+            <th>Status</th>
             <th>Event Source</th>
-            <th>Date of Signup</th>
+            <th>Event Location</th>
+            <th>Event Date</th>
           </tr>
         </thead>
         <tbody>
-          {props.leads.length === 0 && !props.fetchingLeads && (
+          {props.leads.length === 0 && !props.fetchingLeads ? (
             <tr className="empty-state">
-              <td colSpan={8}>
+              <td colSpan={9}>
                 <div>
                   <img src={targetImg} alt="No leads" title="No leads" />
                   <div>No leads match the search criteria</div>
                 </div>
               </td>
             </tr>
+          ) : (
+            mapLeads
           )}
         </tbody>
       </table>
@@ -137,5 +171,10 @@ const css = `
 
   & .visible {
     visibility: visible;
+  }
+
+  & .table-icon {
+    height: 2rem;
+    margin: 0 0.5rem 0 0.5rem;
   }
 `;
