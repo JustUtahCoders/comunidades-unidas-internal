@@ -5,7 +5,7 @@ import backIcon from "../../../icons/148705-essential-collection/svg/back.svg";
 import nextIcon from "../../../icons/148705-essential-collection/svg/next.svg";
 import LeadSearchInput from "../../lead-search/lead-list/lead-search-input.component";
 
-export default function LeadsTableToolbar(props) {
+export default function LeadsTableToolbar(props: LeadsTableToolbarProps) {
   const scope = useCss(css);
 
   const lastPage = Math.ceil(props.numLeads / props.pageSize);
@@ -18,14 +18,27 @@ export default function LeadsTableToolbar(props) {
         </div>
         {lastPage !== 0 && (
           <div>
-            <button className="icon">
+            <div>
+              {(props.page - 1) * props.pageSize + 1} -{" "}
+              {Math.min(props.page * props.pageSize, props.numLeads)} of{" "}
+              {props.numLeads.toLocaleString()}
+            </div>
+            <button
+              className="icon"
+              onClick={goBack}
+              disabled={props.page === 1}
+            >
               <img
                 src={backIcon}
                 alt="Go back one page"
                 title="Go back one page"
               />
             </button>
-            <button className="icon">
+            <button
+              className="icon"
+              onClick={goForward}
+              disabled={props.page === lastPage}
+            >
               <img
                 src={nextIcon}
                 alt="Go forward one page"
@@ -37,6 +50,14 @@ export default function LeadsTableToolbar(props) {
       </div>
     </div>
   );
+
+  function goBack() {
+    props.setPage(props.page - 1);
+  }
+
+  function goForward() {
+    props.setPage(props.page + 1);
+  }
 }
 
 const css = `
@@ -80,3 +101,12 @@ const css = `
 		align-items: center;
 	}
 `;
+
+type LeadsTableToolbarProps = {
+  numLeads: number;
+  pageSize: number;
+  page: number;
+  setPage: any;
+  fetchingLeads: boolean;
+  refetchLeads: any;
+};
