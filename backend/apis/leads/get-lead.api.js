@@ -66,6 +66,9 @@ function getLeadById(leadId, cbk, connection) {
         created.lastName AS createdByLastName,
         modified.firstName AS modifiedByFirstName,
         modified.lastName AS modifiedByLastName,
+        event.id AS eventId,
+        event.eventName,
+        event.eventLocation,
         JSON_ARRAYAGG(
           JSON_OBJECT(
             "serviceId", leadServices.serviceId,
@@ -81,6 +84,8 @@ function getLeadById(leadId, cbk, connection) {
           ON leadServices.leadId = leads.id
         INNER JOIN services 
           ON services.id = leadServices.serviceId
+        INNER JOIN events
+          ON events.id = leads.eventSource
       WHERE leads.id = ? AND leads.isDeleted = false;
     `,
     [leadId]
@@ -110,6 +115,11 @@ function getLeadById(leadId, cbk, connection) {
         third: l.thirdContactAttempt
       },
       inactivityReason: l.inactivityReason,
+      eventSource: {
+        eventId: l.eventId,
+        eventName: l.eventName,
+        eventLocation: l.eventLocation
+      },
       firstName: l.firstName,
       lastName: l.lastName,
       fullName: responseFullName(l.firstName, l.lastName),
