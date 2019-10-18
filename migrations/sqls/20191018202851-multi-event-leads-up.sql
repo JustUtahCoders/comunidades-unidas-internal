@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS leadEvents (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	leadId INT NOT NULL,
+	eventId INT NOT NULL,
+	FOREIGN KEY (leadId) REFERENCES leads(id),
+	FOREIGN KEY (eventId) REFERENCES events(id)
+);
+
+ALTER TABLE leads
+DROP COLUMN eventSource;
