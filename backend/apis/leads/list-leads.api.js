@@ -50,6 +50,9 @@ app.get("/api/leads", (req, res, next) => {
       leads.dateModified,
       leads.addedBy,
       leads.modifiedBy,
+      events.id AS eventId,
+      events.eventName,
+      events.eventLocation,
       created.firstName AS createdByFirstName,
       created.lastName AS createdByLastName,
       modified.firstName AS modifiedByFirstName,
@@ -69,6 +72,8 @@ app.get("/api/leads", (req, res, next) => {
         ON leadServices.leadId = leads.id
       INNER JOIN services 
         ON services.id = leadServices.serviceId
+      INNER JOIN events
+        ON events.id = leads.eventSource
     WHERE leads.isDeleted = false
     GROUP BY leadServices.leadId
     LIMIT ?, ?;
@@ -100,6 +105,11 @@ app.get("/api/leads", (req, res, next) => {
           third: result.thirdContactAttempt
         },
         inactivityReason: result.inactivityReason,
+        eventSource: {
+          eventId: result.eventId,
+          eventName: result.eventName,
+          eventLocation: result.eventLocation
+        },
         firstName: result.firstName,
         lastName: result.lastName,
         fullName: responseFullName(result.firstName, result.lastName),
