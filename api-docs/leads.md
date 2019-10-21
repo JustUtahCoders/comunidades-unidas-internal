@@ -100,134 +100,136 @@ GET /api/leads?page=12
 ### Response
 
 ```json
-"leads": [
-  {
-    "id": 1,
-    "dateOfSignUp": "2019-09-17",
-    "leadStatus": "active",
-    "contactStage": {
-      "first": "2019-05-06T06:00:00.000Z",
-      "second": null,
-      "third": null
+{
+  "leads": [
+    {
+      "id": 1,
+      "dateOfSignUp": "2019-09-17",
+      "leadStatus": "active",
+      "contactStage": {
+        "first": "2019-05-06T06:00:00.000Z",
+        "second": null,
+        "third": null
+      },
+      "inactivityReason": null,
+      "eventSources": [
+        {
+          "eventId": 1,
+          "eventName": "Health Fair",
+          "eventLocation": "Saint Marks"
+        }
+      ],
+      "firstName": "Harry",
+      "lastName": "Potter",
+      "fullName": "Harry Potter",
+      "phone": "5555555555",
+      "smsConsent": false,
+      "zip": "84115",
+      "age": 39,
+      "gender": "male",
+      "leadServices": [
+        {
+          "id": 1,
+          "serviceName": "Citizenship"
+        }
+      ],
+      "clientId": 1,
+      "isDeleted": false,
+      "clientId": 1,
+      "createdBy": {
+        "userId": 1,
+        "firstName": "Joel",
+        "lastName": "Denning",
+        "fullName": "Joel Denning",
+        "timestamp": "2019-05-06T06:00:00.000Z"
+      },
+      "lastUpdatedBy": {
+        "userId": 1,
+        "firstName": "Joel",
+        "lastName": "Denning",
+        "fullName": "Joel Denning",
+        "timestamp": "2019-05-06T06:00:00.000Z"
+      }
     },
-    "inactivityReason": null,
-    "eventSources": [
-      {
-        "eventId": 1,
-        "eventName": "Health Fair",
-        "eventLocation": "Saint Marks"
+    {
+      "id": 2,
+      "dateOfSignUp": "2019-09-17",
+      "leadStatus": "active",
+      "contactStage": {
+        "first": "2019-05-06T06:00:00.000Z",
+        "second": null,
+        "third": null
+      },
+      "inactivityReason": null,
+      "eventSources": [
+        {
+          "eventId": 1,
+          "eventName": "Health Fair",
+          "eventLocation": "Saint Marks"
+        }
+      ],
+      "firstName": "Hermione",
+      "lastName": "Granger",
+      "fullName": "Hermione Granger",
+      "phone": "5555555555",
+      "smsConsent": true,
+      "zip": "84115",
+      "age": 40,
+      "gender": "female",
+      "leadServices": [
+        {
+          "id": 1,
+          "serviceName": "Citizenship"
+        }
+      ],
+      "clientId": 1,
+      "isDeleted": false,
+      "createdBy": {
+        "userId": 1,
+        "firstName": "Joel",
+        "lastName": "Denning",
+        "fullName": "Joel Denning",
+        "timestamp": "2019-05-06T06:00:00.000Z"
+      },
+      "lastUpdatedBy": {
+        "userId": 1,
+        "firstName": "Joel",
+        "lastName": "Denning",
+        "fullName": "Joel Denning",
+        "timestamp": "2019-05-06T06:00:00.000Z"
       }
-    ],
-    "firstName": "Harry",
-    "lastName": "Potter",
-    "fullName": "Harry Potter",
-    "phone": "5555555555",
-    "smsConsent": false,
-    "zip": "84115",
-    "age": 39,
-    "gender": "male",
-    "leadServices": [
-      {
-        "id": 1,
-        "serviceName": "Citizenship"
-      }
-    ],
-    "clientId": 1,
-    "isDeleted": false,
-    "clientId": 1,
-    "createdBy": {
-      "userId": 1,
-      "firstName": "Joel",
-      "lastName": "Denning",
-      "fullName": "Joel Denning",
-      "timestamp": "2019-05-06T06:00:00.000Z"
     },
-    "lastUpdatedBy": {
-      "userId": 1,
-      "firstName": "Joel",
-      "lastName": "Denning",
-      "fullName": "Joel Denning",
-      "timestamp": "2019-05-06T06:00:00.000Z"
-    }
-  },
-  {
-    "id": 2,
-    "dateOfSignUp": "2019-09-17",
-    "leadStatus": "active",
-    "contactStage": {
-      "first": "2019-05-06T06:00:00.000Z",
-      "second": null,
-      "third": null
-    },
-    "inactivityReason": null,
-    "eventSources": [
-      {
-        "eventId": 1,
-        "eventName": "Health Fair",
-        "eventLocation": "Saint Marks"
-      }
-    ],
-    "firstName": "Hermione",
-    "lastName": "Granger",
-    "fullName": "Hermione Granger",
-    "phone": "5555555555",
-    "smsConsent": true,
-    "zip": "84115",
-    "age": 40,
-    "gender": "female",
-    "leadServices": [
-      {
-        "id": 1,
-        "serviceName": "Citizenship"
-      }
-    ],
-    "clientId": 1,
-    "isDeleted": false,
-    "createdBy": {
-      "userId": 1,
-      "firstName": "Joel",
-      "lastName": "Denning",
-      "fullName": "Joel Denning",
-      "timestamp": "2019-05-06T06:00:00.000Z"
-    },
-    "lastUpdatedBy": {
-      "userId": 1,
-      "firstName": "Joel",
-      "lastName": "Denning",
-      "fullName": "Joel Denning",
-      "timestamp": "2019-05-06T06:00:00.000Z"
-    }
-  },
-  {
-    "id": 3,
-    "dateOfSignUp": "2019-09-17",
-    "leadStatus": "active",
-    "contactStage": {
-      "first": "2019-05-06T06:00:00.000Z",
-      "second": null,
-      "third": null
-    },
-    "inactivityReason": null,
-    "eventSources": [
-      {
-        "eventId": 1,
-        "eventName": "Health Fair",
-        "eventLocation": "Saint Marks"
-      }
-    ],
-    "firstName": "Ron",
-    "lastName": "Weasley",
-    "fullName": "Ron Weasley",
-    "phone": "5555555555",
-    "smsConsent": true,
-    "zip": "84115",
-    "age": 39,
-    "gender": "male",
-    "leadServices": [
-      {
-        "id": 1,
-        "serviceName": "Citizenship"
-      }
+    {
+      "id": 3,
+      "dateOfSignUp": "2019-09-17",
+      "leadStatus": "active",
+      "contactStage": {
+        "first": "2019-05-06T06:00:00.000Z",
+        "second": null,
+        "third": null
+      },
+      "inactivityReason": null,
+      "eventSources": [
+        {
+          "eventId": 1,
+          "eventName": "Health Fair",
+          "eventLocation": "Saint Marks"
+        }
+      ],
+      "firstName": "Ron",
+      "lastName": "Weasley",
+      "fullName": "Ron Weasley",
+      "phone": "5555555555",
+      "smsConsent": true,
+      "zip": "84115",
+      "age": 39,
+      "gender": "male",
+      "leadServices": [
+        {
+          "id": 1,
+          "serviceName": "Citizenship"
+        }
+      ]
     }
   ],
   "pagination": {
