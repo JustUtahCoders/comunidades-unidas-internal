@@ -87,8 +87,15 @@ If there is no lead with the provided id, you will get a 404 HTTP response, with
 ### Request
 
 ```http
-GET /api/leads
+GET /api/leads?page=12
 ```
+
+**_Notes_**
+
+- Result is limited to 100 rows ordered by lastName and then firstName
+- Values for the query should be URL encoded
+- "page" query parameter defaults to 1
+- If no search terms are provided, the top 100 rows will be returned ordered by lastName, firstName
 
 ### Response
 
@@ -221,25 +228,15 @@ GET /api/leads
         "id": 1,
         "serviceName": "Citizenship"
       }
-    ],
-    "clientId": 1,
-    "isDeleted": false,
-    "createdBy": {
-      "userId": 1,
-      "firstName": "Joel",
-      "lastName": "Denning",
-      "fullName": "Joel Denning",
-      "timestamp": "2019-05-06T06:00:00.000Z"
-    },
-    "lastUpdatedBy": {
-      "userId": 1,
-      "firstName": "Joel",
-      "lastName": "Denning",
-      "fullName": "Joel Denning",
-      "timestamp": "2019-05-06T06:00:00.000Z"
     }
+  ],
+  "pagination": {
+    "numLeads": 50,
+    "currentPage": 1,
+    "pageSize": 100,
+    "numPages": 1
   }
-]
+}
 ```
 
 ## Create a single Lead

@@ -107,6 +107,7 @@ require("./apis/clients/integrations/patch-integration.api");
 require("./apis/events/list-events.api");
 require("./apis/leads/get-lead.api");
 require("./apis/events/get-event.api");
+require("./apis/leads/list-leads.api");
 
 require("./apis/default-404.api.js");
 require("./index-html.js");

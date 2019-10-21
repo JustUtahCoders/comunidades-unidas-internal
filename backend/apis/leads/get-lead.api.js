@@ -66,6 +66,9 @@ function getLeadById(leadId, cbk, connection) {
         created.lastName AS createdByLastName,
         modified.firstName AS modifiedByFirstName,
         modified.lastName AS modifiedByLastName,
+        event.id AS eventId,
+        event.eventName,
+        event.eventLocation,
         JSON_ARRAYAGG(
           JSON_OBJECT(
             "serviceId", leadServices.serviceId,
@@ -129,6 +132,7 @@ function getLeadById(leadId, cbk, connection) {
       })),
       firstName: l.firstName,
       lastName: l.lastName,
+      fullName: responseFullName(l.firstName, l.lastName),
       phone: l.phone,
       smsConsent: responseBoolean(l.smsConsent),
       zip: l.zip,
