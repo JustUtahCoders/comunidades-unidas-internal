@@ -50,9 +50,6 @@ app.get("/api/leads", (req, res, next) => {
       leads.dateModified,
       leads.addedBy,
       leads.modifiedBy,
-      events.id AS eventId,
-      events.eventName,
-      events.eventLocation,
       created.firstName AS createdByFirstName,
       created.lastName AS createdByLastName,
       modified.firstName AS modifiedByFirstName,
@@ -62,7 +59,14 @@ app.get("/api/leads", (req, res, next) => {
           "serviceId", leadServices.serviceId,
           "serviceName", services.serviceName
         )
-      ) AS leadServices
+      ) AS leadServices,
+      JSON_ARRAYAGG(
+        JSON_OBJECT(
+          "eventId", leadEvents.eventId,
+          "eventName", events.eventName,
+          "eventLocation", events.eventLocation
+        )
+      ) AS eventSources
     FROM leads
       INNER JOIN users created 
         ON created.id = leads.addedBy
@@ -72,8 +76,10 @@ app.get("/api/leads", (req, res, next) => {
         ON leadServices.leadId = leads.id
       INNER JOIN services 
         ON services.id = leadServices.serviceId
+      INNER JOIN leadEvents
+        ON leadEvents.leadId = leads.id
       INNER JOIN events
-        ON events.id = leads.eventSource
+        ON events.id = leadEvents.eventId
     WHERE leads.isDeleted = false
     GROUP BY leadServices.leadId
     LIMIT ?, ?;
@@ -94,6 +100,7 @@ app.get("/api/leads", (req, res, next) => {
 
     const mapLeadsData = leadRowsResults.map(result => {
       const leadServices = JSON.parse(result.leadServices);
+      const eventSources = JSON.parse(result.eventSources);
 
       return {
         id: result.leadId,
@@ -105,11 +112,11 @@ app.get("/api/leads", (req, res, next) => {
           third: result.thirdContactAttempt
         },
         inactivityReason: result.inactivityReason,
-        eventSource: {
-          eventId: result.eventId,
-          eventName: result.eventName,
-          eventLocation: result.eventLocation
-        },
+        eventSources: eventSources.map(event => ({
+          eventId: event.eventId,
+          eventName: event.eventName,
+          eventLocation: event.eventLocation
+        })),
         firstName: result.firstName,
         lastName: result.lastName,
         fullName: responseFullName(result.firstName, result.lastName),

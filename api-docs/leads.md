@@ -23,7 +23,7 @@ GET /api/leads/:id
     "third": null
   },
   "inactivityReason": null,
-  "eventSource": [
+  "eventSources": [
     {
       "eventId": 1,
       "eventName": "Health Fair",
@@ -67,7 +67,7 @@ GET /api/leads/:id
 
 - `leadStatus` is an enum with the possible values of `active`, `inactive`, and `convertedToClient`.
 - `inactivityReason` is an enum with the possible values of `doNotCallRequest`, `threeAttemptsNoResponse`, `wrongNumber`, `noLongerInterested`, and `relocated`.
-- `eventSource` is an array of integer event ids
+- `eventSources` is an array of integer event ids
 - `gender` is an enum with possible values of `female`, `male`, `transgender`, `nonbinary`, `other`.
 - `leadServices` is an array of integers service ids. See (/api-docs/list-services.md).
 - `contactStage.firstAttempt`, `contactStage.secondAttempt`, `contactStage.thirdAttempt`,`created.timestamp` and `lastUpdated.timestamp` are ISO timestamps. `contactStage.firstAttempt`, `contactStage.secondAttempt`, `contactStage.thirdAttempt` are nullable.
@@ -111,7 +111,7 @@ GET /api/leads?page=12
       "third": null
     },
     "inactivityReason": null,
-    "eventSource": [
+    "eventSources": [
       {
         "eventId": 1,
         "eventName": "Health Fair",
@@ -160,7 +160,7 @@ GET /api/leads?page=12
       "third": null
     },
     "inactivityReason": null,
-    "eventSource": [
+    "eventSources": [
       {
         "eventId": 1,
         "eventName": "Health Fair",
@@ -208,7 +208,7 @@ GET /api/leads?page=12
       "third": null
     },
     "inactivityReason": null,
-    "eventSource": [
+    "eventSources": [
       {
         "eventId": 1,
         "eventName": "Health Fair",
@@ -256,7 +256,7 @@ POST /api/leads
     "second": null,
     "third": null
   },
-  "eventSource": [1],
+  "eventSources": [1],
   "firstName": "Joel",
   "lastName": "Denning",
   "fullName": "Joel Denning",
@@ -287,7 +287,7 @@ The response object will be the same as if you do a `GET /api/leads/:id`
     "third": null
   },
   "inactivityReason": null,
-  "eventSource": [
+  "eventSources": [
     {
       "eventId": 1,
       "eventName": "Health Fair",
@@ -354,7 +354,7 @@ PATCH /api/leads/:id
     "second": null,
     "third": null
   },
-  "eventSource": [1],
+  "eventSources": [1],
   "firstName": "Joel",
   "lastName": "Denning",
   "fullName": "Joel Denning",

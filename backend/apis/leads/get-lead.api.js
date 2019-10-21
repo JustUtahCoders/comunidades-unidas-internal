@@ -125,7 +125,7 @@ function getLeadById(leadId, cbk, connection) {
         third: l.thirdContactAttempt
       },
       inactivityReason: l.inactivityReason,
-      eventSource: eventSources.map(event => ({
+      eventSources: eventSources.map(event => ({
         eventId: event.eventId,
         eventName: event.eventName,
         eventLocation: event.eventLocation
