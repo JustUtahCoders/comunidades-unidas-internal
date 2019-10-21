@@ -100,7 +100,7 @@ GET /api/leads?page=12
 ### Response
 
 ```json
-[
+"leads": [
   {
     "id": 1,
     "dateOfSignUp": "2019-09-17",
