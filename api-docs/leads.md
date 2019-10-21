@@ -23,11 +23,13 @@ GET /api/leads/:id
     "third": null
   },
   "inactivityReason": null,
-  "eventSource": {
-    "eventId": 1,
-    "eventName": "Health Fair",
-    "eventLocation": "Saint Marks"
-  },
+  "eventSource": [
+    {
+      "eventId": 1,
+      "eventName": "Health Fair",
+      "eventLocation": "Saint Marks"
+    }
+  ],
   "firstName": "Joel",
   "lastName": "Denning",
   "fullName": "Joel Denning",
@@ -102,11 +104,13 @@ GET /api/leads
       "third": null
     },
     "inactivityReason": null,
-    "eventSource": {
-      "eventId": 1,
-      "eventName": "Health Fair",
-      "eventLocation": "St Marks Hospital"
-    },
+    "eventSource": [
+      {
+        "eventId": 1,
+        "eventName": "Health Fair",
+        "eventLocation": "Saint Marks"
+      }
+    ],
     "firstName": "Harry",
     "lastName": "Potter",
     "fullName": "Harry Potter",
@@ -149,11 +153,13 @@ GET /api/leads
       "third": null
     },
     "inactivityReason": null,
-    "eventSource": {
-      "eventId": 1,
-      "eventName": "Health Fair",
-      "eventLocation": "St Marks Hospital"
-    },
+    "eventSource": [
+      {
+        "eventId": 1,
+        "eventName": "Health Fair",
+        "eventLocation": "Saint Marks"
+      }
+    ],
     "firstName": "Hermione",
     "lastName": "Granger",
     "fullName": "Hermione Granger",
@@ -195,11 +201,13 @@ GET /api/leads
       "third": null
     },
     "inactivityReason": null,
-    "eventSource": {
-      "eventId": 1,
-      "eventName": "Health Fair",
-      "eventLocation": "St Marks Hospital"
-    },
+    "eventSource": [
+      {
+        "eventId": 1,
+        "eventName": "Health Fair",
+        "eventLocation": "Saint Marks"
+      }
+    ],
     "firstName": "Ron",
     "lastName": "Weasley",
     "fullName": "Ron Weasley",
@@ -251,7 +259,7 @@ POST /api/leads
     "second": null,
     "third": null
   },
-  "eventSource": 1,
+  "eventSource": [1],
   "firstName": "Joel",
   "lastName": "Denning",
   "fullName": "Joel Denning",
@@ -282,11 +290,13 @@ The response object will be the same as if you do a `GET /api/leads/:id`
     "third": null
   },
   "inactivityReason": null,
-  "eventSource": {
-    "eventId": 1,
-    "eventName": "Health Fair",
-    "eventLocation": "St Marks Hospital"
-  },
+  "eventSource": [
+    {
+      "eventId": 1,
+      "eventName": "Health Fair",
+      "eventLocation": "Saint Marks"
+    }
+  ],
   "firstName": "Joel",
   "lastName": "Denning",
   "fullName": "Joel Denning",
@@ -347,7 +357,7 @@ PATCH /api/leads/:id
     "second": null,
     "third": null
   },
-  "eventSource": 1,
+  "eventSource": [1],
   "firstName": "Joel",
   "lastName": "Denning",
   "fullName": "Joel Denning",
