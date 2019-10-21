@@ -71,7 +71,14 @@ function getLeadById(leadId, cbk, connection) {
             "serviceId", leadServices.serviceId,
             "serviceName", services.serviceName
           )
-        ) AS leadServices
+        ) AS leadServices,
+        JSON_ARRAYAGG(
+          JSON_OBJECT(
+            "eventId", leadEvents.eventId,
+            "eventName", events.eventName,
+            "eventLocation", events.eventLocation
+          )
+        ) AS eventSources
       FROM leads
         INNER JOIN users created 
           ON created.id = leads.addedBy
@@ -81,6 +88,10 @@ function getLeadById(leadId, cbk, connection) {
           ON leadServices.leadId = leads.id
         INNER JOIN services 
           ON services.id = leadServices.serviceId
+        INNER JOIN leadEvents
+          ON leadEvents.leadId = leads.id
+        INNER JOIN events
+          ON events.id = leadEvents.eventId
       WHERE leads.id = ? AND leads.isDeleted = false;
     `,
     [leadId]
@@ -99,6 +110,7 @@ function getLeadById(leadId, cbk, connection) {
 
     const l = bigLeadObj;
     const leadServices = JSON.parse(l.leadServices);
+    const eventSources = JSON.parse(l.eventSources);
 
     const lead = {
       id: l.leadId,
@@ -110,6 +122,11 @@ function getLeadById(leadId, cbk, connection) {
         third: l.thirdContactAttempt
       },
       inactivityReason: l.inactivityReason,
+      eventSource: eventSources.map(event => ({
+        eventId: event.eventId,
+        eventName: event.eventName,
+        eventLocation: event.eventLocation
+      })),
       firstName: l.firstName,
       lastName: l.lastName,
       phone: l.phone,
