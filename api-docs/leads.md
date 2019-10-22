@@ -23,11 +23,13 @@ GET /api/leads/:id
     "third": null
   },
   "inactivityReason": null,
-  "eventSource": {
-    "eventId": 1,
-    "eventName": "Health Fair",
-    "eventLocation": "Saint Marks"
-  },
+  "eventSources": [
+    {
+      "eventId": 1,
+      "eventName": "Health Fair",
+      "eventLocation": "Saint Marks"
+    }
+  ],
   "firstName": "Joel",
   "lastName": "Denning",
   "fullName": "Joel Denning",
@@ -65,7 +67,7 @@ GET /api/leads/:id
 
 - `leadStatus` is an enum with the possible values of `active`, `inactive`, and `convertedToClient`.
 - `inactivityReason` is an enum with the possible values of `doNotCallRequest`, `threeAttemptsNoResponse`, `wrongNumber`, `noLongerInterested`, and `relocated`.
-- `eventSource` is an array of integer event ids
+- `eventSources` is an array of integer event ids
 - `gender` is an enum with possible values of `female`, `male`, `transgender`, `nonbinary`, `other`.
 - `leadServices` is an array of integers service ids. See (/api-docs/list-services.md).
 - `contactStage.firstAttempt`, `contactStage.secondAttempt`, `contactStage.thirdAttempt`,`created.timestamp` and `lastUpdated.timestamp` are ISO timestamps. `contactStage.firstAttempt`, `contactStage.secondAttempt`, `contactStage.thirdAttempt` are nullable.
@@ -110,11 +112,13 @@ GET /api/leads?page=12
         "third": null
       },
       "inactivityReason": null,
-      "eventSource": {
-        "eventId": 1,
-        "eventName": "Health Fair",
-        "eventLocation": "St Marks Hospital"
-      },
+      "eventSources": [
+        {
+          "eventId": 1,
+          "eventName": "Health Fair",
+          "eventLocation": "Saint Marks"
+        }
+      ],
       "firstName": "Harry",
       "lastName": "Potter",
       "fullName": "Harry Potter",
@@ -146,6 +150,86 @@ GET /api/leads?page=12
         "fullName": "Joel Denning",
         "timestamp": "2019-05-06T06:00:00.000Z"
       }
+    },
+    {
+      "id": 2,
+      "dateOfSignUp": "2019-09-17",
+      "leadStatus": "active",
+      "contactStage": {
+        "first": "2019-05-06T06:00:00.000Z",
+        "second": null,
+        "third": null
+      },
+      "inactivityReason": null,
+      "eventSources": [
+        {
+          "eventId": 1,
+          "eventName": "Health Fair",
+          "eventLocation": "Saint Marks"
+        }
+      ],
+      "firstName": "Hermione",
+      "lastName": "Granger",
+      "fullName": "Hermione Granger",
+      "phone": "5555555555",
+      "smsConsent": true,
+      "zip": "84115",
+      "age": 40,
+      "gender": "female",
+      "leadServices": [
+        {
+          "id": 1,
+          "serviceName": "Citizenship"
+        }
+      ],
+      "clientId": 1,
+      "isDeleted": false,
+      "createdBy": {
+        "userId": 1,
+        "firstName": "Joel",
+        "lastName": "Denning",
+        "fullName": "Joel Denning",
+        "timestamp": "2019-05-06T06:00:00.000Z"
+      },
+      "lastUpdatedBy": {
+        "userId": 1,
+        "firstName": "Joel",
+        "lastName": "Denning",
+        "fullName": "Joel Denning",
+        "timestamp": "2019-05-06T06:00:00.000Z"
+      }
+    },
+    {
+      "id": 3,
+      "dateOfSignUp": "2019-09-17",
+      "leadStatus": "active",
+      "contactStage": {
+        "first": "2019-05-06T06:00:00.000Z",
+        "second": null,
+        "third": null
+      },
+      "inactivityReason": null,
+      "eventSources": [
+        {
+          "eventId": 1,
+          "eventName": "Health Fair",
+          "eventLocation": "Saint Marks"
+        }
+      ],
+      "firstName": "Ron",
+      "lastName": "Weasley",
+      "fullName": "Ron Weasley",
+      "phone": "5555555555",
+      "smsConsent": true,
+      "zip": "84115",
+      "age": 39,
+      "gender": "male",
+      "leadServices": [
+        {
+          "id": 1,
+          "serviceName": "Citizenship"
+        }
+      ]
     }
   ],
   "pagination": {
@@ -174,7 +258,7 @@ POST /api/leads
     "second": null,
     "third": null
   },
-  "eventSource": 1,
+  "eventSources": [1],
   "firstName": "Joel",
   "lastName": "Denning",
   "fullName": "Joel Denning",
@@ -205,11 +289,13 @@ The response object will be the same as if you do a `GET /api/leads/:id`
     "third": null
   },
   "inactivityReason": null,
-  "eventSource": {
-    "eventId": 1,
-    "eventName": "Health Fair",
-    "eventLocation": "St Marks Hospital"
-  },
+  "eventSources": [
+    {
+      "eventId": 1,
+      "eventName": "Health Fair",
+      "eventLocation": "Saint Marks"
+    }
+  ],
   "firstName": "Joel",
   "lastName": "Denning",
   "fullName": "Joel Denning",
@@ -270,7 +356,7 @@ PATCH /api/leads/:id
     "second": null,
     "third": null
   },
-  "eventSource": 1,
+  "eventSources": [1],
   "firstName": "Joel",
   "lastName": "Denning",
   "fullName": "Joel Denning",
