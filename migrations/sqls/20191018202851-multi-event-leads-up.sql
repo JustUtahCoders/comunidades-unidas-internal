@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS leadEvents (
-	id INT AUTO_INCREMENT PRIMARY KEY,
-	leadId INT,
-	eventId INT,
-	FOREIGN KEY (leadId) REFERENCES leads(id),
-	FOREIGN KEY (eventId) REFERENCES events(id)
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  leadId INT,
+  eventId INT,
+  FOREIGN KEY (leadId) REFERENCES leads(id),
+  FOREIGN KEY (eventId) REFERENCES events(id)
 );
 
 SET FOREIGN_KEY_CHECKS = 0;
