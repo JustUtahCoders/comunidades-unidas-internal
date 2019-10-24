@@ -1,74 +1,195 @@
 import React from "react";
 import queryString from "query-string";
+import easyFetch from "../util/easy-fetch";
 import { useFullWidth } from "../navbar/use-full-width.hook";
 import PageHeader from "../page-header.component";
 import ReportIssue from "../report-issue/report-issue.component";
 import LeadsTable from "./table/leads-table.component";
-import { SearchParseValues } from "../client-search/client-list/client-search-dsl.helpers";
-import { SortField, SortOrder } from "../client-list/client-list.component";
+import LeadsTableToolbar from "./toolbar/leads-table-toolbar.component";
 
 export default function LeadList(props: LeadListProps) {
   if (localStorage.getItem("leads") !== null) {
     useFullWidth();
   }
 
-  // const [apiState, dispatchApiState] = React.useReducer(
-  //   reduceApiState,
-  //   null,
-  //   getInitialState
-  // )
+  const [apiState, dispatchApiState] = React.useReducer(
+    reduceApiState,
+    null,
+    getInitialState
+  );
+
+  console.log(apiState);
+
+  useAlwaysValidPage(apiState, dispatchApiState);
+  useLeadsApi(apiState, dispatchApiState);
+  useFrontendUrlParams(apiState, dispatchApiState);
+
+  const fetchingLead = apiState.status !== ApiStateStatus.fetched;
 
   return (
     <>
       <PageHeader title="Lead List" fullScreen />
       {localStorage.getItem("leads") ? (
         <>
-          <LeadsTable />
+          <LeadsTableToolbar
+            numLeads={apiState.apiData.pagination.numLeads}
+            page={apiState.page}
+            pageSize={apiState.apiData.pagination.pageSize}
+            setPage={newPage}
+            fetchingLead={fetchingLead}
+            refetchLeads={refetchLeads}
+          />
+          <LeadsTable
+            leads={apiState.apiData.leads}
+            fetchingLeads={fetchingLead}
+            page={apiState.page}
+          />
         </>
       ) : (
         <ReportIssue missingFeature hideHeader />
       )}
     </>
   );
+
+  function newPage(page: number) {
+    dispatchApiState({
+      type: ActionTypes.newPage,
+      page
+    });
+  }
+
+  function refetchLeads() {
+    dispatchApiState({
+      type: ActionTypes.shouldFetch
+    });
+  }
 }
 
 function reduceApiState(state: ApiState, action: ApiStateAction) {
-  // switch(action.type) {
-  //   case ActionTypes.fetching:
-  //     return {
-  //       ...state,
-  //       status: ApiStateStatus.fetching
-  //     }
-  //   case ActionTypes.fetched:
-  //     return {
-  //       ...state,
-  //       status: ApiStateStatus.fetched,
-  //       apiData: action.apiData
-  //     };
-  //   case ActionTypes.newPage:
-  //     return {
-  //       ...state,
-  //       status: ApiStateStatus.shouldFetch,
-  //       page: action.page
-  //     };
-  //   case ActionTypes.newQueryParams:
-  //     return {
-  //       ...state,
-  //       status: ApiStateStatus.shouldFetch
-  //     };
-  //   case ActionTypes.apiError:
-  //     return {
-  //       ...state,
-  //       status: ApiStateStatus.fetched
-  //     };
-  //   case ActionTypes.shouldFetch:
-  //     return {
-  //       ...state,
-  //       status: ApiStateStatus.shouldFetch
-  //     };
-  //   default:
-  //     throw Error();
-  // }
+  switch (action.type) {
+    case ActionTypes.fetching:
+      return {
+        ...state,
+        status: ApiStateStatus.fetching
+      };
+    case ActionTypes.fetched:
+      return {
+        ...state,
+        status: ApiStateStatus.fetched,
+        apiData: action.apiData
+      };
+    case ActionTypes.newPage:
+      return {
+        ...state,
+        status: ApiStateStatus.shouldFetch,
+        page: action.page
+      };
+    case ActionTypes.newQueryParams:
+      return {
+        ...state,
+        status: ApiStateStatus.shouldFetch
+      };
+    case ActionTypes.apiError:
+      return {
+        ...state,
+        status: ApiStateStatus.fetched
+      };
+    case ActionTypes.shouldFetch:
+      return {
+        ...state,
+        status: ApiStateStatus.shouldFetch
+      };
+    default:
+      throw Error();
+  }
+}
+
+function useLeadsApi(apiState, dispatchApiState) {
+  React.useEffect(() => {
+    if (apiState.status === ApiStateStatus.shouldFetch) {
+      const abortController = new AbortController();
+      const query = queryString.stringify({
+        page: apiState.page
+      });
+      easyFetch(`/api/leads?${query}`)
+        .then(data => {
+          dispatchApiState({
+            type: ActionTypes.fetched,
+            apiData: data
+          });
+        })
+        .catch(err => {
+          dispatchApiState({
+            type: ActionTypes.apiError,
+            err
+          });
+
+          setTimeout(() => {
+            throw err;
+          });
+        });
+
+      return () => abortController.abort();
+    }
+  }, [apiState]);
+}
+
+function useAlwaysValidPage(apiState, dispatchApiState) {
+  React.useEffect(() => {
+    if (apiState.status !== ApiStateStatus.fetched) {
+      return;
+    }
+
+    const lastPage = Math.ceil(
+      apiState.apiData.pagination.numLeads /
+        apiState.apiData.pagination.pageSize
+    );
+
+    let newPage;
+
+    if (
+      typeof apiState.page !== "number" ||
+      isNaN(apiState.page) ||
+      isNaN(lastPage)
+    ) {
+      newPage = 1;
+    } else if (apiState.page <= 0) {
+      newPage = 1;
+    } else if (lastPage === 0) {
+      newPage = 1;
+    } else if (apiState.page > lastPage) {
+      newPage = lastPage;
+    }
+
+    if (newPage && newPage !== apiState.page) {
+      dispatchApiState({
+        type: ActionTypes.newPage,
+        page: newPage
+      });
+    }
+  }, [apiState]);
+}
+
+function useFrontendUrlParams(apiState, dispatchApiState) {
+  React.useEffect(() => {
+    const params = queryString.parse(window.location.search);
+    dispatchApiState({
+      type: ActionTypes.newQueryParams,
+      params
+    });
+  }, []);
+
+  React.useEffect(() => {
+    const queryParams = queryString.stringify({
+      page: apiState.page
+    });
+
+    window.history.replaceState(
+      window.history.state,
+      document.title,
+      window.location.pathname + "?" + queryParams
+    );
+  }, [apiState]);
 }
 
 function getInitialState(): ApiState {
@@ -99,7 +220,6 @@ function getInitialState(): ApiState {
       leads: []
     },
     page
-    // search
   };
 }
 
@@ -121,7 +241,6 @@ enum ActionTypes {
 
 type ApiStateAction =
   | NewPageAction
-  | NewSearchAction
   | NewParamsAction
   | FetchingAction
   | FetchedAction
@@ -164,14 +283,9 @@ type NewPageAction = {
 
 type NewParamsAction = {
   type: ActionTypes.newQueryParams;
-  params: SearchParseValues & {
+  params: {
     page: number;
   };
-};
-
-type NewSearchAction = {
-  // type: ActionTypes.newSearch;
-  search: SearchParseValues;
 };
 
 type ShouldFetchAction = {
@@ -181,6 +295,17 @@ type ShouldFetchAction = {
 type ApiErrorAction = {
   type: ActionTypes.apiError;
   err: any;
+};
+
+export type EventSources = {
+  eventId: number;
+  eventName: string;
+  eventLocation: string;
+};
+
+export type LeadServices = {
+  id: number;
+  serviceName: string;
 };
 
 export type LeadListLead = {
@@ -193,4 +318,20 @@ export type LeadListLead = {
     third: string;
   };
   inactivityReason: string;
+  eventSources: Array<EventSources>;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  phone: string;
+  smsConsent: boolean;
+  zip: string;
+  age: number;
+  gender: string;
+  leadServices: Array<LeadServices>;
+  clientId: number;
+  createdBy: {
+    userId: number;
+    fullName: string;
+    timestamp: string;
+  };
 };

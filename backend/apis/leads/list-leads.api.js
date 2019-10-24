@@ -125,7 +125,7 @@ app.get("/api/leads", (req, res, next) => {
         clientId: result.clientId,
         isDeleted: responseBoolean(result.isDeleted),
         createdBy: {
-          usedId: result.addedBy,
+          userId: result.addedBy,
           firstName: result.createdByFirstName,
           lastName: result.createdByLastName,
           fullName: responseFullName(
