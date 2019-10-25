@@ -1,0 +1,1 @@
+ALTER TABLE leads ALTER leadStatus DROP DEFAULT;

@@ -18,8 +18,6 @@ export default function LeadList(props: LeadListProps) {
     getInitialState
   );
 
-  console.log(apiState);
-
   useAlwaysValidPage(apiState, dispatchApiState);
   useLeadsApi(apiState, dispatchApiState);
   useFrontendUrlParams(apiState, dispatchApiState);
