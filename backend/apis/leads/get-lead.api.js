@@ -117,7 +117,7 @@ function getLeadById(leadId, cbk, connection) {
     const lead = {
       id: l.leadId,
       dateOfSignUp: responseDateWithoutTime(l.dateOfSignUp),
-      leadStatus: l.leadStatus,
+      leadStatus: l.leadStatus === null ? "active" : l.leadStatus,
       contactStage: {
         first: l.firstContactAttempt,
         second: l.secondContactAttempt,

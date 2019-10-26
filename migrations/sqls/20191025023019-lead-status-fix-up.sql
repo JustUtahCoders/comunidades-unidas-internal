@@ -1,1 +1,0 @@
-ALTER TABLE leads ALTER leadStatus SET DEFAULT "active";

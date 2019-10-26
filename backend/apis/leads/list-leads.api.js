@@ -107,7 +107,7 @@ app.get("/api/leads", (req, res, next) => {
       return {
         id: result.leadId,
         dateOfSignUp: responseDateWithoutTime(result.dateOfSignUp),
-        leadStatus: result.leadStatus,
+        leadStatus: result.leadStatus === null ? "active" : result.leadStatus,
         contactStage: {
           first: result.firstContactAttempt,
           second: result.secondContactAttempt,

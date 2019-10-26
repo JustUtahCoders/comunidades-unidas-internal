@@ -37,7 +37,79 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
             </tr>
           ) : (
             props.leads.map(lead => {
-              console.log(lead);
+              function determineLeadStatus(
+                leadStatus,
+                clientId,
+                contactStage,
+                inactivityReason
+              ) {
+                if (leadStatus === "convertedToClient") {
+                  return `Converted to client (see client #${clientId}`;
+                } else if (leadStatus === "active") {
+                  if (contactStage.first === null) {
+                    return "Not yet contacted";
+                  } else {
+                    if (contactStage.second === null) {
+                      return `First contact attempt made on ${dateformat(
+                        contactStage.first,
+                        "m/d/yyyy"
+                      )}`;
+                    } else {
+                      if (contactStage.third === null) {
+                        return `Second contact attempt made on ${dateformat(
+                          contactStage.second,
+                          "m/d/yyyy"
+                        )}`;
+                      } else {
+                        return `Third contact attempt made on ${dateformat(
+                          contactStage.third,
+                          "m/d/yyyy"
+                        )}`;
+                      }
+                    }
+                  }
+                } else if (leadStatus === "inactive") {
+                  switch (inactivityReason) {
+                    case "doNotCallRequest":
+                      return "Do not call request";
+                      break;
+                    case "threeAttemptsNoResponse":
+                      return "Three attempts made, no response";
+                      break;
+                    case "wrongNumber":
+                      return "Wrong number";
+                      break;
+                    case "noLongerInterested":
+                      return "No longer interested";
+                      break;
+                    case "relocated":
+                      return "No longer in Utah";
+                      break;
+                    default:
+                      return "Inactive - no reason provided";
+                      break;
+                  }
+                } else {
+                  return "Status unknown";
+                }
+              }
+
+              function leadStatusColor(leadStatus) {
+                if (leadStatus === "active") {
+                  return {
+                    color: "#000000"
+                  };
+                } else if (leadStatus === "inactive") {
+                  return {
+                    color: "#B30000"
+                  };
+                } else if (leadStatus === "convertedToClient") {
+                  return {
+                    color: "#006600"
+                  };
+                }
+              }
+
               return (
                 <tr key={lead.id}>
                   <td>{lead.id}</td>
@@ -47,42 +119,16 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
                     {lead.eventSources[lead.eventSources.length - 1].eventName}
                   </td>
                   <td>{dateformat(lead.dateOfSignUp, "m/d/yyyy")}</td>
-                  <td className="status-cell">
-                    {lead.leadStatus === "convertedToClient"
-                      ? `Converted to client - see client #${lead.clientId}`
-                      : lead.leadStatus === "inactive"
-                      ? lead.inactivityReason === null
-                        ? "Inactive - Reason not provided"
-                        : lead.inactivityReason === "doNotCallRequest"
-                        ? "Do not call request"
-                        : lead.inactivityReason === "threeAttemptsNoResponse"
-                        ? "No response after three attempts"
-                        : lead.inactivityReason === "wrongNumber"
-                        ? "Wrong number"
-                        : lead.inactivityReason === "noLongerInterested"
-                        ? "No longer interested"
-                        : lead.inactivityReason === "relocated" &&
-                          "No longer in Utah"
-                      : lead.leadStatus === "active" &&
-                        lead.contactStage.first === null
-                      ? "Not Yet Contacted"
-                      : lead.contactStage.first !== null &&
-                        lead.contactStage.second === null
-                      ? `First contact attempt made ${dateformat(
-                          lead.contactStage.first,
-                          "m/d/yyyy"
-                        )}`
-                      : lead.contactStage.second !== null &&
-                        lead.contactStage.third === null
-                      ? `Second contact attempt made ${dateformat(
-                          lead.contactStage.second,
-                          "m/d/yyyy"
-                        )}`
-                      : lead.contactStage.third !== null &&
-                        `Third contact attempt made ${dateformat(
-                          lead.contactStage.third,
-                          "m/d/yyyy"
-                        )}`}
+                  <td
+                    className="status-cell"
+                    style={leadStatusColor(lead.leadStatus)}
+                  >
+                    {determineLeadStatus(
+                      lead.leadStatus,
+                      lead.clientId,
+                      lead.contactStage,
+                      lead.inactivityReason
+                    )}
                   </td>
                   <td className="interests-cell">
                     <ul className="cell-list">
