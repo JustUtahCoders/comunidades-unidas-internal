@@ -33,6 +33,7 @@ app.get("/api/leads", (req, res, next) => {
     SELECT SQL_CALC_FOUND_ROWS
       leads.id AS leadId,
       leads.dateOfSignUp,
+      leads.leadStatus,
       leads.firstContactAttempt,
       leads.secondContactAttempt,
       leads.thirdContactAttempt,
@@ -64,7 +65,8 @@ app.get("/api/leads", (req, res, next) => {
         JSON_OBJECT(
           "eventId", leadEvents.eventId,
           "eventName", events.eventName,
-          "eventLocation", events.eventLocation
+          "eventLocation", events.eventLocation,
+          "eventDate", events.eventDate
         )
       ) AS eventSources
     FROM leads
@@ -105,7 +107,7 @@ app.get("/api/leads", (req, res, next) => {
       return {
         id: result.leadId,
         dateOfSignUp: responseDateWithoutTime(result.dateOfSignUp),
-        leadStatus: result.leadStatus,
+        leadStatus: result.leadStatus === null ? "active" : result.leadStatus,
         contactStage: {
           first: result.firstContactAttempt,
           second: result.secondContactAttempt,
@@ -115,7 +117,8 @@ app.get("/api/leads", (req, res, next) => {
         eventSources: eventSources.map(event => ({
           eventId: event.eventId,
           eventName: event.eventName,
-          eventLocation: event.eventLocation
+          eventLocation: event.eventLocation,
+          eventDate: event.eventDate
         })),
         firstName: result.firstName,
         lastName: result.lastName,
@@ -132,7 +135,7 @@ app.get("/api/leads", (req, res, next) => {
         clientId: result.clientId,
         isDeleted: responseBoolean(result.isDeleted),
         createdBy: {
-          usedId: result.addedBy,
+          userId: result.addedBy,
           firstName: result.createdByFirstName,
           lastName: result.createdByLastName,
           fullName: responseFullName(
