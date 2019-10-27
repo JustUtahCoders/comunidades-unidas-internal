@@ -45,6 +45,7 @@ function getLeadById(leadId, cbk, connection) {
       SELECT
         leads.id AS leadId,
         leads.dateOfSignUp,
+        leads.leadStatus,
         leads.firstContactAttempt,
         leads.secondContactAttempt,
         leads.thirdContactAttempt,
@@ -66,9 +67,6 @@ function getLeadById(leadId, cbk, connection) {
         created.lastName AS createdByLastName,
         modified.firstName AS modifiedByFirstName,
         modified.lastName AS modifiedByLastName,
-        event.id AS eventId,
-        event.eventName,
-        event.eventLocation,
         JSON_ARRAYAGG(
           JSON_OBJECT(
             "serviceId", leadServices.serviceId,
@@ -79,7 +77,8 @@ function getLeadById(leadId, cbk, connection) {
           JSON_OBJECT(
             "eventId", leadEvents.eventId,
             "eventName", events.eventName,
-            "eventLocation", events.eventLocation
+            "eventLocation", events.eventLocation,
+            "eventDate", events.eventDate
           )
         ) AS eventSources
       FROM leads
@@ -118,7 +117,7 @@ function getLeadById(leadId, cbk, connection) {
     const lead = {
       id: l.leadId,
       dateOfSignUp: responseDateWithoutTime(l.dateOfSignUp),
-      leadStatus: l.leadStatus,
+      leadStatus: l.leadStatus === null ? "active" : l.leadStatus,
       contactStage: {
         first: l.firstContactAttempt,
         second: l.secondContactAttempt,
