@@ -86,20 +86,18 @@ export default function ViewClient(props: ViewClientProps) {
                 <img src={historyImgUrl} alt="Notepad icon" title="History" />
               </Link>
             </li>
-            {localStorage.getItem("feature:integrations") && (
-              <li>
-                <Link
-                  to={`/clients/${clientId}/integrations`}
-                  getProps={getLinkProps}
-                >
-                  <img
-                    src={integrationsImgUrl}
-                    alt="Cloud server refresh icon"
-                    title="Integrations"
-                  />
-                </Link>
-              </li>
-            )}
+            <li>
+              <Link
+                to={`/clients/${clientId}/integrations`}
+                getProps={getLinkProps}
+              >
+                <img
+                  src={integrationsImgUrl}
+                  alt="Cloud server refresh icon"
+                  title="Integrations"
+                />
+              </Link>
+            </li>
             <li>
               <Link
                 to={`/clients/${clientId}/add-info`}
