@@ -31,7 +31,7 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
               <td colSpan={7}>
                 <div>
                   <img src={targetImg} alt="No leads" title="No leads" />
-                  <p>No clients match the search criteria</p>
+                  <p>No leads match the search criteria</p>
                 </div>
               </td>
             </tr>
