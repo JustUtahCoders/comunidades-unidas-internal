@@ -6,7 +6,7 @@ import { LastUpdate } from "../view-client.component";
 
 export default function ClientSection(props: ClientSectionProps) {
   const [expanded, setExpanded] = React.useState(() =>
-    localStorage.getItem(`cu-client-section-expandeded:${props.title}`)
+    localStorage.getItem(`cu-client-section-expanded:${props.title}`)
       ? JSON.parse(
           localStorage.getItem(`cu-client-section-expanded:${props.title}`)
         )
