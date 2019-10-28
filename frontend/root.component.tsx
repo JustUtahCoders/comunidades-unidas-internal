@@ -12,6 +12,7 @@ import ClientList from "./client-list/client-list.component";
 import Growls from "./growls/growls.component";
 import AddCaseNote from "./view-edit-client/case-notes/add-case-note.component";
 import AddClientInteraction from "./view-edit-client/interactions/add-client-interaction.component";
+import AddLeads from "./add-leads/add-leads.component";
 
 export default function Root() {
   return (
@@ -27,6 +28,7 @@ export default function Root() {
             <AddCaseNote isGlobalAdd path="add-case-note" />
             <ReportIssue path="report-issue" />
             <ReportIssueSuccess path="report-issue/:issueId" />
+            <AddLeads path="add-leads" />
           </Navbars>
         </Router>
         <Growls />
