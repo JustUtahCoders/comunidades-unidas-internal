@@ -63,15 +63,18 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
         return databaseError(req, res, err);
       }
 
-      const existingIntegration = result[0] || {};
+      const existingIntegration = result[0] || null;
 
       const finalIntegration = {
         integrationType: integrationId,
         name: getIntegrationName(integrationId),
-        status: req.body.status || existingIntegration.status || "disabled",
+        status:
+          req.body.status ||
+          (existingIntegration ? existingIntegration.status : "disabled"),
         lastSync: new Date(),
         externalId:
-          req.body.externalId || existingIntegration.externalId || null
+          req.body.externalId ||
+          (existingIntegration ? existingIntegration.externalId : null)
       };
 
       performIntegration(finalIntegration, client)
@@ -83,6 +86,10 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
             userId,
             true
           );
+
+          if (integrationResult.externalId) {
+            finalIntegration.externalId = integrationResult.externalId;
+          }
 
           let upsertSql;
           if (existingIntegration) {

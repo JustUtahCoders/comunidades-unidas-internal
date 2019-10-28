@@ -92,7 +92,7 @@ function logIntegrationResult(
   statusChanged = false
 ) {
   if (result.error) {
-    console.error("------------ Integration API error ------------");
+    console.error("\n------------ Integration API error ------------");
     console.error(
       `For client ${clientId} and integration type ${integration.integrationType} with externalId ${integration.externalId}`
     );

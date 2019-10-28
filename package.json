@@ -53,6 +53,7 @@
     "express": "^4.17.1",
     "fuzzy-search": "^3.0.1",
     "js-cookie": "^2.2.1",
+    "juntos-por-la-salud-node-client": "^1.1.1",
     "keygrip": "^1.1.0",
     "kremling": "^2.0.1",
     "lodash-es": "^4.17.15",

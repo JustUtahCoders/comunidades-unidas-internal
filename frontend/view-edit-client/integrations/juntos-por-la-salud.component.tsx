@@ -54,11 +54,7 @@ export default function JuntosPorLaSalud(props: EditIntegrationProps) {
     <Modal
       close={props.close}
       headerText={props.client ? props.client.fullName : "Client"}
-      primaryText={
-        props.integration.status === IntegrationStatus.enabled
-          ? "Disable"
-          : "Enable"
-      }
+      primaryText={primaryButtonText()}
       primaryAction={primaryAction}
     >
       {props.integration.status === IntegrationStatus.enabled
@@ -66,6 +62,27 @@ export default function JuntosPorLaSalud(props: EditIntegrationProps) {
         : renderEnablePrompt()}
     </Modal>
   );
+
+  function primaryButtonText() {
+    console.log(
+      "modalStatus",
+      modalStatus,
+      "props.integration.status",
+      props.integration.status
+    );
+    if (modalStatus === "enabling") {
+      return "Enabling...";
+    } else if (modalStatus === "disabling") {
+      return "Disabling...";
+    } else if (
+      props.integration.status === IntegrationStatus.disabled ||
+      props.integration.status === IntegrationStatus.broken
+    ) {
+      return "Enable";
+    } else {
+      return "Disable";
+    }
+  }
 
   function renderEnablePrompt() {
     return (

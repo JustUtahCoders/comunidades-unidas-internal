@@ -7,8 +7,9 @@ module.exports = function juntosPorLaSalud(integration, client) {
     username: process.env.JPLS_USERNAME,
     password: process.env.JPLS_PASSWORD
   }).then(
-    result => ({
-      error: null
+    participantId => ({
+      error: null,
+      externalId: participantId
     }),
     error => ({
       error
