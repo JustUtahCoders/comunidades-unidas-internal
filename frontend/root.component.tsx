@@ -28,7 +28,7 @@ export default function Root() {
             <ViewClient path="clients/:clientId/*" />
             <AddCaseNote isGlobalAdd path="add-case-note" />
             <LeadList path="lead-list" />
-            <ViewLead path="leads/:leadId/*" />
+            <ViewLead path="leads/:leadId" />
             <ReportIssue path="report-issue" />
             <ReportIssueSuccess path="report-issue/:issueId" />
           </Navbars>
