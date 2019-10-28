@@ -64,12 +64,6 @@ export default function JuntosPorLaSalud(props: EditIntegrationProps) {
   );
 
   function primaryButtonText() {
-    console.log(
-      "modalStatus",
-      modalStatus,
-      "props.integration.status",
-      props.integration.status
-    );
     if (modalStatus === "enabling") {
       return "Enabling...";
     } else if (modalStatus === "disabling") {
