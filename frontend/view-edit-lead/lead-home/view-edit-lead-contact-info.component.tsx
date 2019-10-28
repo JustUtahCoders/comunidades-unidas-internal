@@ -8,7 +8,7 @@ export default function ViewEditLeadContactInfo(
   const { lead } = props;
 
   return (
-    <LeadSection title="Conact Info">
+    <LeadSection title="Contact Info">
       <table className="lead-table">
         <tbody>
           <tr>

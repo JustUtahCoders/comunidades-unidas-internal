@@ -20,7 +20,7 @@ export default function ViewEditLeadServicesInfo(
         <tbody>
           {lead.leadServices.map(service => {
             return (
-              <tr>
+              <tr key={service.id}>
                 <td align="left">{service.serviceName}</td>
                 <td align="center">{service.programName}</td>
                 <td align="center">pending</td>

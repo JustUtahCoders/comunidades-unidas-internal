@@ -3,7 +3,7 @@ import { useCss } from "kremling";
 
 export default function LeadSection(props: LeadSectionProps) {
   const [expanded, setExpanded] = React.useState(() =>
-    localStorage.getItem(`cu-lead-section-expandeded:${props.title}`)
+    localStorage.getItem(`cu-lead-section-expanded:${props.title}`)
       ? JSON.parse(
           localStorage.getItem(`cu-lead-section-expanded:${props.title}`)
         )
