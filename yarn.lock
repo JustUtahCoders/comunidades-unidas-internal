@@ -5304,10 +5304,10 @@ jsx-ast-utils@^2.2.1:
     array-includes "^3.0.3"
     object.assign "^4.1.0"
 
-juntos-por-la-salud-node-client@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/juntos-por-la-salud-node-client/-/juntos-por-la-salud-node-client-1.1.1.tgz#a900d9994baf051643e8490580bcf51f5088c8bf"
-  integrity sha512-Wm+2VmjBtpq9xVHbQXu8Cacd0uuGgUcYC7MJg1NCBI2x9yOzqxSXsd+ywSDTsISahH3lkPpVFDSSetBFopAU7A==
+juntos-por-la-salud-node-client@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/juntos-por-la-salud-node-client/-/juntos-por-la-salud-node-client-1.1.2.tgz#6b4a8f026029428befc68e6bec6d6ac5e2c33675"
+  integrity sha512-Ylso3Ah+c/43ZCZ4NU7g1sKpABPkuY4odqrx+JpgClOYpTxV7gZ6+lIrVHiEmEOshKVeqfVSDNct9Zg5+DwhBg==
   dependencies:
     cheerio "^1.0.0-rc.3"
     fuse.js "^3.4.5"
