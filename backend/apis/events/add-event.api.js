@@ -8,23 +8,19 @@ const {
 } = require("../utils/validation-utils");
 
 app.post("/api/events", (req, res, next) => {
+  const validityErrors = checkValid(
+    req.body,
+    nonEmptyString("eventName"),
+    nonEmptyString("eventLocation"),
+    validDate("eventDate"),
+    validInteger("totalAttendence")
+  );
+
+  if (validityErrors.length > 0) {
+    return invalidRequest(res, validityErrors, connection);
+  }
+
   pool.getConnection((err, connection) => {
-    if (err) {
-      return databaseError(req, res, err, connection);
-    }
-
-    const validityErrors = checkValid(
-      req.body,
-      nonEmptyString("eventName"),
-      nonEmptyString("eventLocation"),
-      validDate("eventDate"),
-      validInteger("totalAttendence")
-    );
-
-    if (validityErrors.length > 0) {
-      return invalidRequest(res, validityErrors, connection);
-    }
-
     if (err) {
       return databaseError(req, res, err, connection);
     }
