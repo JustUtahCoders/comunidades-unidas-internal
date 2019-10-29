@@ -70,7 +70,8 @@ function getLeadById(leadId, cbk, connection) {
         JSON_ARRAYAGG(
           JSON_OBJECT(
             "serviceId", leadServices.serviceId,
-            "serviceName", services.serviceName
+            "serviceName", services.serviceName,
+            "programName", programs.programName
           )
         ) AS leadServices,
         JSON_ARRAYAGG(
@@ -90,6 +91,8 @@ function getLeadById(leadId, cbk, connection) {
           ON leadServices.leadId = leads.id
         INNER JOIN services 
           ON services.id = leadServices.serviceId
+        INNER JOIN programs
+          ON programs.id = services.programId
         INNER JOIN leadEvents
           ON leadEvents.leadId = leads.id
         INNER JOIN events
@@ -127,7 +130,8 @@ function getLeadById(leadId, cbk, connection) {
       eventSources: eventSources.map(event => ({
         eventId: event.eventId,
         eventName: event.eventName,
-        eventLocation: event.eventLocation
+        eventLocation: event.eventLocation,
+        eventDate: event.eventDate
       })),
       firstName: l.firstName,
       lastName: l.lastName,
@@ -139,7 +143,8 @@ function getLeadById(leadId, cbk, connection) {
       gender: l.gender,
       leadServices: leadServices.map(service => ({
         id: service.serviceId,
-        serviceName: service.serviceName
+        serviceName: service.serviceName,
+        programName: service.programName
       })),
       clientId: l.clientId,
       isDeleted: responseBoolean(l.isDeleted),

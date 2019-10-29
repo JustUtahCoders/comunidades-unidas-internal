@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "@reach/router";
 import { useCss } from "kremling";
 import dateformat from "dateformat";
 import { LeadsTableProps } from "./leads-table.component";
@@ -39,30 +40,57 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
             props.leads.map(lead => {
               return (
                 <tr key={lead.id}>
-                  <td>{lead.id}</td>
-                  <td>{lead.fullName}</td>
-                  <td>{formatPhone(lead.phone)}</td>
-                  <td className="capitalize">
-                    {lead.eventSources[lead.eventSources.length - 1].eventName}
+                  <td>
+                    <Link to={`/leads/${lead.id}`} className="unstyled">
+                      {lead.id}
+                    </Link>
                   </td>
-                  <td>{dateformat(lead.dateOfSignUp, "m/d/yyyy")}</td>
+                  <td>
+                    <Link to={`/leads/${lead.id}`} className="unstyled">
+                      {lead.fullName}
+                    </Link>
+                  </td>
+                  <td>
+                    <Link to={`/leads/${lead.id}`} className="unstyled">
+                      {formatPhone(lead.phone)}
+                    </Link>
+                  </td>
+                  <td className="capitalize">
+                    <Link to={`/leads/${lead.id}`} className="unstyled">
+                      {
+                        lead.eventSources[lead.eventSources.length - 1]
+                          .eventName
+                      }
+                    </Link>
+                  </td>
+                  <td>
+                    <Link to={`/leads/${lead.id}`} className="unstyled">
+                      {dateformat(lead.dateOfSignUp, "m/d/yyyy")}
+                    </Link>
+                  </td>
                   <td
                     className="status-cell"
                     style={leadStatusColor(lead.leadStatus)}
                   >
-                    {determineLeadStatus(
-                      lead.leadStatus,
-                      lead.clientId,
-                      lead.contactStage,
-                      lead.inactivityReason
-                    )}
+                    <Link to={`/leads/${lead.id}`} className="unstyled">
+                      {determineLeadStatus(
+                        lead.leadStatus,
+                        lead.clientId,
+                        lead.contactStage,
+                        lead.inactivityReason
+                      )}
+                    </Link>
                   </td>
                   <td className="interests-cell">
-                    <ul className="cell-list">
-                      {lead.leadServices.map(service => {
-                        return <li key={service.id}>{service.serviceName}</li>;
-                      })}
-                    </ul>
+                    <Link to={`/leads/${lead.id}`} className="unstyled">
+                      <ul>
+                        {lead.leadServices.map(service => {
+                          return (
+                            <li key={service.id}>{service.serviceName}</li>
+                          );
+                        })}
+                      </ul>
+                    </Link>
                   </td>
                 </tr>
               );
@@ -206,7 +234,6 @@ const css = `
     height: 100%;
     align-items: center;
     justify-content: center;
-    white-space: nowrap;
   }
 
   & .loading-overlay {
@@ -248,10 +275,6 @@ const css = `
     visibility: visible;
   }
 
-  & .cell-list {
-    text-align: left;
-  }
-
   & .capitalize {
     text-transform: capitalize;
   }
@@ -263,4 +286,14 @@ const css = `
   & .interests-cell {
     max-width: 20rem;
   }
+
+  & .interests-cell > a > ul {
+    width: 100%;
+    text-align: left;
+  }
+
+  & .interests-cell > a > ul > li {
+    margin-bottom: 0.75rem;
+  }
+
 `;

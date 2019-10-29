@@ -27,7 +27,8 @@ GET /api/leads/:id
     {
       "eventId": 1,
       "eventName": "Health Fair",
-      "eventLocation": "Saint Marks"
+      "eventLocation": "Saint Marks",
+      "eventDate": "2019-10-10"
     }
   ],
   "firstName": "Joel",
@@ -41,7 +42,8 @@ GET /api/leads/:id
   "leadServices": [
     {
       "id": 1,
-      "serviceName": "Citizenship"
+      "serviceName": "Citizenship",
+      "programName": "Immigration"
     }
   ],
   "clientId": 1,
