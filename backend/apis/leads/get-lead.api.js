@@ -97,7 +97,7 @@ function getLeadById(leadId, cbk, connection) {
           ON leadEvents.leadId = leads.id
         INNER JOIN events
           ON events.id = leadEvents.eventId
-      WHERE leads.id = ? AND leads.isDeleted = false;
+      WHERE leads.id IN (?) AND leads.isDeleted = false;
     `,
     [leadId]
   );
