@@ -1,7 +1,7 @@
 import React from "react";
 
 export function useFullWidth() {
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const mainContentEl = document.querySelector(".main-content");
     mainContentEl.classList.add("full");
 
