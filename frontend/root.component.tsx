@@ -15,6 +15,9 @@ import AddClientInteraction from "./view-edit-client/interactions/add-client-int
 import LeadList from "./leads-list/lead-list.component";
 import ViewLead from "./view-edit-lead/view-lead.component";
 
+//FIXME
+import TempAddLeadPage from "./add-lead/temp-add-lead.component";
+
 export default function Root() {
   return (
     <UserContext>
@@ -31,6 +34,8 @@ export default function Root() {
             <ViewLead path="leads/:leadId" />
             <ReportIssue path="report-issue" />
             <ReportIssueSuccess path="report-issue/:issueId" />
+
+            <TempAddLeadPage path="add-leads" />
           </Navbars>
         </Router>
         <Growls />
