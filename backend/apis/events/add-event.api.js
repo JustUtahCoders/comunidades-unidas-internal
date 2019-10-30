@@ -6,8 +6,9 @@ const {
   validDate,
   validInteger
 } = require("../utils/validation-utils");
+const { getEventById } = require("./get-event.api");
 
-app.post("/api/events", (req, res, next) => {
+app.post("/api/events", (req, res) => {
   const validityErrors = checkValid(
     req.body,
     nonEmptyString("eventName"),
@@ -20,42 +21,40 @@ app.post("/api/events", (req, res, next) => {
     return invalidRequest(res, validityErrors, connection);
   }
 
-  pool.getConnection((err, connection) => {
+  const user = req.session.passport.user;
+
+  const newEvent = mysql.format(
+    `
+      INSERT INTO events (
+        eventName,
+        eventLocation,
+        eventDate,
+        totalAttendence,
+        addedBy,
+        modifiedBy
+      )
+      VALUES (?, ?, ?, ?, ?, ?)
+    `,
+    [
+      req.body.eventName,
+      req.body.eventLocation,
+      req.body.eventDate,
+      req.body.totalAttendence,
+      user.id,
+      user.id
+    ]
+  );
+
+  pool.query(newEvent, (err, result) => {
     if (err) {
-      return databaseError(req, res, err, connection);
+      return databaseError(req, res, err);
     }
 
-    const user = req.session.passport.user;
-
-    const newEvent = mysql.format(
-      `
-        INSERT INTO events
-          eventName,
-          eventLocation,
-          eventDate,
-          totalAttendence,
-          addedBy,
-          modifiedBy
-        VALUES (?, ?, ?, ?, ?, ?)
-      `,
-      [
-        req.body.eventName,
-        req.body.eventLocation,
-        req.body.eventDate,
-        req.body.totalAttendence,
-        user.id,
-        user.id
-      ]
-    );
-
-    connection.query(newEvent, (newEventErr, result, fields) => {
+    getEventById(result.insertId, (err, event) => {
       if (err) {
-        return databaseError(req, res, err, connection);
+        return err(req, res);
       }
-
-      const event = result;
-
-      res.json(event);
+      res.send(event);
     });
   });
 });
