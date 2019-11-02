@@ -13,6 +13,12 @@ app.post("/api/leads", (req, res) => {
   const leads = req.body.data;
   const user = req.session.passport.user;
 
+  if (!Array.isArray(leads)) {
+    return invalidRequest(res, [
+      `POST /api/leads must be called with an array of leads in the request body`
+    ]);
+  }
+
   for (let i = 0; i < leads.length; i++) {
     const validityErrors = checkValid(
       leads[i],
