@@ -1,6 +1,5 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
 const mysql = require("mysql");
-const { requestEnum } = require("../utils/transform-utils");
 const {
   nullableValidDate,
   checkValid,
@@ -99,7 +98,7 @@ app.post("/api/clients", (req, res, next) => {
 
     connection.beginTransaction(err => {
       if (err) {
-        return databaseError(req, ers, err, connection);
+        return databaseError(req, res, err, connection);
       }
 
       const insertClient = mysql.format(
