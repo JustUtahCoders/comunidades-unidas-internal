@@ -104,6 +104,12 @@ require("./apis/clients/client-interactions/delete-client-interaction.api");
 require("./apis/clients/client-logs/patch-activity-log.api");
 require("./apis/clients/integrations/get-integrations.api");
 require("./apis/clients/integrations/patch-integration.api");
+require("./apis/events/list-events.api");
+require("./apis/leads/get-lead.api");
+require("./apis/events/get-event.api");
+require("./apis/leads/list-leads.api");
+require("./apis/leads/add-leads.api");
+require("./apis/events/add-event.api");
 
 require("./apis/default-404.api.js");
 require("./index-html.js");

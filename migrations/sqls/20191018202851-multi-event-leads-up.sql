@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS leadEvents (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  leadId INT,
+  eventId INT,
+  FOREIGN KEY (leadId) REFERENCES leads(id),
+  FOREIGN KEY (eventId) REFERENCES events(id)
+);
+
+SET FOREIGN_KEY_CHECKS = 0;
+ALTER TABLE leads DROP FOREIGN KEY `leads_ibfk_1`;
+ALTER TABLE leads DROP eventSource;
+SET FOREIGN_KEY_CHECKS = 1;

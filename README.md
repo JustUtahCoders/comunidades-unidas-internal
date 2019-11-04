@@ -36,7 +36,7 @@ yarn fix-everything
 Now create a file inside of the comunidades-unidas-internal directory called `.env`.
 
 ```sh
-# Required for local dev
+# Required for local dev - can be any value
 KEYGRIP_SECRET=123
 
 # Only needed if you're testing specific features
@@ -47,6 +47,8 @@ KEYGRIP_SECRET=123
 # GOOGLE_CLIENT_SECRET=<insert_client_secret_here>
 # GOOGLE_CALLBACK_URL=http://localhost:8080/api/auth/google/callback
 # GUEST_GITHUB_KEY=<insert_github_key_here>
+# JPLS_USERNAME=<juntos_por_la_salud_ventanilla_username>
+# JPLS_PASSWORD=<juntos_por_la_salud_ventanilla_password>
 ```
 
 Now run the following command:

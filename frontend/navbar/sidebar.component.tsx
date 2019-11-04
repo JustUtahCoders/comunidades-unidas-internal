@@ -81,16 +81,27 @@ export default function Sidebar(props: SidebarProps) {
             </Link>
           </li>
           {localStorage.getItem("feature:leads") && (
+            <li>
+              <Link
+                to="add-leads"
+                className="nav-link"
+                onClick={maybeHideSidebar}
+                getProps={maybeActiveLink}
+              >
+                <div>Add leads</div>
+              </Link>
+            </li>
+          )}
           <li>
             <Link
-              to="add-leads"
+              to="lead-list"
               className="nav-link"
               onClick={maybeHideSidebar}
               getProps={maybeActiveLink}
             >
-              <div>Add leads</div>
+              <div>Lead List</div>
             </Link>
-          </li>)}
+          </li>
           <li>
             <Link
               to="report-issue"

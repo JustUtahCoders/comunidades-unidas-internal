@@ -114,8 +114,8 @@ export default function DemographicInformationInputs(
             value={householdSize}
             onChange={evt => setHouseholdSize(Number(evt.target.value))}
             required
-            min="1"
-            max="30"
+            min={1}
+            max={30}
           />
         </label>
       </div>

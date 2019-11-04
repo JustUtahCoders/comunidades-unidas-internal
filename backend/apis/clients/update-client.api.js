@@ -258,7 +258,7 @@ app.patch("/api/clients/:id", (req, res, next) => {
           return databaseError(req, res, selectErr, connection);
         }
 
-        performAnyIntegrations(clientId, req.session.passport.user.id);
+        performAnyIntegrations(client, req.session.passport.user.id);
 
         res.send({
           client

@@ -22,7 +22,7 @@ exports.up = function(db) {
   var filePath = path.join(
     __dirname,
     "sqls",
-    "20191002015049-leads-and-events-up.sql"
+    "20191012044609-events-correction-up.sql"
   );
   return new Promise(function(resolve, reject) {
     fs.readFile(filePath, { encoding: "utf-8" }, function(err, data) {
@@ -40,7 +40,7 @@ exports.down = function(db) {
   var filePath = path.join(
     __dirname,
     "sqls",
-    "20191002015049-leads-and-events-down.sql"
+    "20191012044609-events-correction-down.sql"
   );
   return new Promise(function(resolve, reject) {
     fs.readFile(filePath, { encoding: "utf-8" }, function(err, data) {

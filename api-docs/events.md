@@ -7,7 +7,7 @@ The list of events will document CU events.
 ### Request
 
 ```http
-GET /api/event/:id
+GET /api/events/:id
 ```
 
 ### Response
@@ -67,7 +67,21 @@ GET /api/events
     "eventDate": "2019-09-16",
     "eventLocation": "Saint Marks",
     "totalAttendence": 150,
-    "isDeleted": false
+    "isDeleted": false,
+    "createdBy": {
+      "userId": 1,
+      "firstName": "Joel",
+      "lastName": "Denning",
+      "fullName": "Joel Denning",
+      "timestamp": "2019-05-06T06:00:00.000Z"
+    },
+    "lastUpdatedBy": {
+      "userId": 1,
+      "firstName": "Joel",
+      "lastName": "Denning",
+      "fullName": "Joel Denning",
+      "timestamp": "2019-05-06T06:00:00.000Z"
+    }
   },
   {
     "id": 2,
@@ -75,7 +89,21 @@ GET /api/events
     "eventDate": "2019-09-24",
     "eventLocation": "Salt Lake City Library",
     "totalAttendence": 150,
-    "isDeleted": false
+    "isDeleted": false,
+    "createdBy": {
+      "userId": 1,
+      "firstName": "Joel",
+      "lastName": "Denning",
+      "fullName": "Joel Denning",
+      "timestamp": "2019-05-06T06:00:00.000Z"
+    },
+    "lastUpdatedBy": {
+      "userId": 1,
+      "firstName": "Joel",
+      "lastName": "Denning",
+      "fullName": "Joel Denning",
+      "timestamp": "2019-05-06T06:00:00.000Z"
+    }
   }
 ]
 ```

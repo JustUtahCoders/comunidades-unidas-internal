@@ -149,8 +149,8 @@ export default React.forwardRef(function ContactInformationInputs(
     const data: ContactInformationFormClient = {
       phone,
       smsConsent,
-      streetAddress: capitalize(streetAddress.trim()),
-      city: capitalize(streetAddress.trim()),
+      streetAddress: capitalizeAll(streetAddress.trim()),
+      city: capitalizeAll(city.trim()),
       state,
       zip,
       housing,
@@ -168,6 +168,13 @@ export default React.forwardRef(function ContactInformationInputs(
 function getTodayAsString() {
   const date = dateFormat(new Date(), "yyyy-mm-dd");
   return date;
+}
+
+function capitalizeAll(str) {
+  return str
+    .split(/\s/)
+    .map(s => capitalize(s))
+    .join(" ");
 }
 
 type ContactInformationInputsProps = {

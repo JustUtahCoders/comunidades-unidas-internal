@@ -27,6 +27,8 @@ app.get("/api/client-duplicates", (req, res, next) => {
     SELECT id, firstName, lastName, date_format(birthday,'%Y/%m/%d') as birthday, gender
     FROM clients
     WHERE 
+    isDeleted = false
+    AND
     (firstName LIKE ? OR lastName LIKE ?)
     AND
     (YEAR(birthday) >= ? AND YEAR(birthday) <= ? AND MONTH(birthday) >= ? AND MONTH(birthday) <= ?)
