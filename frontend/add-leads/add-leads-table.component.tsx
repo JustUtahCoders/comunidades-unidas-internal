@@ -69,6 +69,6 @@ const css = `
 
   & tr:focus-within input, & tr:hover input, & tr:focus-within select, & tr:hover select {
     background: white;
-    border: 1px solid rgb(238, 238, 238);
+    border: 1px solid var(--very-light-gray);
   }
 `;
