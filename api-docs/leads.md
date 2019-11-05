@@ -134,7 +134,7 @@ GET /api/leads?name=John%Jane&page=1
 }
 ```
 
-## Create a single Lead
+## Create Leads
 
 ### Request
 
@@ -143,26 +143,44 @@ POST /api/leads
 ```
 
 ```json
-{
-  "dateOfSignUp": "2019-09-17",
-  "leadStatus": "active",
-  "contactStage": {
-    "first": "2019-05-06T06:00:00.000Z",
-    "second": null,
-    "third": null
+[
+  {
+    "dateOfSignUp": "2019-09-17",
+    "firstName": "Jone",
+    "lastName": "Doe",
+    "phone": "5555555555",
+    "smsConsent": false,
+    "zip": "84115",
+    "age": 25,
+    "gender": "male",
+    "eventSources": [1],
+    "leadServices": [1, 5, 8]
   },
-  "eventSources": [1],
-  "firstName": "Joel",
-  "lastName": "Denning",
-  "fullName": "Joel Denning",
-  "phone": "5555555555",
-  "smsConsent": false,
-  "zip": "84115",
-  "age": 25,
-  "gender": "male",
-  "leadServices": [1, 5, 8],
-  "clientId": 1
-}
+  {
+    "dateOfSignUp": "2019-09-17",
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "phone": "5555555555",
+    "smsConsent": false,
+    "zip": "84115",
+    "age": 25,
+    "gender": "male",
+    "eventSources": [1],
+    "leadServices": [28]
+  },
+  {
+    "dateOfSignUp": "2019-09-17",
+    "firstName": "Jake",
+    "lastName": "Doe",
+    "phone": "5555555555",
+    "smsConsent": true,
+    "zip": "84115",
+    "age": 25,
+    "gender": "male",
+    "eventSources": [1],
+    "leadServices": [20, 35, 18]
+  }
+]
 ```
 
 ### Response
@@ -173,52 +191,7 @@ The response object will be the same as if you do a `GET /api/leads/:id`
 
 ```json
 {
-  "id": 1,
-  "dateOfSignUp": "2019-09-17",
-  "leadStatus": "active",
-  "contactStage": {
-    "first": "2019-05-06T06:00:00.000Z",
-    "second": null,
-    "third": null
-  },
-  "inactivityReason": null,
-  "eventSources": [
-    {
-      "eventId": 1,
-      "eventName": "Health Fair",
-      "eventLocation": "Saint Marks"
-    }
-  ],
-  "firstName": "Joel",
-  "lastName": "Denning",
-  "fullName": "Joel Denning",
-  "phone": "5555555555",
-  "smsConsent": true,
-  "zip": "84115",
-  "age": 25,
-  "gender": "male",
-  "leadServices": [
-    {
-      "id": 1,
-      "serviceName": "Citizenship"
-    }
-  ],
-  "clientId": 1,
-  "isDeleted": false,
-  "createdBy": {
-    "userId": 1,
-    "firstName": "Joel",
-    "lastName": "Denning",
-    "fullName": "Joel Denning",
-    "timestamp": "2019-05-06T06:00:00.000Z"
-  },
-  "lastUpdatedBy": {
-    "userId": 1,
-    "firstName": "Joel",
-    "lastName": "Denning",
-    "fullName": "Joel Denning",
-    "timestamp": "2019-05-06T06:00:00.000Z"
-  }
+  "Created leads 1, 2, 3."
 }
 ```
 
