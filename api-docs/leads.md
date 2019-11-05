@@ -86,7 +86,7 @@ If there is no lead with the provided id, you will get a 404 HTTP response, with
 
 ## Get all Leads
 
-## Request
+### Request
 
 ```http
 GET /api/leads?name=John%Jane&page=1
@@ -99,7 +99,7 @@ GET /api/leads?name=John%Jane&page=1
 - "name" can be partial
 - If no search terms are provided, the top 100 rows will be returned
 
-## Response
+### Response
 
 ```json
 {
