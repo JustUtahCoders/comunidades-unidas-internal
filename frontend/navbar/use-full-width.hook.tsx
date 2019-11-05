@@ -1,6 +1,6 @@
 import React from "react";
 
-export function useFullWidth(enabled?: boolean) {
+export function useFullWidth(enabled: boolean = true) {
   React.useLayoutEffect(() => {
     if (enabled) {
       const mainContentEl = document.querySelector(".main-content");
