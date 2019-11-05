@@ -33,7 +33,7 @@ app.get("/api/leads", (req, res, next) => {
   let whereClauseValues = [];
 
   if (req.query.name) {
-    whereClause += `AND CONCAT(leads.firstName, ' ', leads.lastName) LIKE ? `;
+    ` ${whereClause} AND CONCAT(leads.firstName, ' ', leads.lastName) LIKE ? `;
     whereClauseValues.push(`%${req.query.name}%`);
   }
 
