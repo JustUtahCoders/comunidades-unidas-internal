@@ -93,7 +93,6 @@ app.get("/api/leads", (req, res, next) => {
     ${whereClause}
     GROUP BY leadServices.leadId
     LIMIT ?, ?;
-
     SELECT FOUND_ROWS();
   `;
 
