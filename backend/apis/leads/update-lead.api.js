@@ -81,19 +81,19 @@ app.patch("/api/leads/:id", (req, res, next) => {
       queries.push(
         mysql.format(
           `
-						UPDATE leads
-						SET
-							dateOfSignUp = ?,
-							firstName = ?,
-							lastName = ?,
-							phone = ?,
-							smsConsent = ?,
-							zip = ?,
-							age = ?,
-							gender = ?,
-							modifiedBy = ?
-						WHERE id = ?;
-					`,
+            UPDATE leads
+            SET
+              dateOfSignUp = ?,
+              firstName = ?,
+              lastName = ?,
+              phone = ?,
+              smsConsent = ?,
+              zip = ?,
+              age = ?,
+              gender = ?,
+              modifiedBy = ?
+            WHERE id = ?;
+          `,
           [
             fullLead.dateOfSignUp,
             fullLead.firstName,
@@ -118,7 +118,13 @@ app.patch("/api/leads/:id", (req, res, next) => {
     }
 
     if (leadEventsChanged) {
-      queries.push(insertLeadEventsQuery(leadId, fullLead.eventSources));
+      queries.push(
+        insertLeadEventsQuery(
+          leadId,
+          fullLead.eventSources,
+          oldLead.eventSources
+        )
+      );
     }
 
     if (leadServicesChanged) {
@@ -139,22 +145,20 @@ app.patch("/api/leads/:id", (req, res, next) => {
       return;
     }
 
-    console.log(queries);
+    pool.query(queries.join("\n"), (patchErr, result) => {
+      if (patchErr) {
+        return databaseError(req, res, patchErr);
+      }
 
-    // pool.query(queries.join("\n"), (patchErr, result) => {
-    // 	if (patchErr) {
-    // 		return databaseError(req, res, patchErr)
-    // 	}
+      getLeadById(req.params.id, (selectErr, lead) => {
+        if (selectErr) {
+          return databaseError(req, res, selectErr, connection);
+        }
 
-    // 	getLeadById(req.params.id, (selectErr, lead) => {
-    // 		if (selectErr) {
-    // 			return databaseError(req, res, selectErr, connection)
-    // 		}
-
-    // 		res.send({
-    // 			lead
-    // 		})
-    // 	})
-    // })
+        res.send({
+          lead
+        });
+      });
+    });
   });
 });
