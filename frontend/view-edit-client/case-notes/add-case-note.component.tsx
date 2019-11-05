@@ -103,7 +103,7 @@ export default function AddCaseNote({
           />
         </div>
         <div>
-          <a className="secondary button" href="javascript:history.back()">
+          <a className="secondary button" onClick={() => window.history.back()}>
             Cancel
           </a>
           <button
