@@ -31,7 +31,7 @@ export default function ViewEditLeadEventInfo(
         {lead.eventSources.length > 1 &&
           lead.eventSources.map((event, i) => {
             return (
-              <table className="lead-table events-table">
+              <table className="lead-table events-table" key={event.eventId}>
                 <thead>
                   <tr>
                     <th colSpan={2}>Event #{i + 1}</th>
