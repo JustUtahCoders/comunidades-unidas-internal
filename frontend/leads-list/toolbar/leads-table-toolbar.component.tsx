@@ -5,6 +5,9 @@ import { mediaDesktop, mediaMobile } from "../../styleguide.component";
 import backIcon from "../../../icons/148705-essential-collection/svg/back.svg";
 import nextIcon from "../../../icons/148705-essential-collection/svg/next.svg";
 
+//FIXME
+import TestUpdateLeads from "./test-lead-update.component";
+
 export default function LeadsTableToolbar(props: LeadsTableToolbarProps) {
   const scope = useCss(css);
 
@@ -13,6 +16,10 @@ export default function LeadsTableToolbar(props: LeadsTableToolbarProps) {
   return (
     <div className="leads-table-toolbar" {...scope}>
       <div className="desktop-table-toolbar">
+        {/* FIXME */}
+        <TestUpdateLeads />
+        {/* FIXME */}
+
         {lastPage !== 0 && (
           <div className="pagination-container">
             <div>
