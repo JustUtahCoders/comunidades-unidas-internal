@@ -29,8 +29,6 @@ export default function ViewLead(props: ViewLeadProps) {
     refetchLead: () => setLeadIsStale(true)
   };
 
-  console.log(lead);
-
   return (
     <div {...scope}>
       <PageHeader title={getHeaderTitle()} />

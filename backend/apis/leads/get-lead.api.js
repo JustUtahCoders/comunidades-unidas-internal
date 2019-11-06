@@ -89,9 +89,9 @@ function getLeadById(leadId, cbk, connection) {
         services.serviceName,
         programs.programName
       FROM leadServices
-        INNER JOIN services 
+        INNER JOIN services
           ON services.id = leadServices.serviceId
-        INNER JOIN programs 
+        INNER JOIN programs
           ON programs.id = services.programId
       WHERE leadId = ?;
     `,
@@ -159,8 +159,6 @@ function getLeadById(leadId, cbk, connection) {
         timestamp: l.dateModified
       }
     };
-
-    console.log(lead);
 
     cbk(err, lead);
   });
