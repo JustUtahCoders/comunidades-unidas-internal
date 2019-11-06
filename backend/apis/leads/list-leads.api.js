@@ -29,6 +29,14 @@ app.get("/api/leads", (req, res, next) => {
     );
   }
 
+  let whereClause = `WHERE leads.isDeleted = false`;
+  let whereClauseValues = [];
+
+  if (req.query.name) {
+    ` ${whereClause} AND CONCAT(leads.firstName, ' ', leads.lastName) LIKE ? `;
+    whereClauseValues.push(`%${req.query.name}%`);
+  }
+
   const mysqlQuery = `
     SELECT SQL_CALC_FOUND_ROWS
       leads.id AS leadId,
@@ -82,25 +90,28 @@ app.get("/api/leads", (req, res, next) => {
         ON leadEvents.leadId = leads.id
       INNER JOIN events
         ON events.id = leadEvents.eventId
-    WHERE leads.isDeleted = false
+    ${whereClause}
     GROUP BY leadServices.leadId
     LIMIT ?, ?;
-
     SELECT FOUND_ROWS();
   `;
 
-  const getLeads = mysql.format(mysqlQuery, [mysqlOffset, pageSize]);
+  const getLeads = mysql.format(mysqlQuery, [
+    ...whereClauseValues,
+    mysqlOffset,
+    pageSize
+  ]);
 
-  pool.query(getLeads, (err, results) => {
+  pool.query(getLeads, (err, results, fields) => {
     if (err) {
       return databaseError(req, res, err);
     }
 
-    const [leadRowsResults, totalCountRows] = results;
+    const [leadRows, totalCountRows] = results;
 
     const totalCount = totalCountRows[0]["FOUND_ROWS()"];
 
-    const mapLeadsData = leadRowsResults.map(result => {
+    const mapLeadsData = leadRows.map(result => {
       const leadServices = JSON.parse(result.leadServices);
       const eventSources = JSON.parse(result.eventSources);
 

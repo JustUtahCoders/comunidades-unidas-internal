@@ -10,6 +10,9 @@ import Indent from "./control-buttons/indent.component";
 import Outdent from "./control-buttons/outdent.component";
 import RichTextLink from "./control-buttons/rich-text-link.component";
 import RichTextImage from "./control-buttons/rich-text-image.component";
+import createDOMPurify from "dompurify";
+
+const DOMPurify = createDOMPurify(window);
 
 export default React.forwardRef(function FullRichTextEditor(
   props: FullRichTextEditorProps,
@@ -46,6 +49,7 @@ export default React.forwardRef(function FullRichTextEditor(
           initialHTML={props.initialHTML}
           ref={richTextEditorRef}
           className="editor"
+          sanitizeHTML={DOMPurify.sanitize}
         />
       </RichTextContainer>
     </div>

@@ -8,9 +8,8 @@ import LeadsTable from "./table/leads-table.component";
 import LeadsTableToolbar from "./toolbar/leads-table-toolbar.component";
 
 export default function LeadList(props: LeadListProps) {
-  if (localStorage.getItem("leads") !== null) {
-    useFullWidth();
-  }
+  const featureEnabled = Boolean(localStorage.getItem("leads"));
+  useFullWidth(featureEnabled);
 
   const [apiState, dispatchApiState] = React.useReducer(
     reduceApiState,
@@ -26,7 +25,7 @@ export default function LeadList(props: LeadListProps) {
 
   return (
     <>
-      <PageHeader title="Lead List" fullScreen />
+      <PageHeader title="Lead List" fullScreen={featureEnabled} />
       {localStorage.getItem("leads") ? (
         <>
           <LeadsTableToolbar
