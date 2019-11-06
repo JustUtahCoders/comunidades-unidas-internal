@@ -89,7 +89,7 @@ If there is no lead with the provided id, you will get a 404 HTTP response, with
 ### Request
 
 ```http
-GET /api/leads?name=John%Jane&page=1
+GET /api/leads?name=John&page=1
 ```
 
 **NOTES:**
