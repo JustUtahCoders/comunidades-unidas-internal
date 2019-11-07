@@ -66,40 +66,36 @@ function getLeadById(leadId, cbk, connection) {
         created.firstName AS createdByFirstName,
         created.lastName AS createdByLastName,
         modified.firstName AS modifiedByFirstName,
-        modified.lastName AS modifiedByLastName,
-        JSON_ARRAYAGG(
-          JSON_OBJECT(
-            "serviceId", leadServices.serviceId,
-            "serviceName", services.serviceName,
-            "programName", programs.programName
-          )
-        ) AS leadServices,
-        JSON_ARRAYAGG(
-          JSON_OBJECT(
-            "eventId", leadEvents.eventId,
-            "eventName", events.eventName,
-            "eventLocation", events.eventLocation,
-            "eventDate", events.eventDate
-          )
-        ) AS eventSources
+        modified.lastName AS modifiedByLastName
       FROM leads
-        INNER JOIN users created 
+        INNER JOIN users AS created 
           ON created.id = leads.addedBy
-        INNER JOIN users modified 
+        INNER JOIN users AS modified 
           ON modified.id = leads.modifiedBy
-        INNER JOIN leadServices 
-          ON leadServices.leadId = leads.id
-        INNER JOIN services 
+      WHERE leads.id = ? AND leads.isDeleted = false;
+
+      SELECT 
+        leadEvents.eventId,
+        events.eventName,
+        events.eventLocation,
+        events.eventDate
+      FROM leadEvents
+        INNER JOIN events 
+          ON events.id = leadEvents.eventId
+      WHERE leadId = ?;
+
+      SELECT 
+        leadServices.serviceId,
+        services.serviceName,
+        programs.programName
+      FROM leadServices
+        INNER JOIN services
           ON services.id = leadServices.serviceId
         INNER JOIN programs
           ON programs.id = services.programId
-        INNER JOIN leadEvents
-          ON leadEvents.leadId = leads.id
-        INNER JOIN events
-          ON events.id = leadEvents.eventId
-      WHERE leads.id = ? AND leads.isDeleted = false;
+      WHERE leadId = ?;
     `,
-    [leadId]
+    [leadId, leadId, leadId]
   );
 
   (connection || pool).query(getLead, (err, data, fields) => {
@@ -108,14 +104,14 @@ function getLeadById(leadId, cbk, connection) {
     }
 
     const bigLeadObj = data[0];
+    const eventSources = data[1];
+    const leadServices = data[2];
 
     if (bigLeadObj.length === 0) {
       return cbk(err, null);
     }
 
     const l = bigLeadObj;
-    const leadServices = JSON.parse(l.leadServices);
-    const eventSources = JSON.parse(l.eventSources);
 
     const lead = {
       id: l.leadId,
