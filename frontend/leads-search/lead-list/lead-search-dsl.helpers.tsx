@@ -4,7 +4,8 @@ export const allowedSearchFields = {
   id: "Lead ID",
   zip: "ZIP Code",
   phone: "Phone",
-  program: "Interest in Program"
+  program: "Interest in Program",
+  event: "Event attended"
 };
 
 const allowedKeys = Object.keys(allowedSearchFields);
@@ -31,7 +32,7 @@ export function parseSearch(
         errors.push(
           `Unknown search key '${key}'. Valid search keys are '${allowedKeys.join(
             ", "
-          )}`
+          )}'`
         );
       }
     } else if (nameFound) {
@@ -96,4 +97,5 @@ export type SearchParseValues = {
   zip?: string;
   phone?: string;
   id?: string;
+  event?: string;
 };

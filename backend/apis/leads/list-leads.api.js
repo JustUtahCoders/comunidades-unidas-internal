@@ -2,16 +2,26 @@ const { app, databaseError, pool } = require("../../server");
 const mysql = require("mysql");
 const {
   checkValid,
-  nullableValidInteger
+  nullableValidInteger,
+  nullableNonEmptyString,
+  nullableValidId,
+  nullableValidEnum
 } = require("../utils/validation-utils");
 const {
   responseFullName,
+  requestPhone,
   responseBoolean,
   responseDateWithoutTime
 } = require("../utils/transform-utils");
 
 app.get("/api/leads", (req, res, next) => {
-  const validationErrors = checkValid(req.query, nullableValidInteger("page"));
+  const validationErrors = checkValid(
+    req.query,
+    nullableValidInteger("page"),
+    nullableValidId("id"),
+    nullableNonEmptyString("phone"),
+    nullableValidId("program")
+  );
 
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
@@ -22,6 +32,9 @@ app.get("/api/leads", (req, res, next) => {
   const zeroBasedPage = req.query.page ? requestPage - 1 : 0;
   const mysqlOffset = zeroBasedPage * pageSize;
 
+  let whereClause = `WHERE leads.isDeleted = false`;
+  let whereClauseValues = [];
+
   if (requestPage < 1) {
     return invalidRequest(
       res,
@@ -29,15 +42,41 @@ app.get("/api/leads", (req, res, next) => {
     );
   }
 
-  let whereClause = `WHERE leads.isDeleted = false`;
-  let whereClauseValues = [];
-
   if (req.query.name) {
     ` ${whereClause} AND CONCAT(leads.firstName, ' ', leads.lastName) LIKE ? `;
     whereClauseValues.push(`%${req.query.name}%`);
   }
 
-  const mysqlQuery = `
+  if (req.query.zip) {
+    whereClause += `AND ct.zip = ? `;
+    whereClauseValues.push(req.query.zip);
+  }
+
+  if (req.query.id) {
+    whereClause += `AND cl.id = ? `;
+    whereClauseValues.push(req.query.id);
+  }
+
+  if (req.query.phone) {
+    whereClause += `AND ct.primaryPhone LIKE ? `;
+    whereClauseValues.push("%" + requestPhone(req.query.phone) + "%");
+  }
+
+  if (req.query.program) {
+    whereClause += `
+      AND services.programId = ?
+    `;
+    whereClauseValues.push(req.query.program);
+  }
+
+  if (req.query.event) {
+    whereClause += `
+      AND leadEvents.eventId = ?
+    `;
+    whereClauseValues.push(req.query.event);
+  }
+
+  let mysqlQuery = `
     SELECT SQL_CALC_FOUND_ROWS
       leads.id AS leadId,
       leads.dateOfSignUp,

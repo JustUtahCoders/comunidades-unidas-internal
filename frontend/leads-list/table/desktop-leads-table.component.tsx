@@ -25,7 +25,7 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
         </thead>
         <tbody
           role="group"
-          aria-label="Select one or more lead for batch action"
+          aria-label="Select one or more leads for batch action"
         >
           {props.leads.length === 0 && !props.fetchingLeads ? (
             <tr className="empty-state">
