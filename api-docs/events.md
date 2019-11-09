@@ -1,6 +1,6 @@
 # Events
 
-The list of events will document CU events.
+Comunidades Unidas holds events for the general public that are accessible through this API.
 
 ## Get single Event
 
@@ -107,6 +107,10 @@ GET /api/events
   }
 ]
 ```
+
+### Notes
+
+- The list of events are ordered the eventDate (descending)
 
 ## Create Event
 
