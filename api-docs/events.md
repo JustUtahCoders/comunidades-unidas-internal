@@ -1,6 +1,6 @@
 # Events
 
-The list of events will document CU events.
+Comunidades Unidas holds events for the general public that are accessible through this API.
 
 ## Get single Event
 
@@ -108,7 +108,13 @@ GET /api/events
 ]
 ```
 
+### Notes
+
+- The list of events are ordered the eventDate (descending)
+
 ## Create Event
+
+### Request
 
 ```http
 POST /api/events
@@ -122,6 +128,10 @@ POST /api/events
   "totalAttendance": 150
 }
 ```
+
+### Response
+
+The response object will be the same as for GET /api/events/:id
 
 ## Modify an Event
 
