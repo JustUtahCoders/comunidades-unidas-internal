@@ -118,9 +118,9 @@ function getLeadById(leadId, cbk, connection) {
       dateOfSignUp: responseDateWithoutTime(l.dateOfSignUp),
       leadStatus: l.leadStatus === null ? "active" : l.leadStatus,
       contactStage: {
-        first: responseDateWithoutTime(l.firstContactAttempt),
-        second: responseDateWithoutTime(l.secondContactAttempt),
-        third: responseDateWithoutTime(l.thirdContactAttempt)
+        first: l.firstContactAttempt,
+        second: l.secondContactAttempt,
+        third: l.thirdContactAttempt
       },
       inactivityReason: l.inactivityReason,
       eventSources: eventSources.map(event => ({
