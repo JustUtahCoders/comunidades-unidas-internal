@@ -111,7 +111,7 @@ function getLeadById(leadId, cbk, connection) {
       return cbk(err, null);
     }
 
-    const l = bigLeadObj;
+    const l = bigLeadObj[0];
 
     const lead = {
       id: l.leadId,
@@ -127,7 +127,7 @@ function getLeadById(leadId, cbk, connection) {
         eventId: event.eventId,
         eventName: event.eventName,
         eventLocation: event.eventLocation,
-        eventDate: event.eventDate
+        eventDate: responseDateWithoutTime(event.eventDate)
       })),
       firstName: l.firstName,
       lastName: l.lastName,
