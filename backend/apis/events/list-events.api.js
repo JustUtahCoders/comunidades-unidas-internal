@@ -26,7 +26,9 @@ app.get("/api/events", (req, res, next) => {
     FROM events
     INNER JOIN users created ON created.id = events.addedBy
     INNER JOIN users modified ON modified.id = events.modifiedBy
-    WHERE events.isDeleted = false;
+    WHERE events.isDeleted = false
+    ORDER BY events.eventDate DESC
+    ;
   `);
 
   pool.query(getEvents, (err, results) => {
