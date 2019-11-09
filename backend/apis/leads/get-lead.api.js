@@ -111,23 +111,23 @@ function getLeadById(leadId, cbk, connection) {
       return cbk(err, null);
     }
 
-    const l = bigLeadObj;
+    const l = bigLeadObj[0];
 
     const lead = {
       id: l.leadId,
       dateOfSignUp: responseDateWithoutTime(l.dateOfSignUp),
       leadStatus: l.leadStatus === null ? "active" : l.leadStatus,
       contactStage: {
-        first: l.firstContactAttempt,
-        second: l.secondContactAttempt,
-        third: l.thirdContactAttempt
+        first: responseDateWithoutTime(l.firstContactAttempt),
+        second: responseDateWithoutTime(l.secondContactAttempt),
+        third: responseDateWithoutTime(l.thirdContactAttempt)
       },
       inactivityReason: l.inactivityReason,
       eventSources: eventSources.map(event => ({
         eventId: event.eventId,
         eventName: event.eventName,
         eventLocation: event.eventLocation,
-        eventDate: event.eventDate
+        eventDate: responseDateWithoutTime(event.eventDate)
       })),
       firstName: l.firstName,
       lastName: l.lastName,
