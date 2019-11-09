@@ -14,11 +14,11 @@ app.post("/api/events", (req, res) => {
     nonEmptyString("eventName"),
     nonEmptyString("eventLocation"),
     validDate("eventDate"),
-    validInteger("totalAttendence")
+    validInteger("totalAttendance")
   );
 
   if (validityErrors.length > 0) {
-    return invalidRequest(res, validityErrors, connection);
+    return invalidRequest(res, validityErrors);
   }
 
   const user = req.session.passport.user;
@@ -29,7 +29,7 @@ app.post("/api/events", (req, res) => {
         eventName,
         eventLocation,
         eventDate,
-        totalAttendence,
+        totalAttendance,
         addedBy,
         modifiedBy
       )
@@ -39,7 +39,7 @@ app.post("/api/events", (req, res) => {
       req.body.eventName,
       req.body.eventLocation,
       req.body.eventDate,
-      req.body.totalAttendence,
+      req.body.totalAttendance,
       user.id,
       user.id
     ]
@@ -52,7 +52,7 @@ app.post("/api/events", (req, res) => {
 
     getEventById(result.insertId, (err, event) => {
       if (err) {
-        return err(req, res);
+        return databaseError(req, res);
       }
       res.send(event);
     });

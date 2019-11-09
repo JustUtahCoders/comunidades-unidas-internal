@@ -13,7 +13,7 @@ app.get("/api/events", (req, res, next) => {
       events.eventName,
       events.eventDate,
       events.eventLocation,
-      events.totalAttendence,
+      events.totalAttendance,
       events.isDeleted,
       events.dateAdded,
       events.dateModified,
@@ -40,7 +40,7 @@ app.get("/api/events", (req, res, next) => {
         eventName: result.eventName,
         eventDate: responseDateWithoutTime(result.eventDate),
         eventLocation: result.eventLocation,
-        totalAttendence: result.totalAttendence,
+        totalAttendance: result.totalAttendance,
         isDeleted: responseBoolean(result.isDeleted),
         createdBy: {
           userId: result.createdByUserId,
