@@ -51,7 +51,7 @@ export default function AddEventStep(props: AddEventStepProps) {
         }
       })
         .then(result => {
-          console.log("result", result);
+          // TO-DO: move to the add leads step
         })
         .catch(err => {
           setCreateNewEvent(false);
