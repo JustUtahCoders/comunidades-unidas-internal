@@ -20,7 +20,7 @@ GET /api/events/:id
   "eventName": "Heath Fair",
   "eventDate": "2019-09-16",
   "eventLocation": "Saint Marks",
-  "totalAttendence": 150,
+  "totalAttendance": 150,
   "isDeleted": false,
   "createdBy": {
     "userId": 1,
@@ -66,7 +66,7 @@ GET /api/events
     "eventName": "Heath Fair",
     "eventDate": "2019-09-16",
     "eventLocation": "Saint Marks",
-    "totalAttendence": 150,
+    "totalAttendance": 150,
     "isDeleted": false,
     "createdBy": {
       "userId": 1,
@@ -88,7 +88,7 @@ GET /api/events
     "eventName": "Job Fair",
     "eventDate": "2019-09-24",
     "eventLocation": "Salt Lake City Library",
-    "totalAttendence": 150,
+    "totalAttendance": 150,
     "isDeleted": false,
     "createdBy": {
       "userId": 1,
@@ -119,7 +119,7 @@ POST /api/events
   "eventName": "Job Fair",
   "eventDate": "2019-09-24",
   "eventLocation": "Salt Lake City Library",
-  "totalAttendence": 150
+  "totalAttendance": 150
 }
 ```
 
@@ -134,7 +134,7 @@ PATCH /api/events/:id
   "eventName": "Job Fair",
   "eventDate": "2019-09-24",
   "eventLocation": "Salt Lake City Library",
-  "totalAttendence": 150
+  "totalAttendance": 150
 }
 ```
 
