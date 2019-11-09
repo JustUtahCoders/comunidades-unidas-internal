@@ -41,7 +41,7 @@ GET /api/events/:id
 
 #### Not Found
 
-If there is no lead with the provided id, you will get a 404 HTTP response, with the following error message:
+If there is no event with the provided id, you will get a 404 HTTP response, with the following error message:
 
 ```json
 {
@@ -159,7 +159,7 @@ Validation errors will respond with HTTP status 400.
 }
 ```
 
-## Delete a single Lead
+## Delete a single event
 
 ### Request
 
