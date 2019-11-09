@@ -114,6 +114,8 @@ GET /api/events
 
 ## Create Event
 
+### Request
+
 ```http
 POST /api/events
 ```
@@ -126,6 +128,10 @@ POST /api/events
   "totalAttendance": 150
 }
 ```
+
+### Response
+
+The response object will be the same as for GET /api/events/:id
 
 ## Modify an Event
 
