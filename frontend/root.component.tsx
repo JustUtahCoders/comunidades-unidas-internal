@@ -20,7 +20,7 @@ export default function Root() {
   return (
     <UserContext>
       <Styleguide>
-        <Router basepath="/">
+        <Router basepath="/" primary>
           <Navbars path="/">
             <Home path="/" />
             <AddClient path="add-client" />
@@ -32,7 +32,7 @@ export default function Root() {
             <ViewLead path="leads/:leadId" />
             <ReportIssue path="report-issue" />
             <ReportIssueSuccess path="report-issue/:issueId" />
-            <AddLeads path="add-leads" />
+            <AddLeads path="add-leads/*" />
           </Navbars>
         </Router>
         <Growls />
