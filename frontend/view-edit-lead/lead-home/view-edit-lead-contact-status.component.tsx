@@ -14,11 +14,15 @@ export default function ViewEditLeadContactStatus(
       <table className="lead-table">
         <tbody>
           <tr>
+            <td>Date of Sign Up:</td>
+            <td>{lead.dateOfSignUp}</td>
+          </tr>
+          <tr>
             <td>Current Status:</td>
             <td>{lead.leadStatus}</td>
           </tr>
           <tr>
-            <td>First Attempt:</td>
+            <td>First Contact Attempt:</td>
             <td>
               {lead.contactStage.first === null
                 ? "Attempt not yet made"
@@ -26,7 +30,7 @@ export default function ViewEditLeadContactStatus(
             </td>
           </tr>
           <tr>
-            <td>Second Attempt:</td>
+            <td>Second Contact Attempt:</td>
             <td>
               {lead.contactStage.second === null
                 ? "Attempt not yet made"
@@ -34,7 +38,7 @@ export default function ViewEditLeadContactStatus(
             </td>
           </tr>
           <tr>
-            <td>Third Attempt:</td>
+            <td>Third Contact Attempt:</td>
             <td>
               {lead.contactStage.third === null
                 ? "Attempt not yet made"

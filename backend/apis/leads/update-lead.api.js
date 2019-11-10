@@ -64,63 +64,94 @@ app.patch("/api/leads/:id", (req, res, next) => {
 
     const queries = [];
 
-    const leadChanged = atLeastOne(
+    const leadBasicInfoChanged = atLeastOne(
       req.body,
-      "dateOfSignUp",
       "firstName",
       "lastName",
-      "phone",
-      "smsConsent",
-      "zip",
       "age",
-      "gender",
-      "modifiedBy"
+      "gender"
     );
 
-    if (leadChanged) {
+    const leadContactInfoChanged = atLeastOne(
+      req.body,
+      "phone",
+      "smsConsent",
+      "zip"
+    );
+
+    const leadStatusChanged = atLeastOne(
+      req.body,
+      "dateOfSignUp",
+      "leadStatus",
+      "inactivityReason",
+      "firstContactAttempt",
+      "secondContactAttempt",
+      "thirdContactAttempt"
+    );
+
+    const leadEventsChanged = atLeastOne(req.body, "eventSources");
+
+    const leadServicesChanged = atLeastOne(req.body, "leadServices");
+
+    if (leadBasicInfoChanged) {
       queries.push(
         mysql.format(
           `
             UPDATE leads
             SET
-              dateOfSignUp = ?,
               firstName = ?,
               lastName = ?,
-              phone = ?,
-              smsConsent = ?,
-              zip = ?,
               age = ?,
               gender = ?,
               modifiedBy = ?
             WHERE id = ?;
           `,
           [
-            fullLead.dateOfSignUp,
             fullLead.firstName,
             fullLead.lastName,
-            fullLead.phone,
-            fullLead.smsConsent,
-            fullLead.zip,
             fullLead.age,
             fullLead.gender,
-            userId
+            userId,
+            leadId
           ]
         )
       );
     }
 
-    const leadEventsChanged = atLeastOne(req.body, "eventSources");
-
-    const leadServicesChanged = atLeastOne(req.body, "leadServices");
-
-    if (leadEventsChanged || leadServicesChanged) {
-      queries.push(`SET @leadDataId = LAST_INSERT_ID();`);
+    if (leadContactInfoChanged) {
+      queries.push(
+        mysql.format(
+          `
+            UPDATE leads
+            SET
+              dateOfSignUp = ?,
+              leadStatus = ?,
+              inactivityAttempt = ?,
+              firstContactAttempt = ?,
+              secondContactAttempt = ?,
+              thirdContactAttempt = ?,
+              modifiedBy = ?
+            WHERE id = ?;
+          `,
+          [
+            fullLead.dateOfSignUp,
+            fullLead.leadStatus,
+            fullLead.inactivityReason,
+            fullLead.firstContactAttempt,
+            fullLead.secondContactAttempt,
+            fullLead.thirdContactAttempt,
+            userId,
+            leadId
+          ]
+        )
+      );
     }
 
     if (leadEventsChanged) {
       queries.push(
         insertLeadEventsQuery(
           leadId,
+          userId,
           fullLead.eventSources,
           oldLead.eventSources
         )
@@ -131,6 +162,7 @@ app.patch("/api/leads/:id", (req, res, next) => {
       queries.push(
         insertLeadServicesQuery(
           leadId,
+          userId,
           fullLead.leadServices,
           oldLead.leadServices
         )
