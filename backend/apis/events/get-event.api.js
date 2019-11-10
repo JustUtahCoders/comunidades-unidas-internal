@@ -47,7 +47,7 @@ function getEventById(eventId, cbk, connection) {
         events.eventName,
         events.eventDate,
         events.eventLocation,
-        events.totalAttendence,
+        events.totalAttendance,
         events.isDeleted,
         events.dateAdded,
         events.dateModified,
@@ -83,7 +83,7 @@ function getEventById(eventId, cbk, connection) {
       eventName: e.eventName,
       eventDate: responseDateWithoutTime(e.eventDate),
       eventLocation: e.eventLocation,
-      totalAttendence: e.totalAttendence,
+      totalAttendance: e.totalAttendance,
       isDeleted: responseBoolean(e.isDeleted),
       createdBy: {
         userId: e.createdByUserId,

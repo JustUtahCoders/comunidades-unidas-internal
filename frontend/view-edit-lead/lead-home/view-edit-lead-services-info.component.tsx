@@ -14,7 +14,6 @@ export default function ViewEditLeadServicesInfo(
           <tr>
             <th>Name of Service</th>
             <th>Program</th>
-            <th>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -23,7 +22,6 @@ export default function ViewEditLeadServicesInfo(
               <tr key={service.id}>
                 <td align="left">{service.serviceName}</td>
                 <td align="center">{service.programName}</td>
-                <td align="center">pending</td>
               </tr>
             );
           })}

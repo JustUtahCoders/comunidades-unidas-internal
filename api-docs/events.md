@@ -1,6 +1,6 @@
 # Events
 
-The list of events will document CU events.
+Comunidades Unidas holds events for the general public that are accessible through this API.
 
 ## Get single Event
 
@@ -20,7 +20,7 @@ GET /api/events/:id
   "eventName": "Heath Fair",
   "eventDate": "2019-09-16",
   "eventLocation": "Saint Marks",
-  "totalAttendence": 150,
+  "totalAttendance": 150,
   "isDeleted": false,
   "createdBy": {
     "userId": 1,
@@ -41,7 +41,7 @@ GET /api/events/:id
 
 #### Not Found
 
-If there is no lead with the provided id, you will get a 404 HTTP response, with the following error message:
+If there is no event with the provided id, you will get a 404 HTTP response, with the following error message:
 
 ```json
 {
@@ -66,7 +66,7 @@ GET /api/events
     "eventName": "Heath Fair",
     "eventDate": "2019-09-16",
     "eventLocation": "Saint Marks",
-    "totalAttendence": 150,
+    "totalAttendance": 150,
     "isDeleted": false,
     "createdBy": {
       "userId": 1,
@@ -88,7 +88,7 @@ GET /api/events
     "eventName": "Job Fair",
     "eventDate": "2019-09-24",
     "eventLocation": "Salt Lake City Library",
-    "totalAttendence": 150,
+    "totalAttendance": 150,
     "isDeleted": false,
     "createdBy": {
       "userId": 1,
@@ -108,7 +108,13 @@ GET /api/events
 ]
 ```
 
+### Notes
+
+- The list of events are ordered the eventDate (descending)
+
 ## Create Event
+
+### Request
 
 ```http
 POST /api/events
@@ -119,9 +125,13 @@ POST /api/events
   "eventName": "Job Fair",
   "eventDate": "2019-09-24",
   "eventLocation": "Salt Lake City Library",
-  "totalAttendence": 150
+  "totalAttendance": 150
 }
 ```
+
+### Response
+
+The response object will be the same as for GET /api/events/:id
 
 ## Modify an Event
 
@@ -134,7 +144,7 @@ PATCH /api/events/:id
   "eventName": "Job Fair",
   "eventDate": "2019-09-24",
   "eventLocation": "Salt Lake City Library",
-  "totalAttendence": 150
+  "totalAttendance": 150
 }
 ```
 
@@ -159,7 +169,7 @@ Validation errors will respond with HTTP status 400.
 }
 ```
 
-## Delete a single Lead
+## Delete a single event
 
 ### Request
 

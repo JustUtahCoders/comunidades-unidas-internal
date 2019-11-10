@@ -19,7 +19,7 @@ export default function AddLeads(props: AddLeadsProps) {
   return (
     <>
       <PageHeader title="Add new leads" />
-      {content}
+      <div className="card">{content}</div>
     </>
   );
 }
