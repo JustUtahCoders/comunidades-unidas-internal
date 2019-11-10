@@ -4,6 +4,7 @@ import AddLeadStepHeader from "./add-lead-step-header.component";
 import imgSrc from "../../icons/148705-essential-collection/svg/map-location.svg";
 import dayjs from "dayjs";
 import easyFetch from "../util/easy-fetch";
+import { mediaDesktop } from "../styleguide.component";
 
 export default function AddEventStep(props: AddEventStepProps) {
   const scope = useCss(css);
@@ -206,11 +207,21 @@ const css = `
 
 & .add-event-form {
   display: flex;
-  width: 40rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin: 2.4rem auto 0 auto;
+}
+
+${mediaDesktop} {
+  & .add-event-form {
+    width: 40rem;
+  }
+
+  & .add-event-form > div > label {
+    min-width: 15rem;
+    width: 15rem;
+  }
 }
 
 & .add-event-form > div {
@@ -221,8 +232,6 @@ const css = `
 }
 
 & .add-event-form > div > label {
-  min-width: 15rem;
-  width: 15rem;
   text-align: right;
   margin-right: 1.6rem;
 }
