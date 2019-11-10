@@ -2,9 +2,9 @@ import React from "react";
 import { useCss } from "kremling";
 import easyFetch from "../../util/easy-fetch";
 import { mediaDesktop, mediaMobile } from "../../styleguide.component";
-import { SearchParseValues } from "../../leads-search/lead-list/lead-search-dsl.helpers";
+import { SearchParseValues } from "../../util/list-search/search-dsl.helpers";
 import { LeadListLead } from "../lead-list.component";
-import LeadSearchInput from "../../leads-search/lead-list/lead-search-input.component";
+import LeadSearchInput from "./lead-search-input.component";
 import backIcon from "../../../icons/148705-essential-collection/svg/back.svg";
 import nextIcon from "../../../icons/148705-essential-collection/svg/next.svg";
 

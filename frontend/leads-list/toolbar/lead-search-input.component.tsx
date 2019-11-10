@@ -2,14 +2,15 @@ import React from "react";
 import ReactDOM from "react-dom";
 import easyFetch from "../../util/easy-fetch";
 import { useCss } from "kremling";
-import { SearchParseValues } from "../../leads-search/lead-list/lead-search-dsl.helpers";
 import {
+  SearchParseValues,
   parseSearch,
   SearchParse,
   deserializeSearch,
   allowedSearchFields,
+  setAllowedSearchFields,
   serializeSearch
-} from "./lead-search-dsl.helpers";
+} from "../../util/list-search/search-dsl.helpers";
 
 export default function LeadSearchInput(props: LeadSearchInputProps) {
   const scope = useCss(css);
@@ -24,13 +25,24 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
   const [programs, setPrograms] = React.useState([]);
   const [events, setEvents] = React.useState([]);
 
+  const searchFields = {
+    id: "Lead ID",
+    zip: "ZIP Code",
+    phone: "Phone",
+    program: "Interest in Program",
+    event: "Event Attended"
+  };
+
+  React.useEffect(() => {
+    setAllowedSearchFields(searchFields);
+  }, [showingAdvancedSearch]);
+
   React.useEffect(() => {
     inputRef.current.setCustomValidity(search.parseResult.errors.join(". "));
   }, [search]);
 
   React.useEffect(() => {
     const abortController = new AbortController();
-
     easyFetch(`/api/services`, { signal: abortController.signal })
       .then(json => {
         setPrograms(json.programs);
@@ -40,7 +52,10 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
           throw err;
         });
       });
+  }, []);
 
+  React.useEffect(() => {
+    const abortController = new AbortController();
     easyFetch(`/api/events`, { signal: abortController.signal })
       .then(json => {
         setEvents(json.events);

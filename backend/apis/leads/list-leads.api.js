@@ -1,11 +1,10 @@
-const { app, databaseError, pool } = require("../../server");
+const { app, databaseError, pool, invalidRequest } = require("../../server");
 const mysql = require("mysql");
 const {
   checkValid,
   nullableValidInteger,
   nullableNonEmptyString,
-  nullableValidId,
-  nullableValidEnum
+  nullableValidId
 } = require("../utils/validation-utils");
 const {
   responseFullName,
@@ -20,19 +19,18 @@ app.get("/api/leads", (req, res, next) => {
     nullableValidInteger("page"),
     nullableValidId("id"),
     nullableNonEmptyString("phone"),
-    nullableValidId("program")
+    nullableNonEmptyString("zip"),
+    nullableValidId("program"),
+    nullableValidId("event")
   );
 
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
   }
 
-  const pageSize = 100;
   const requestPage = parseInt(req.query.page);
-  const zeroBasedPage = req.query.page ? requestPage - 1 : 0;
-  const mysqlOffset = zeroBasedPage * pageSize;
 
-  let whereClause = `WHERE leads.isDeleted = false`;
+  let whereClause = `WHERE leads.isDeleted = false `;
   let whereClauseValues = [];
 
   if (requestPage < 1) {
@@ -42,23 +40,25 @@ app.get("/api/leads", (req, res, next) => {
     );
   }
 
+  const pageSize = 100;
+
   if (req.query.name) {
-    ` ${whereClause} AND CONCAT(leads.firstName, ' ', leads.lastName) LIKE ? `;
+    whereClause += `AND CONCAT(leads.firstName, ' ', leads.lastName) LIKE ? `;
     whereClauseValues.push(`%${req.query.name}%`);
   }
 
   if (req.query.zip) {
-    whereClause += `AND ct.zip = ? `;
+    whereClause += `AND leads.zip = ? `;
     whereClauseValues.push(req.query.zip);
   }
 
   if (req.query.id) {
-    whereClause += `AND cl.id = ? `;
+    whereClause += `AND leads.id = ? `;
     whereClauseValues.push(req.query.id);
   }
 
   if (req.query.phone) {
-    whereClause += `AND ct.primaryPhone LIKE ? `;
+    whereClause += `AND leads.phone LIKE ? `;
     whereClauseValues.push("%" + requestPhone(req.query.phone) + "%");
   }
 
@@ -135,6 +135,8 @@ app.get("/api/leads", (req, res, next) => {
     SELECT FOUND_ROWS();
   `;
 
+  const zeroBasedPage = req.query.page ? requestPage - 1 : 0;
+  const mysqlOffset = zeroBasedPage * pageSize;
   const getLeads = mysql.format(mysqlQuery, [
     ...whereClauseValues,
     mysqlOffset,

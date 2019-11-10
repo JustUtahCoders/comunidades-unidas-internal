@@ -7,8 +7,9 @@ import {
   SearchParseValues,
   deserializeSearch,
   allowedSearchFields,
+  setAllowedSearchFields,
   serializeSearch
-} from "./client-search-dsl.helpers";
+} from "../../util/list-search/search-dsl.helpers";
 import easyFetch from "../../util/easy-fetch";
 
 export default function ClientSearchInput(props: ClientSearchInputProps) {
@@ -22,6 +23,17 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
   );
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [programs, setPrograms] = React.useState([]);
+
+  const searchFields = {
+    id: "Client ID",
+    zip: "ZIP Code",
+    phone: "Phone",
+    program: "Interest in Program"
+  };
+
+  React.useEffect(() => {
+    setAllowedSearchFields(searchFields);
+  }, [searchFields]);
 
   React.useEffect(() => {
     inputRef.current.setCustomValidity(search.parseResult.errors.join(", "));

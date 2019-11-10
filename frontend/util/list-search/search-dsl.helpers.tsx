@@ -1,14 +1,13 @@
 import queryString from "query-string";
 
-export const allowedSearchFields = {
-  id: "Lead ID",
-  zip: "ZIP Code",
-  phone: "Phone",
-  program: "Interest in Program",
-  event: "Event attended"
-};
+export let allowedSearchFields = {};
 
-const allowedKeys = Object.keys(allowedSearchFields);
+let allowedKeys = Object.keys(allowedSearchFields);
+
+export function setAllowedSearchFields(searchFields) {
+  allowedSearchFields = { ...searchFields };
+  allowedKeys = Object.keys(allowedSearchFields);
+}
 
 export function parseSearch(
   value: string,
@@ -41,6 +40,12 @@ export function parseSearch(
       nameFound = true;
       result.name = token;
     }
+
+    console.log("parseSearch:");
+    console.log("value string");
+    console.log(value);
+    console.log("result");
+    console.log(result);
 
     return result;
   }, initialParsedValue);
