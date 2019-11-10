@@ -41,12 +41,6 @@ export function parseSearch(
       result.name = token;
     }
 
-    console.log("parseSearch:");
-    console.log("value string");
-    console.log(value);
-    console.log("result");
-    console.log(result);
-
     return result;
   }, initialParsedValue);
 
