@@ -124,6 +124,23 @@ app.patch("/api/leads/:id", (req, res, next) => {
           `
             UPDATE leads
             SET
+              phone = ?,
+              smsConsent = ?.
+              zip = ?,
+              modifiedBy = ?
+            WHERE id = ?;
+          `,
+          [fullLead.phone, fullLead.smsConsent, fullLead.zip, userId, leadId]
+        )
+      );
+    }
+
+    if (leadStatusChanged) {
+      queries.push(
+        mysql.format(
+          `
+            UPDATE leads
+            SET
               dateOfSignUp = ?,
               leadStatus = ?,
               inactivityAttempt = ?,
