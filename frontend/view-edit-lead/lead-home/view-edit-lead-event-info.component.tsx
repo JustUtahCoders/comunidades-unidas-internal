@@ -14,18 +14,20 @@ export default function ViewEditLeadEventInfo(
           "Lead has not attended any events to date"}
         {lead.eventSources.length === 1 && (
           <table className="lead-table">
-            <tr>
-              <td>Event Name:</td>
-              <td>{lead.eventSources[0].eventName}</td>
-            </tr>
-            <tr>
-              <td>Event Location:</td>
-              <td>{lead.eventSources[0].eventLocation}</td>
-            </tr>
-            <tr>
-              <td>Event Date:</td>
-              <td>{lead.eventSources[0].eventDate}</td>
-            </tr>
+            <tbody>
+              <tr>
+                <td>Event Name:</td>
+                <td>{lead.eventSources[0].eventName}</td>
+              </tr>
+              <tr>
+                <td>Event Location:</td>
+                <td>{lead.eventSources[0].eventLocation}</td>
+              </tr>
+              <tr>
+                <td>Event Date:</td>
+                <td>{lead.eventSources[0].eventDate}</td>
+              </tr>
+            </tbody>
           </table>
         )}
         {lead.eventSources.length > 1 &&

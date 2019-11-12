@@ -1,5 +1,4 @@
 import React from "react";
-import { capitalize } from "lodash-es";
 import easyFetch from "../../util/easy-fetch";
 import { SingleLead } from "../view-lead.component";
 import LeadSection from "./lead-section.component";

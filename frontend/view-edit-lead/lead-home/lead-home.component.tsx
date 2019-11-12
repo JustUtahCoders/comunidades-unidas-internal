@@ -15,7 +15,7 @@ export default function LeadHome(props: LeadHomeProps) {
 
   return (
     <div style={{ marginBottom: "3.2rem" }}>
-      <ViewEditBasicLeadInfo lead={lead} />
+      <ViewEditBasicLeadInfo lead={lead} leadUpdated={setLead} />
       <ViewEditLeadContactInfo lead={lead} />
       <ViewEditLeadContactStatus lead={lead} />
       <ViewEditLeadServicesInfo lead={lead} />

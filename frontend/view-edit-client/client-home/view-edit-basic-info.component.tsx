@@ -106,6 +106,8 @@ ViewEditBasicInfo.defaultProps = {
 };
 
 function updatingReducer(state, action) {
+  console.log(state);
+  console.log(action);
   switch (action.type) {
     case "update":
       return { isUpdating: true, newClientData: action.newClientData };

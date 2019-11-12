@@ -8,7 +8,6 @@ export default function BasicLeadInformationInputs(
   const [lastName, setLastName] = React.useState(props.lead.lastName || "");
   const [gender, setGender] = React.useState(props.lead.gender || "female");
   const [age, setAge] = React.useState(props.lead.age);
-
   return (
     <form onSubmit={handleSubmit} autoComplete="off" className="edit-form">
       <div>
@@ -31,6 +30,20 @@ export default function BasicLeadInformationInputs(
             type="text"
             value={lastName}
             onChange={evt => setLastName(evt.target.value)}
+            autoComplete="new-password"
+            autoFocus
+            required
+          />
+        </label>
+      </div>
+      <div>
+        <label>
+          <span>Age</span>
+          <input
+            type="number"
+            name="age"
+            value={age}
+            onChange={evt => setAge(parseInt(evt.target.value))}
             autoComplete="new-password"
             autoFocus
             required
