@@ -1,33 +1,112 @@
 # Client files
 
 This api is provided to upload and keep track of client files.
+To upload or access any file you need the corresponding signed url.
 
-## Get a single client file
+## Get a signed POST URL
 
 ```http
-GET /api/clients/:clientId/files/:fileId
+  GET /api/clients/files/signedPost
 ```
 
 ### Response
 
-### Success
+#### Success
 
 ```json
 {
+  "url": "https://yourbukcer.s3.amazonaws.com/",
+  "key": "fileKey",
+  "X-Amz-Algorithm": "AWS4-HMAC-SHA256",
+  "X-Amz-Credential": "awsCredentials",
+  "X-Amz-Date": "20191114T194641Z",
+  "X-Amz-Expires": "60",
+  "X-Amz-Signature": "awsSignature",
+  "X-Amz-SignedHeaders": "host"
+}
+```
+
+**NOTES**
+
+Once you receieve the URL you will need to make a PUT not POST to this URL.
+
+---
+
+## Get a signed GET URL
+
+```http
+  GET /apit/clients/files/signedGet
+```
+
+### Request
+
+```json
+{
+  "key": "clientId/fileKey"
+}
+```
+
+`clientId/key` Required, clientId is going to be the folder assigned to a client then the key is the file.
+
+### Response
+
+#### Success
+
+```json
+{
+  "url": "https://yourbukcer.s3.amazonaws.com/",
+  "key": "fileKey",
+  "X-Amz-Algorithm": "AWS4-HMAC-SHA256",
+  "X-Amz-Credential": "awsCredentials",
+  "X-Amz-Date": "20191114T194641Z",
+  "X-Amz-Expires": "60",
+  "X-Amz-Signature": "awsSignature",
+  "X-Amz-SignedHeaders": "host"
+}
+```
+
+```json
+{
+  "errors": ["You must provide a fileKey"]
+}
+```
+
+---
+
+**NOTES**
+
+You will need the corresponding signed URL from above to access, any of the following API's
+
+---
+
+## Get a client file
+
+```http
+  GET /api/clients/:clientId/files/:fileKey
+```
+
+### Response
+
+#### Success
+
+```json
+{
+  "clientId": 1,
+  "interactionId": 1,
   "createdBy": {
     "firstName": "Sean",
     "lastName": "White",
     "fullName": "Sean White",
     "timestamp": "2019-11-06T06:00:00.000Z"
   },
-  "fileName": "file-1",
+  "fileName": "fileKey",
   "fileSize": "10mb",
-  "fileExtension": "jpeg",
-  "fileNote": "some note here"
+  "fileExtension": "pdf",
+  "fileDesc": "invoice"
 }
 ```
 
-#### Not Found
+#### Error
 
 If there is no client with the provided id, you will get a 404 HTTP response, with the following error
 
@@ -41,48 +120,44 @@ If there is no file with the provided id, you will get a 404 HTTP response, with
 
 ```json
 {
-  "errors": ["Could not find file with id 123"]
+  "errors": ["Could not find fileKey"]
 }
 ```
 
-&nbsp;
-
 ---
-
-&nbsp;
 
 ## Get all client files
 
 ```http
-GET /api/clients/:id/files
+  GET /api/clients/:clientId/files
 ```
 
 ### Response
 
 #### Success
 
-The response for all files will look identical to get a single file but will return a array of files
-
 ```json
 {
   "files": [
     {
+      "clientId": 1,
+      "interactionId": 1,
       "createdBy": {
         "firstName": "Sean",
         "lastName": "White",
         "fullName": "Sean White",
         "timestamp": "2019-11-06T06:00:00.000Z"
       },
-      "fileName": "file-1",
+      "fileName": "fileKey",
       "fileSize": "10mb",
-      "fileExtension": "jpeg",
-      "fileNote": "some note here"
+      "fileExtension": "pdf",
+      "fileDesc": "invoice"
     }
   ]
 }
 ```
 
-#### Not Found
+#### Error
 
 If there is no client with the provided id, you will get a 404 HTTP response, with the following error
 
@@ -92,16 +167,12 @@ If there is no client with the provided id, you will get a 404 HTTP response, wi
 }
 ```
 
-&nbsp;
-
 ---
 
-&nbsp;
-
-## Create a single client file
+## Create a client file
 
 ```http
-POST /api/client/file
+  POST /api/clients/:clientId/file
 ```
 
 ### Request
@@ -109,37 +180,40 @@ POST /api/client/file
 ```json
 {
   "clientId": 1,
-  "fileName": "filename.ext",
-  "fileNote": "Some note here"
+  "interactionId": 1,
+  "fileName": "fileKey",
+  "fileSize": "10mb",
+  "fileExtension": "pdf",
+  "fileDesc": "invoice"
 }
 ```
 
-**_Notes_**
+**NOTES**
 
-`fileNote` is not required and is limited to 200 characters
+The `filename` will be included in the signed url. Not in the uploaded file.
 
 ### Response
 
-The response will look identical to get a client file
+#### Success
 
 ```json
 {
+  "clientId": 1,
+  "interactionId": 1,
   "createdBy": {
     "firstName": "Sean",
     "lastName": "White",
     "fullName": "Sean White",
     "timestamp": "2019-11-06T06:00:00.000Z"
   },
-  "fileName": "file-1",
+  "fileName": "fileKey",
   "fileSize": "10mb",
-  "fileExtension": "jpeg",
-  "fileNote": "some note here"
+  "fileExtension": "pdf",
+  "fileDesc": "invoice"
 }
 ```
 
-**_Notes_**
-
-### Validation Error
+#### Error
 
 Validation errors will respond with HTTP status 400.
 
@@ -149,58 +223,55 @@ Validation errors will respond with HTTP status 400.
 }
 ```
 
-&nbsp;
-
 ---
-
-&nbsp;
 
 ## Create multiple client files
 
 ```http
-POST /api/clients/:clientId/files
+  POST /api/clients/:clientId/files
 ```
-
-### Request
 
 ```json
 {
-  "clientId": "1",
   "files": [
     {
-      "fileName": "filname.ext",
-      "fileNote": "Some note here"
-    },
-    "...."
+      "clientId": 1,
+      "interactionId": 1,
+      "fileName": "fileKey",
+      "fileSize": "10mb",
+      "fileExtension": "pdf",
+      "fileDesc": "invoice"
+    }
   ]
 }
 ```
 
 ### Response
 
-The response will look identical to get all client files execpt that it will only return the array of the current files that you are uploading
+#### Success
 
 ```json
 {
   "files": [
     {
+      "clientId": 1,
+      "interactionId": 1,
       "createdBy": {
         "firstName": "Sean",
         "lastName": "White",
         "fullName": "Sean White",
         "timestamp": "2019-11-06T06:00:00.000Z"
       },
-      "fileName": "file-1",
-      "fileSize": "file://host/path"
-    },
-    "..."
+      "fileName": "fileKey",
+      "fileSize": "10mb",
+      "fileExtension": "pdf",
+      "fileDesc": "invoice"
+    }
   ]
 }
 ```
 
-**_Notes_**
-
-### Validation Error
+#### Error
 
 Validation errors will respond with HTTP status 400.
 
@@ -210,24 +281,38 @@ Validation errors will respond with HTTP status 400.
 }
 ```
 
-&nbsp;
-
 ---
 
-&nbsp;
-
-## Delete a single client file
+## Soft delete a client file
 
 ```http
-DELETE /api/client/:clientId/files/:files
+DELETE /api/clients/:clientId/file/:fileKey
 ```
 
-**note**
+### Response
 
-This will ne a hard delete of the file. Should indicate to the client that this is permanant, and cannot be reversed.
-
-## Response
+#### Success
 
 An HTTP 204 status is returned if the deletion was sucessful
 
-An HTTP 400 status is return if you cannot delete the file
+An HTTP 403 status is return if you cannot delete the file
+
+#### Error
+
+If there is no client with the provided id, you will get a 404 HTTP response, with the following error
+
+```json
+{
+  "errors": ["Could not find client with id 2"]
+}
+```
+
+If there is no file with the provided id, you will get a 404 HTTP response, with the following error
+
+```json
+{
+  "errors": ["Could not find fileKey"]
+}
+```
+
+---
