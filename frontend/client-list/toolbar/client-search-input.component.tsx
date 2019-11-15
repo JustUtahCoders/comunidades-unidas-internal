@@ -50,6 +50,8 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
           throw err;
         });
       });
+
+    return () => abortController.abort();
   }, []);
 
   return (

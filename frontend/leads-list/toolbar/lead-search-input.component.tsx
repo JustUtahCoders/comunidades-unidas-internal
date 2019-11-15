@@ -52,6 +52,8 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
           throw err;
         });
       });
+
+    return () => abortController.abort();
   }, []);
 
   React.useEffect(() => {
@@ -65,6 +67,8 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
           throw err;
         });
       });
+
+    return () => abortController.abort();
   }, []);
 
   return (
