@@ -4,6 +4,7 @@ import AddLeadStepHeader from "./add-lead-step-header.component";
 import imgSrc from "../../icons/148705-essential-collection/svg/map-location.svg";
 import dayjs from "dayjs";
 import easyFetch from "../util/easy-fetch";
+import { mediaDesktop } from "../styleguide.component";
 
 export default function AddEventStep(props: AddEventStepProps) {
   const scope = useCss(css);
@@ -16,6 +17,9 @@ export default function AddEventStep(props: AddEventStepProps) {
   const [eventLocation, setEventLocation] = React.useState("");
   const [totalAttendance, setTotalAttendance] = React.useState(1);
   const [createNewEvent, setCreateNewEvent] = React.useState(false);
+  const [existingEventId, setExistingEventId] = React.useState<ExistingEventId>(
+    ""
+  );
 
   React.useEffect(() => {
     const abortController = new AbortController();
@@ -50,8 +54,8 @@ export default function AddEventStep(props: AddEventStepProps) {
           totalAttendance
         }
       })
-        .then(result => {
-          // TO-DO: move to the add leads step
+        .then(event => {
+          props["navigate"](`/add-leads/event/${event.id}`);
         })
         .catch(err => {
           setCreateNewEvent(false);
@@ -67,7 +71,7 @@ export default function AddEventStep(props: AddEventStepProps) {
   return (
     <>
       <AddLeadStepHeader
-        text="Let's check for an event that the lead attended"
+        text="Let's check for an event that the leads attended"
         imgSrc={imgSrc}
         imgAlt="Map Location icon"
       />
@@ -106,12 +110,28 @@ export default function AddEventStep(props: AddEventStepProps) {
 
   function existingEventInputs() {
     return (
-      <div>
-        <label htmlFor="existing-events-list">Choose event:</label>
-        <select id="existing-events-list">
-          <option value="To-DO">Still need to implement this</option>
-        </select>
-      </div>
+      <>
+        <div>
+          <label htmlFor="existing-events-list">Choose event:</label>
+          <select
+            id="existing-events-list"
+            value={existingEventId}
+            onChange={evt => setExistingEventId(Number(evt.target.value))}
+          >
+            <option value="">(Select an event)</option>
+            {allEvents.map(event => (
+              <option key={event.id} value={event.id}>
+                {event.eventName} ({event.eventDate})
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="actions">
+          <button className="primary" type="submit" disabled={!existingEventId}>
+            Reuse event
+          </button>
+        </div>
+      </>
     );
   }
 
@@ -160,7 +180,7 @@ export default function AddEventStep(props: AddEventStepProps) {
           />
         </div>
         <div className="actions">
-          <button className="primary" type="submit">
+          <button className="primary" type="submit" disabled={createNewEvent}>
             Create event
           </button>
         </div>
@@ -170,6 +190,7 @@ export default function AddEventStep(props: AddEventStepProps) {
 
   function submitExistingEvent(evt) {
     evt.preventDefault();
+    props["navigate"](`/add-leads/event/${existingEventId}`);
   }
 
   function submitNewEvent(evt) {
@@ -186,11 +207,21 @@ const css = `
 
 & .add-event-form {
   display: flex;
-  width: 40rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin: 2.4rem auto 0 auto;
+}
+
+${mediaDesktop} {
+  & .add-event-form {
+    width: 40rem;
+  }
+
+  & .add-event-form > div > label {
+    min-width: 15rem;
+    width: 15rem;
+  }
 }
 
 & .add-event-form > div {
@@ -201,8 +232,6 @@ const css = `
 }
 
 & .add-event-form > div > label {
-  min-width: 15rem;
-  width: 15rem;
   text-align: right;
   margin-right: 1.6rem;
 }
@@ -226,4 +255,8 @@ const css = `
 }
 `;
 
-type AddEventStepProps = {};
+type AddEventStepProps = {
+  path: string;
+};
+
+type ExistingEventId = number | "";

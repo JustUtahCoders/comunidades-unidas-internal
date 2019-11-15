@@ -26,9 +26,7 @@ app.get("/api/events/:id", (req, res, next) => {
     }
 
     if (event) {
-      res.send({
-        event
-      });
+      res.send(event);
     } else {
       notFound(res, `Could not find event with id ${req.params.id}`);
     }
@@ -70,11 +68,11 @@ function getEventById(eventId, cbk, connection) {
       return cbk(err, data, fields);
     }
 
-    const bigEventObj = data[0];
-
-    if (bigEventObj.length === 0) {
+    if (data.length === 0) {
       return cbk(err, null);
     }
+
+    const bigEventObj = data[0];
 
     const e = bigEventObj;
 

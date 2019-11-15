@@ -52,7 +52,9 @@ export default function AddLeadsStep(props: AddLeadsStepProps) {
   );
 }
 
-type AddLeadsStepProps = {};
+type AddLeadsStepProps = {
+  path: string;
+};
 
 const css = `
   & table {

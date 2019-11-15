@@ -29,7 +29,7 @@
   ],
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged && concurrently -n lint,typescript,test 'yarn:lint' 'yarn:typescript' 'yarn:test'"
+      "pre-commit": "pretty-quick --staged && concurrently 'yarn:lint' 'yarn:typescript' 'yarn:test'"
     }
   },
   "dependencies": {
