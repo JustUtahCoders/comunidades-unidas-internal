@@ -84,9 +84,7 @@ app.patch("/api/leads/:id", (req, res, next) => {
     }
 
     if (queries.length === 0) {
-      res.send({
-        lead: oldLead
-      });
+      res.send(oldLead);
       return;
     }
 
