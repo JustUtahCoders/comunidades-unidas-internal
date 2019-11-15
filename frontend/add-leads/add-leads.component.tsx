@@ -14,7 +14,10 @@ export default function AddLeads(props: AddLeadsProps) {
 
   return (
     <>
-      <PageHeader title="Add new leads" />
+      <PageHeader
+        title="Add new leads"
+        fullScreen={/\/add-leads\/event\/.+/.test(window.location.pathname)}
+      />
       {featureEnabled ? (
         <div className="card">
           <Router>
