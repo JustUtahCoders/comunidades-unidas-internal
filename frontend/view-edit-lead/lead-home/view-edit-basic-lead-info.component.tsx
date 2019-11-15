@@ -21,11 +21,17 @@ export default function ViewEditBasicLeadInfo(
         method: "PATCH",
         body: apiStatus.newLeadData,
         signal: abortController.signal
-      }).then(data => {
-        dispatchApiStatus({ type: "reset" });
-        props.leadUpdated(data.lead);
-        setEditing(false);
-      });
+      })
+        .then(data => {
+          dispatchApiStatus({ type: "reset" });
+          props.leadUpdated(data.lead);
+          setEditing(false);
+        })
+        .catch(err => {
+          setTimeout(() => {
+            throw err;
+          });
+        });
 
       return () => abortController.abort();
     }
