@@ -84,7 +84,6 @@ app.patch("/api/leads/:id", (req, res, next) => {
     }
 
     if (queries.length === 0) {
-      console.log("No queries");
       res.send({
         lead: oldLead
       });
@@ -94,15 +93,11 @@ app.patch("/api/leads/:id", (req, res, next) => {
     let queryString = "";
 
     if (queries.length === 1) {
-      console.log("one query");
       queryString = queries[0];
-      console.log(queryString);
     }
 
     if (queries.length > 1) {
-      console.log("multiple queries");
       queryString = queries.join(" ");
-      console.log(queryString);
     }
 
     const mySqlQuery = mysql.format(queryString, queryData);
@@ -116,9 +111,6 @@ app.patch("/api/leads/:id", (req, res, next) => {
         if (selectErr) {
           return databaseError(req, res, selectErr, connection);
         }
-
-        console.log(lead);
-
         res.send({
           lead
         });
