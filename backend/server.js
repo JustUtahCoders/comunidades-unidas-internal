@@ -110,6 +110,7 @@ require("./apis/events/get-event.api");
 require("./apis/leads/list-leads.api");
 require("./apis/leads/add-leads.api");
 require("./apis/events/add-event.api");
+require("./apis/leads/update-lead.api");
 require("./apis/events/delete-event.api");
 
 require("./apis/default-404.api.js");
