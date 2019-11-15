@@ -2,7 +2,7 @@ import React from "react";
 import { capitalize } from "lodash-es";
 
 export default function BasicLeadInformationInputs(
-  props: BasicLeadInforamtionInputsProps
+  props: BasicLeadInformationInputsProps
 ) {
   const [firstName, setFirstName] = React.useState(props.lead.firstName || "");
   const [lastName, setLastName] = React.useState(props.lead.lastName || "");
@@ -81,7 +81,7 @@ export default function BasicLeadInformationInputs(
   }
 }
 
-type BasicLeadInforamtionInputsProps = {
+type BasicLeadInformationInputsProps = {
   lead: BasicInfoLead;
   children: JSX.Element | JSX.Element[];
   handleSubmit(evt: Event, newState: BasicInfoLead);
