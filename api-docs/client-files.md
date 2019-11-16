@@ -6,7 +6,7 @@ To upload or access any file you need the corresponding signed url.
 ## Get a signed POST URL
 
 ```http
-  GET /api/clients/files/signedPost
+  GET /api/signed-file-uploads
 ```
 
 ### Response
@@ -16,7 +16,6 @@ To upload or access any file you need the corresponding signed url.
 ```json
 {
   "url": "https://yourbukcer.s3.amazonaws.com/",
-  "key": "fileKey",
   "X-Amz-Algorithm": "AWS4-HMAC-SHA256",
   "X-Amz-Credential": "awsCredentials",
   "X-Amz-Date": "20191114T194641Z",
@@ -28,21 +27,21 @@ To upload or access any file you need the corresponding signed url.
 
 **NOTES**
 
-Once you receieve the URL you will need to make a PUT not POST to this URL.
+Once you receive the URL you will need to make a PUT not POST to this URL.
 
 ---
 
 ## Get a signed GET URL
 
 ```http
-  GET /apit/clients/files/signedGet
+  GET /api/clients/:clientId/files/:fileId/signed-downloads
 ```
 
 ### Request
 
 ```json
 {
-  "key": "clientId/fileKey"
+  "key": "clientId/fileId"
 }
 ```
 
@@ -55,7 +54,7 @@ Once you receieve the URL you will need to make a PUT not POST to this URL.
 ```json
 {
   "url": "https://yourbukcer.s3.amazonaws.com/",
-  "key": "fileKey",
+  "key": "fileId",
   "X-Amz-Algorithm": "AWS4-HMAC-SHA256",
   "X-Amz-Credential": "awsCredentials",
   "X-Amz-Date": "20191114T194641Z",
@@ -67,7 +66,7 @@ Once you receieve the URL you will need to make a PUT not POST to this URL.
 
 ```json
 {
-  "errors": ["You must provide a fileKey"]
+  "errors": ["You must provide a fileId"]
 }
 ```
 
@@ -82,7 +81,7 @@ You will need the corresponding signed URL from above to access, any of the foll
 ## Get a client file
 
 ```http
-  GET /api/clients/:clientId/files/:fileKey
+  GET /api/clients/:clientId/files/:fileId
 ```
 
 ### Response
@@ -92,14 +91,13 @@ You will need the corresponding signed URL from above to access, any of the foll
 ```json
 {
   "clientId": 1,
-  "interactionId": 1,
   "createdBy": {
     "firstName": "Sean",
     "lastName": "White",
     "fullName": "Sean White",
     "timestamp": "2019-11-06T06:00:00.000Z"
   },
-  "fileName": "fileKey",
+  "fileName": "fileId",
   "fileSize": "10mb",
   "fileExtension": "pdf",
   "fileDesc": "invoice"
@@ -120,7 +118,7 @@ If there is no file with the provided id, you will get a 404 HTTP response, with
 
 ```json
 {
-  "errors": ["Could not find fileKey"]
+  "errors": ["Could not find fileId"]
 }
 ```
 
@@ -141,14 +139,13 @@ If there is no file with the provided id, you will get a 404 HTTP response, with
   "files": [
     {
       "clientId": 1,
-      "interactionId": 1,
       "createdBy": {
         "firstName": "Sean",
         "lastName": "White",
         "fullName": "Sean White",
         "timestamp": "2019-11-06T06:00:00.000Z"
       },
-      "fileName": "fileKey",
+      "fileName": "fileId",
       "fileSize": "10mb",
       "fileExtension": "pdf",
       "fileDesc": "invoice"
@@ -179,9 +176,7 @@ If there is no client with the provided id, you will get a 404 HTTP response, wi
 
 ```json
 {
-  "clientId": 1,
-  "interactionId": 1,
-  "fileName": "fileKey",
+  "fileName": "fileId",
   "fileSize": "10mb",
   "fileExtension": "pdf",
   "fileDesc": "invoice"
@@ -199,75 +194,16 @@ The `filename` will be included in the signed url. Not in the uploaded file.
 ```json
 {
   "clientId": 1,
-  "interactionId": 1,
   "createdBy": {
     "firstName": "Sean",
     "lastName": "White",
     "fullName": "Sean White",
     "timestamp": "2019-11-06T06:00:00.000Z"
   },
-  "fileName": "fileKey",
+  "fileName": "fileId",
   "fileSize": "10mb",
   "fileExtension": "pdf",
   "fileDesc": "invoice"
-}
-```
-
-#### Error
-
-Validation errors will respond with HTTP status 400.
-
-```json
-{
-  "errors": ["You must provide a id"]
-}
-```
-
----
-
-## Create multiple client files
-
-```http
-  POST /api/clients/:clientId/files
-```
-
-```json
-{
-  "files": [
-    {
-      "clientId": 1,
-      "interactionId": 1,
-      "fileName": "fileKey",
-      "fileSize": "10mb",
-      "fileExtension": "pdf",
-      "fileDesc": "invoice"
-    }
-  ]
-}
-```
-
-### Response
-
-#### Success
-
-```json
-{
-  "files": [
-    {
-      "clientId": 1,
-      "interactionId": 1,
-      "createdBy": {
-        "firstName": "Sean",
-        "lastName": "White",
-        "fullName": "Sean White",
-        "timestamp": "2019-11-06T06:00:00.000Z"
-      },
-      "fileName": "fileKey",
-      "fileSize": "10mb",
-      "fileExtension": "pdf",
-      "fileDesc": "invoice"
-    }
-  ]
 }
 ```
 
@@ -286,7 +222,7 @@ Validation errors will respond with HTTP status 400.
 ## Soft delete a client file
 
 ```http
-DELETE /api/clients/:clientId/file/:fileKey
+DELETE /api/clients/:clientId/file/:fileId
 ```
 
 ### Response
@@ -311,7 +247,7 @@ If there is no file with the provided id, you will get a 404 HTTP response, with
 
 ```json
 {
-  "errors": ["Could not find fileKey"]
+  "errors": ["Could not find fileId"]
 }
 ```
 
