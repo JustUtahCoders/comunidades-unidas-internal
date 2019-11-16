@@ -99,8 +99,7 @@ You will need the corresponding signed URL from above to access, any of the foll
   },
   "fileName": "fileId",
   "fileSize": "10mb",
-  "fileExtension": "pdf",
-  "fileDesc": "invoice"
+  "fileExtension": "pdf"
 }
 ```
 
@@ -147,8 +146,7 @@ If there is no file with the provided id, you will get a 404 HTTP response, with
       },
       "fileName": "fileId",
       "fileSize": "10mb",
-      "fileExtension": "pdf",
-      "fileDesc": "invoice"
+      "fileExtension": "pdf"
     }
   ]
 }
@@ -178,8 +176,7 @@ If there is no client with the provided id, you will get a 404 HTTP response, wi
 {
   "fileName": "fileId",
   "fileSize": "10mb",
-  "fileExtension": "pdf",
-  "fileDesc": "invoice"
+  "fileExtension": "pdf"
 }
 ```
 
@@ -202,8 +199,7 @@ The `filename` will be included in the signed url. Not in the uploaded file.
   },
   "fileName": "fileId",
   "fileSize": "10mb",
-  "fileExtension": "pdf",
-  "fileDesc": "invoice"
+  "fileExtension": "pdf"
 }
 ```
 
