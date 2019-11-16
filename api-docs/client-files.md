@@ -3,10 +3,26 @@
 This api is provided to upload and keep track of client files.
 To upload or access any file you need the corresponding signed url.
 
+### API flow
+
+If performing an upload you will get a signed url via `/api/signed-file-uploads` you will then make
+a PUT request to the url like so
+
+```javascript
+axios.put(signedRequest, file, options).then(result => {
+  if (result.data.success) {
+    //Make the request to create a client file /api/clients/:clientId/file
+  }
+});
+```
+
+For each file that you want to download you would make a request to `/api/clients/:clientId/files/:fileId/signed-downloads` then
+you would make a request on the front end like so `window.location.href = downloadurl`
+
 ## Get a signed POST URL
 
 ```http
-  GET /api/signed-file-uploads
+GET /api/signed-file-uploads
 ```
 
 ### Response
@@ -15,13 +31,7 @@ To upload or access any file you need the corresponding signed url.
 
 ```json
 {
-  "url": "https://yourbukcer.s3.amazonaws.com/",
-  "X-Amz-Algorithm": "AWS4-HMAC-SHA256",
-  "X-Amz-Credential": "awsCredentials",
-  "X-Amz-Date": "20191114T194641Z",
-  "X-Amz-Expires": "60",
-  "X-Amz-Signature": "awsSignature",
-  "X-Amz-SignedHeaders": "host"
+  "uploadUrl": "https://bucket.s3.amazonaws.com/fileId?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=awsCredential&X-Amz-Date=20191116T030355Z&X-Amz-Expires=60&X-Amz-Signature=signature&X-Amz-SignedHeaders=host"
 }
 ```
 
@@ -34,18 +44,8 @@ Once you receive the URL you will need to make a PUT not POST to this URL.
 ## Get a signed GET URL
 
 ```http
-  GET /api/clients/:clientId/files/:fileId/signed-downloads
+GET /api/clients/:clientId/files/:fileId/signed-downloads
 ```
-
-### Request
-
-```json
-{
-  "key": "clientId/fileId"
-}
-```
-
-`clientId/key` Required, clientId is going to be the folder assigned to a client then the key is the file.
 
 ### Response
 
@@ -53,20 +53,27 @@ Once you receive the URL you will need to make a PUT not POST to this URL.
 
 ```json
 {
-  "url": "https://yourbukcer.s3.amazonaws.com/",
-  "key": "fileId",
-  "X-Amz-Algorithm": "AWS4-HMAC-SHA256",
-  "X-Amz-Credential": "awsCredentials",
-  "X-Amz-Date": "20191114T194641Z",
-  "X-Amz-Expires": "60",
-  "X-Amz-Signature": "awsSignature",
-  "X-Amz-SignedHeaders": "host"
+  "downloadUrl": "https://bucket.s3.amazonaws.com/fileId?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=awsCredential&X-Amz-Date=20191116T030355Z&X-Amz-Expires=60&X-Amz-Signature=signature&X-Amz-SignedHeaders=host"
 }
 ```
 
+#### Errors
+
+#### Error
+
+If there is no client with the provided id, you will get a 404 HTTP response, with the following error
+
 ```json
 {
-  "errors": ["You must provide a fileId"]
+  "errors": ["Could not find client with id 2"]
+}
+```
+
+If there is no file with the provided id, you will get a 404 HTTP response, with the following error
+
+```json
+{
+  "errors": ["Could not find file with fileId"]
 }
 ```
 
@@ -81,7 +88,7 @@ You will need the corresponding signed URL from above to access, any of the foll
 ## Get a client file
 
 ```http
-  GET /api/clients/:clientId/files/:fileId
+GET /api/clients/:clientId/files/:fileId
 ```
 
 ### Response
@@ -126,7 +133,7 @@ If there is no file with the provided id, you will get a 404 HTTP response, with
 ## Get all client files
 
 ```http
-  GET /api/clients/:clientId/files
+GET /api/clients/:clientId/files
 ```
 
 ### Response
@@ -167,7 +174,7 @@ If there is no client with the provided id, you will get a 404 HTTP response, wi
 ## Create a client file
 
 ```http
-  POST /api/clients/:clientId/file
+POST /api/clients/:clientId/file
 ```
 
 ### Request
@@ -180,17 +187,12 @@ If there is no client with the provided id, you will get a 404 HTTP response, wi
 }
 ```
 
-**NOTES**
-
-The `filename` will be included in the signed url. Not in the uploaded file.
-
 ### Response
 
 #### Success
 
 ```json
 {
-  "clientId": 1,
   "createdBy": {
     "firstName": "Sean",
     "lastName": "White",
@@ -205,11 +207,27 @@ The `filename` will be included in the signed url. Not in the uploaded file.
 
 #### Error
 
+If there is no client with the provided id, you will get a 404 HTTP response, with the following error
+
+```json
+{
+  "errors": ["Could not find client with id 2"]
+}
+```
+
+If there is no file with the provided id, you will get a 404 HTTP response, with the following error
+
+```json
+{
+  "errors": ["Could not find fileId"]
+}
+```
+
 Validation errors will respond with HTTP status 400.
 
 ```json
 {
-  "errors": ["You must provide a id"]
+  "errors": ["You must provide a file"]
 }
 ```
 
@@ -220,6 +238,8 @@ Validation errors will respond with HTTP status 400.
 ```http
 DELETE /api/clients/:clientId/file/:fileId
 ```
+
+This is a soft delete it will only flag the fileId in the database it will still be stored in s3
 
 ### Response
 
