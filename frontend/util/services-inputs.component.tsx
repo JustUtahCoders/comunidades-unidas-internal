@@ -67,24 +67,24 @@ export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
 );
 
 const css = `
-	& h3 {
-		font-size: 1.8rem;
-	}
+  & h3 {
+    font-size: 1.8rem;
+  }
 
-	& .vertical-options {
-		display: block;
-	}
+  & .vertical-options {
+    display: block;
+  }
 
-	& .vertical-options > * {
-		padding: .8rem 0;
-	}
+  & .vertical-options > * {
+    padding: .8rem 0;
+  }
 
-	& .vertical-options > div {
-		display: flex;
-		flex-direction: column;
-		justify-content: flex-start;
-		align-items: flex-start;
-	}
+  & .vertical-options > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
 `;
 
 export type IntakeService = {

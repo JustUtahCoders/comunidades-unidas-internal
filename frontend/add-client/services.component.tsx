@@ -82,7 +82,7 @@ const css = `
   margin-top: .8rem;
 }
 
-form {
+& form {
   display: flex;
   flex-direction: column;
   align-items: center;

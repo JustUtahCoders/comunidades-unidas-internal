@@ -1,4 +1,5 @@
 const mysql = require("mysql");
+const _ = require("lodash");
 const {
   app,
   databaseError,
@@ -89,38 +90,38 @@ app.patch("/api/leads/:id", (req, res, next) => {
       queries.push("UPDATE leads SET modifiedBy = ? WHERE id = ?;");
       queryData.push(userId, leadId);
 
-      const oldLeadServices = [...oldLead.leadServices];
-      const oldLeadServiceIds = oldLeadServices.map(service => {
+      const oldLeadServiceIds = oldLead.leadServices.map(service => {
         return service.id;
       });
-      const fullLeadServiceIds = [...fullLead.leadServices];
 
-      const newLeadServiceIds = [];
+      const newLeadServiceIds = _.difference(
+        fullLead.leadServices,
+        oldLeadServiceIds
+      );
 
-      for (let i = 0; i < fullLeadServiceIds.length; i++) {
-        let isNewLead = true;
-        const checkingLead = fullLeadServiceIds[i];
-
-        for (let j = 0; j < oldLeadServiceIds.length; j++) {
-          const checkingOldLead = oldLeadServiceIds[j];
-          if (isNewLead === true) {
-            if (checkingOldLead == checkingLead) {
-              isNewLead = false;
-            }
-          }
-        }
-
-        if (isNewLead === true) {
-          newLeadServiceIds.push(checkingLead);
+      if (newLeadServiceIds.length > 0) {
+        for (let i = 0; i < newLeadServiceIds.length; i++) {
+          const serviceId = newLeadServiceIds[i];
+          queries.push(
+            "INSERT INTO leadServices (leadId, serviceId) VALUES (?, ?);"
+          );
+          queryData.push(leadId, serviceId);
         }
       }
 
-      for (let i = 0; i < newLeadServiceIds.length; i++) {
-        const serviceId = newLeadServiceIds[i];
-        queries.push(
-          "INSERT INTO leadServices (leadId, serviceId) VALUES (?, ?);"
-        );
-        queryData.push(leadId, serviceId);
+      const removeLeadSericeIds = _.difference(
+        oldLeadServiceIds,
+        fullLead.leadServices
+      );
+
+      if (removeLeadSericeIds.length > 0) {
+        for (let i = 0; i < removeLeadSericeIds.length; i++) {
+          const serviceId = removeLeadSericeIds[i];
+          queries.push(
+            "DELETE FROM leadServices WHERE leadId = ? AND serviceId = ?;"
+          );
+          queryData.push(leadId, serviceId);
+        }
       }
     }
 

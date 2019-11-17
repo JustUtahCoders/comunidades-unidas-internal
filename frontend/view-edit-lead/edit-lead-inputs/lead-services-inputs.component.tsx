@@ -15,22 +15,24 @@ export default function LeadServicesInformationInputs(
   React.useEffect(() => {
     const abortController = new AbortController();
 
-    easyFetch("/api/services", { signal: abortController.signal }).then(data =>
-      setServices(data.services)
-    );
+    easyFetch("/api/services", { signal: abortController.signal })
+      .then(data => setServices(data.services))
+      .catch(err => {
+        setTimeout(() => {
+          throw err;
+        });
+      });
 
     return () => abortController.abort();
   }, []);
 
   return (
     <form onSubmit={handleSubmit} autoComplete="off" className="edit-form">
-      <label>
-        <IntakeServicesInputs
-          ref={leadServicesRef}
-          services={services}
-          checkedServices={leadServices}
-        />
-      </label>
+      <IntakeServicesInputs
+        ref={leadServicesRef}
+        services={services}
+        checkedServices={leadServices}
+      />
       <div className="children-container">{props.children}</div>
     </form>
   );

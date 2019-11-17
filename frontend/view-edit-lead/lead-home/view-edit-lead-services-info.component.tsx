@@ -41,7 +41,7 @@ export default function ViewEditLeadServicesInfo(
 
   return (
     <LeadSection
-      title={editing ? "Edit Serivces of Interest" : "Services of Interest"}
+      title={editing ? "Edit Services of Interest" : "Services of Interest"}
     >
       {editing ? (
         <LeadServicesInformationInputs

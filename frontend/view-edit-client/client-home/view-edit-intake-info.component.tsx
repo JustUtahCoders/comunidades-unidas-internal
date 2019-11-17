@@ -201,7 +201,6 @@ const css = `
   margin-left: .8rem;
 }
 
-
 `;
 
 ViewEditIntakeInfo.defaultProps = {
