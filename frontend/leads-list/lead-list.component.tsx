@@ -2,6 +2,7 @@ import React from "react";
 import queryString from "query-string";
 import easyFetch from "../util/easy-fetch";
 import { useFullWidth } from "../navbar/use-full-width.hook";
+import { SearchParseValues } from "../util/list-search/search-dsl.helpers";
 import PageHeader from "../page-header.component";
 import ReportIssue from "../report-issue/report-issue.component";
 import LeadsTable from "./table/leads-table.component";
@@ -35,6 +36,7 @@ export default function LeadList(props: LeadListProps) {
             setPage={newPage}
             fetchingLead={fetchingLead}
             refetchLeads={refetchLeads}
+            setSearch={setSearch}
           />
           <LeadsTable
             leads={apiState.apiData.leads}
@@ -60,6 +62,13 @@ export default function LeadList(props: LeadListProps) {
       type: ActionTypes.shouldFetch
     });
   }
+
+  function setSearch(search) {
+    dispatchApiState({
+      type: ActionTypes.newSearch,
+      search
+    });
+  }
 }
 
 function reduceApiState(state: ApiState, action: ApiStateAction) {
@@ -80,6 +89,12 @@ function reduceApiState(state: ApiState, action: ApiStateAction) {
         ...state,
         status: ApiStateStatus.shouldFetch,
         page: action.page
+      };
+    case ActionTypes.newSearch:
+      return {
+        ...state,
+        status: ApiStateStatus.shouldFetch,
+        search: action.search
       };
     case ActionTypes.newQueryParams:
       return {
@@ -106,6 +121,7 @@ function useLeadsApi(apiState, dispatchApiState) {
     if (apiState.status === ApiStateStatus.shouldFetch) {
       const abortController = new AbortController();
       const query = queryString.stringify({
+        ...apiState.search,
         page: apiState.page
       });
       easyFetch(`/api/leads?${query}`)
@@ -178,7 +194,8 @@ function useFrontendUrlParams(apiState, dispatchApiState) {
 
   React.useEffect(() => {
     const queryParams = queryString.stringify({
-      page: apiState.page
+      page: apiState.page,
+      ...apiState.search
     });
 
     window.history.replaceState(
@@ -196,7 +213,6 @@ function getInitialState(): ApiState {
 
   if (!isNaN(Number(queryParams.page))) {
     page = Number(queryParams.page);
-
     if (page < 1) {
       page = 1;
     }
@@ -216,7 +232,8 @@ function getInitialState(): ApiState {
       },
       leads: []
     },
-    page
+    page,
+    search
   };
 }
 
@@ -233,7 +250,8 @@ enum ActionTypes {
   newPage = "newPage",
   newQueryParams = "newQueryParams",
   apiError = "apiError",
-  shouldFetch = "shouldFetch"
+  shouldFetch = "shouldFetch",
+  newSearch = "newSearch"
 }
 
 type ApiStateAction =
@@ -242,12 +260,14 @@ type ApiStateAction =
   | FetchingAction
   | FetchedAction
   | ShouldFetchAction
-  | ApiErrorAction;
+  | ApiErrorAction
+  | NewSearchAction;
 
 type ApiState = {
   status: ApiStateStatus;
   page: number;
   apiData: LeadApiData;
+  search: SearchParseValues;
 };
 
 type FetchedAction = {
@@ -280,9 +300,14 @@ type NewPageAction = {
 
 type NewParamsAction = {
   type: ActionTypes.newQueryParams;
-  params: {
+  params: SearchParseValues & {
     page: number;
   };
+};
+
+type NewSearchAction = {
+  type: ActionTypes.newSearch;
+  search: SearchParseValues;
 };
 
 type ShouldFetchAction = {

@@ -2,17 +2,30 @@ import React from "react";
 import { useCss } from "kremling";
 import easyFetch from "../../util/easy-fetch";
 import { mediaDesktop, mediaMobile } from "../../styleguide.component";
+import { SearchParseValues } from "../../util/list-search/search-dsl.helpers";
+import { LeadListLead } from "../lead-list.component";
+import LeadSearchInput from "./lead-search-input.component";
 import backIcon from "../../../icons/148705-essential-collection/svg/back.svg";
 import nextIcon from "../../../icons/148705-essential-collection/svg/next.svg";
 
 export default function LeadsTableToolbar(props: LeadsTableToolbarProps) {
   const scope = useCss(css);
+  const advancedSearchRef = React.useRef(null);
 
   const lastPage = Math.ceil(props.numLeads / props.pageSize);
 
   return (
     <div className="leads-table-toolbar" {...scope}>
       <div className="desktop-table-toolbar">
+        <div className="left">
+          <LeadSearchInput
+            autoFocus
+            performSearch={performSearch}
+            initialValueFromQueryParams
+            disabled={props.fetchingLead}
+            advancedSearchRef={advancedSearchRef}
+          />
+        </div>
         {lastPage !== 0 && (
           <div className="pagination-container">
             <div>
@@ -45,6 +58,7 @@ export default function LeadsTableToolbar(props: LeadsTableToolbarProps) {
           </div>
         )}
       </div>
+      <div ref={advancedSearchRef} />
     </div>
   );
 
@@ -54,6 +68,10 @@ export default function LeadsTableToolbar(props: LeadsTableToolbarProps) {
 
   function goForward() {
     props.setPage(props.page + 1);
+  }
+
+  function performSearch(searchParse: SearchParseValues) {
+    props.setSearch(searchParse);
   }
 }
 
@@ -109,6 +127,7 @@ type LeadsTableToolbarProps = {
   page: number;
   pageSize: number;
   setPage(pageNum: number): void;
+  setSearch(searchParse: SearchParseValues): any;
   fetchingLead: boolean;
   refetchLeads: () => any;
 };
