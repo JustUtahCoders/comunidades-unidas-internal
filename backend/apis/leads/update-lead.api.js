@@ -83,6 +83,47 @@ app.patch("/api/leads/:id", (req, res, next) => {
       );
     }
 
+    const leadServicesChanged = atLeastOne(req.body, "leadServices");
+
+    if (leadServicesChanged && fullLead.leadServices.length > 0) {
+      queries.push("UPDATE leads SET modifiedBy = ? WHERE id = ?;");
+      queryData.push(userId, leadId);
+
+      const oldLeadServices = [...oldLead.leadServices];
+      const oldLeadServiceIds = oldLeadServices.map(service => {
+        return service.id;
+      });
+      const fullLeadServiceIds = [...fullLead.leadServices];
+
+      const newLeadServiceIds = [];
+
+      for (let i = 0; i < fullLeadServiceIds.length; i++) {
+        let isNewLead = true;
+        const checkingLead = fullLeadServiceIds[i];
+
+        for (let j = 0; j < oldLeadServiceIds.length; j++) {
+          const checkingOldLead = oldLeadServiceIds[j];
+          if (isNewLead === true) {
+            if (checkingOldLead == checkingLead) {
+              isNewLead = false;
+            }
+          }
+        }
+
+        if (isNewLead === true) {
+          newLeadServiceIds.push(checkingLead);
+        }
+      }
+
+      for (let i = 0; i < newLeadServiceIds.length; i++) {
+        const serviceId = newLeadServiceIds[i];
+        queries.push(
+          "INSERT INTO leadServices (leadId, serviceId) VALUES (?, ?);"
+        );
+        queryData.push(leadId, serviceId);
+      }
+    }
+
     if (queries.length === 0) {
       res.send(oldLead);
       return;

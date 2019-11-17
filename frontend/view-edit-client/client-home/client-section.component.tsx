@@ -75,6 +75,23 @@ function getCss() {
       align-items: center;
     }
 
+    & .client-section-content > form > div > label > span {
+      width: 50%;
+    }
+
+    & .client-section-content > form > div.intake-services-inputs > label {
+      display: flex;
+      flex-direction: column;
+    }
+
+    & .client-section-content > form > div.intake-services-inputs > label > span {
+      margin-top: 2rem;
+      width: 100%;
+      font-size: 2.2rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
     & button.icon {
       margin-left: 1.6rem;
     }

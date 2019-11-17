@@ -7,7 +7,7 @@ import ClientSourceInputsComponent, {
 } from "../../add-client/form-inputs/client-source-inputs.component";
 import IntakeDateInput from "../../add-client/form-inputs/intake-date-input.component";
 import easyFetch from "../../util/easy-fetch";
-import IntakeServicesInputs from "../../add-client/form-inputs/intake-services-inputs.component";
+import IntakeServicesInputs from "../../util/services-inputs.component";
 import checkedUrl from "../../../icons/148705-essential-collection/svg/checked-1.svg";
 import closeUrl from "../../../icons/148705-essential-collection/svg/close.svg";
 import { useCss } from "kremling";
@@ -74,7 +74,7 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
               couldVolunteer: client.couldVolunteer
             }}
           />
-          <div>
+          <div className="intake-services-inputs">
             <label>
               <span>Intake Services</span>
               <IntakeServicesInputs
@@ -200,6 +200,8 @@ const css = `
   width: 1.6rem;
   margin-left: .8rem;
 }
+
+
 `;
 
 ViewEditIntakeInfo.defaultProps = {
