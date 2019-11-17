@@ -83,6 +83,26 @@ app.patch("/api/leads/:id", (req, res, next) => {
       );
     }
 
+    const leadContactInfoChanged = atLeastOne(
+      req.body,
+      "phone",
+      "smsConsent",
+      "zip"
+    );
+
+    if (leadContactInfoChanged) {
+      const leadContactInfoQuery =
+        "UPDATE leads SET phone = ?, smsConsent = ?, zip = ?, modifiedBy = ? WHERE id = ?;";
+      queries.push(leadContactInfoQuery);
+      queryData.push(
+        fullLead.phone,
+        fullLead.smsConsent,
+        fullLead.zip,
+        userId,
+        leadId
+      );
+    }
+
     if (queries.length === 0) {
       res.send(oldLead);
       return;

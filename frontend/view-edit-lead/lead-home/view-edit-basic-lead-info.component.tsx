@@ -17,7 +17,7 @@ export default function ViewEditBasicLeadInfo(
   React.useEffect(() => {
     if (apiStatus.isUpdating) {
       const abortController = new AbortController();
-      easyFetch(`/api/leads/${props.lead.id}`, {
+      easyFetch(`/api/leads/${lead.id}`, {
         method: "PATCH",
         body: apiStatus.newLeadData,
         signal: abortController.signal
