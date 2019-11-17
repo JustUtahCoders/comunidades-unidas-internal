@@ -7,10 +7,16 @@ import {
   parseSearch,
   SearchParse,
   deserializeSearch,
-  allowedSearchFields,
-  setAllowedSearchFields,
   serializeSearch
 } from "../../util/list-search/search-dsl.helpers";
+
+const searchFields = {
+  id: "Lead ID",
+  zip: "ZIP Code",
+  phone: "Phone",
+  program: "Interest in Program",
+  event: "Event Attended"
+};
 
 export default function LeadSearchInput(props: LeadSearchInputProps) {
   const scope = useCss(css);
@@ -19,23 +25,11 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
   );
   const [search, dispatchSearch] = React.useReducer(
     searchReducer,
-    getInitialSearch()
+    getInitialSearch(searchFields)
   );
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [programs, setPrograms] = React.useState([]);
   const [events, setEvents] = React.useState([]);
-
-  const searchFields = {
-    id: "Lead ID",
-    zip: "ZIP Code",
-    phone: "Phone",
-    program: "Interest in Program",
-    event: "Event Attended"
-  };
-
-  React.useEffect(() => {
-    setAllowedSearchFields(searchFields);
-  }, [showingAdvancedSearch]);
 
   React.useEffect(() => {
     inputRef.current.setCustomValidity(search.parseResult.errors.join(". "));
@@ -128,45 +122,44 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
                 type="text"
                 value={search.parseResult.parse.name || ""}
               />
-              {Object.entries(allowedSearchFields).map(
-                ([fieldKey, fieldName]) =>
-                  fieldKey === "program" || fieldKey === "event" ? (
-                    <React.Fragment key={fieldKey}>
-                      <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
-                      <select
-                        onChange={evt => {
-                          updateAdvancedSearch(fieldKey, evt.target.value);
-                        }}
-                        value={search.parseResult.parse[fieldKey]}
-                      >
-                        <option value="">No {fieldKey} selected</option>
-                        {fieldKey === "program"
-                          ? programs.map(program => (
-                              <option key={program.id} value={program.id}>
-                                {program.programName}
-                              </option>
-                            ))
-                          : events.map(event => (
-                              <option key={event.id} value={event.id}>
-                                {event.eventName}
-                              </option>
-                            ))}
-                      </select>
-                    </React.Fragment>
-                  ) : (
-                    <React.Fragment key={fieldKey}>
-                      <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
-                      <input
-                        aria-labelledby={"advanced-search-" + fieldKey}
-                        onChange={evt =>
-                          updateAdvancedSearch(fieldKey, evt.target.value)
-                        }
-                        placeholder={getPlaceholder(fieldKey)}
-                        type="text"
-                        value={search.parseResult.parse[fieldKey] || ""}
-                      />
-                    </React.Fragment>
-                  )
+              {Object.entries(searchFields).map(([fieldKey, fieldName]) =>
+                fieldKey === "program" || fieldKey === "event" ? (
+                  <React.Fragment key={fieldKey}>
+                    <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
+                    <select
+                      onChange={evt => {
+                        updateAdvancedSearch(fieldKey, evt.target.value);
+                      }}
+                      value={search.parseResult.parse[fieldKey]}
+                    >
+                      <option value="">No {fieldKey} selected</option>
+                      {fieldKey === "program"
+                        ? programs.map(program => (
+                            <option key={program.id} value={program.id}>
+                              {program.programName}
+                            </option>
+                          ))
+                        : events.map(event => (
+                            <option key={event.id} value={event.id}>
+                              {event.eventName}
+                            </option>
+                          ))}
+                    </select>
+                  </React.Fragment>
+                ) : (
+                  <React.Fragment key={fieldKey}>
+                    <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
+                    <input
+                      aria-labelledby={"advanced-search-" + fieldKey}
+                      onChange={evt =>
+                        updateAdvancedSearch(fieldKey, evt.target.value)
+                      }
+                      placeholder={getPlaceholder(fieldKey)}
+                      type="text"
+                      value={search.parseResult.parse[fieldKey] || ""}
+                    />
+                  </React.Fragment>
+                )
               )}
             </div>
             <button
@@ -199,17 +192,17 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
     });
   }
 
-  function getInitialSearch(): Search {
+  function getInitialSearch(searchFields): Search {
     let value: string;
     if (props.initialValueFromQueryParams) {
-      value = deserializeSearch();
+      value = deserializeSearch(searchFields);
     } else {
       value = props.initialValue || "";
     }
 
     return {
       value,
-      parseResult: parseSearch(value)
+      parseResult: parseSearch(searchFields, value)
     };
   }
 
@@ -236,13 +229,13 @@ function searchReducer(state: Search, action: SearchAction): Search {
   let parseResult;
   switch (action.type) {
     case SearchTypes.newValue:
-      parseResult = parseSearch(action.value);
+      parseResult = parseSearch(searchFields, action.value);
       return { value: action.value, parseResult };
     case SearchTypes.newAdvancedValue:
-      parseResult = parseSearch(action.currentSearch, {
+      parseResult = parseSearch(searchFields, action.currentSearch, {
         [action.fieldKey]: action.value
       });
-      const newSearchValue = serializeSearch(parseResult.parse);
+      const newSearchValue = serializeSearch(searchFields, parseResult.parse);
       return { value: newSearchValue, parseResult };
     default:
       throw Error();

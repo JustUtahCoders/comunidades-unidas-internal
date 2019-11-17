@@ -7,7 +7,16 @@ import {
 describe(`client-search-dsl.helpers`, () => {
   describe(`parseSearch`, () => {
     it(`works with just searching name`, () => {
-      const result = parseSearch("Freddie Mercury");
+      const result = parseSearch(
+        {
+          id: "Lead ID",
+          zip: "ZIP Code",
+          phone: "Phone",
+          program: "Interest in Program",
+          event: "Event Attended"
+        },
+        "Freddie Mercury"
+      );
       expect(result.isValid).toBe(true);
       expect(result.errors).toEqual([]);
       expect(result.parse.name).toBe("Freddie Mercury");
@@ -64,7 +73,17 @@ describe(`client-search-dsl.helpers`, () => {
     // });
 
     it(`omits empty forced values from the parse`, () => {
-      const result = parseSearch("Yoshi", { id: "" });
+      const result = parseSearch(
+        {
+          id: "Lead ID",
+          zip: "ZIP Code",
+          phone: "Phone",
+          program: "Interest in Program",
+          event: "Event Attended"
+        },
+        "Yoshi",
+        { id: "" }
+      );
       expect(result.isValid).toBe(true);
       expect(result.errors).toEqual([]);
       expect(result.parse.name).toBe("Yoshi");
@@ -74,9 +93,20 @@ describe(`client-search-dsl.helpers`, () => {
 
   describe(`serializeSearch`, () => {
     it(`can serialize just a name`, () => {
-      expect(serializeSearch({ name: "Freddie Mercury" })).toEqual(
-        "Freddie Mercury"
-      );
+      expect(
+        serializeSearch(
+          {
+            id: "Lead ID",
+            zip: "ZIP Code",
+            phone: "Phone",
+            program: "Interest in Program",
+            event: "Event Attended"
+          },
+          {
+            name: "Freddie Mercury"
+          }
+        )
+      ).toEqual("Freddie Mercury");
     });
 
     // FIXME - returning false
@@ -94,7 +124,18 @@ describe(`client-search-dsl.helpers`, () => {
 
   describe(`deserializeSearch`, () => {
     it(`can deserialize just a name`, () => {
-      expect(deserializeSearch("?name=hello there")).toEqual("hello there");
+      expect(
+        deserializeSearch(
+          {
+            id: "Lead ID",
+            zip: "ZIP Code",
+            phone: "Phone",
+            program: "Interest in Program",
+            event: "Event Attended"
+          },
+          "?name=hello there"
+        )
+      ).toEqual("hello there");
     });
 
     // FIXME - returning false
