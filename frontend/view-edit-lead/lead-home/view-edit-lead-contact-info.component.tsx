@@ -8,9 +8,10 @@ import LeadContactInformationInputs from "../edit-lead-inputs/lead-contact-infor
 export default function ViewEditLeadContactInfo(
   props: ViewEditLeadContactInfoProps
 ) {
-  const [editing, setEditing] = React.useState(false);
+  // const [editing, setEditing] = React.useState(false);
   const [apiStatus, dispatchApiStatus] = React.useReducer(updatingReducer, {
     isUpdating: false,
+    isEditing: false,
     newLeadData: null
   });
   const { lead } = props;
@@ -26,7 +27,6 @@ export default function ViewEditLeadContactInfo(
         .then(data => {
           dispatchApiStatus({ type: "reset" });
           props.leadUpdated(data.lead);
-          setEditing(false);
         })
         .catch(err => {
           setTimeout(() => {
@@ -39,8 +39,10 @@ export default function ViewEditLeadContactInfo(
   }, [apiStatus]);
 
   return (
-    <LeadSection title={editing ? "Edit Contact Info" : "Contact Info"}>
-      {editing ? (
+    <LeadSection
+      title={apiStatus.isEditing ? "Edit Contact Info" : "Contact Info"}
+    >
+      {apiStatus.isEditing ? (
         <LeadContactInformationInputs
           lead={{
             phone: lead.phone,
@@ -53,7 +55,7 @@ export default function ViewEditLeadContactInfo(
             <button
               type="button"
               className="secondary"
-              onClick={() => setEditing(false)}
+              onClick={() => apiStatus.isEditing}
               disabled={apiStatus.isUpdating}
             >
               Cancel
@@ -88,7 +90,7 @@ export default function ViewEditLeadContactInfo(
           {props.editable && (
             <button
               className="secondary edit-button"
-              onClick={() => setEditing(true)}
+              onClick={() => dispatchApiStatus({ type: "edit" })}
             >
               Edit
             </button>
@@ -110,8 +112,14 @@ ViewEditLeadContactInfo.defaultProps = {
 
 function updatingReducer(state, action) {
   switch (action.type) {
+    case "edit":
+      return { isEditing: true };
     case "update":
-      return { isUpdating: true, newLeadData: action.newLeadData };
+      return {
+        isUpdating: true,
+        isEditing: false,
+        newLeadData: action.newLeadData
+      };
     case "reset":
       return { isUpdating: false };
     default:

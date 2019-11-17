@@ -15,7 +15,7 @@ export default function LeadContactInformationInputs(
       <div>
         <label>
           <span>Phone number</span>
-          <PhoneInput phone={phone} setPhone={setPhone} />
+          <PhoneInput phone={phone} setPhone={setPhone} autoFocus />
         </label>
       </div>
       <div>
@@ -38,7 +38,6 @@ export default function LeadContactInformationInputs(
             value={zip}
             onChange={evt => setZip(evt.target.value)}
             autoComplete="new-password"
-            autoFocus
             required
           />
         </label>
