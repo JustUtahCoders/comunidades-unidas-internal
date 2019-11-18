@@ -84,6 +84,7 @@ app.use((err, req, res, next) => {
 });
 app.use(morgan("tiny"));
 
+require("./apis/health.api");
 require("./apis/login.api");
 require("./apis/github-issues.api");
 require("./apis/clients/add-client.api");
