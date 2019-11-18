@@ -7,20 +7,23 @@ Returns the total number of clients who have had at least that many client inter
 _The request should accept query parameters indicating a time range, number of client interaction hours, and current page._
 
 ```http
-GET /api/interactions?start=2019-05-06T0&end=2019-05-08T0&=21600&hours=21600&page=1
+GET /api/interactions?start=2019-05-06T0&end=2019-05-08T0&minInteractionMinutes=21600&page=1
 ```
 
 Notes:
 
 - Result is limited to 100 rows ordered by lastName and then firstName
 - Values for the query should be URL encoded
-- The "page" query parameter defaults to 1
+- The 'page' query parameter defaults to 1
+- The 'start' parameter denotes the lower class limit (date and time)
+- The 'end' parameter denotes the upper class limit (date and time)
+- The 'minInteractionSeconds' parameter specifies the least number of hours the query will filter
+- reportDefaultParameters explains values for parameters left blank or empty
 
 ## Response
 
 ```json
 {
-  "totalNumberOfClients": 3,
   "clients": [
     {
       "id": 1,
@@ -28,7 +31,7 @@ Notes:
       "lastName": "Doe",
       "fullName": "John Doe",
       "gender": "male",
-      "timestamp": "2019-05-06T06:00:00.000Z",
+      "birthday": "1969-08-15",
       "totalDuration": "06:00:00"
     },
     {
@@ -37,7 +40,7 @@ Notes:
       "lastName": "Doe",
       "fullName": "Jane Doe",
       "gender": "female",
-      "timestamp": "2019-05-07T06:00:00.000Z",
+      "birthday": "1969-08-16",
       "totalDuration": "06:15:00"
     },
     {
@@ -46,7 +49,7 @@ Notes:
       "lastName": "Doe",
       "fullName": "Jill Doe",
       "gender": "female",
-      "timestamp": "2019-05-08T06:00:00.000Z",
+      "birthday": "1969-08-17",
       "totalDuration": "06:30:00"
     }
   ],
@@ -55,6 +58,12 @@ Notes:
     "currentPage": 1,
     "pageSize": 100,
     "numPages": 1
+  },
+  "reportDefaultParameters": {
+    "start": "[TODAY]", // it will default to currentday
+    "end": "[TODAY]", // it will default to currentday
+    "minInteractionSeconds": 0,
+    "page": 1
   }
 }
 ```
