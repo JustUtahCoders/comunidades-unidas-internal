@@ -74,9 +74,9 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
               couldVolunteer: client.couldVolunteer
             }}
           />
-          <div className="intake-services-inputs">
-            <label>
-              <span>Intake Services</span>
+          <div>
+            <label className="intake-services-label">
+              <span className="intake-services-span">Intake Services</span>
               <IntakeServicesInputs
                 ref={intakeServicesRef}
                 services={services}
@@ -200,7 +200,6 @@ const css = `
   width: 1.6rem;
   margin-left: .8rem;
 }
-
 `;
 
 ViewEditIntakeInfo.defaultProps = {

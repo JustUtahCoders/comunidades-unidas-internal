@@ -7,7 +7,7 @@ export default React.forwardRef<IntakeDateInputRef, IntakeDateInputProps>(
     return (
       <div>
         <label>
-          <span>Intake Date</span>
+          <span className="intake-span">Intake Date</span>
           <input
             type="date"
             value={date}

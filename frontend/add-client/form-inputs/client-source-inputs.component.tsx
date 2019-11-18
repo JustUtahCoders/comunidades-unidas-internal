@@ -24,7 +24,9 @@ export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
       <>
         <div>
           <label>
-            <span>How did they hear about Comunidades Unidas</span>
+            <span className="intake-span">
+              How did they hear about Comunidades Unidas
+            </span>
             <select
               value={clientSource}
               onChange={evt => setClientSource(evt.target.value)}
@@ -41,7 +43,9 @@ export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
         </div>
         <div>
           <label>
-            <span>Would they like to volunteer for Comunidades Unidas?</span>
+            <span className="intake-span">
+              Would they like to volunteer for Comunidades Unidas?
+            </span>
             <input
               type="checkbox"
               name="couldVolunteer"

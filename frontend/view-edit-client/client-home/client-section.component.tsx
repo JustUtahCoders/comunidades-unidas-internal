@@ -75,16 +75,16 @@ function getCss() {
       align-items: center;
     }
 
-    & .client-section-content > form > div > label > span {
+    & .intake-span {
       width: 50%;
     }
 
-    & .client-section-content > form > div.intake-services-inputs > label {
+    & .intake-services-label {
       display: flex;
       flex-direction: column;
     }
 
-    & .client-section-content > form > div.intake-services-inputs > label > span {
+    & .intake-services-span {
       margin-top: 2rem;
       width: 100%;
       font-size: 2.2rem;

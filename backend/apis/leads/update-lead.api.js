@@ -109,14 +109,14 @@ app.patch("/api/leads/:id", (req, res, next) => {
         }
       }
 
-      const removeLeadSericeIds = _.difference(
+      const removeLeadServiceIds = _.difference(
         oldLeadServiceIds,
         fullLead.leadServices
       );
 
-      if (removeLeadSericeIds.length > 0) {
-        for (let i = 0; i < removeLeadSericeIds.length; i++) {
-          const serviceId = removeLeadSericeIds[i];
+      if (removeLeadServiceIds.length > 0) {
+        for (let i = 0; i < removeLeadServiceIds.length; i++) {
+          const serviceId = removeLeadServiceIds[i];
           queries.push(
             "DELETE FROM leadServices WHERE leadId = ? AND serviceId = ?;"
           );
