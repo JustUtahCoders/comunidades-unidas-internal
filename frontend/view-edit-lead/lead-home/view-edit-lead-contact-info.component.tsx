@@ -8,7 +8,6 @@ import LeadContactInformationInputs from "../edit-lead-inputs/lead-contact-infor
 export default function ViewEditLeadContactInfo(
   props: ViewEditLeadContactInfoProps
 ) {
-  // const [editing, setEditing] = React.useState(false);
   const [apiStatus, dispatchApiStatus] = React.useReducer(updatingReducer, {
     isUpdating: false,
     isEditing: false,
