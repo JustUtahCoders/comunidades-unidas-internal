@@ -25,7 +25,7 @@ you would make a request on the front end like so `window.location.href = downlo
 ## Get a signed POST URL
 
 ```http
-GET /api/signed-file-uploads
+GET /api/clients/:clientId/signed-file-uploads
 ```
 
 ### Response
