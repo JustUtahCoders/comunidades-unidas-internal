@@ -16,6 +16,9 @@ axios.put(signedRequest, file, options).then(result => {
 });
 ```
 
+After you upload the file to S3, you need to tell the web server that you
+did so by calling `http POST /api/clients/:clientId/files`
+
 For each file that you want to download you would make a request to `/api/clients/:clientId/files/:fileId/signed-downloads` then
 you would make a request on the front end like so `window.location.href = downloadurl`
 
@@ -97,7 +100,7 @@ GET /api/clients/:clientId/files/:fileId
 
 ```json
 {
-  "clientId": 1,
+  "id": 1,
   "createdBy": {
     "firstName": "Sean",
     "lastName": "White",
@@ -144,7 +147,7 @@ GET /api/clients/:clientId/files
 {
   "files": [
     {
-      "clientId": 1,
+      "id": 1,
       "createdBy": {
         "firstName": "Sean",
         "lastName": "White",
@@ -193,6 +196,7 @@ POST /api/clients/:clientId/file
 
 ```json
 {
+  "id": 1,
   "createdBy": {
     "firstName": "Sean",
     "lastName": "White",
@@ -245,7 +249,7 @@ This is a soft delete it will only flag the fileId in the database it will still
 
 #### Success
 
-An HTTP 204 status is returned if the deletion was sucessful
+An HTTP 204 status is returned if the deletion was successful
 
 An HTTP 403 status is return if you cannot delete the file
 
