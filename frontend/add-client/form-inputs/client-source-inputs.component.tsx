@@ -62,7 +62,7 @@ export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
 );
 
 const css = `
-& .intake - span {
+& .intake-span {
   width: 50%;
 }
 `;
