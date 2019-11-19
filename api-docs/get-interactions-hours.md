@@ -6,8 +6,10 @@ Returns the total number of clients who have had at least that many client inter
 
 _The request should accept query parameters indicating a time range, number of client interaction hours, and current page._
 
+Example case:
+
 ```http
-GET /api/interactions?start=2019-05-06T0&end=2019-05-08T0&minInteractionMinutes=21600&page=1
+GET /api/reports/interaction-hours-by-client?start=2019-05-06T0&end=2019-05-08T0&minInteractionMinutes=21600&page=1
 ```
 
 Notes:
@@ -59,10 +61,10 @@ Notes:
     "pageSize": 100,
     "numPages": 1
   },
-  "reportDefaultParameters": {
-    "start": "[TODAY]", // it will default to currentday
-    "end": "[TODAY]", // it will default to currentday
-    "minInteractionSeconds": 0,
+  "reportParameters": {
+    "start": "2019-05-06T0",
+    "end": "2019-05-06T0",
+    "minInteractionSeconds": 21600,
     "page": 1
   }
 }
