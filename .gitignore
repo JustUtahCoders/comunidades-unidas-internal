@@ -70,3 +70,6 @@ static
 
 .env
 .vscode
+
+# lint config for markdown
+.markdownlint.json
