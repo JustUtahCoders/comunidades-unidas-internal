@@ -200,6 +200,19 @@ const css = `
   width: 1.6rem;
   margin-left: .8rem;
 }
+
+& .intake - services - label {
+  display: flex;
+  flex - direction: column;
+}
+
+& .intake - services - span {
+  margin - top: 2rem;
+  width: 100 %;
+  font - size: 2.2rem;
+  font - weight: 600;
+  text - align: center;
+}
 `;
 
 ViewEditIntakeInfo.defaultProps = {
