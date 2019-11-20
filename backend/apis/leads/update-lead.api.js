@@ -125,6 +125,21 @@ app.patch("/api/leads/:id", (req, res, next) => {
       }
     }
 
+    if (oldLead.eventSources.length < fullLead.eventSources.length) {
+      const oldLeadEventIds = oldLead.eventSources.map(event => event.eventId);
+
+      const newLeadEventIds = _.difference(
+        fullLead.eventSources,
+        oldLeadEventIds
+      );
+
+      for (let i = 0; i < newLeadEventIds.length; i++) {
+        const eventId = newLeadEventIds[i];
+        queries.push("INSERT INTO leadEvents (leadId, eventId) VALUES (?, ?);");
+        queryData.push(leadId, eventId);
+      }
+    }
+
     if (queries.length === 0) {
       res.send(oldLead);
       return;
