@@ -4,7 +4,7 @@ import PageHeader from "../page-header.component";
 import ClientsTableToolbar from "./toolbar/clients-table-toolbar.component";
 import ClientsTable from "./table/clients-table.component";
 import easyFetch from "../util/easy-fetch";
-import { SearchParseValues } from "../client-search/client-list/client-search-dsl.helpers";
+import { SearchParseValues } from "../util/list-search/search-dsl.helpers";
 import queryString from "query-string";
 import Modal from "../util/modal.component";
 

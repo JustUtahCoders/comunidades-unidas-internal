@@ -1,26 +1,37 @@
-const { app, databaseError, pool } = require("../../server");
+const { app, databaseError, pool, invalidRequest } = require("../../server");
 const mysql = require("mysql");
 const {
   checkValid,
-  nullableValidInteger
+  nullableValidInteger,
+  nullableNonEmptyString,
+  nullableValidId
 } = require("../utils/validation-utils");
 const {
   responseFullName,
+  requestPhone,
   responseBoolean,
   responseDateWithoutTime
 } = require("../utils/transform-utils");
 
 app.get("/api/leads", (req, res, next) => {
-  const validationErrors = checkValid(req.query, nullableValidInteger("page"));
+  const validationErrors = checkValid(
+    req.query,
+    nullableValidInteger("page"),
+    nullableValidId("id"),
+    nullableNonEmptyString("phone"),
+    nullableNonEmptyString("zip"),
+    nullableValidId("program"),
+    nullableValidId("event")
+  );
 
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
   }
 
-  const pageSize = 100;
   const requestPage = parseInt(req.query.page);
-  const zeroBasedPage = req.query.page ? requestPage - 1 : 0;
-  const mysqlOffset = zeroBasedPage * pageSize;
+
+  let whereClause = `WHERE leads.isDeleted = false `;
+  let whereClauseValues = [];
 
   if (requestPage < 1) {
     return invalidRequest(
@@ -29,15 +40,43 @@ app.get("/api/leads", (req, res, next) => {
     );
   }
 
-  let whereClause = `WHERE leads.isDeleted = false`;
-  let whereClauseValues = [];
+  const pageSize = 100;
 
   if (req.query.name) {
-    ` ${whereClause} AND CONCAT(leads.firstName, ' ', leads.lastName) LIKE ? `;
+    whereClause += `AND CONCAT(leads.firstName, ' ', leads.lastName) LIKE ? `;
     whereClauseValues.push(`%${req.query.name}%`);
   }
 
-  const mysqlQuery = `
+  if (req.query.zip) {
+    whereClause += `AND leads.zip = ? `;
+    whereClauseValues.push(req.query.zip);
+  }
+
+  if (req.query.id) {
+    whereClause += `AND leads.id = ? `;
+    whereClauseValues.push(req.query.id);
+  }
+
+  if (req.query.phone) {
+    whereClause += `AND leads.phone LIKE ? `;
+    whereClauseValues.push("%" + requestPhone(req.query.phone) + "%");
+  }
+
+  if (req.query.program) {
+    whereClause += `
+      AND services.programId = ?
+    `;
+    whereClauseValues.push(req.query.program);
+  }
+
+  if (req.query.event) {
+    whereClause += `
+      AND leadEvents.eventId = ?
+    `;
+    whereClauseValues.push(req.query.event);
+  }
+
+  let mysqlQuery = `
     SELECT SQL_CALC_FOUND_ROWS
       leads.id AS leadId,
       leads.dateOfSignUp,
@@ -96,6 +135,8 @@ app.get("/api/leads", (req, res, next) => {
     SELECT FOUND_ROWS();
   `;
 
+  const zeroBasedPage = req.query.page ? requestPage - 1 : 0;
+  const mysqlOffset = zeroBasedPage * pageSize;
   const getLeads = mysql.format(mysqlQuery, [
     ...whereClauseValues,
     mysqlOffset,
