@@ -10,7 +10,7 @@ const {
 } = require("../utils/validation-utils");
 
 app.post("/api/leads", (req, res) => {
-  const leads = req.body.data;
+  const leads = req.body;
   const user = req.session.passport.user;
 
   if (!Array.isArray(leads)) {
@@ -46,8 +46,8 @@ app.post("/api/leads", (req, res) => {
     const lead = leads[i];
 
     const addToLeadQuery =
-      "INSERT INTO leads (dateOfSignUp, firstName, lastName, phone, smsConsent, zip, age, gender, addedBy, modifiedBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    const setLeadId = "SET @leadId = LAST_INSERT_ID()";
+      "INSERT INTO leads (dateOfSignUp, firstName, lastName, phone, smsConsent, zip, age, gender, addedBy, modifiedBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    const setLeadId = "SET @leadId = LAST_INSERT_ID();";
 
     leadDataArray.push(
       lead.dateOfSignUp,
@@ -78,6 +78,8 @@ app.post("/api/leads", (req, res) => {
           leadDataArray.push(serviceId);
         }
       }
+
+      leadServicesQuery += ";";
     }
 
     const leadEvents = lead.eventSources;
@@ -96,9 +98,12 @@ app.post("/api/leads", (req, res) => {
           leadDataArray.push(eventId);
         }
       }
+
+      leadEventsQuery += ";";
     }
 
-    const newLeadQuery = `${addToLeadQuery}; ${setLeadId}; ${leadServicesQuery}; ${leadEventsQuery};`;
+    const newLeadQuery =
+      addToLeadQuery + setLeadId + leadServicesQuery + leadEventsQuery;
     leadQuery = `${leadQuery} ${newLeadQuery}`;
   }
 
@@ -109,7 +114,7 @@ app.post("/api/leads", (req, res) => {
       return databaseError(req, res, err);
     }
 
-    const leadIds = result.map(data => data.insertId).joint(", ");
+    const leadIds = result.map(data => data.insertId).join(", ");
 
     res.json({ message: `Created leads ${leadIds}.` });
   });
