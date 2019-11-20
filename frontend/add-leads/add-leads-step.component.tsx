@@ -5,8 +5,8 @@ import AddLeadsTable from "./add-leads-table.component";
 import AddLeadStepHeader from "./add-lead-step-header.component";
 import easyFetch from "../util/easy-fetch";
 import { showGrowl, GrowlType } from "../growls/growls.component";
-import dayjs from "dayjs";
 import imgUrl from "../../icons/148705-essential-collection/svg/archive.svg";
+import { navigate } from "@reach/router";
 
 let uniqueId = 0;
 
@@ -16,8 +16,44 @@ export default function AddLeadsStep(props: AddLeadsStepProps) {
   const [event, setEvent] = React.useState(null);
 
   const [state, dispatch] = useReducer(reducer, {
-    leads: [{ uuid: uniqueId }]
+    leads: [{ uuid: uniqueId }],
+    isCreating: false
   });
+
+  React.useEffect(() => {
+    if (state.isCreating) {
+      const abortController = new AbortController();
+
+      easyFetch(`/api/leads`, {
+        method: "POST",
+        body: state.leads.slice(0, state.leads.length - 1).map(l => ({
+          dateOfSignUp: "2019-09-17",
+          firstName: l.firstName,
+          lastName: l.lastName,
+          phone: l.phone,
+          smsConsent: false,
+          zip: l.zip,
+          age: l.age,
+          gender: "male",
+          eventSources: [props.eventId],
+          leadServices: []
+        }))
+      })
+        .then(() => {
+          showGrowl({
+            type: GrowlType.success,
+            message: `${state.leads.length} leads were created`
+          });
+          navigate(`/lead-list`);
+        })
+        .catch(err => {
+          dispatch({ type: "doneCreating" });
+          setTimeout(() => {
+            throw err;
+          });
+        });
+    }
+  }, [state.isCreating]);
 
   React.useEffect(() => {
     const abortController = new AbortController();
@@ -51,20 +87,37 @@ export default function AddLeadsStep(props: AddLeadsStepProps) {
       <AddLeadStepHeader
         text={headerText()}
         imgSrc={imgUrl}
-        imgAlt="Icon of a woman's face"
+        imgAlt="Filing cabinet icon"
       />
-      <AddLeadsTable
-        leads={state.leads}
-        deleteLead={index => dispatch({ type: "deleteLead", index })}
-        updateLead={(index, field, value) =>
-          dispatch({ type: "updateLead", index, field, value })
-        }
-      />
+      <form onSubmit={handleSubmit}>
+        <div className="well">
+          <AddLeadsTable
+            leads={state.leads}
+            deleteLead={index => dispatch({ type: "deleteLead", index })}
+            updateLead={(index, field, value) =>
+              dispatch({ type: "updateLead", index, field, value })
+            }
+          />
+        </div>
+        <div className="actions">
+          <button type="button" className="secondary">
+            Back
+          </button>
+          <button type="submit" className="primary">
+            Create leads
+          </button>
+        </div>
+      </form>
     </div>
   );
 
   function headerText() {
     return `Leads are people who have shown interest in CU but have not yet filled out the intake.`;
+  }
+
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    dispatch({ type: "createLeads" });
   }
 }
 
@@ -91,6 +144,18 @@ function reducer(state, action) {
         ...state,
         leads
       };
+    case "createLeads":
+      return {
+        ...state,
+        isCreating: true
+      };
+    case "doneCreating":
+      return {
+        ...state,
+        isCreating: false
+      };
+    default:
+      throw Error();
   }
 }
 
@@ -100,12 +165,26 @@ type AddLeadsStepProps = {
 };
 
 const css = `
-  & table {
-    border-spacing: 0;
-    table-layout: fixed;
-  }
-  & table td, & table th {
-    border-collapse: collapse;
-    padding: 0;
-  }
+& table {
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+& table td, & table th {
+  border-collapse: collapse;
+  padding: .4rem;
+}
+
+& .well {
+  margin-top: 2.4rem;
+  background-color: var(--colored-well);
+  border-radius: .5rem;
+  padding: .8rem;
+}
+
+& .actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.4rem;
+}
 `;

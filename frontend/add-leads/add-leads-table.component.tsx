@@ -15,12 +15,12 @@ export default function AddLeadsTable({
         <tr>
           <th style={{ width: "18%" }}>First</th>
           <th style={{ width: "18%" }}>Last</th>
-          <th style={{ width: "12%" }}>Phone</th>
-          <th style={{ width: "8%" }}>Zip</th>
-          <th style={{ width: "5%" }}>Age</th>
-          <th style={{ width: "10%" }}>Gender</th>
+          <th style={{ width: "15%" }}>Phone</th>
+          <th style={{ width: "10%" }}>Zip</th>
+          <th style={{ width: "10%" }}>Age</th>
+          <th style={{ width: "15%" }}>Gender</th>
           <th style={{ width: "5%" }}>Texts?</th>
-          <th style={{ width: "20%" }}>Interests</th>
+          <th style={{ width: "5%" }}></th>
           <th style={{ width: "4%" }}></th>
         </tr>
       </thead>
@@ -32,6 +32,8 @@ export default function AddLeadsTable({
             updateLead={(field, value) => updateLead(i, field, value)}
             deleteLead={() => deleteLead(i)}
             canDelete={leads.length > 1}
+            isFirstLead={i === 0}
+            isLastLead={i === leads.length - 1}
           />
         ))}
       </tbody>

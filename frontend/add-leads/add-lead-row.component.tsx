@@ -1,12 +1,22 @@
 import React from "react";
 
-export default function LeadRow({ lead, deleteLead, updateLead, canDelete }) {
+export default function LeadRow({
+  lead,
+  deleteLead,
+  updateLead,
+  canDelete,
+  isLastLead,
+  isFirstLead
+}) {
+  const required = isFirstLead || !isLastLead;
+
   const input = (field, label) => (
     <input
       style={{ width: "100%" }}
       value={lead[field] || ""}
       onChange={e => updateLead(field, e.target.value)}
       aria-label={label}
+      required={required}
     />
   );
 
@@ -18,7 +28,7 @@ export default function LeadRow({ lead, deleteLead, updateLead, canDelete }) {
       <td>{input("zip", "Zip")}</td>
       <td>{input("age", "Age")}</td>
       <td>
-        <select style={{ width: "100%" }}>
+        <select style={{ width: "100%" }} required={required}>
           <option></option>
           <option>Female</option>
           <option>Male</option>
