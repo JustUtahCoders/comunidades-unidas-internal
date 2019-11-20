@@ -7,8 +7,8 @@ import LeadServicesInformationInputs from "../edit-lead-inputs/lead-services-inp
 export default function ViewEditLeadServicesInfo(
   props: ViewEditLeadServicesInfoProps
 ) {
-  const [editing, setEditing] = React.useState(false);
   const [apiStatus, dispatchApiStatus] = React.useReducer(updatingReducer, {
+    isEditing: false,
     isUpdating: false,
     newLeadData: null
   });
@@ -17,7 +17,7 @@ export default function ViewEditLeadServicesInfo(
   React.useEffect(() => {
     if (apiStatus.isUpdating) {
       const abortController = new AbortController();
-      easyFetch(`/api/leads/${props.lead.id}`, {
+      easyFetch(`/api/leads/${lead.id}`, {
         method: "PATCH",
         body: apiStatus.newLeadData,
         signal: abortController.signal
@@ -31,7 +31,6 @@ export default function ViewEditLeadServicesInfo(
           });
         })
         .finally(() => {
-          setEditing(false);
           dispatchApiStatus({ type: "reset" });
         });
 
@@ -41,9 +40,13 @@ export default function ViewEditLeadServicesInfo(
 
   return (
     <LeadSection
-      title={editing ? "Edit Services of Interest" : "Services of Interest"}
+      title={
+        apiStatus.isEditing
+          ? "Edit Services of Interest"
+          : "Services of Interest"
+      }
     >
-      {editing ? (
+      {apiStatus.isEditing ? (
         <LeadServicesInformationInputs
           lead={{
             leadServices: lead.leadServices
@@ -54,7 +57,7 @@ export default function ViewEditLeadServicesInfo(
             <button
               type="button"
               className="secondary"
-              onClick={() => setEditing(false)}
+              onClick={() => dispatchApiStatus({ type: "reset" })}
               disabled={apiStatus.isUpdating}
             >
               Cancel
@@ -91,7 +94,7 @@ export default function ViewEditLeadServicesInfo(
           {props.editable && (
             <button
               className="secondary edit-button"
-              onClick={() => setEditing(true)}
+              onClick={() => dispatchApiStatus({ type: "edit" })}
             >
               Edit
             </button>
@@ -113,10 +116,16 @@ ViewEditLeadServicesInfo.defaultProps = {
 
 function updatingReducer(state, action) {
   switch (action.type) {
+    case "edit":
+      return { isEditing: true };
     case "update":
-      return { isUpdating: true, newLeadData: action.newLeadData };
+      return {
+        isEditing: false,
+        isUpdating: true,
+        newLeadData: action.newLeadData
+      };
     case "reset":
-      return { isUpdating: false };
+      return { isEditing: false, isUpdating: false };
     default:
       throw Error();
   }
