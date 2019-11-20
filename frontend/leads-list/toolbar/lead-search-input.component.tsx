@@ -1,30 +1,38 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import easyFetch from "../../util/easy-fetch";
 import { useCss } from "kremling";
 import {
+  SearchParseValues,
   parseSearch,
   SearchParse,
-  SearchParseValues,
   deserializeSearch,
-  allowedSearchFields,
   serializeSearch
-} from "./client-search-dsl.helpers";
-import easyFetch from "../../util/easy-fetch";
+} from "../../util/list-search/search-dsl.helpers";
 
-export default function ClientSearchInput(props: ClientSearchInputProps) {
+const searchFields = {
+  id: "Lead ID",
+  zip: "ZIP Code",
+  phone: "Phone",
+  program: "Interest in Program",
+  event: "Event Attended"
+};
+
+export default function LeadSearchInput(props: LeadSearchInputProps) {
   const scope = useCss(css);
   const [showingAdvancedSearch, setShowingAdvancedSearch] = React.useState(
     false
   );
   const [search, dispatchSearch] = React.useReducer(
     searchReducer,
-    getInitialSearch()
+    getInitialSearch(searchFields)
   );
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [programs, setPrograms] = React.useState([]);
+  const [events, setEvents] = React.useState([]);
 
   React.useEffect(() => {
-    inputRef.current.setCustomValidity(search.parseResult.errors.join(", "));
+    inputRef.current.setCustomValidity(search.parseResult.errors.join(". "));
   }, [search]);
 
   React.useEffect(() => {
@@ -38,24 +46,41 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
           throw err;
         });
       });
+
+    return () => abortController.abort();
+  }, []);
+
+  React.useEffect(() => {
+    const abortController = new AbortController();
+    easyFetch(`/api/events`, { signal: abortController.signal })
+      .then(json => {
+        setEvents(json.events);
+      })
+      .catch(err => {
+        setTimeout(() => {
+          throw err;
+        });
+      });
+
+    return () => abortController.abort();
   }, []);
 
   return (
     <div className="search-container" {...scope}>
       <form
         autoComplete="new-password"
-        onSubmit={handleSubmit}
         className="search-form"
+        onSubmit={handleSubmit}
       >
         <input
+          aria-label="Search for leads"
+          autoFocus={props.autoFocus}
+          className="search-input"
+          onChange={handleChange}
+          placeholder="Search for leads"
+          ref={inputRef}
           type="search"
           value={search.value}
-          onChange={handleChange}
-          className="search-input"
-          autoFocus={props.autoFocus}
-          ref={inputRef}
-          aria-label="Search for clients"
-          placeholder="Search for clients"
         />
         {!showingAdvancedSearch && (
           <>
@@ -67,7 +92,7 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
             >
               Advanced
             </button>
-            <button type="submit" className="primary" disabled={props.disabled}>
+            <button className="primary" disabled={props.disabled} type="submit">
               Search
             </button>
           </>
@@ -77,9 +102,9 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
         props.advancedSearchRef &&
         ReactDOM.createPortal(
           <form
-            className="advanced-search"
             {...scope}
             autoComplete="new-password"
+            className="advanced-search"
             onSubmit={handleSubmit}
           >
             <div className="header">
@@ -90,46 +115,51 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
               </div>
             </div>
             <div className="advanced-search-fields">
-              <div id="advanced-search-name">Client name:</div>
+              <div id="advanced-search-name">Lead name:</div>
               <input
                 aria-labelledby="advanced-search-name"
+                onChange={evt => updateAdvancedSearch("name", evt.target.value)}
                 type="text"
                 value={search.parseResult.parse.name || ""}
-                onChange={evt => updateAdvancedSearch("name", evt.target.value)}
               />
-              {Object.entries(allowedSearchFields).map(
-                ([fieldKey, fieldName]) =>
-                  fieldKey !== "program" ? (
-                    <React.Fragment key={fieldKey}>
-                      <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
-                      <input
-                        aria-labelledby={"advanced-search-" + fieldKey}
-                        type="text"
-                        value={search.parseResult.parse[fieldKey] || ""}
-                        onChange={evt =>
-                          updateAdvancedSearch(fieldKey, evt.target.value)
-                        }
-                        placeholder={getPlaceholder(fieldKey)}
-                      />
-                    </React.Fragment>
-                  ) : (
-                    <React.Fragment key={fieldKey}>
-                      <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
-                      <select
-                        value={search.parseResult.parse[fieldKey]}
-                        onChange={evt => {
-                          updateAdvancedSearch(fieldKey, evt.target.value);
-                        }}
-                      >
-                        <option value="">No program selected</option>
-                        {programs.map(program => (
-                          <option key={program.id} value={program.id}>
-                            {program.programName}
-                          </option>
-                        ))}
-                      </select>
-                    </React.Fragment>
-                  )
+              {Object.entries(searchFields).map(([fieldKey, fieldName]) =>
+                fieldKey === "program" || fieldKey === "event" ? (
+                  <React.Fragment key={fieldKey}>
+                    <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
+                    <select
+                      onChange={evt => {
+                        updateAdvancedSearch(fieldKey, evt.target.value);
+                      }}
+                      value={search.parseResult.parse[fieldKey]}
+                    >
+                      <option value="">No {fieldKey} selected</option>
+                      {fieldKey === "program"
+                        ? programs.map(program => (
+                            <option key={program.id} value={program.id}>
+                              {program.programName}
+                            </option>
+                          ))
+                        : events.map(event => (
+                            <option key={event.id} value={event.id}>
+                              {event.eventName}
+                            </option>
+                          ))}
+                    </select>
+                  </React.Fragment>
+                ) : (
+                  <React.Fragment key={fieldKey}>
+                    <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
+                    <input
+                      aria-labelledby={"advanced-search-" + fieldKey}
+                      onChange={evt =>
+                        updateAdvancedSearch(fieldKey, evt.target.value)
+                      }
+                      placeholder={getPlaceholder(fieldKey)}
+                      type="text"
+                      value={search.parseResult.parse[fieldKey] || ""}
+                    />
+                  </React.Fragment>
+                )
               )}
             </div>
             <button
@@ -162,17 +192,17 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
     });
   }
 
-  function getInitialSearch(): Search {
+  function getInitialSearch(searchFields): Search {
     let value: string;
     if (props.initialValueFromQueryParams) {
-      value = deserializeSearch();
+      value = deserializeSearch(searchFields);
     } else {
       value = props.initialValue || "";
     }
 
     return {
       value,
-      parseResult: parseSearch(value)
+      parseResult: parseSearch(searchFields, value)
     };
   }
 
@@ -199,13 +229,13 @@ function searchReducer(state: Search, action: SearchAction): Search {
   let parseResult;
   switch (action.type) {
     case SearchTypes.newValue:
-      parseResult = parseSearch(action.value);
+      parseResult = parseSearch(searchFields, action.value);
       return { value: action.value, parseResult };
     case SearchTypes.newAdvancedValue:
-      parseResult = parseSearch(action.currentSearch, {
+      parseResult = parseSearch(searchFields, action.currentSearch, {
         [action.fieldKey]: action.value
       });
-      const newSearchValue = serializeSearch(parseResult.parse);
+      const newSearchValue = serializeSearch(searchFields, parseResult.parse);
       return { value: newSearchValue, parseResult };
     default:
       throw Error();
@@ -231,7 +261,8 @@ const css = `
 }
 
 & .advanced-search {
-  padding: 1.4rem;
+	padding: 1.4rem;
+	border-bottom: 1px solid var(--light-gray);
 }
 
 & .advanced-search h1 {
@@ -276,7 +307,7 @@ type NewAdvancedValueAction = {
   currentSearch: string;
 };
 
-type ClientSearchInputProps = {
+type LeadSearchInputProps = {
   initialValue?: string;
   initialValueFromQueryParams?: boolean;
   autoFocus?: boolean;

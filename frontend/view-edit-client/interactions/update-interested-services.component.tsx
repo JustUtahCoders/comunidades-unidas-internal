@@ -1,6 +1,6 @@
 import React from "react";
 import { SingleClient } from "../view-client.component";
-import IntakeServicesInputsComponent from "../../add-client/form-inputs/intake-services-inputs.component";
+import IntakeServicesInputs from "../../util/services-inputs.component";
 import easyFetch from "../../util/easy-fetch";
 import { useCss } from "kremling";
 
@@ -65,7 +65,7 @@ export default React.forwardRef(function UpdateInterestedServices(
       </p>
       <div className="verticalOptions">
         {client && (
-          <IntakeServicesInputsComponent
+          <IntakeServicesInputs
             checkedServices={client.intakeServices}
             services={intakeServices}
             ref={intakeServicesRef}

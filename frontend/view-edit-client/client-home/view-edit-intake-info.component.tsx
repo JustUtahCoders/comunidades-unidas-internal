@@ -7,7 +7,7 @@ import ClientSourceInputsComponent, {
 } from "../../add-client/form-inputs/client-source-inputs.component";
 import IntakeDateInput from "../../add-client/form-inputs/intake-date-input.component";
 import easyFetch from "../../util/easy-fetch";
-import IntakeServicesInputs from "../../add-client/form-inputs/intake-services-inputs.component";
+import IntakeServicesInputs from "../../util/services-inputs.component";
 import checkedUrl from "../../../icons/148705-essential-collection/svg/checked-1.svg";
 import closeUrl from "../../../icons/148705-essential-collection/svg/close.svg";
 import { useCss } from "kremling";
@@ -75,8 +75,8 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
             }}
           />
           <div>
-            <label>
-              <span>Intake Services</span>
+            <label className="intake-services-label">
+              <span className="intake-services-span">Intake Services</span>
               <IntakeServicesInputs
                 ref={intakeServicesRef}
                 services={services}
@@ -199,6 +199,19 @@ const css = `
 & .could-volunteer-icon {
   width: 1.6rem;
   margin-left: .8rem;
+}
+
+& .intake - services - label {
+  display: flex;
+  flex - direction: column;
+}
+
+& .intake - services - span {
+  margin - top: 2rem;
+  width: 100 %;
+  font - size: 2.2rem;
+  font - weight: 600;
+  text - align: center;
 }
 `;
 

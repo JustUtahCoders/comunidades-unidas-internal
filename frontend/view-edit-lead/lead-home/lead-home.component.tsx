@@ -15,10 +15,10 @@ export default function LeadHome(props: LeadHomeProps) {
 
   return (
     <div style={{ marginBottom: "3.2rem" }}>
-      <ViewEditBasicLeadInfo lead={lead} />
-      <ViewEditLeadContactInfo lead={lead} />
+      <ViewEditBasicLeadInfo lead={lead} leadUpdated={setLead} />
+      <ViewEditLeadContactInfo lead={lead} leadUpdated={setLead} />
       <ViewEditLeadContactStatus lead={lead} />
-      <ViewEditLeadServicesInfo lead={lead} />
+      <ViewEditLeadServicesInfo lead={lead} leadUpdated={setLead} />
       <ViewEditLeadEventInfo lead={lead} />
     </div>
   );

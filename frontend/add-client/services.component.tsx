@@ -3,7 +3,7 @@ import { StepComponentProps, Step } from "./add-client.component";
 import agendaIconUrl from "../../icons/148705-essential-collection/svg/agenda.svg";
 import { useCss } from "kremling";
 import easyFetch from "../util/easy-fetch";
-import IntakeServicesInputs from "./form-inputs/intake-services-inputs.component";
+import IntakeServicesInputs from "../util/services-inputs.component";
 import { mediaMobile } from "../styleguide.component";
 
 export default function Services(props: StepComponentProps) {
@@ -80,6 +80,12 @@ const css = `
   font-size: 1.6rem;
   padding: 0 1rem;
   margin-top: .8rem;
+}
+
+& form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 ${mediaMobile} {

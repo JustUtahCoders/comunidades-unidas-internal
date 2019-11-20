@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useCss } from "kremling";
 import { ClientSources } from "../add-client.component";
 
 export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
@@ -9,6 +10,7 @@ export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
     const [couldVolunteer, setCouldVolunteer] = useState(
       props.client.couldVolunteer || false
     );
+    const scope = useCss(css);
 
     React.useEffect(() => {
       if (ref) {
@@ -22,9 +24,11 @@ export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
 
     return (
       <>
-        <div>
+        <div {...scope}>
           <label>
-            <span>How did they hear about Comunidades Unidas</span>
+            <span className="intake-span">
+              How did they hear about Comunidades Unidas
+            </span>
             <select
               value={clientSource}
               onChange={evt => setClientSource(evt.target.value)}
@@ -39,9 +43,11 @@ export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
             </select>
           </label>
         </div>
-        <div>
+        <div {...scope}>
           <label>
-            <span>Would they like to volunteer for Comunidades Unidas?</span>
+            <span className="intake-span">
+              Would they like to volunteer for Comunidades Unidas?
+            </span>
             <input
               type="checkbox"
               name="couldVolunteer"
@@ -54,6 +60,12 @@ export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
     );
   }
 );
+
+const css = `
+& .intake-span {
+  width: 50%;
+}
+`;
 
 export const clientSources = {
   facebook: "Facebook",

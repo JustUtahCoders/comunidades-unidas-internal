@@ -44,7 +44,7 @@ export default function ViewLead(props: ViewLeadProps) {
     } else if (error && error.status === 400) {
       return `Invalid lead id '${leadId}'`;
     } else if (lead) {
-      return lead.fullName;
+      return `${lead.fullName} (#${lead.id})`;
     } else {
       return "Loading lead...";
     }
@@ -94,6 +94,32 @@ const css = `
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+
+  & .edit-button {
+    margin-top: 1rem;
+  }
+
+  & .edit-form {
+    width: 55%;
+  }
+
+  & .edit-form > div {
+    padding: 1rem;
+  }
+
+  & .edit-form > div > label > span {
+    margin-right: 1rem;
+  }
+
+  & .edit-form > div > label > select {
+    font-size: 1.8rem;
+    padding: .4rem .6rem;
+  }
+
+  & .edit-form > .children-container {
+    display: flex;
+    justify-content: center;
   }
 `;
 

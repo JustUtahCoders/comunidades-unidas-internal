@@ -1,15 +1,7 @@
 import queryString from "query-string";
 
-export const allowedSearchFields = {
-  id: "Client ID",
-  zip: "ZIP Code",
-  phone: "Phone",
-  program: "Interest in Program"
-};
-
-const allowedKeys = Object.keys(allowedSearchFields);
-
 export function parseSearch(
+  searchFields,
   value: string,
   forcedValues: SearchParseValues = {}
 ): SearchParse {
@@ -19,6 +11,8 @@ export function parseSearch(
   const tokens = value.split(/\s/);
   let nameFound = false;
   let errors = [];
+
+  const allowedKeys = Object.keys(searchFields);
 
   const initialParsedValue: SearchParseValues = {};
 
@@ -59,7 +53,11 @@ export function parseSearch(
   };
 }
 
-export function serializeSearch(parse: SearchParseValues): string {
+export function serializeSearch(
+  searchFields,
+  parse: SearchParseValues
+): string {
+  const allowedKeys = Object.keys(searchFields);
   return Object.keys(parse)
     .reduce((acc, key) => {
       if (allowedKeys.includes(key) && parse[key]) {
@@ -72,8 +70,10 @@ export function serializeSearch(parse: SearchParseValues): string {
 }
 
 export function deserializeSearch(
+  searchFields,
   queryParamString: string = window.location.search
 ): string {
+  const allowedKeys = Object.keys(searchFields);
   const params = queryString.parse(queryParamString);
   const relevantParams = Object.keys(params).reduce((acc, key) => {
     if (allowedKeys.includes(key)) {
@@ -96,4 +96,5 @@ export type SearchParseValues = {
   zip?: string;
   phone?: string;
   id?: string;
+  event?: string;
 };
