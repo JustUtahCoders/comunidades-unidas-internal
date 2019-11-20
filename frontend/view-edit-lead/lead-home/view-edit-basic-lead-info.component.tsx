@@ -9,6 +9,7 @@ export default function ViewEditBasicLeadInfo(
 ) {
   const [editing, setEditing] = React.useState(false);
   const [apiStatus, dispatchApiStatus] = React.useReducer(updatingReducer, {
+    isEditing: false,
     isUpdating: false,
     newLeadData: null
   });
@@ -31,7 +32,6 @@ export default function ViewEditBasicLeadInfo(
           });
         })
         .finally(() => {
-          setEditing(false);
           dispatchApiStatus({ type: "reset" });
         });
 
@@ -41,9 +41,11 @@ export default function ViewEditBasicLeadInfo(
 
   return (
     <LeadSection
-      title={editing ? "Edit Basic Information" : "Basic information"}
+      title={
+        apiStatus.isEditing ? "Edit Basic Information" : "Basic information"
+      }
     >
-      {editing ? (
+      {apiStatus.isEditing ? (
         <BasicLeadInformationInputs
           lead={{
             firstName: lead.firstName,
@@ -57,7 +59,7 @@ export default function ViewEditBasicLeadInfo(
             <button
               type="button"
               className="secondary"
-              onClick={() => setEditing(false)}
+              onClick={() => dispatchApiStatus({ type: "reset" })}
               disabled={apiStatus.isUpdating}
             >
               Cancel
@@ -92,7 +94,7 @@ export default function ViewEditBasicLeadInfo(
           {props.editable && (
             <button
               className="secondary edit-button"
-              onClick={() => setEditing(true)}
+              onClick={() => dispatchApiStatus({ type: "edit" })}
             >
               Edit
             </button>
@@ -114,10 +116,16 @@ ViewEditBasicLeadInfo.defaultProps = {
 
 function updatingReducer(state, action) {
   switch (action.type) {
+    case "edit":
+      return { isEditing: true };
     case "update":
-      return { isUpdating: true, newLeadData: action.newLeadData };
+      return {
+        isEditing: false,
+        isUpdating: true,
+        newLeadData: action.newLeadData
+      };
     case "reset":
-      return { isUpdating: false };
+      return { isEditing: false, isUpdating: false };
     default:
       throw Error();
   }
