@@ -109,9 +109,6 @@ app.post("/api/leads", (req, res) => {
 
   let newLeadsData = mysql.format(leadQuery, leadDataArray);
 
-  console.log("here");
-  console.log(newLeadsData);
-
   pool.query(newLeadsData, (err, result) => {
     if (err) {
       return databaseError(req, res, err);
