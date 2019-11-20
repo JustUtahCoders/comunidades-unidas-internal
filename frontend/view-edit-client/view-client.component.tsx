@@ -20,6 +20,7 @@ import homeImgUrl from "../../icons/148705-essential-collection/svg/home.svg";
 import historyImgUrl from "../../icons/148705-essential-collection/svg/notepad.svg";
 import integrationsImgUrl from "../../icons/148705-essential-collection/svg/cloud-computing-3.svg";
 import addNewImgUrl from "../../icons/148705-essential-collection/svg/add-1.svg";
+import { IntakeService } from "../util/services-inputs.component";
 
 export default function ViewClient(props: ViewClientProps) {
   const [client, setClient] = React.useState<SingleClient>(null);
@@ -220,12 +221,6 @@ export type SingleClient = {
   intakeServices?: IntakeService[];
   createdBy?: ClientUserRelationship;
   lastUpdatedBy?: ClientUserRelationship;
-};
-
-export type IntakeService = {
-  id: number;
-  serviceName: string;
-  serviceDescription: string;
 };
 
 type Address = {

@@ -17,7 +17,7 @@ import Finished from "./finished.component";
 
 import { mediaMobile, mediaDesktop } from "../styleguide.component";
 import { WeeklyEmployedHours } from "./form-inputs/demographic-information-inputs.component";
-import { IntakeService } from "../view-edit-client/view-client.component";
+import { IntakeService } from "../util/services-inputs.component";
 
 export default function AddClient(props: AddClientProps) {
   const scope = useCss(css);

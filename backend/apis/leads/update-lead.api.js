@@ -1,4 +1,5 @@
 const mysql = require("mysql");
+const _ = require("lodash");
 const {
   app,
   databaseError,
@@ -83,24 +84,45 @@ app.patch("/api/leads/:id", (req, res, next) => {
       );
     }
 
-    const leadContactInfoChanged = atLeastOne(
-      req.body,
-      "phone",
-      "smsConsent",
-      "zip"
-    );
+    const leadServicesChanged = atLeastOne(req.body, "leadServices");
 
-    if (leadContactInfoChanged) {
-      const leadContactInfoQuery =
-        "UPDATE leads SET phone = ?, smsConsent = ?, zip = ?, modifiedBy = ? WHERE id = ?;";
-      queries.push(leadContactInfoQuery);
-      queryData.push(
-        fullLead.phone,
-        fullLead.smsConsent,
-        fullLead.zip,
-        userId,
-        leadId
+    if (leadServicesChanged && fullLead.leadServices.length > 0) {
+      queries.push("UPDATE leads SET modifiedBy = ? WHERE id = ?;");
+      queryData.push(userId, leadId);
+
+      const oldLeadServiceIds = oldLead.leadServices.map(service => {
+        return service.id;
+      });
+
+      const newLeadServiceIds = _.difference(
+        fullLead.leadServices,
+        oldLeadServiceIds
       );
+
+      if (newLeadServiceIds.length > 0) {
+        for (let i = 0; i < newLeadServiceIds.length; i++) {
+          const serviceId = newLeadServiceIds[i];
+          queries.push(
+            "INSERT INTO leadServices (leadId, serviceId) VALUES (?, ?);"
+          );
+          queryData.push(leadId, serviceId);
+        }
+      }
+
+      const removeLeadServiceIds = _.difference(
+        oldLeadServiceIds,
+        fullLead.leadServices
+      );
+
+      if (removeLeadServiceIds.length > 0) {
+        for (let i = 0; i < removeLeadServiceIds.length; i++) {
+          const serviceId = removeLeadServiceIds[i];
+          queries.push(
+            "DELETE FROM leadServices WHERE leadId = ? AND serviceId = ?;"
+          );
+          queryData.push(leadId, serviceId);
+        }
+      }
     }
 
     if (queries.length === 0) {

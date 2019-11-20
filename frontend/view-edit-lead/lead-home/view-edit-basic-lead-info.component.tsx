@@ -12,7 +12,7 @@ export default function ViewEditBasicLeadInfo(
     isUpdating: false,
     newLeadData: null
   });
-  const { lead } = props;
+  const { lead, leadUpdated } = props;
 
   React.useEffect(() => {
     if (apiStatus.isUpdating) {
@@ -23,14 +23,16 @@ export default function ViewEditBasicLeadInfo(
         signal: abortController.signal
       })
         .then(data => {
-          dispatchApiStatus({ type: "reset" });
-          props.leadUpdated(data.lead);
-          setEditing(false);
+          leadUpdated(data.lead);
         })
         .catch(err => {
           setTimeout(() => {
             throw err;
           });
+        })
+        .finally(() => {
+          setEditing(false);
+          dispatchApiStatus({ type: "reset" });
         });
 
       return () => abortController.abort();

@@ -1,13 +1,15 @@
 import React from "react";
+import { useCss } from "kremling";
 
 export default React.forwardRef<IntakeDateInputRef, IntakeDateInputProps>(
   function IntakeDateInput(props: IntakeDateInputProps, ref) {
     const [date, setDate] = React.useState(props.date);
+    const scope = useCss(css);
 
     return (
-      <div>
+      <div {...scope}>
         <label>
-          <span>Intake Date</span>
+          <span className="intake-span">Intake Date</span>
           <input
             type="date"
             value={date}
@@ -19,6 +21,12 @@ export default React.forwardRef<IntakeDateInputRef, IntakeDateInputProps>(
     );
   }
 );
+
+const css = `
+  & .intake-span {
+    width: 50%;
+  }
+`;
 
 type IntakeDateInputProps = {
   date: string;

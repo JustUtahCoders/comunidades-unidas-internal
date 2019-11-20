@@ -1,6 +1,5 @@
 import React from "react";
 import { groupBy } from "lodash-es";
-import { IntakeService } from "../../view-edit-client/view-client.component";
 import { useCss } from "kremling";
 
 export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
@@ -9,16 +8,15 @@ export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
       IntakeService[]
     >(props.checkedServices || []);
 
+    const scope = useCss(css);
+    const groupedServices = groupBy<Service>(props.services, "programName");
+
     React.useEffect(() => {
       // @ts-ignore
       ref.current = {
         checkedServices
       };
     });
-
-    const groupedServices = groupBy<Service>(props.services, "programName");
-
-    const scope = useCss(css);
 
     return (
       <div {...scope}>
@@ -29,7 +27,7 @@ export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
         >
           {Object.entries(groupedServices).map(([programName, services]) => (
             <div key={programName}>
-              <h1>{programName}</h1>
+              <h3>{programName}</h3>
               {services.map(service => (
                 <label key={service.id}>
                   <input
@@ -69,10 +67,30 @@ export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
 );
 
 const css = `
-& h1 {
-  font-size: 1.8rem;
-}
+  & h3 {
+    font-size: 1.8rem;
+  }
+
+  & .vertical-options {
+    display: block;
+  }
+
+  & .vertical-options > * {
+    padding: .8rem 0;
+  }
+
+  & .vertical-options > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
 `;
+
+export type IntakeService = {
+  id: number;
+  serviceName: string;
+};
 
 type IntakeServicesInputsProps = {
   services: Service[];
