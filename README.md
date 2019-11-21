@@ -96,6 +96,23 @@ SELECT * FROM clients;
 # etc etc
 ```
 
+##### Windows Users
+
+When using Windows, the above command does not work within the `Git for Windows` shell without using `winpty`. Fortunately, `winpty` comes installed with `Git for Windows` shell.
+
+To be able to run the exact same command in a Windows environment, you need to add the following lines to your .bashrc file:
+
+```
+alias docker='winpty docker'
+alias docker-compose='winpty docker-compose'
+```
+
+If you don't want to add these aliases, you will need to run the following command when starting `docker-compose`:
+
+```sh
+winpty docker-compose exec db bash
+```
+
 #### Production database
 
 Run the following commands in a terminal. Replace `$HOSTNAME`, `$USERNAME`, and `$PASSWORD` with the correct values.
