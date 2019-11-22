@@ -64,14 +64,32 @@ app.get("/api/leads", (req, res, next) => {
 
   if (req.query.program) {
     whereClause += `
-      AND services.programId = ?
+      AND (
+        SELECT COUNT(*)
+        FROM leadServices
+        WHERE leadServices.leadId = leads.id
+          AND leadServices.serviceId IN (
+            SELECT id 
+            FROM services 
+            WHERE programId = ?
+          )
+      ) > 0
     `;
     whereClauseValues.push(req.query.program);
   }
 
   if (req.query.event) {
     whereClause += `
-      AND leadEvents.eventId = ?
+      AND (
+        SELECT COUNT(*)
+        FROM leadEvents
+        WHERE leadEvents.leadId = leads.id
+          AND leadEvents.eventId IN (
+              SELECT id 
+              FROM events 
+              WHERE eventId = events.id
+            )
+      ) > 0
     `;
     whereClauseValues.push(req.query.event);
   }
@@ -101,36 +119,13 @@ app.get("/api/leads", (req, res, next) => {
       created.firstName AS createdByFirstName,
       created.lastName AS createdByLastName,
       modified.firstName AS modifiedByFirstName,
-      modified.lastName AS modifiedByLastName,
-      JSON_ARRAYAGG(
-        JSON_OBJECT(
-          "serviceId", leadServices.serviceId,
-          "serviceName", services.serviceName
-        )
-      ) AS leadServices,
-      JSON_ARRAYAGG(
-        JSON_OBJECT(
-          "eventId", leadEvents.eventId,
-          "eventName", events.eventName,
-          "eventLocation", events.eventLocation,
-          "eventDate", events.eventDate
-        )
-      ) AS eventSources
+      modified.lastName AS modifiedByLastName
     FROM leads
       INNER JOIN users created 
         ON created.id = leads.addedBy
       INNER JOIN users modified 
         ON modified.id = leads.modifiedBy
-      INNER JOIN leadServices 
-        ON leadServices.leadId = leads.id
-      INNER JOIN services 
-        ON services.id = leadServices.serviceId
-      INNER JOIN leadEvents
-        ON leadEvents.leadId = leads.id
-      INNER JOIN events
-        ON events.id = leadEvents.eventId
     ${whereClause}
-    GROUP BY leadServices.leadId
     LIMIT ?, ?;
     SELECT FOUND_ROWS();
   `;
@@ -152,71 +147,130 @@ app.get("/api/leads", (req, res, next) => {
 
     const totalCount = totalCountRows[0]["FOUND_ROWS()"];
 
-    const mapLeadsData = leadRows.map(result => {
-      const leadServices = JSON.parse(result.leadServices);
-      const eventSources = JSON.parse(result.eventSources);
+    const leads = [];
 
-      return {
-        id: result.leadId,
-        dateOfSignUp: responseDateWithoutTime(result.dateOfSignUp),
-        leadStatus: result.leadStatus === null ? "active" : result.leadStatus,
-        contactStage: {
-          first: result.firstContactAttempt,
-          second: result.secondContactAttempt,
-          third: result.thirdContactAttempt
-        },
-        inactivityReason: result.inactivityReason,
-        eventSources: eventSources.map(event => ({
-          eventId: event.eventId,
-          eventName: event.eventName,
-          eventLocation: event.eventLocation,
-          eventDate: event.eventDate
-        })),
-        firstName: result.firstName,
-        lastName: result.lastName,
-        fullName: responseFullName(result.firstName, result.lastName),
-        phone: result.phone,
-        smsConsent: responseBoolean(result.smsConsent),
-        zip: result.zip,
-        age: result.age,
-        gender: result.gender,
-        leadServices: leadServices.map(service => ({
-          id: service.serviceId,
-          serviceName: service.serviceName
-        })),
-        clientId: result.clientId,
-        isDeleted: responseBoolean(result.isDeleted),
-        createdBy: {
-          userId: result.addedBy,
-          firstName: result.createdByFirstName,
-          lastName: result.createdByLastName,
-          fullName: responseFullName(
-            result.createdByFirstName,
-            result.createdByLastName
-          ),
-          timestamp: result.dateAdded
-        },
-        lastUpdatedBy: {
-          userId: result.modifiedBy,
-          firstName: result.modifiedByFirstName,
-          lastName: result.modifiedByLastName,
-          fullName: responseFullName(
-            result.modifiedByFirstName,
-            result.modifiedByLastName
-          ),
-          timestamp: result.dateModified
+    for (let i = 0; i < leadRows.length; i++) {
+      const getMoreData = mysql.format(
+        `
+        SELECT
+          leadServices.serviceId,
+          services.serviceName,
+          services.programId,
+          programs.programName
+        FROM leadServices
+          INNER JOIN services
+            ON services.id = leadServices.serviceId
+          INNER JOIN programs
+            ON programs.id = services.programId
+        WHERE leadServices.leadId = ?;
+
+        SELECT
+          leadEvents.eventId,
+          events.eventName,
+          events.eventLocation,
+          events.eventDate
+        FROM leadEvents
+          INNER JOIN events
+            ON events.id = leadEvents.eventId
+        WHERE leadEvents.leadId = ?;
+      `,
+        [leadRows[i].leadId, leadRows[i].leadId]
+      );
+
+      pool.query(getMoreData, (err, results, fields) => {
+        if (err) {
+          return databaseError(req, res, err);
         }
-      };
-    });
 
-    res.send({
-      leads: mapLeadsData,
-      pagination: {
-        currentPage: zeroBasedPage + 1,
-        pageSize,
-        numLeads: totalCount,
-        numPages: Math.ceil(totalCount / pageSize)
-      }
-    });
+        const leadServices = [];
+        const leadEvents = [];
+
+        if (results[0].length > 0) {
+          for (let j = 0; j < results[0].length; j++) {
+            const leadService = {
+              id: results[0][j].serviceId,
+              servicename: results[0][j].serviceName,
+              programId: results[0][j].programId,
+              programName: results[0][j].programName
+            };
+            leadServices.push(leadService);
+          }
+        }
+
+        if (results[1].length > 0) {
+          for (let j = 0; j < results[1].length; j++) {
+            const leadEvent = {
+              id: results[1][j].eventId,
+              eventName: results[1][j].eventName,
+              eventLocation: results[1][j].eventLocation,
+              eventDate: results[1][j].eventDate
+            };
+            leadEvents.push(leadEvent);
+          }
+        }
+
+        const lead = {
+          id: leadRows[i].leadId,
+          dateOfSignUp: responseDateWithoutTime(leadRows[i].dateOfSignUp),
+          leadStatus:
+            leadRows[i].leadStatus === null ? "active" : leadRows[i].leadStatus,
+          contactStage: {
+            first: leadRows[i].firstContactAttempt,
+            second: leadRows[i].secondContactAttempt,
+            third: leadRows[i].thirdContactAttempt
+          },
+          inactivityReason: leadRows[i].inactivityReason,
+          eventSources: leadEvents,
+          firstName: leadRows[i].firstName,
+          lastName: leadRows[i].lastName,
+          fullName: responseFullName(
+            leadRows[i].firstName,
+            leadRows[i].lastName
+          ),
+          phone: leadRows[i].phone,
+          smsConsent: responseBoolean(leadRows[i].smsConsent),
+          zip: leadRows[i].zip,
+          age: leadRows[i].age,
+          gender: leadRows[i].gender,
+          leadServices: leadServices,
+          clientId: leadRows[i].clientId,
+          isDeleted: responseBoolean(leadRows[i].isDeleted),
+          createdBy: {
+            userId: leadRows[i].addedBy,
+            firstName: leadRows[i].createdByFirstName,
+            lastName: leadRows[i].createdByLastName,
+            fullName: responseFullName(
+              leadRows[i].createdByFirstName,
+              leadRows[i].createdByLastName
+            ),
+            timestamp: leadRows[i].dateAdded
+          },
+          lastUpdatedBy: {
+            userId: leadRows[i].modifiedBy,
+            firstName: leadRows[i].modifiedByFirstName,
+            lastName: leadRows[i].modifiedByLastName,
+            fullName: responseFullName(
+              leadRows[i].modifiedByFirstName,
+              leadRows[i].modifiedByLastName
+            ),
+            timestamp: leadRows[i].dateModified
+          }
+        };
+
+        leads.push(lead);
+
+        if (leads.length === leadRows.length) {
+          res.send({
+            leads: [...leads],
+            pagination: {
+              currentPage: zeroBasedPage + 1,
+              pageSize,
+              numLeads: totalCount,
+              numPages: Math.ceil(totalCount / pageSize)
+            }
+          });
+        }
+      });
+    }
   });
 });
