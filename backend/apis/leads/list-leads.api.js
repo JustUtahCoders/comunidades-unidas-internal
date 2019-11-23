@@ -149,7 +149,7 @@ app.get("/api/leads", (req, res, next) => {
 
     const leads = [];
 
-    leadsRows.forEach(lead => {
+    leadRows.forEach(lead => {
       const getMoreData = mysql.format(
         `
         SELECT
@@ -185,7 +185,7 @@ app.get("/api/leads", (req, res, next) => {
         let leadServices = [];
         let leadEvents = [];
 
-        if (results[0].length > 0) {
+        if (results[0].length) {
           leadServices = results[0].map(leadService => {
             return {
               id: leadService.serviceId,
@@ -196,7 +196,7 @@ app.get("/api/leads", (req, res, next) => {
           });
         }
 
-        if (results[1].length > 0) {
+        if (results[1].length) {
           leadEvents = results[1].map(leadEvent => {
             return {
               id: leadEvent.eventId,
@@ -207,7 +207,7 @@ app.get("/api/leads", (req, res, next) => {
           });
         }
 
-        const lead = {
+        const leadData = {
           id: lead.leadId,
           dateOfSignUp: responseDateWithoutTime(lead.dateOfSignUp),
           leadStatus: lead.leadStatus === null ? "active" : lead.leadStatus,
@@ -251,7 +251,7 @@ app.get("/api/leads", (req, res, next) => {
           }
         };
 
-        leads.push(lead);
+        leads.push(leadData);
 
         if (leads.length === leadRows.length) {
           res.send({

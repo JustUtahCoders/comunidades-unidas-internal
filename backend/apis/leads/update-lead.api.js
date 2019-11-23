@@ -86,7 +86,7 @@ app.patch("/api/leads/:id", (req, res, next) => {
 
     const leadServicesChanged = atLeastOne(req.body, "leadServices");
 
-    if (leadServicesChanged || fullLead.leadServices.length > 0) {
+    if (leadServicesChanged && fullLead.leadServices.length > 0) {
       queries.push("UPDATE leads SET modifiedBy = ? WHERE id = ?;");
       queryData.push(userId, leadId);
 
