@@ -185,7 +185,7 @@ app.get("/api/leads", (req, res, next) => {
         let leadServices = [];
         let leadEvents = [];
 
-        if (results[0].length) {
+        if (results[0]) {
           leadServices = results[0].map(leadService => {
             return {
               id: leadService.serviceId,
@@ -196,7 +196,7 @@ app.get("/api/leads", (req, res, next) => {
           });
         }
 
-        if (results[1].length) {
+        if (results[1]) {
           leadEvents = results[1].map(leadEvent => {
             return {
               id: leadEvent.eventId,
