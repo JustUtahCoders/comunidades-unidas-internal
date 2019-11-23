@@ -12,17 +12,31 @@ import focusGroupsIcon from "../../../icons/148705-essential-collection/svg/070-
 export default function LeadServicesCell(props: LeadServicesCellProps) {
   const { leadServices } = props;
 
-  const [healthServices, setHealthServices] = React.useState([]);
-  const [nutritionServices, setNutritionServices] = React.useState([]);
-  const [immigrationServices, setImmigrationServices] = React.useState([]);
-  const [financialServices, setFinancialServices] = React.useState([]);
-  const [workersRightsServices, setWorkersRightsServices] = React.useState([]);
-  const [familySupportServices, setFamilySupportServices] = React.useState([]);
+  const [healthServices, setHealthServices] = React.useState<HealthService[]>(
+    []
+  );
+  const [nutritionServices, setNutritionServices] = React.useState<
+    NutritionService[]
+  >([]);
+  const [immigrationServices, setImmigrationServices] = React.useState<
+    ImmigrationService[]
+  >([]);
+  const [financialServices, setFinancialServices] = React.useState<
+    FinancialService[]
+  >([]);
+  const [workersRightsServices, setWorkersRightsServices] = React.useState<
+    WorkersRightsService[]
+  >([]);
+  const [familySupportServices, setFamilySupportServices] = React.useState<
+    FamilySupportService[]
+  >([]);
   const [
     communityEngagementServices,
     setCommunityEngagementServices
-  ] = React.useState([]);
-  const [focusGroupServices, setFocusGroupServices] = React.useState([]);
+  ] = React.useState<CommunityEngagementService[]>([]);
+  const [focusGroupServices, setFocusGroupServices] = React.useState<
+    FocusGroupService[]
+  >([]);
 
   const scope = useCss(css);
 
@@ -197,6 +211,62 @@ type LeadServicesCellProps = {
 };
 
 type LeadService = {
+  id?: number;
+  serviceName?: string;
+  programId?: number;
+  programName?: string;
+};
+
+type HealthService = {
+  id?: number;
+  serviceName?: string;
+  programId?: number;
+  programName?: string;
+};
+
+type NutritionService = {
+  id?: number;
+  serviceName?: string;
+  programId?: number;
+  programName?: string;
+};
+
+type ImmigrationService = {
+  id?: number;
+  serviceName?: string;
+  programId?: number;
+  programName?: string;
+};
+
+type FinancialService = {
+  id?: number;
+  serviceName?: string;
+  programId?: number;
+  programName?: string;
+};
+
+type WorkersRightsService = {
+  id?: number;
+  serviceName?: string;
+  programId?: number;
+  programName?: string;
+};
+
+type FamilySupportService = {
+  id?: number;
+  serviceName?: string;
+  programId?: number;
+  programName?: string;
+};
+
+type CommunityEngagementService = {
+  id?: number;
+  serviceName?: string;
+  programId?: number;
+  programName?: string;
+};
+
+type FocusGroupService = {
   id?: number;
   serviceName?: string;
   programId?: number;
