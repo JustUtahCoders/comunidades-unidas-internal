@@ -149,7 +149,7 @@ app.get("/api/leads", (req, res, next) => {
 
     const leads = [];
 
-    for (let i = 0; i < leadRows.length; i++) {
+    leadsRows.forEach(lead => {
       const getMoreData = mysql.format(
         `
         SELECT
@@ -174,7 +174,7 @@ app.get("/api/leads", (req, res, next) => {
             ON events.id = leadEvents.eventId
         WHERE leadEvents.leadId = ?;
       `,
-        [leadRows[i].leadId, leadRows[i].leadId]
+        [lead.leadId, lead.leadId]
       );
 
       pool.query(getMoreData, (err, results, fields) => {
@@ -182,78 +182,72 @@ app.get("/api/leads", (req, res, next) => {
           return databaseError(req, res, err);
         }
 
-        const leadServices = [];
-        const leadEvents = [];
+        let leadServices = [];
+        let leadEvents = [];
 
         if (results[0].length > 0) {
-          for (let j = 0; j < results[0].length; j++) {
-            const leadService = {
-              id: results[0][j].serviceId,
-              servicename: results[0][j].serviceName,
-              programId: results[0][j].programId,
-              programName: results[0][j].programName
+          leadServices = results[0].map(leadService => {
+            return {
+              id: leadService.serviceId,
+              serviceName: leadService.serviceName,
+              programId: leadService.programId,
+              programName: leadService.programName
             };
-            leadServices.push(leadService);
-          }
+          });
         }
 
         if (results[1].length > 0) {
-          for (let j = 0; j < results[1].length; j++) {
-            const leadEvent = {
-              id: results[1][j].eventId,
-              eventName: results[1][j].eventName,
-              eventLocation: results[1][j].eventLocation,
-              eventDate: results[1][j].eventDate
+          leadEvents = results[1].map(leadEvent => {
+            return {
+              id: leadEvent.eventId,
+              eventName: leadEvent.eventName,
+              eventLocation: leadEvent.eventLocation,
+              eventDate: leadEvent.eventDate
             };
-            leadEvents.push(leadEvent);
-          }
+          });
         }
 
         const lead = {
-          id: leadRows[i].leadId,
-          dateOfSignUp: responseDateWithoutTime(leadRows[i].dateOfSignUp),
-          leadStatus:
-            leadRows[i].leadStatus === null ? "active" : leadRows[i].leadStatus,
+          id: lead.leadId,
+          dateOfSignUp: responseDateWithoutTime(lead.dateOfSignUp),
+          leadStatus: lead.leadStatus === null ? "active" : lead.leadStatus,
           contactStage: {
-            first: leadRows[i].firstContactAttempt,
-            second: leadRows[i].secondContactAttempt,
-            third: leadRows[i].thirdContactAttempt
+            first: lead.firstContactAttempt,
+            second: lead.secondContactAttempt,
+            third: lead.thirdContactAttempt
           },
-          inactivityReason: leadRows[i].inactivityReason,
+          inactivityReason: lead.inactivityReason,
           eventSources: leadEvents,
-          firstName: leadRows[i].firstName,
-          lastName: leadRows[i].lastName,
-          fullName: responseFullName(
-            leadRows[i].firstName,
-            leadRows[i].lastName
-          ),
-          phone: leadRows[i].phone,
-          smsConsent: responseBoolean(leadRows[i].smsConsent),
-          zip: leadRows[i].zip,
-          age: leadRows[i].age,
-          gender: leadRows[i].gender,
+          firstName: lead.firstName,
+          lastName: lead.lastName,
+          fullName: responseFullName(lead.firstName, lead.lastName),
+          phone: lead.phone,
+          smsConsent: responseBoolean(lead.smsConsent),
+          zip: lead.zip,
+          age: lead.age,
+          gender: lead.gender,
           leadServices: leadServices,
-          clientId: leadRows[i].clientId,
-          isDeleted: responseBoolean(leadRows[i].isDeleted),
+          clientId: lead.clientId,
+          isDeleted: responseBoolean(lead.isDeleted),
           createdBy: {
-            userId: leadRows[i].addedBy,
-            firstName: leadRows[i].createdByFirstName,
-            lastName: leadRows[i].createdByLastName,
+            userId: lead.addedBy,
+            firstName: lead.createdByFirstName,
+            lastName: lead.createdByLastName,
             fullName: responseFullName(
-              leadRows[i].createdByFirstName,
-              leadRows[i].createdByLastName
+              lead.createdByFirstName,
+              lead.createdByLastName
             ),
-            timestamp: leadRows[i].dateAdded
+            timestamp: lead.dateAdded
           },
           lastUpdatedBy: {
-            userId: leadRows[i].modifiedBy,
-            firstName: leadRows[i].modifiedByFirstName,
-            lastName: leadRows[i].modifiedByLastName,
+            userId: lead.modifiedBy,
+            firstName: lead.modifiedByFirstName,
+            lastName: lead.modifiedByLastName,
             fullName: responseFullName(
-              leadRows[i].modifiedByFirstName,
-              leadRows[i].modifiedByLastName
+              lead.modifiedByFirstName,
+              lead.modifiedByLastName
             ),
-            timestamp: leadRows[i].dateModified
+            timestamp: lead.dateModified
           }
         };
 
@@ -271,6 +265,6 @@ app.get("/api/leads", (req, res, next) => {
           });
         }
       });
-    }
+    });
   });
 });

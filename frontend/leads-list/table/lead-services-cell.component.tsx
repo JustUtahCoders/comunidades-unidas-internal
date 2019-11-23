@@ -169,27 +169,27 @@ export default function LeadServicesCell(props: LeadServicesCellProps) {
 }
 
 const css = `
-	& .programs-cell {
-		width: 100%;
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		justify-content: center;
-		font-size: 1.25rem;
-		font-weight: 600;
-	}
+  & .programs-cell {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
 
-	.icon-container {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		margin: 0.5rem;
-	}
+  .icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.5rem;
+  }
 
-	& .program-icon {
-		height: 2rem;
-		margin-right: 0.35rem;
-	}
+  & .program-icon {
+    height: 2rem;
+    margin-right: 0.35rem;
+  }
 `;
 
 type LeadServicesCellProps = {
