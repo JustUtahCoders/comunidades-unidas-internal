@@ -211,6 +211,12 @@ const css = `
   box-shadow: 0 .2rem .2rem var(--medium-gray);
 }
 
+@media print {
+  & .clients-table th {
+    top: 0;
+  }
+}
+
 & .clients-table th button {
   display: block !important;
   width: 100% !important;

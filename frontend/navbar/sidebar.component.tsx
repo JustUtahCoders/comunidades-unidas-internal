@@ -137,6 +137,12 @@ export default function Sidebar(props: SidebarProps) {
 }
 
 const css = `
+@media print {
+  & .sidebar {
+    display: none;
+  }
+}
+
 ${mediaMobile} {
   & .sidebar:not(.force-show) {
     left: calc(-100%);
