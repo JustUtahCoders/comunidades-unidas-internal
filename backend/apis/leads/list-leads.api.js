@@ -147,12 +147,15 @@ app.get("/api/leads", (req, res, next) => {
 
     const totalCount = totalCountRows[0]["FOUND_ROWS()"];
 
-    const leads = [];
+    let secondQuery = "";
+    const secondQueryData = [];
 
     leadRows.forEach(lead => {
-      const getMoreData = mysql.format(
-        `
+      secondQuery = `
+        ${secondQuery} 
+
         SELECT
+          leadServices.leadId,
           leadServices.serviceId,
           services.serviceName,
           services.programId,
@@ -165,6 +168,7 @@ app.get("/api/leads", (req, res, next) => {
         WHERE leadServices.leadId = ?;
 
         SELECT
+          leadEvents.leadId,
           leadEvents.eventId,
           events.eventName,
           events.eventLocation,
@@ -173,41 +177,44 @@ app.get("/api/leads", (req, res, next) => {
           INNER JOIN events
             ON events.id = leadEvents.eventId
         WHERE leadEvents.leadId = ?;
-      `,
-        [lead.leadId, lead.leadId]
-      );
+      `;
+      secondQueryData.push(lead.leadId, lead.leadId);
+    });
 
-      pool.query(getMoreData, (err, results, fields) => {
-        if (err) {
-          return databaseError(req, res, err);
-        }
+    const getMoreData = mysql.format(secondQuery, secondQueryData);
 
+    pool.query(getMoreData, (err, results, fields) => {
+      if (err) {
+        return databaseError(req, res, err);
+      }
+
+      const leads = leadRows.map((lead, i) => {
         let leadServices = [];
         let leadEvents = [];
 
-        if (results[0]) {
-          leadServices = results[0].map(leadService => {
-            return {
-              id: leadService.serviceId,
-              serviceName: leadService.serviceName,
-              programId: leadService.programId,
-              programName: leadService.programName
-            };
+        if (results[i * 2].length > 0) {
+          results[i * 2].forEach(service => {
+            leadServices.push({
+              serviceId: service.serviceId,
+              serviceName: service.serviceName,
+              programId: service.programId,
+              programName: service.programName
+            });
           });
         }
 
-        if (results[1]) {
-          leadEvents = results[1].map(leadEvent => {
-            return {
-              id: leadEvent.eventId,
-              eventName: leadEvent.eventName,
-              eventLocation: leadEvent.eventLocation,
-              eventDate: leadEvent.eventDate
-            };
+        if (results[i * 2 + 1].length > 0) {
+          results[i * 2 + 1].forEach(event => {
+            leadEvents.push({
+              eventId: event.eventId,
+              eventName: event.eventName,
+              eventLocation: event.eventLocation,
+              eventDate: event.eventDate
+            });
           });
         }
 
-        const leadData = {
+        return {
           id: lead.leadId,
           dateOfSignUp: responseDateWithoutTime(lead.dateOfSignUp),
           leadStatus: lead.leadStatus === null ? "active" : lead.leadStatus,
@@ -250,19 +257,15 @@ app.get("/api/leads", (req, res, next) => {
             timestamp: lead.dateModified
           }
         };
+      });
 
-        leads.push(leadData);
-
-        if (leads.length === leadRows.length) {
-          res.send({
-            leads: [...leads],
-            pagination: {
-              currentPage: zeroBasedPage + 1,
-              pageSize,
-              numLeads: totalCount,
-              numPages: Math.ceil(totalCount / pageSize)
-            }
-          });
+      res.send({
+        leads: [...leads],
+        pagination: {
+          currentPage: zeroBasedPage + 1,
+          pageSize,
+          numLeads: totalCount,
+          numPages: Math.ceil(totalCount / pageSize)
         }
       });
     });
