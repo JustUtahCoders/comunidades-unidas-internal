@@ -17,7 +17,8 @@ const {
   nullableValidBoolean,
   nullableValidInteger,
   nullableValidPhone,
-  nullableValidZip
+  nullableValidZip,
+  nullableValidEnum
 } = require("../utils/validation-utils");
 const { atLeastOne } = require("../utils/patch-utils");
 const { getLeadById } = require("./get-lead.api");
@@ -28,6 +29,18 @@ app.patch("/api/leads/:id", (req, res, next) => {
   const bodyValidationErrors = checkValid(
     req.body,
     nullableValidDate("dateOfSignUp"),
+    nullableValidEnum("leadStatus", "active", "inactive", "convertedToClient"),
+    nullableValidDate("firstContactStatus"),
+    nullableValidDate("secondContactStatus"),
+    nullableValidDate("thirdContactStatus"),
+    nullableValidEnum(
+      "inactivityReason",
+      "doNotCallRequest",
+      "threeAttemptsNoResponse",
+      "wrongNumber",
+      "noLongerInterested",
+      "relocated"
+    ),
     nullableNonEmptyString("firstName"),
     nullableNonEmptyString("lastName"),
     nullableValidPhone("phone"),
@@ -108,23 +121,29 @@ app.patch("/api/leads/:id", (req, res, next) => {
       req.body,
       "dateOfSignUp",
       "leadStatus",
+      "inactivityReason",
       "first",
       "second",
-      "third",
-      "inactivityReason"
+      "third"
     );
 
     if (leadContactStatusChanged) {
+      let newInactivityReason = fullLead.inactivityReason;
+
+      if (fullLead.leadStatus === "active") {
+        newInactivityReason = null;
+      }
+
       const leadContactStatusInfo =
-        "UPDATE leads SET dateOfSignUp = ?, leadStatus = ?, firstContactAttempt = ?, secondContactAttempt = ?, thirdContactAttempt = ?, inactivityReason = ?, modifiedBy = ? WHERE id = ?;";
+        "UPDATE leads SET dateOfSignUp = ?, leadStatus = ?, inactivityReason = ?, firstContactAttempt = ?, secondContactAttempt = ?, thirdContactAttempt = ?, modifiedBy = ? WHERE id = ?";
       queries.push(leadContactStatusInfo);
       queryData.push(
         fullLead.dateOfSignUp,
         fullLead.leadStatus,
-        fullLead.firstContactAttempt,
-        fullLead.secondContactAttempt,
-        fullLead.thirdContactAttempt,
-        fullLead.inactivityReason,
+        newInactivityReason,
+        fullLead.contactStage.first || null,
+        fullLead.contactStage.second || null,
+        fullLead.contactStage.third || null,
         userId,
         leadId
       );
@@ -197,6 +216,7 @@ app.patch("/api/leads/:id", (req, res, next) => {
         if (selectErr) {
           return databaseError(req, res, selectErr, connection);
         }
+
         res.send({
           lead
         });

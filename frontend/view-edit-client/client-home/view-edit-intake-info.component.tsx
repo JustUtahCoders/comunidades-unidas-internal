@@ -64,7 +64,6 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
       {editing ? (
         <form onSubmit={handleEditSubmit}>
           <DateInput
-            withTime={false}
             ref={dateInputRef}
             date={client.dateOfIntake}
             labelName="Intake date"

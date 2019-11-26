@@ -1,9 +1,10 @@
 import React from "react";
+import dateformat from "dateformat";
 import { useCss } from "kremling";
 
 export default React.forwardRef<DateInputRef, DateInputProps>(
   function DateInput(props: DateInputProps, ref) {
-    const [date, setDate] = React.useState(props.date);
+    const [date, setDate] = React.useState(props.date || null);
     const scope = useCss(css);
 
     return (
@@ -11,7 +12,7 @@ export default React.forwardRef<DateInputRef, DateInputProps>(
         <label>
           <span className="intake-span">{props.labelName}</span>
           <input
-            type={props.withTime ? "datetime-local" : "date"}
+            type={"date"}
             value={date}
             onChange={evt => setDate(evt.target.value)}
             ref={ref}
@@ -31,7 +32,6 @@ const css = `
 type DateInputProps = {
   date: string;
   labelName: string;
-  withTime: boolean;
 };
 
 type DateInputRef = HTMLInputElement;

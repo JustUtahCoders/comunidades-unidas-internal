@@ -3,35 +3,35 @@ import dateformat from "dateformat";
 import { useCss } from "kremling";
 import DateInput from "../../util/date-input.component";
 import ContactAttemptStatus from "./contact-attempt-input.component";
+import { first } from "lodash-es";
 
 export default function LeadContactStatusInputs(
   props: LeadContactStatusInputsProps
 ) {
   const dateInputRef = React.useRef(null);
+  const [dateOfSignUp, setDateOfSignUp] = React.useState(
+    props.lead.dateOfSignUp || ""
+  );
   const [leadStatus, setLeadStatus] = React.useState(
-    props.lead.leadStatus || ""
+    props.lead.leadStatus || null
   );
   const [firstContactAttempt, setFirstContactAttempt] = React.useState(
-    props.lead.firstContactAttempt || ""
+    props.lead.contactStage.first || null
   );
   const [secondContactAttempt, setSecondContactAttempt] = React.useState(
-    props.lead.secondContactAttempt || ""
+    props.lead.contactStage.second || null
   );
   const [thirdContactAttempt, setThirdContactAttempt] = React.useState(
-    props.lead.thirdContactAttempt || ""
+    props.lead.contactStage.third || null
   );
   const [inactivityReason, setInactivityReason] = React.useState(
-    props.lead.inactivityReason || ""
+    props.lead.inactivityReason || null
   );
   const [errMsg, setErrMsg] = React.useState("");
 
   const scope = useCss(css);
 
   const now = new Date();
-
-  console.log("lead-contact-status");
-  console.log("date of signup");
-  console.log(props.lead.dateOfSignUp);
 
   return (
     <form
@@ -41,9 +41,8 @@ export default function LeadContactStatusInputs(
       {...scope}
     >
       <DateInput
-        withTime={false}
         ref={dateInputRef}
-        date={props.lead.dateOfSignUp}
+        date={dateOfSignUp}
         labelName="Date of sign-up"
       />
       <div>
@@ -125,23 +124,31 @@ export default function LeadContactStatusInputs(
 
   function handleSubmit(evt) {
     evt.preventDefault();
+
     return props.handleSubmit(evt, {
       dateOfSignUp: dateInputRef.current.value,
       leadStatus: leadStatus,
-      firstContactAttempt: firstContactAttempt,
-      secondContactAttempt: secondContactAttempt,
-      thirdContactAttempt: thirdContactAttempt,
+      contactStage: {
+        first:
+          firstContactAttempt !== null
+            ? dateformat(firstContactAttempt, "yyyy-mm-dd hh:MM:ss")
+            : null,
+        second:
+          secondContactAttempt !== null
+            ? dateformat(secondContactAttempt, "yyyy-mm-dd hh:MM:ss")
+            : null,
+        third:
+          thirdContactAttempt !== null
+            ? dateformat(thirdContactAttempt, "yyyy-mm-dd hh:MM:ss")
+            : null
+      },
       inactivityReason: inactivityReason
     });
   }
 
   function addContactAttempt(evt) {
     evt.preventDefault();
-    if (!firstContactAttempt) {
-      setFirstContactAttempt(dateformat(now, "mm/dd/yyyy hh:MM TT"));
-    } else if (!secondContactAttempt) {
-      setSecondContactAttempt(dateformat(now, "mm/dd/yyyy hh:MM TT"));
-    } else if (!thirdContactAttempt) {
+    if (!thirdContactAttempt && secondContactAttempt && firstContactAttempt) {
       setThirdContactAttempt(dateformat(now, "mm/dd/yyyy hh:MM TT"));
       if (leadStatus === "active") {
         setLeadStatus("inactive");
@@ -149,6 +156,10 @@ export default function LeadContactStatusInputs(
       if (!inactivityReason) {
         setInactivityReason("threeAttemptsNoResponse");
       }
+    } else if (!secondContactAttempt && firstContactAttempt) {
+      setSecondContactAttempt(dateformat(now, "mm/dd/yyyy hh:MM TT"));
+    } else if (!firstContactAttempt) {
+      setFirstContactAttempt(dateformat(now, "mm/dd/yyyy hh:MM TT"));
     } else {
       setErrMsg("Three contact attempts have already been made.");
     }
@@ -200,8 +211,12 @@ type LeadContactStatusInputsProps = {
 type LeadContactStatusInfo = {
   dateOfSignUp?: string;
   leadStatus?: string;
-  firstContactAttempt?: string;
-  secondContactAttempt?: string;
-  thirdContactAttempt?: string;
+  contactStage?: ContactStageInfo;
   inactivityReason?: string;
+};
+
+type ContactStageInfo = {
+  first?: string;
+  second?: string;
+  third?: string;
 };

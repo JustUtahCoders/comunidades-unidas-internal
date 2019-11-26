@@ -10,7 +10,7 @@ export default function ViewEditLeadContactStatus(
 ) {
   const [apiStatus, dispatchApiStatus] = React.useReducer(updatingReducer, {
     isUpdating: false,
-    isEditing: true,
+    isEditing: false,
     newLeadData: null
   });
   const { lead, leadUpdated } = props;
@@ -44,9 +44,11 @@ export default function ViewEditLeadContactStatus(
           lead={{
             dateOfSignUp: lead.dateOfSignUp,
             leadStatus: lead.leadStatus,
-            firstContactAttempt: lead.contactStage.first,
-            secondContactAttempt: lead.contactStage.second,
-            thirdContactAttempt: lead.contactStage.third,
+            contactStage: {
+              first: lead.contactStage.first,
+              second: lead.contactStage.second,
+              third: lead.contactStage.third
+            },
             inactivityReason: lead.inactivityReason
           }}
           handleSubmit={handleSubmit}

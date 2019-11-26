@@ -1,15 +1,12 @@
 import React from "react";
 import dateformat from "dateformat";
 import { useCss } from "kremling";
-import DateInput from "../../util/date-input.component";
 import editIcon from "../../../icons/148705-essential-collection/svg/edit.svg";
 import cancelIcon from "../../../icons/148705-essential-collection/svg/add-1.svg";
 
 export default function ContactStatusInput(props: ContactStatusInputProps) {
-  const { contactAttempt } = props;
+  const { contactAttempt, setContactAttempt } = props;
   const [editAttempt, setEditAttempt] = React.useState(false);
-  console.log("contact attempt input");
-  console.log(contactAttempt);
 
   const scope = useCss(css);
 
@@ -18,18 +15,27 @@ export default function ContactStatusInput(props: ContactStatusInputProps) {
       <td className="attempt-name">{props.rowName}</td>
       {editAttempt ? (
         <td className="attempt-input">
-          <DateInput date={props.contactAttempt} labelName="" withTime={true} />
-          <img
-            alt="cancel icon"
-            className="cancel-icon"
-            onClick={() => setEditAttempt(!editAttempt)}
-            src={cancelIcon}
-            title="cancel edit"
-          />
+          <div>
+            <label>
+              <span>{props.rowName}</span>
+              <input
+                type="datetime-local"
+                value={dateformat(contactAttempt, "yyyy-mm-dd'T'hh:MM")}
+                onChange={evt => setContactAttempt(evt.target.value)}
+              />
+            </label>
+            <img
+              alt="cancel icon"
+              className="cancel-icon"
+              onClick={() => setEditAttempt(!editAttempt)}
+              src={cancelIcon}
+              title="cancel edit"
+            />
+          </div>
         </td>
       ) : (
         <td>
-          {dateformat(contactAttempt, "mm/dd/yyyy hh:MM:ss")}
+          {dateformat(contactAttempt, "mm/dd/yyyy hh:MM TT")}
           <img
             alt="edit icon"
             className="edit-icon"
