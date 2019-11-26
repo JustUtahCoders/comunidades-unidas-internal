@@ -5,7 +5,7 @@ import dateformat from "dateformat";
 import ClientSourceInputsComponent, {
   clientSources
 } from "../../add-client/form-inputs/client-source-inputs.component";
-import IntakeDateInput from "../../add-client/form-inputs/intake-date-input.component";
+import DateInput from "../../util/date-input.component";
 import easyFetch from "../../util/easy-fetch";
 import IntakeServicesInputs from "../../util/services-inputs.component";
 import checkedUrl from "../../../icons/148705-essential-collection/svg/checked-1.svg";
@@ -15,7 +15,7 @@ import { useCss } from "kremling";
 export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
   const { client } = props;
   const [editing, setEditing] = React.useState(false);
-  const intakeDateInputRef = React.useRef(null);
+  const dateInputRef = React.useRef(null);
   const clientSourceRef = React.useRef(null);
   const [apiStatus, dispatchApiStatus] = React.useReducer(apiStatusReducer, {
     isUpdating: false,
@@ -63,9 +63,11 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
     >
       {editing ? (
         <form onSubmit={handleEditSubmit}>
-          <IntakeDateInput
-            ref={intakeDateInputRef}
+          <DateInput
+            withTime={false}
+            ref={dateInputRef}
             date={client.dateOfIntake}
+            labelName="Intake date"
           />
           <ClientSourceInputsComponent
             ref={clientSourceRef}
@@ -148,7 +150,7 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
   function handleEditSubmit(evt) {
     evt.preventDefault();
     const newClientData = {
-      dateOfIntake: intakeDateInputRef.current.value,
+      dateOfIntake: dateInputRef.current.value,
       couldVolunteer: clientSourceRef.current.couldVolunteer,
       clientSource: clientSourceRef.current.clientSource,
       intakeServices: intakeServicesRef.current.checkedServices.map(

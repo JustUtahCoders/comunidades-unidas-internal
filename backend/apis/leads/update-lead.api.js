@@ -84,6 +84,52 @@ app.patch("/api/leads/:id", (req, res, next) => {
       );
     }
 
+    const leadContactInfoChanged = atLeastOne(
+      req.body,
+      "phone",
+      "smsConsent",
+      "zip"
+    );
+
+    if (leadContactInfoChanged) {
+      const leadContactInfoQuery =
+        "UPDATE leads SET phone = ?, smsConsent = ?, zip = ?, modifiedBy = ? WHERE id = ?;";
+      queries.push(leadContactInfoQuery);
+      queryData.push(
+        fullLead.phone,
+        fullLead.smsConsent,
+        fullLead.zip,
+        userId,
+        leadId
+      );
+    }
+
+    const leadContactStatusChanged = atLeastOne(
+      req.body,
+      "dateOfSignUp",
+      "leadStatus",
+      "first",
+      "second",
+      "third",
+      "inactivityReason"
+    );
+
+    if (leadContactStatusChanged) {
+      const leadContactStatusInfo =
+        "UPDATE leads SET dateOfSignUp = ?, leadStatus = ?, firstContactAttempt = ?, secondContactAttempt = ?, thirdContactAttempt = ?, inactivityReason = ?, modifiedBy = ? WHERE id = ?;";
+      queries.push(leadContactStatusInfo);
+      queryData.push(
+        fullLead.dateOfSignUp,
+        fullLead.leadStatus,
+        fullLead.firstContactAttempt,
+        fullLead.secondContactAttempt,
+        fullLead.thirdContactAttempt,
+        fullLead.inactivityReason,
+        userId,
+        leadId
+      );
+    }
+
     const leadServicesChanged = atLeastOne(req.body, "leadServices");
 
     if (leadServicesChanged && fullLead.leadServices.length > 0) {
