@@ -167,39 +167,39 @@ export default function LeadContactStatusInputs(
 }
 
 const css = `
-	& .contact-status-form {
-		width: 75%;
-	}
+  & .contact-status-form {
+    width: 75%;
+  }
 
-	& .no-contact-attempt {
-		text-align: center;
-		font-style: italic;
-	}
+  & .no-contact-attempt {
+    text-align: center;
+    font-style: italic;
+  }
 
-	& .attempts {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
+  & .attempts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 
-	& .attempt-table {
-		border: var(--light-gray) solid 2px;
-		background-color: var(--very-light-gray);
-		width: 100%;
-		text-align: center;
-		margin: 1rem 0 1rem 0;
-	}
+  & .attempt-table {
+    border: var(--light-gray) solid 2px;
+    background-color: var(--very-light-gray);
+    width: 100%;
+    text-align: center;
+    margin: 1rem 0 1rem 0;
+  }
 
-	& .attempt-table td {
-		padding: 1rem;
-	}
+  & .attempt-table td {
+    padding: 1rem;
+  }
 
-	& .error-message {
-		color: red;
-		font-style: italic;
-		text-align: center;
-	}
+  & .error-message {
+    color: red;
+    font-style: italic;
+    text-align: center;
+  }
 `;
 
 type LeadContactStatusInputsProps = {
