@@ -49,38 +49,38 @@ export default function ContactStatusInput(props: ContactStatusInputProps) {
 }
 
 const css = `
-	& .attempt-name {
-		border-right: var(--light-gray) solid 1px;
-	}	
+  & .attempt-name {
+    border-right: var(--light-gray) solid 1px;
+  }	
 
-	& .edit-icon {
-		height: 1.5rem;
-		filter: invert(70%) opacity(50%);
-		margin-left: 1rem;
-	}
+  & .edit-icon {
+    height: 1.5rem;
+    filter: invert(70%) opacity(50%);
+    margin-left: 1rem;
+  }
 
-	& .edit-icon:hover {
-		filter: invert(70%) opacity(100%);
-	}
+  & .edit-icon:hover {
+    filter: invert(70%) opacity(100%);
+  }
 
-	& .cancel-icon {
-		height: 1.5rem;
-		filter: hue-rotate(75deg);
-		opacity: 50%;
-		transform: rotate(45deg);
-		margin-left: 1rem;
-	}
+  & .cancel-icon {
+    height: 1.5rem;
+    filter: hue-rotate(75deg);
+    opacity: 50%;
+    transform: rotate(45deg);
+    margin-left: 1rem;
+  }
 
-	& .cancel-icon:hover {
-		filter: hue-rotate(75deg);
-		opacity: 100%;
-	}
+  & .cancel-icon:hover {
+    filter: hue-rotate(75deg);
+    opacity: 100%;
+  }
 
-	& .attempt-input {
-		display: flex;
-		align-items: center;
-		justify-content: space-around;
-	}
+  & .attempt-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
 `;
 
 type ContactStatusInputProps = {
