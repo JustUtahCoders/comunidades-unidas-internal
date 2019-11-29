@@ -37,6 +37,12 @@ type PageHeaderProps = {
 };
 
 const css = `
+@media print {
+  & .page-header {
+    display: none !important;
+  }
+}
+
 & .page-header {
   height: 10.2rem;
   display: flex;

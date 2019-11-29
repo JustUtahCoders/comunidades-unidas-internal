@@ -53,7 +53,6 @@ export default function ViewEditLeadEventInfo(
                     <td>{event.eventDate}</td>
                   </tr>
                 </tbody>
-                <br />
               </table>
             );
           })}
