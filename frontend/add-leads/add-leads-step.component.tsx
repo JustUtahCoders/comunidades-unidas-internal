@@ -31,12 +31,12 @@ export default function AddLeadsStep(props: AddLeadsStepProps) {
           firstName: l.firstName,
           lastName: l.lastName,
           phone: l.phone,
-          smsConsent: false,
+          smsConsent: Boolean(l.smsConsent),
           zip: l.zip,
           age: l.age,
-          gender: "male",
+          gender: l.gender || "female",
           eventSources: [props.eventId],
-          leadServices: []
+          leadServices: (l.leadServices || []).map(s => s.id)
         }))
       })
         .then(() => {
