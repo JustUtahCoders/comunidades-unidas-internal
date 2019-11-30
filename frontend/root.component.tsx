@@ -15,6 +15,7 @@ import AddClientInteraction from "./view-edit-client/interactions/add-client-int
 import AddLeads from "./add-leads/add-leads.component";
 import LeadList from "./leads-list/lead-list.component";
 import ViewLead from "./view-edit-lead/view-lead.component";
+import Reports from "./reports/reports.components";
 
 export default function Root() {
   return (
@@ -33,6 +34,7 @@ export default function Root() {
             <ReportIssue path="report-issue" />
             <ReportIssueSuccess path="report-issue/:issueId" />
             <AddLeads path="add-leads/*" />
+            <Reports path="reports/*" />
           </Navbars>
         </Router>
         <Growls />
