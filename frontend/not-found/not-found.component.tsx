@@ -34,8 +34,9 @@ const css = `
 
 	& .not-found-page > h1 {
 		font-size: 15rem;
-		margin: 0 0 -3rem 0;
+		margin: 0 0 -6rem 0;
 		color: var(--brand-color);
+		text-shadow: black 3px 3px 1px;
 	}
 
 	& .not-found-page > h2 {
