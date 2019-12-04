@@ -23,33 +23,33 @@ export default function NotFound(props: NotFoundProps) {
 }
 
 const css = `
-	& .not-found-page {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-contents: center;
-		background-color: white;
-		padding: 3rem 15rem 3rem 15rem;
-	}
+  & .not-found-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-contents: center;
+    background-color: white;
+    padding: 3rem 15rem 3rem 15rem;
+  }
 
-	& .not-found-page > h1 {
-		font-size: 15rem;
-		margin: 0 0 -6rem 0;
-		color: var(--brand-color);
-		text-shadow: black 3px 3px 1px;
-	}
+  & .not-found-page > h1 {
+    font-size: 15rem;
+    margin: 0 0 -6rem 0;
+    color: var(--brand-color);
+    text-shadow: black 3px 3px 1px;
+  }
 
-	& .not-found-page > h2 {
-		font-size: 3.5rem;
-		color: var(--brand-color);
-	}
+  & .not-found-page > h2 {
+    font-size: 3.5rem;
+    color: var(--brand-color);
+  }
 
-	& .not-found-page > p {
-		font-size: 2rem;
-		line-height: 3rem;
-		margin: 0 0 1rem 0;
-		text-align: center;
-	}
+  & .not-found-page > p {
+    font-size: 2rem;
+    line-height: 3rem;
+    margin: 0 0 1rem 0;
+    text-align: center;
+  }
 `;
 
 type NotFoundProps = {
