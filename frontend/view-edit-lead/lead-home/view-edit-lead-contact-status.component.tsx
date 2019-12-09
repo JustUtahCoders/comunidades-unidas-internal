@@ -1,6 +1,6 @@
 import React from "react";
 import dayjs from "dayjs";
-import { useCss } from "kremling";
+import { Link } from "@reach/router";
 import { SingleLead } from "../view-lead.component";
 import LeadSection from "./lead-section.component";
 
@@ -19,7 +19,14 @@ export default function ViewEditLeadContactStatus(
           </tr>
           <tr>
             <td>Current Status:</td>
-            <td>{lead.leadStatus}</td>
+            {lead.leadStatus === "convertedToClient" ? (
+              <td>
+                Converted to Client (see client{" "}
+                <Link to={`/clients/${lead.clientId}`}>#{lead.clientId}</Link>)
+              </td>
+            ) : (
+              <td>{lead.leadStatus}</td>
+            )}
           </tr>
           <tr>
             <td>First Contact Attempt:</td>

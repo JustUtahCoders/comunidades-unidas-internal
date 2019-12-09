@@ -124,7 +124,7 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
     inactivityReason
   ) {
     if (leadStatus === "convertedToClient") {
-      return `Converted to client (see client #${clientId}`;
+      return `Converted to client (see client #${clientId})`;
     } else if (leadStatus === "active") {
       if (contactStage.first === null) {
         return "Not yet contacted";

@@ -4,6 +4,7 @@ import PhoneInput from "../../util/phone-input.component";
 import StateSelect from "../../util/state-select.component";
 import CityInput from "../../util/city-input.component";
 import { capitalize } from "lodash-es";
+import { SingleLead } from "../../view-edit-lead/view-lead.component";
 
 export default React.forwardRef(function ContactInformationInputs(
   props: ContactInformationInputsProps,
@@ -28,6 +29,13 @@ export default React.forwardRef(function ContactInformationInputs(
   );
 
   const zipRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (props.lead) {
+      setPhone(props.lead.phone);
+      setZip(props.lead.zip);
+    }
+  }, [props.lead]);
 
   React.useEffect(() => {
     // @ts-ignore
@@ -55,7 +63,7 @@ export default React.forwardRef(function ContactInformationInputs(
       <div>
         <label>
           <span>Phone number</span>
-          <PhoneInput phone={phone} setPhone={setPhone} />
+          <PhoneInput phone={props.lead.phone || phone} setPhone={setPhone} />
         </label>
       </div>
       <div>
@@ -182,6 +190,7 @@ type ContactInformationInputsProps = {
   client: ContactInformationFormClient;
   children: JSX.Element | JSX.Element[];
   showDateOfIntake?: boolean;
+  lead?: SingleLead;
 };
 
 export type ContactInformationFormClient = {

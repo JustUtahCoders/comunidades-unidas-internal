@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import CountrySelect from "../../util/country-select.component";
 import CurrencyInput from "../../util/currency-input.component";
+import { SingleLead } from "../../view-edit-lead/view-lead.component";
 
 export default function DemographicInformationInputs(
   props: DemographicInformationInputsProps
@@ -491,6 +492,7 @@ type DemographicInformationInputsProps = {
   children(
     demographicInfo: DemographicInformationClient
   ): JSX.Element | JSX.Element[];
+  lead?: SingleLead;
 };
 
 export type DemographicInformationClient = {

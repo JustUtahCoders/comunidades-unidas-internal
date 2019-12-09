@@ -171,3 +171,10 @@ exports.insertIntakeServicesQuery = function insertIntakeServicesQuery(
     data.intakeServices
   );
 };
+
+exports.updateLeadData = function(leadId, leadStatus, clientId, userId) {
+  return mysql.format(
+    "UPDATE leads SET leadStatus = ?, clientId = ?, modifiedBy = ? WHERE leads.id = ?;",
+    [leadStatus, clientId, userId, leadId]
+  );
+};

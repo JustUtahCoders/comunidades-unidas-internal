@@ -23,7 +23,11 @@ export default function Root() {
         <Router basepath="/" primary>
           <Navbars path="/">
             <Home path="/" />
-            <AddClient path="add-client" />
+            <AddClient path="add-client" title="Add new client" />
+            <AddClient
+              path="add-client/lead/:leadId/"
+              title="Convert lead to client"
+            />
             <ClientList path="client-list" />
             <AddClientInteraction isGlobalAdd path="add-client-interaction" />
             <ViewClient path="clients/:clientId/*" />

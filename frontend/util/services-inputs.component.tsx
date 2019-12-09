@@ -1,6 +1,7 @@
 import React from "react";
 import { groupBy } from "lodash-es";
 import { useCss } from "kremling";
+import { SingleLead } from "../view-edit-lead/view-lead.component";
 
 export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
   function IntakeServicesInputs(props, ref) {
@@ -17,6 +18,12 @@ export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
         checkedServices
       };
     });
+
+    React.useEffect(() => {
+      if (props.lead && props.lead.leadServices.length > 0) {
+        setCheckedServices([...checkedServices, ...props.lead.leadServices]);
+      }
+    }, [props.lead]);
 
     return (
       <div {...scope}>
@@ -95,6 +102,7 @@ export type IntakeService = {
 type IntakeServicesInputsProps = {
   services: Service[];
   checkedServices: IntakeService[];
+  lead?: SingleLead;
 };
 
 type Service = {

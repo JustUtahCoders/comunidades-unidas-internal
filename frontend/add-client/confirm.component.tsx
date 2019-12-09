@@ -57,7 +57,8 @@ export default function Confirm(props: StepComponentProps) {
           eligibleToVote: d.eligibleToVote,
           clientSource: d.clientSource,
           couldVolunteer: d.couldVolunteer,
-          intakeServices: d.intakeServices.map(service => service.id)
+          intakeServices: d.intakeServices.map(service => service.id),
+          leadId: props.lead.id || null
         }
       })
         .then(function(data) {

@@ -22,9 +22,20 @@ export default function Finished(props: StepComponentProps) {
           >
             View {props.clientState.firstName} {props.clientState.lastName}
           </Link>
-          <button className="primary" onClick={addAnother}>
-            Add another client
-          </button>
+          {props.lead ? (
+            <>
+              <Link to={`/leads/${props.lead.id}`}>
+                <button className="button secondary">View original lead</button>
+              </Link>
+              <Link to="/leads">
+                <button className="button primary">Go to leads list</button>
+              </Link>
+            </>
+          ) : (
+            <button className="button primary" onClick={addAnother}>
+              Add another client
+            </button>
+          )}
         </div>
       </div>
     </>

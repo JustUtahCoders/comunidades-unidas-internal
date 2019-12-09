@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useCss } from "kremling";
 import { ClientSources } from "../add-client.component";
+import { SingleLead } from "../../view-edit-lead/view-lead.component";
 
 export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
   function ClientSourceInputs(props: ClientSourceInputsProps, ref) {
@@ -85,6 +86,7 @@ export const clientSources = {
 
 type ClientSourceInputsProps = {
   client: ClientSourceInputClient;
+  lead?: SingleLead;
 };
 
 type ClientSourceInputClient = {

@@ -14,14 +14,19 @@ import {
 } from "./form-inputs/demographic-information-inputs.component";
 import Services from "./services.component";
 import Finished from "./finished.component";
+import easyFetch from "../util/easy-fetch";
 
 import { mediaMobile, mediaDesktop } from "../styleguide.component";
 import { WeeklyEmployedHours } from "./form-inputs/demographic-information-inputs.component";
 import { IntakeService } from "../util/services-inputs.component";
+import { SingleLead, fetchLead } from "../view-edit-lead/view-lead.component";
 
 export default function AddClient(props: AddClientProps) {
   const scope = useCss(css);
-
+  const { leadId } = props;
+  const [lead, setLead] = React.useState<SingleLead>(null);
+  const [error, setError] = React.useState(null);
+  const [leadIsStale, setLeadIsStale] = React.useState(false);
   const [step, setStep] = useState<Step>(Step.CHECK_DUPLICATE);
   const [clientState, setClientState] = useState<ClientState>({});
   const [duplicateWarning, setDuplicateWarning] = useState<DuplicateWarning>(
@@ -29,9 +34,19 @@ export default function AddClient(props: AddClientProps) {
   );
   const StepComponent = stepComponents[step];
 
+  React.useEffect(() => {
+    fetchLead(props.leadId, setLead, setError, setLeadIsStale);
+  }, [leadId]);
+
+  React.useEffect(() => {
+    if (leadIsStale) {
+      return fetchLead(props.leadId, setLead, setError, setLeadIsStale);
+    }
+  }, [leadIsStale]);
+
   return (
     <div {...scope}>
-      <PageHeader title="Add a new client" />
+      <PageHeader title={props.title} />
       <div className="card">
         <div className="form-with-hints">
           {duplicateWarning ? (
@@ -47,6 +62,8 @@ export default function AddClient(props: AddClientProps) {
               goBack={goBack}
               reset={reset}
               showDuplicateWarning={showDuplicateWarning}
+              lead={lead}
+              setLead={setLead}
             />
           )}
         </div>
@@ -103,7 +120,9 @@ const stepComponents = {
 };
 
 type AddClientProps = {
+  leadId?: number;
   path: string;
+  title: string;
 };
 
 export type ClientState = {
@@ -152,6 +171,7 @@ export type StepComponentProps = {
   goBack(Step, newClientState?): void;
   reset(): void;
   showDuplicateWarning(DuplicateWarning): void;
+  lead: SingleLead;
 };
 
 export type DuplicateWarning = {

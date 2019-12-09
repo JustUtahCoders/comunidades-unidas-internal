@@ -1,5 +1,6 @@
 import React from "react";
 import { capitalize } from "lodash-es";
+import { SingleLead } from "../../view-edit-lead/view-lead.component";
 
 export default function BasicInformationInputs(
   props: BasicInformationInputsProps
@@ -12,6 +13,14 @@ export default function BasicInformationInputs(
     props.client.birthday || "1990-01-01"
   );
   const [gender, setGender] = React.useState(props.client.gender || "female");
+
+  React.useEffect(() => {
+    if (props.lead) {
+      setFirstName(props.lead.firstName);
+      setLastName(props.lead.lastName);
+      setGender(props.lead.gender);
+    }
+  }, [props.lead]);
 
   return (
     <form onSubmit={handleSubmit} autoComplete="off">
@@ -86,6 +95,7 @@ type BasicInformationInputsProps = {
   client: BasicInfoClient;
   children: JSX.Element | JSX.Element[];
   handleSubmit(evt: Event, newState: BasicInfoClient);
+  lead?: SingleLead;
 };
 
 type BasicInfoClient = {

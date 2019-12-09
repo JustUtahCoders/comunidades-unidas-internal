@@ -2,6 +2,7 @@ import React from "react";
 import easyFetch from "../../util/easy-fetch";
 import { IntakeService } from "../../util/services-inputs.component";
 import IntakeServicesInputs from "../../util/services-inputs.component";
+import { SingleLead } from "../view-lead.component";
 
 export default function LeadServicesInformationInputs(
   props: LeadServicesInformationInputsProps
@@ -32,6 +33,7 @@ export default function LeadServicesInformationInputs(
         ref={leadServicesRef}
         services={services}
         checkedServices={leadServices}
+        lead={props.lead}
       />
       <div className="children-container">{props.children}</div>
     </form>
@@ -48,7 +50,7 @@ export default function LeadServicesInformationInputs(
 }
 
 type LeadServicesInformationInputsProps = {
-  lead: LeadServicesInfo;
+  lead: SingleLead;
   children: JSX.Element | JSX.Element[];
   handleSubmit(evt: Event, newState: LeadServicesInfo);
 };

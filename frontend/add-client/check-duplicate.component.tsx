@@ -22,6 +22,7 @@ export default function CheckDuplicate(props: StepComponentProps) {
       <BasicInformationInputs
         client={props.clientState}
         handleSubmit={handleSubmit}
+        lead={props.lead}
       >
         <div className="actions">
           <button type="submit" className="primary">

@@ -3,7 +3,10 @@ import easyFetch from "../util/easy-fetch";
 import { useCss, always } from "kremling";
 import { Link, Router } from "@reach/router";
 import PageHeader from "../page-header.component";
+import StickySecondaryNav from "../navbar/sticky-secondary-nav.component";
 import LeadHome from "./lead-home/lead-home.component";
+import homeImgUrl from "../../icons/148705-essential-collection/svg/home.svg";
+import leadToClientImgUrl from "../../icons/148705-essential-collection/svg/user-8.svg";
 
 export default function ViewLead(props: ViewLeadProps) {
   const [lead, setLead] = React.useState<SingleLead>(null);
@@ -13,12 +16,12 @@ export default function ViewLead(props: ViewLeadProps) {
   const scope = useCss(css);
 
   React.useEffect(() => {
-    return fetchLead();
+    return fetchLead(leadId, setLead, setError, setLeadIsStale);
   }, [leadId]);
 
   React.useEffect(() => {
     if (leadIsStale) {
-      return fetchLead();
+      return fetchLead(leadId, setLead, setError, setLeadIsStale);
     }
   }, [leadIsStale]);
 
@@ -31,7 +34,33 @@ export default function ViewLead(props: ViewLeadProps) {
 
   return (
     <div {...scope}>
-      <PageHeader title={getHeaderTitle()} />
+      <PageHeader title={getHeaderTitle()} withSecondaryNav />
+      <StickySecondaryNav>
+        <div className="nav-container">
+          <ul>
+            <li>
+              <Link to={`/leads/${leadId}`} getProps={getLinkProps}>
+                <img
+                  alt="Home icon"
+                  className="nav-icon"
+                  src={homeImgUrl}
+                  title={possessiveLeadName() + " home"}
+                />
+              </Link>
+            </li>
+            <li>
+              <Link to={`/add-client/lead/${leadId}`} getProps={getLinkProps}>
+                <img
+                  alt="convert to client icon"
+                  className="nav-icon-bigger"
+                  src={leadToClientImgUrl}
+                  title={"Convert lead to client"}
+                />
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </StickySecondaryNav>
       <Router>
         <LeadHome path="/" {...childProps} />
       </Router>
@@ -56,24 +85,6 @@ export default function ViewLead(props: ViewLeadProps) {
     };
   }
 
-  function fetchLead() {
-    const abortController = new AbortController();
-
-    easyFetch(`/api/leads/${leadId}`, { signal: abortController.signal })
-      .then(data => {
-        setLead(data.lead);
-      })
-      .catch(err => {
-        console.error(err);
-        setError(err);
-      })
-      .finally(() => {
-        setLeadIsStale(false);
-      });
-
-    return () => abortController.abort();
-  }
-
   function possessiveLeadName() {
     if (lead) {
       return lead.firstName + (lead.firstName.endsWith("s") ? "'" : "'s");
@@ -83,9 +94,31 @@ export default function ViewLead(props: ViewLeadProps) {
   }
 }
 
+export function fetchLead(leadId, setLead, setError, setLeadIsStale) {
+  const abortController = new AbortController();
+
+  easyFetch(`/api/leads/${leadId}`, { signal: abortController.signal })
+    .then(data => {
+      setLead(data.lead);
+    })
+    .catch(err => {
+      console.error(err);
+      setError(err);
+    })
+    .finally(() => {
+      setLeadIsStale(false);
+    });
+
+  return () => abortController.abort();
+}
+
 const css = `
-  & .secondary-nav-link img {
+  & .nav-icon {
     height: 40%;
+  }
+
+  & .nav-icon-bigger {
+    height: 55%;
   }
 
   & .nav-container {

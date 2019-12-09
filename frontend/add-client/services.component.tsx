@@ -40,6 +40,7 @@ export default function Services(props: StepComponentProps) {
           checkedServices={props.clientState.intakeServices}
           services={services}
           ref={intakeServicesRef}
+          lead={props.lead}
         />
         <div className="actions">
           <button

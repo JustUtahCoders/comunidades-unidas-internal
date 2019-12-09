@@ -1,5 +1,6 @@
 import React from "react";
 import { useCss } from "kremling";
+import { SingleLead } from "../../view-edit-lead/view-lead.component";
 
 export default React.forwardRef<IntakeDateInputRef, IntakeDateInputProps>(
   function IntakeDateInput(props: IntakeDateInputProps, ref) {
@@ -30,6 +31,7 @@ const css = `
 
 type IntakeDateInputProps = {
   date: string;
+  lead?: SingleLead;
 };
 
 type IntakeDateInputRef = HTMLInputElement;
