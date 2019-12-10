@@ -25,10 +25,10 @@ app.delete("/api/leads/:leadId", (req, res) => {
 
     const sql = mysql.format(
       `
-				UPDATE leads
-				SET isDeleted = true, modifiedBy = ?
-				WHERE id = ?;
-			`,
+        UPDATE leads
+        SET isDeleted = true, modifiedBy = ?
+        WHERE id = ?;
+      `,
       [userId, leadId]
     );
 
