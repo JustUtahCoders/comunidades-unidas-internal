@@ -85,50 +85,50 @@ export default function MobileLeadsTable(props: LeadsTableProps) {
 }
 
 const css = `
-	& .mobile-lead-table-container {
-		width: 100%;
-		display: flex;
-		justify-content: center;
-	}
+  & .mobile-lead-table-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
 
-	& .lead-link {
-		display: block;
-		margin-top: 3.2rem;
-	}
+  & .lead-link {
+    display: block;
+    margin-top: 3.2rem;
+  }
 
-	& .lead-link:last-child {
-		margin: 3.2rem 0 3.2rem 0;
-	}
+  & .lead-link:last-child {
+    margin: 3.2rem 0 3.2rem 0;
+  }
 
-	& .lead-link > h2 {
-		font-size: 1rem;
-	}
+  & .lead-link > h2 {
+    font-size: 1rem;
+  }
 
-	& .mobile-lead-table-card {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-contents: center;
-	}
+  & .mobile-lead-table-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-contents: center;
+  }
 
-	& .leads-info-table-mobile td:first-child {
-		text-align: right;
-		padding-right: 2.4rem;
-		width: 30%;
-		max-width: 30%;
-	}
+  & .leads-info-table-mobile td:first-child {
+    text-align: right;
+    padding-right: 2.4rem;
+    width: 30%;
+    max-width: 30%;
+  }
 
-	& .leads-info-table-mobile td {
-		padding: 0.4rem;
-	}
+  & .leads-info-table-mobile td {
+    padding: 0.4rem;
+  }
 
-	& .loading-overlay {
-		position: absolute;
-		top: 0;
-		width: 100%;
-		height: 100%;
-		background-color: var(--light-gray);
-		z-index: 100;
-		opacity: 0.6;
-	}
+  & .loading-overlay {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--light-gray);
+    z-index: 100;
+    opacity: 0.6;
+  }
 `;
