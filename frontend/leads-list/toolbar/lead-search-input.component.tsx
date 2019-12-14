@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import easyFetch from "../../util/easy-fetch";
 import { useCss } from "kremling";
+import { mediaDesktop, mediaMobile } from "../../styleguide.component";
 import {
   SearchParseValues,
   parseSearch,
@@ -83,7 +84,7 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
           value={search.value}
         />
         {!showingAdvancedSearch && (
-          <>
+          <div className="button-container">
             <button
               type="button"
               className="secondary"
@@ -95,7 +96,7 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
             <button className="primary" disabled={props.disabled} type="submit">
               Search
             </button>
-          </>
+          </div>
         )}
       </form>
       {showingAdvancedSearch &&
@@ -261,8 +262,8 @@ const css = `
 }
 
 & .advanced-search {
-	padding: 1.4rem;
-	border-bottom: 1px solid var(--light-gray);
+  padding: 1.4rem;
+  border-bottom: 1px solid var(--light-gray);
 }
 
 & .advanced-search h1 {
@@ -280,6 +281,31 @@ const css = `
   align-items: center;
   grid-gap: .8rem;
   margin-bottom: 1.6rem;
+}
+
+${mediaMobile} {
+  & .search-container {
+    align-items: center;
+    flex-direction: column;
+  }
+
+  & .search-form {
+    flex-direction: column;
+    align-items: center;
+    justify-contents: center;
+  }
+
+  & .button-container {
+    margin-top: 1rem;
+  }
+
+  & .search-input {
+    margin-right: 0;
+  }
+
+  & .advanced-search {
+    margin-top: 4rem;
+  }
 }
 `;
 

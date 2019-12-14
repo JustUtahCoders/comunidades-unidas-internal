@@ -92,6 +92,16 @@ const css = `
     align-items: center;
   }
 
+  & .desktop-table-toolbar > * {
+    display: flex;
+    align-items: center;
+  }
+
+  & .pagination-container {
+    position: absolute;
+    right: 0;
+  }
+
   ${mediaDesktop} {
     & .desktop-table-toolbar {
       flex-direction: row;
@@ -104,22 +114,24 @@ const css = `
   }
 
   ${mediaMobile} {
+    & .leads-table-toolbar {
+      display: flex;
+      flex-direction: column;
+      min-height: 12.5rem;
+    }
+
     & .desktop-table-toolbar {
       flex-direction: column;
       justify-content: center;
       padding: .8rem;
     }
+
+    & .pagination-container {
+      margin-top: 6rem;
+    }
   }
   
-  & .desktop-table-toolbar > * {
-    display: flex;
-    align-items: center;
-  }
 
-  & .pagination-container {
-    position: absolute;
-    right: 0;
-  }
 `;
 
 type LeadsTableToolbarProps = {
