@@ -2,7 +2,11 @@ import React from "react";
 import { Link } from "@reach/router";
 import { useCss } from "kremling";
 import dateformat from "dateformat";
-import { LeadsTableProps } from "./leads-table.component";
+import {
+  LeadsTableProps,
+  leadStatusColor,
+  determineLeadStatus
+} from "./leads-table.component";
 import { formatPhone } from "../../util/formatters";
 import targetImg from "../../../icons/148705-essential-collection/svg/target.svg";
 
@@ -100,79 +104,6 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
       </table>
     </div>
   );
-
-  function leadStatusColor(leadStatus) {
-    if (leadStatus === "active") {
-      return {
-        color: "#000000"
-      };
-    } else if (leadStatus === "inactive") {
-      return {
-        color: "#B30000"
-      };
-    } else if (leadStatus === "convertedToClient") {
-      return {
-        color: "#006600"
-      };
-    }
-  }
-
-  function determineLeadStatus(
-    leadStatus,
-    clientId,
-    contactStage,
-    inactivityReason
-  ) {
-    if (leadStatus === "convertedToClient") {
-      return `Converted to client (see client #${clientId}`;
-    } else if (leadStatus === "active") {
-      if (contactStage.first === null) {
-        return "Not yet contacted";
-      } else {
-        if (contactStage.second === null) {
-          return `First contact attempt made on ${dateformat(
-            contactStage.first,
-            "m/d/yyyy"
-          )}`;
-        } else {
-          if (contactStage.third === null) {
-            return `Second contact attempt made on ${dateformat(
-              contactStage.second,
-              "m/d/yyyy"
-            )}`;
-          } else {
-            return `Third contact attempt made on ${dateformat(
-              contactStage.third,
-              "m/d/yyyy"
-            )}`;
-          }
-        }
-      }
-    } else if (leadStatus === "inactive") {
-      switch (inactivityReason) {
-        case "doNotCallRequest":
-          return "Do not call request";
-          break;
-        case "threeAttemptsNoResponse":
-          return "Three attempts made, no response";
-          break;
-        case "wrongNumber":
-          return "Wrong number";
-          break;
-        case "noLongerInterested":
-          return "No longer interested";
-          break;
-        case "relocated":
-          return "No longer in Utah";
-          break;
-        default:
-          return "Inactive - no reason provided";
-          break;
-      }
-    } else {
-      return "Status unknown";
-    }
-  }
 }
 
 const css = `
