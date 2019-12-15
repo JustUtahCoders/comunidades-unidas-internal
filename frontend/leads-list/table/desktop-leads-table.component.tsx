@@ -1,10 +1,16 @@
 import React from "react";
 import { Link } from "@reach/router";
-import { useCss } from "kremling";
+import { useCss, a } from "kremling";
 import dateformat from "dateformat";
 import { LeadsTableProps } from "./leads-table.component";
+import {
+  reversedSortOrder,
+  SortField,
+  SortOrder
+} from "../lead-list.component";
 import { formatPhone } from "../../util/formatters";
 import targetImg from "../../../icons/148705-essential-collection/svg/target.svg";
+import { startCase } from "lodash-es";
 
 export default function DesktopLeadsTable(props: LeadsTableProps) {
   const scope = useCss(css);
@@ -14,11 +20,33 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
       <table className="leads-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Name</th>
+            <th>
+              <button
+                className="unstyled"
+                onClick={sortColumnClicked(SortField.id)}
+              >
+                ID{sortableColumnIcon(SortField.id)}
+              </button>
+            </th>
+            <th>
+              <button className="unstyled" onClick={sortNameClicked}>
+                {props.sortField === SortField.firstName ||
+                props.sortField === SortField.lastName
+                  ? startCase(props.sortField)
+                  : "Name"}
+                {sortableColumnIcon(SortField.firstName, SortField.lastName)}
+              </button>
+            </th>
             <th>Phone</th>
             <th>Event</th>
-            <th>Signup Date</th>
+            <th>
+              <button
+                className="unstyled"
+                onClick={sortColumnClicked(SortField.dateOfSignUp)}
+              >
+                Signup Date{sortableColumnIcon(SortField.dateOfSignUp)}
+              </button>
+            </th>
             <th>Status</th>
             <th>Interests</th>
           </tr>
@@ -173,6 +201,47 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
       return "Status unknown";
     }
   }
+
+  function sortColumnClicked(sortField: SortField) {
+    return () => {
+      if (props.sortField === sortField) {
+        props.newSortOrder(sortField, reversedSortOrder(props.sortOrder));
+      } else {
+        props.newSortOrder(sortField, SortOrder.ascending);
+      }
+    };
+  }
+
+  function sortNameClicked() {
+    if (props.sortField === SortField.firstName) {
+      if (props.sortOrder === SortOrder.ascending) {
+        props.newSortOrder(SortField.firstName, SortOrder.descending);
+      } else {
+        props.newSortOrder(SortField.lastName, SortOrder.ascending);
+      }
+    } else if (props.sortField === SortField.lastName) {
+      if (props.sortOrder === SortOrder.ascending) {
+        props.newSortOrder(SortField.lastName, SortOrder.descending);
+      } else {
+        props.newSortOrder(SortField.firstName, SortOrder.ascending);
+      }
+    } else {
+      props.newSortOrder(SortField.lastName, SortOrder.ascending);
+    }
+  }
+
+  function sortableColumnIcon(...sortFields: SortField[]) {
+    return (
+      <span
+        className={a("sort-icon").m(
+          "visible",
+          sortFields.includes(props.sortField)
+        )}
+      >
+        {props.sortOrder === SortOrder.ascending ? "\u2191" : "\u2193"}
+      </span>
+    );
+  }
 }
 
 const css = `
@@ -296,4 +365,7 @@ const css = `
     margin-bottom: 0.75rem;
   }
 
+  button {
+    outline: none;
+  }
 `;

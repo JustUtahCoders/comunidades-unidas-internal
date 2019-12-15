@@ -4,7 +4,8 @@ const {
   checkValid,
   nullableValidInteger,
   nullableNonEmptyString,
-  nullableValidId
+  nullableValidId,
+  nullableValidEnum
 } = require("../utils/validation-utils");
 const {
   responseFullName,
@@ -21,7 +22,15 @@ app.get("/api/leads", (req, res, next) => {
     nullableNonEmptyString("phone"),
     nullableNonEmptyString("zip"),
     nullableValidId("program"),
-    nullableValidId("event")
+    nullableValidId("event"),
+    nullableValidEnum(
+      "sortField",
+      "id",
+      "firstName",
+      "lastName",
+      "dateOfSignUp"
+    ),
+    nullableValidEnum("sortOrder", "asc", "desc")
   );
 
   if (validationErrors.length > 0) {
@@ -74,6 +83,14 @@ app.get("/api/leads", (req, res, next) => {
       AND leadEvents.eventId = ?
     `;
     whereClauseValues.push(req.query.event);
+  }
+
+  const sortOrder = req.query.sortOrder === "desc" ? "DESC" : "ASC";
+
+  let columnsToOrder = `leads.lastName ${sortOrder}, leads.firstName ${sortOrder}`;
+
+  if (req.query.sortField) {
+    columnsToOrder = `leads.${req.query.sortField} ${sortOrder}`;
   }
 
   let mysqlQuery = `
@@ -131,6 +148,7 @@ app.get("/api/leads", (req, res, next) => {
         ON events.id = leadEvents.eventId
     ${whereClause}
     GROUP BY leadServices.leadId
+    ORDER BY ${columnsToOrder}
     LIMIT ?, ?;
     SELECT FOUND_ROWS();
   `;
