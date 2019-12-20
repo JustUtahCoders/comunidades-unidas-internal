@@ -73,7 +73,7 @@ export default function DesktopEventTable(props: EventTableProps) {
           ) : (
             props.events.map(event => {
               return (
-                <tr>
+                <tr key={event.id}>
                   <td>
                     <Link to={`/events/${event.id}`} className="unstyled">
                       {event.id}
