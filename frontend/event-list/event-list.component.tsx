@@ -131,7 +131,6 @@ function useEventsApi(apiState, dispatchApiState) {
       });
       easyFetch(`/api/events?${query}`)
         .then(data => {
-          console.log(data);
           dispatchApiState({
             type: ActionTypes.fetched,
             apiData: data
