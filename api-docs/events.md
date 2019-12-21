@@ -21,6 +21,8 @@ GET /api/events/:id
   "eventDate": "2019-09-16",
   "eventLocation": "Saint Marks",
   "totalAttendance": 150,
+  "totalLeads": 15,
+  "leadsConvertedToClients": 5,
   "isDeleted": false,
   "createdBy": {
     "userId": 1,
@@ -67,6 +69,8 @@ GET /api/events
     "eventDate": "2019-09-16",
     "eventLocation": "Saint Marks",
     "totalAttendance": 150,
+    "totalLeads": 15,
+    "leadsConvertedToClients": 5,
     "isDeleted": false,
     "createdBy": {
       "userId": 1,
@@ -89,6 +93,8 @@ GET /api/events
     "eventDate": "2019-09-24",
     "eventLocation": "Salt Lake City Library",
     "totalAttendance": 150,
+    "totalLeads": 15,
+    "leadsConvertedToClients": 5,
     "isDeleted": false,
     "createdBy": {
       "userId": 1,

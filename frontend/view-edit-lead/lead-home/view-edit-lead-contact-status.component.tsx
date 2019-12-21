@@ -1,6 +1,5 @@
 import React from "react";
 import dayjs from "dayjs";
-import { useCss } from "kremling";
 import { SingleLead } from "../view-lead.component";
 import LeadSection from "./lead-section.component";
 

@@ -59,8 +59,22 @@ function getEventById(eventId, cbk, connection) {
       INNER JOIN users created ON created.id = events.addedBy
       INNER JOIN users modified ON modified.id = events.modifiedBy
       WHERE events.id = ? AND isDeleted = false;
+
+      SELECT
+        leadEvents.leadId
+      FROM leadEvents
+      WHERE eventId = ?;
+
+      SELECT
+        leads.id,
+        leadEvents.eventId,
+        leads.leadStatus
+      FROM leads
+        INNER JOIN leadEvents
+          ON leadEvents.leadId = leads.id
+      WHERE leads.leadStatus = "convertedToClient" AND leadEvents.eventId = 1;
     `,
-    [eventId]
+    [eventId, eventId, eventId]
   );
 
   (connection || pool).query(getEvent, (err, data, fields) => {
@@ -72,9 +86,9 @@ function getEventById(eventId, cbk, connection) {
       return cbk(err, null);
     }
 
-    const bigEventObj = data[0];
-
-    const e = bigEventObj;
+    const e = data[0][0];
+    const eventLeads = data[1];
+    const eventClients = data[2];
 
     const event = {
       id: e.eventId,
@@ -82,6 +96,8 @@ function getEventById(eventId, cbk, connection) {
       eventDate: responseDateWithoutTime(e.eventDate),
       eventLocation: e.eventLocation,
       totalAttendance: e.totalAttendance,
+      totalLeads: eventLeads.length,
+      totalConvertedToClients: eventClients.length,
       isDeleted: responseBoolean(e.isDeleted),
       createdBy: {
         userId: e.createdByUserId,

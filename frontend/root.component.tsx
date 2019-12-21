@@ -16,6 +16,7 @@ import AddLeads from "./add-leads/add-leads.component";
 import LeadList from "./leads-list/lead-list.component";
 import ViewLead from "./view-edit-lead/view-lead.component";
 import NotFound from "./not-found/not-found.component";
+import ViewEvent from "./view-edit-events/view-event.component";
 
 export default function Root() {
   return (
@@ -35,6 +36,7 @@ export default function Root() {
             <ReportIssue path="report-issue" />
             <ReportIssueSuccess path="report-issue/:issueId" />
             <AddLeads path="add-leads/*" />
+            <ViewEvent path="events/:eventId" />
           </Navbars>
         </Router>
         <Growls />
