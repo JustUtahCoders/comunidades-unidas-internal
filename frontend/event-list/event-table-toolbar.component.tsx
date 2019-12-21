@@ -62,26 +62,26 @@ const css = `
     top: 0;
     left: 23.6rem;
     padding: 0.25rem 1.4rem;
-		z-index: 100;
-		height: 4.25rem;
-		width: 100%;
-		background-color: white;
-	}
+    z-index: 100;
+    height: 4.25rem;
+    width: 100%;
+    background-color: white;
+  }
 
-	& .desktop-table-toolbar {
+  & .desktop-table-toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-	
-	& .pagination-container {
-		position: absolute;
-		top: 0;
-		right: 0;
-		display: flex;
+  
+  & .pagination-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
     justify-content: space-between;
     align-items: center;
-	}
+  }
 `;
 
 type EventsTableToolbarProps = {

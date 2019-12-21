@@ -136,30 +136,30 @@ const css = `
   & .table-container {
     position: relative;
     width: 100%;
-	}
-	
-	& table.events-table {
+  }
+  
+  & table.events-table {
     width: 100%;
     height: 100%;
     border-spacing: 0;
-	}
-	
-	& .events-table th {
+  }
+  
+  & .events-table th {
     position: sticky;
     top: 6rem;
     background-color: var(--very-light-grey);
     box-shadow: 0 .2rem 0.2rem var(--medium-gray);
     padding: 0 1rem 0 1rem;
-	}
-	
-	& .events-table th button {
+  }
+  
+  & .events-table th button {
     display: block !important;
     width: 100% !important;
     height: 6rem !important;
     cursor: pointer;
-	}
-	
-	& .events-table th button: hover {
+  }
+  
+  & .events-table th button: hover {
     background-color: var(--medium-gray);
   }
 
