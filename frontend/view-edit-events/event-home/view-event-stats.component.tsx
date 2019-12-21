@@ -67,101 +67,101 @@ type ViewEventStatsProps = {
 };
 
 const css = `
-	& .chart-container {
-		display: grid;
-		grid-template-column: 1fr 1fr;
-		grid-template-row: 1fr 1fr;
-	}
+  & .chart-container {
+    display: grid;
+    grid-template-column: 1fr 1fr;
+    grid-template-row: 1fr 1fr;
+  }
 
-	& .label-container {
-		grid-column: 1;
-		grid-row: 1;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-contents: space-around;
-		padding-right: 1rem;
-	}
+  & .label-container {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-contents: space-around;
+    padding-right: 1rem;
+  }
 
-	& .label-container > p {
-		margin-top: 2.25rem;
-		heigt: 5rem;
-		width: 100%;
-		text-align: right;
-	}
+  & .label-container > p {
+    margin-top: 2.25rem;
+    heigt: 5rem;
+    width: 100%;
+    text-align: right;
+  }
 
-	& .chart-grid-container {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		justify-contents: space-around;
-		grid-column: 2;
-		grid-row: 1;
-		height: 20rem;
-		width: 42rem;
-		border-left: solid black 0.5rem;
-		border-bottom: solid black 0.5rem;
-	}
+  & .chart-grid-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-contents: space-around;
+    grid-column: 2;
+    grid-row: 1;
+    height: 20rem;
+    width: 42rem;
+    border-left: solid black 0.5rem;
+    border-bottom: solid black 0.5rem;
+  }
 
-	& .chart-bar {
-		display: flex;
-		align-items: center;
-		justify-contents: flex-end;
-		margin: 2rem 0 1rem 0;
-		height: 3rem;
-		min-width: 0.25rem;
-		border-top: 1px solid black;
-		border-bottom: 1px solid black;
-		border-right: 1px solid black;
-		border-radius: 0 5px 5px 0;
-	}
+  & .chart-bar {
+    display: flex;
+    align-items: center;
+    justify-contents: flex-end;
+    margin: 2rem 0 1rem 0;
+    height: 3rem;
+    min-width: 0.25rem;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    border-radius: 0 5px 5px 0;
+  }
 
-	& .chart-bar > p {
-		width: 100%;
-		color: white;
-		font-size: 1.5rem;
-		text-align: center;
-	}
+  & .chart-bar > p {
+    width: 100%;
+    color: white;
+    font-size: 1.5rem;
+    text-align: center;
+  }
 
-	& .total-attendance {
-		background-color: blue;
-	}
+  & .total-attendance {
+    background-color: blue;
+  }
 
-	& .total-leads {
-		background-color: purple;
-	}
+  & .total-leads {
+    background-color: purple;
+  }
 
-	& .total-clients {
-		background-color: red;
-	}
+  & .total-clients {
+    background-color: red;
+  }
 
-	& .ticks-container {
-		grid-column: 2;
-		grid-row: 2;
-		width: 42rem;
-		display: flex;
-		align-items: center;
-		justify-contents: center;
-	}
+  & .ticks-container {
+    grid-column: 2;
+    grid-row: 2;
+    width: 42rem;
+    display: flex;
+    align-items: center;
+    justify-contents: center;
+  }
 
-	& .tick-container {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-contents: center;
-		font-size: 1rem;
-		width: 3rem;
-		margin-right: 1rem;
-	}
+  & .tick-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-contents: center;
+    font-size: 1rem;
+    width: 3rem;
+    margin-right: 1rem;
+  }
 
-	& .tick {
-		display: inline;
-		height: 2rem;
-		width: 2px;
-		background-color: black;
-	}
+  & .tick {
+    display: inline;
+    height: 2rem;
+    width: 2px;
+    background-color: black;
+  }
 
-	& .tick-container > p {
-		display: inline;
-	}
+  & .tick-container > p {
+    display: inline;
+  }
 `;

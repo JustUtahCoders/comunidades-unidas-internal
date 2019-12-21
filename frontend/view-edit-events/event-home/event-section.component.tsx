@@ -42,38 +42,38 @@ type EventSectionProps = {
 const css = `
   & h1 {
     font-size: 2.1rem;
-	}
-	
-	& button.unstyled.event-section-header {
-		padding: 1.6rem 3.2rem;
-		width: 100%;
-	}
+  }
+  
+  & button.unstyled.event-section-header {
+    padding: 1.6rem 3.2rem;
+    width: 100%;
+  }
 
-	& button.unstyled.event-section-header:hover {
-		background-color: var(--light-gray);
-	}
+  & button.unstyled.event-section-header:hover {
+    background-color: var(--light-gray);
+  }
 
-	& .event-section-content {
+  & .event-section-content {
     padding: 1.6rem 3.2rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-	}
-	
-	& table.event-table {
+  }
+  
+  & table.event-table {
     width: 100%;
     table-layout: fixed;
-	}
-	
-	& table.event-table td:first-child {
+  }
+  
+  & table.event-table td:first-child {
     text-align: right;
     padding-right: 1.2rem;
     width: 50%;
     max-width: 50%;
-	}
-	
-	& table.event-table td:last-child {
+  }
+  
+  & table.event-table td:last-child {
     padding-left: 1.2rem;
   }
 
@@ -83,5 +83,5 @@ const css = `
 
   & table.event-table tr:not(:last-child) td {
     padding-bottom: .4rem;
-	}
+  }
 `;
