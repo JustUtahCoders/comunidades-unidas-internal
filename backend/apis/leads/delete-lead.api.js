@@ -16,7 +16,7 @@ app.delete("/api/leads/:leadId", (req, res) => {
 
   getLeadById(leadId, (err, data, fields) => {
     if (err) {
-      return invalidRequest(res, err);
+      return databaseError(req, res, err);
     }
 
     if (!data) {
