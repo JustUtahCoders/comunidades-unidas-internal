@@ -81,7 +81,7 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
         >
           {props.leads.length === 0 && !props.fetchingLeads ? (
             <tr className="empty-state">
-              <td colSpan={7}>
+              <td colSpan={8}>
                 <div>
                   <img src={targetImg} alt="No leads" title="No leads" />
                   <p>No leads match the search criteria</p>

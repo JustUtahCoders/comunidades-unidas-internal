@@ -5,6 +5,7 @@ const {
   nullableValidInteger,
   nullableNonEmptyString,
   nullableValidId,
+  nullableValidZip,
   nullableValidEnum
 } = require("../utils/validation-utils");
 const {
@@ -20,7 +21,7 @@ app.get("/api/leads", (req, res, next) => {
     nullableValidInteger("page"),
     nullableValidId("id"),
     nullableNonEmptyString("phone"),
-    nullableNonEmptyString("zip"),
+    nullableValidZip("zip"),
     nullableValidId("program"),
     nullableValidId("event"),
     nullableValidEnum(
@@ -164,6 +165,19 @@ app.get("/api/leads", (req, res, next) => {
     const [leadRows, totalCountRows] = results;
 
     const totalCount = totalCountRows[0]["FOUND_ROWS()"];
+
+    if (totalCount === 0) {
+      res.send({
+        leads: [],
+        pagination: {
+          currentPage: zeroBasedPage + 1,
+          pageSize,
+          numLeads: totalCount,
+          numPages: Math.ceil(totalCount / pageSize)
+        }
+      });
+      return;
+    }
 
     let secondQuery = "";
     const secondQueryData = [];
