@@ -1,13 +1,42 @@
 import React from "react";
 import dayjs from "dayjs";
 import { Link } from "@reach/router";
+import easyFetch from "../../util/easy-fetch";
 import { SingleLead } from "../view-lead.component";
 import LeadSection from "./lead-section.component";
+import LeadContactStatusInputs from "../edit-lead-inputs/lead-contact-status-inputs.component";
 
 export default function ViewEditLeadContactStatus(
   props: ViewEditLeadContactStatusProps
 ) {
-  const { lead } = props;
+  const [apiStatus, dispatchApiStatus] = React.useReducer(updatingReducer, {
+    isUpdating: false,
+    isEditing: false,
+    newLeadData: null
+  });
+  const { lead, leadUpdated } = props;
+
+  React.useEffect(() => {
+    if (apiStatus.isUpdating) {
+      const abortController = new AbortController();
+      easyFetch(`/api/leads/${lead.id}`, {
+        method: "PATCH",
+        body: apiStatus.newLeadData,
+        signal: abortController.signal
+      })
+        .then(data => {
+          dispatchApiStatus({ type: "reset" });
+          leadUpdated(data.lead);
+        })
+        .catch(err => {
+          setTimeout(() => {
+            throw err;
+          });
+        });
+
+      return () => abortController.abort();
+    }
+  }, [apiStatus]);
 
   return (
     <LeadSection title="Contact Status">
@@ -56,8 +85,36 @@ export default function ViewEditLeadContactStatus(
       </table>
     </LeadSection>
   );
+
+  function handleSubmit(evt, newLeadData) {
+    evt.preventDefault();
+    dispatchApiStatus({ type: "update", newLeadData });
+  }
+}
+
+ViewEditLeadContactStatus.defaultProps = {
+  editable: true
+};
+
+function updatingReducer(state, action) {
+  switch (action.type) {
+    case "edit":
+      return { isEditing: true };
+    case "update":
+      return {
+        isUpdating: true,
+        isEditing: false,
+        newLeadData: action.newLeadData
+      };
+    case "reset":
+      return { isUpdating: false };
+    default:
+      throw Error();
+  }
 }
 
 type ViewEditLeadContactStatusProps = {
   lead: SingleLead;
+  leadUpdated?(lead: SingleLead): void;
+  editable?: boolean;
 };

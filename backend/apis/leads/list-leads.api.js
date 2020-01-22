@@ -4,7 +4,8 @@ const {
   checkValid,
   nullableValidInteger,
   nullableNonEmptyString,
-  nullableValidId
+  nullableValidId,
+  nullableValidEnum
 } = require("../utils/validation-utils");
 const {
   responseFullName,
@@ -21,7 +22,15 @@ app.get("/api/leads", (req, res, next) => {
     nullableNonEmptyString("phone"),
     nullableNonEmptyString("zip"),
     nullableValidId("program"),
-    nullableValidId("event")
+    nullableValidId("event"),
+    nullableValidEnum(
+      "sortField",
+      "id",
+      "firstName",
+      "lastName",
+      "dateOfSignUp"
+    ),
+    nullableValidEnum("sortOrder", "asc", "desc")
   );
 
   if (validationErrors.length > 0) {
@@ -54,7 +63,7 @@ app.get("/api/leads", (req, res, next) => {
 
   if (req.query.id) {
     whereClause += `AND leads.id = ? `;
-    whereClauseValues.push(req.query.id);
+    whereClauseValues.push(Number(req.query.id));
   }
 
   if (req.query.phone) {
@@ -64,16 +73,42 @@ app.get("/api/leads", (req, res, next) => {
 
   if (req.query.program) {
     whereClause += `
-      AND services.programId = ?
+      AND (
+        SELECT COUNT(*)
+        FROM leadServices
+        WHERE leadServices.leadId = leads.id
+          AND leadServices.serviceId IN (
+            SELECT id 
+            FROM services 
+            WHERE programId = ?
+          )
+      ) > 0
     `;
     whereClauseValues.push(req.query.program);
   }
 
   if (req.query.event) {
     whereClause += `
-      AND leadEvents.eventId = ?
+      AND (
+        SELECT COUNT(*)
+        FROM leadEvents
+        WHERE leadEvents.leadId = leads.id
+          AND leadEvents.eventId IN (
+              SELECT id 
+              FROM events 
+              WHERE eventId = ?
+            )
+      ) > 0
     `;
-    whereClauseValues.push(req.query.event);
+    whereClauseValues.push(Number(req.query.event));
+  }
+
+  const sortOrder = req.query.sortOrder === "desc" ? "DESC" : "ASC";
+
+  let columnsToOrder = `leads.lastName ${sortOrder}, leads.firstName ${sortOrder}`;
+
+  if (req.query.sortField) {
+    columnsToOrder = `leads.${req.query.sortField} ${sortOrder}`;
   }
 
   let mysqlQuery = `
@@ -101,36 +136,14 @@ app.get("/api/leads", (req, res, next) => {
       created.firstName AS createdByFirstName,
       created.lastName AS createdByLastName,
       modified.firstName AS modifiedByFirstName,
-      modified.lastName AS modifiedByLastName,
-      JSON_ARRAYAGG(
-        JSON_OBJECT(
-          "serviceId", leadServices.serviceId,
-          "serviceName", services.serviceName
-        )
-      ) AS leadServices,
-      JSON_ARRAYAGG(
-        JSON_OBJECT(
-          "eventId", leadEvents.eventId,
-          "eventName", events.eventName,
-          "eventLocation", events.eventLocation,
-          "eventDate", events.eventDate
-        )
-      ) AS eventSources
+      modified.lastName AS modifiedByLastName
     FROM leads
       INNER JOIN users created 
         ON created.id = leads.addedBy
       INNER JOIN users modified 
         ON modified.id = leads.modifiedBy
-      INNER JOIN leadServices 
-        ON leadServices.leadId = leads.id
-      INNER JOIN services 
-        ON services.id = leadServices.serviceId
-      INNER JOIN leadEvents
-        ON leadEvents.leadId = leads.id
-      INNER JOIN events
-        ON events.id = leadEvents.eventId
     ${whereClause}
-    GROUP BY leadServices.leadId
+    ORDER BY ${columnsToOrder}
     LIMIT ?, ?;
     SELECT FOUND_ROWS();
   `;
@@ -152,71 +165,127 @@ app.get("/api/leads", (req, res, next) => {
 
     const totalCount = totalCountRows[0]["FOUND_ROWS()"];
 
-    const mapLeadsData = leadRows.map(result => {
-      const leadServices = JSON.parse(result.leadServices);
-      const eventSources = JSON.parse(result.eventSources);
+    let secondQuery = "";
+    const secondQueryData = [];
 
-      return {
-        id: result.leadId,
-        dateOfSignUp: responseDateWithoutTime(result.dateOfSignUp),
-        leadStatus: result.leadStatus === null ? "active" : result.leadStatus,
-        contactStage: {
-          first: result.firstContactAttempt,
-          second: result.secondContactAttempt,
-          third: result.thirdContactAttempt
-        },
-        inactivityReason: result.inactivityReason,
-        eventSources: eventSources.map(event => ({
-          eventId: event.eventId,
-          eventName: event.eventName,
-          eventLocation: event.eventLocation,
-          eventDate: event.eventDate
-        })),
-        firstName: result.firstName,
-        lastName: result.lastName,
-        fullName: responseFullName(result.firstName, result.lastName),
-        phone: result.phone,
-        smsConsent: responseBoolean(result.smsConsent),
-        zip: result.zip,
-        age: result.age,
-        gender: result.gender,
-        leadServices: leadServices.map(service => ({
-          id: service.serviceId,
-          serviceName: service.serviceName
-        })),
-        clientId: result.clientId,
-        isDeleted: responseBoolean(result.isDeleted),
-        createdBy: {
-          userId: result.addedBy,
-          firstName: result.createdByFirstName,
-          lastName: result.createdByLastName,
-          fullName: responseFullName(
-            result.createdByFirstName,
-            result.createdByLastName
-          ),
-          timestamp: result.dateAdded
-        },
-        lastUpdatedBy: {
-          userId: result.modifiedBy,
-          firstName: result.modifiedByFirstName,
-          lastName: result.modifiedByLastName,
-          fullName: responseFullName(
-            result.modifiedByFirstName,
-            result.modifiedByLastName
-          ),
-          timestamp: result.dateModified
-        }
-      };
+    leadRows.forEach(lead => {
+      secondQuery = `
+        ${secondQuery} 
+
+        SELECT
+          leadServices.leadId,
+          leadServices.serviceId,
+          services.serviceName,
+          services.programId,
+          programs.programName
+        FROM leadServices
+          INNER JOIN services
+            ON services.id = leadServices.serviceId
+          INNER JOIN programs
+            ON programs.id = services.programId
+        WHERE leadServices.leadId = ?;
+
+        SELECT
+          leadEvents.leadId,
+          leadEvents.eventId,
+          events.eventName,
+          events.eventLocation,
+          events.eventDate
+        FROM leadEvents
+          INNER JOIN events
+            ON events.id = leadEvents.eventId
+        WHERE leadEvents.leadId = ?;
+      `;
+      secondQueryData.push(lead.leadId, lead.leadId);
     });
 
-    res.send({
-      leads: mapLeadsData,
-      pagination: {
-        currentPage: zeroBasedPage + 1,
-        pageSize,
-        numLeads: totalCount,
-        numPages: Math.ceil(totalCount / pageSize)
+    const getMoreData = mysql.format(secondQuery, secondQueryData);
+
+    pool.query(getMoreData, (err, results, fields) => {
+      if (err) {
+        return databaseError(req, res, err);
       }
+
+      const leads = leadRows.map((lead, i) => {
+        let leadServices = [];
+        let leadEvents = [];
+
+        if (results[i * 2].length > 0) {
+          results[i * 2].forEach(service => {
+            leadServices.push({
+              serviceId: service.serviceId,
+              serviceName: service.serviceName,
+              programId: service.programId,
+              programName: service.programName
+            });
+          });
+        }
+
+        if (results[i * 2 + 1].length > 0) {
+          results[i * 2 + 1].forEach(event => {
+            leadEvents.push({
+              eventId: event.eventId,
+              eventName: event.eventName,
+              eventLocation: event.eventLocation,
+              eventDate: event.eventDate
+            });
+          });
+        }
+
+        return {
+          id: lead.leadId,
+          dateOfSignUp: responseDateWithoutTime(lead.dateOfSignUp),
+          leadStatus: lead.leadStatus === null ? "active" : lead.leadStatus,
+          contactStage: {
+            first: lead.firstContactAttempt,
+            second: lead.secondContactAttempt,
+            third: lead.thirdContactAttempt
+          },
+          inactivityReason: lead.inactivityReason,
+          eventSources: leadEvents,
+          firstName: lead.firstName,
+          lastName: lead.lastName,
+          fullName: responseFullName(lead.firstName, lead.lastName),
+          phone: lead.phone,
+          smsConsent: responseBoolean(lead.smsConsent),
+          zip: lead.zip,
+          age: lead.age,
+          gender: lead.gender,
+          leadServices: leadServices,
+          clientId: lead.clientId,
+          isDeleted: responseBoolean(lead.isDeleted),
+          createdBy: {
+            userId: lead.addedBy,
+            firstName: lead.createdByFirstName,
+            lastName: lead.createdByLastName,
+            fullName: responseFullName(
+              lead.createdByFirstName,
+              lead.createdByLastName
+            ),
+            timestamp: lead.dateAdded
+          },
+          lastUpdatedBy: {
+            userId: lead.modifiedBy,
+            firstName: lead.modifiedByFirstName,
+            lastName: lead.modifiedByLastName,
+            fullName: responseFullName(
+              lead.modifiedByFirstName,
+              lead.modifiedByLastName
+            ),
+            timestamp: lead.dateModified
+          }
+        };
+      });
+
+      res.send({
+        leads,
+        pagination: {
+          currentPage: zeroBasedPage + 1,
+          pageSize,
+          numLeads: totalCount,
+          numPages: Math.ceil(totalCount / pageSize)
+        }
+      });
     });
   });
 });
