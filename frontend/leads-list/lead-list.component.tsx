@@ -60,6 +60,9 @@ export default function LeadList(props: LeadListProps) {
             leads={apiState.apiData.leads}
             fetchingLeads={fetchingLead}
             page={apiState.page}
+            newSortOrder={newSortOrder}
+            sortField={apiState.sortField}
+            sortOrder={apiState.sortOrder}
             selectedLeads={selectedLeads}
             setSelectedLeads={setSelectedLeads}
           />
@@ -110,6 +113,14 @@ export default function LeadList(props: LeadListProps) {
       search
     });
   }
+
+  function newSortOrder(sortField: SortField, sortOrder: SortOrder) {
+    dispatchApiState({
+      type: ActionTypes.newSort,
+      sortField,
+      sortOrder
+    });
+  }
 }
 
 function reduceApiState(state: ApiState, action: ApiStateAction) {
@@ -152,6 +163,14 @@ function reduceApiState(state: ApiState, action: ApiStateAction) {
         ...state,
         status: ApiStateStatus.shouldFetch
       };
+    case ActionTypes.newSort:
+      return {
+        ...state,
+        status: ApiStateStatus.shouldFetch,
+        sortField: action.sortField,
+        sortOrder: action.sortOrder,
+        page: 1
+      };
     default:
       throw Error();
   }
@@ -163,6 +182,8 @@ function useLeadsApi(apiState, dispatchApiState) {
       const abortController = new AbortController();
       const query = queryString.stringify({
         ...apiState.search,
+        sortField: apiState.sortField,
+        sortOrder: apiState.sortOrder,
         page: apiState.page
       });
       easyFetch(`/api/leads?${query}`)
@@ -236,6 +257,8 @@ function useFrontendUrlParams(apiState, dispatchApiState) {
   React.useEffect(() => {
     const queryParams = queryString.stringify({
       page: apiState.page,
+      sortField: apiState.sortField,
+      sortOrder: apiState.sortOrder,
       ...apiState.search
     });
 
@@ -259,8 +282,20 @@ function getInitialState(): ApiState {
     }
   }
 
+  let sortField = queryParams.sortField as SortField;
+  if (!SortField[sortField]) {
+    sortField = SortField.lastName;
+  }
+
+  let sortOrder = queryParams.sortOrder as SortOrder;
+  if (!Object.values(SortOrder).includes(sortOrder)) {
+    sortOrder = SortOrder.ascending;
+  }
+
   const search = { ...queryParams };
   delete search.page;
+  delete search.sortField;
+  delete search.sortOrder;
 
   return {
     status: ApiStateStatus.uninitialized,
@@ -274,8 +309,16 @@ function getInitialState(): ApiState {
       leads: []
     },
     page,
-    search
+    search,
+    sortField,
+    sortOrder
   };
+}
+
+export function reversedSortOrder(oldOrder: SortOrder) {
+  return oldOrder === SortOrder.ascending
+    ? SortOrder.descending
+    : SortOrder.ascending;
 }
 
 enum ApiStateStatus {
@@ -292,7 +335,20 @@ enum ActionTypes {
   newQueryParams = "newQueryParams",
   apiError = "apiError",
   shouldFetch = "shouldFetch",
-  newSearch = "newSearch"
+  newSearch = "newSearch",
+  newSort = "newSort"
+}
+
+export enum SortField {
+  id = "id",
+  firstName = "firstName",
+  lastName = "lastName",
+  dateOfSignUp = "dateOfSignUp"
+}
+
+export enum SortOrder {
+  ascending = "asc",
+  descending = "desc"
 }
 
 type ApiStateAction =
@@ -302,13 +358,16 @@ type ApiStateAction =
   | FetchedAction
   | ShouldFetchAction
   | ApiErrorAction
-  | NewSearchAction;
+  | NewSearchAction
+  | NewSortAction;
 
 type ApiState = {
   status: ApiStateStatus;
   page: number;
   apiData: LeadApiData;
   search: SearchParseValues;
+  sortField: SortField;
+  sortOrder: SortOrder;
 };
 
 type FetchedAction = {
@@ -344,6 +403,12 @@ type NewParamsAction = {
   params: SearchParseValues & {
     page: number;
   };
+};
+
+type NewSortAction = {
+  type: ActionTypes.newSort;
+  sortField: SortField;
+  sortOrder: SortOrder;
 };
 
 type NewSearchAction = {
