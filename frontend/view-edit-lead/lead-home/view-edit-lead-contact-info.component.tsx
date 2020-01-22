@@ -13,7 +13,7 @@ export default function ViewEditLeadContactInfo(
     isEditing: false,
     newLeadData: null
   });
-  const { lead } = props;
+  const { lead, leadUpdated } = props;
 
   React.useEffect(() => {
     if (apiStatus.isUpdating) {
@@ -25,7 +25,7 @@ export default function ViewEditLeadContactInfo(
       })
         .then(data => {
           dispatchApiStatus({ type: "reset" });
-          props.leadUpdated(data.lead);
+          leadUpdated(data.lead);
         })
         .catch(err => {
           setTimeout(() => {

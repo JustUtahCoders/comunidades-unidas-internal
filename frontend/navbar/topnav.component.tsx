@@ -25,6 +25,12 @@ export default function Topnav(props: TopnavProps) {
 }
 
 const css = `
+@media print {
+  & .topnav {
+    display: none !important;
+  }
+}
+
 & .topnav {
   position: fixed;
   top: 0;
