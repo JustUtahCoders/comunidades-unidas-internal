@@ -141,9 +141,15 @@ app.patch("/api/leads/:id", (req, res, next) => {
         fullLead.dateOfSignUp,
         fullLead.leadStatus,
         newInactivityReason,
-        fullLead.contactStage.first || null,
-        fullLead.contactStage.second || null,
-        fullLead.contactStage.third || null,
+        fullLead.contactStage.first
+          ? new Date(fullLead.contactStage.first)
+          : null,
+        fullLead.contactStage.second
+          ? new Date(fullLead.contactStage.second)
+          : null,
+        fullLead.contactStage.third
+          ? new Date(fullLead.contactStage.third)
+          : null,
         userId,
         leadId
       );
@@ -151,7 +157,7 @@ app.patch("/api/leads/:id", (req, res, next) => {
 
     const leadServicesChanged = atLeastOne(req.body, "leadServices");
 
-    if (leadServicesChanged || fullLead.leadServices.length > 0) {
+    if (leadServicesChanged) {
       queries.push("UPDATE leads SET modifiedBy = ? WHERE id = ?;");
       queryData.push(userId, leadId);
 

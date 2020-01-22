@@ -3,10 +3,13 @@ import dateformat from "dateformat";
 import { useCss } from "kremling";
 import editIcon from "../../../icons/148705-essential-collection/svg/edit.svg";
 import cancelIcon from "../../../icons/148705-essential-collection/svg/add-1.svg";
+import dayjs from "dayjs";
 
-export default function ContactStatusInput(props: ContactStatusInputProps) {
+export default function ContactAttemptInput(props: ContactStatusInputProps) {
   const { contactAttempt, setContactAttempt } = props;
   const [editAttempt, setEditAttempt] = React.useState(false);
+
+  const attemptDate = dayjs(contactAttempt);
 
   const scope = useCss(css);
 
@@ -17,11 +20,15 @@ export default function ContactStatusInput(props: ContactStatusInputProps) {
         <td className="attempt-input">
           <div>
             <label>
-              <span>{props.rowName}</span>
               <input
-                type="datetime-local"
-                value={dateformat(contactAttempt, "yyyy-mm-dd'T'hh:MM")}
-                onChange={evt => setContactAttempt(evt.target.value)}
+                type="date"
+                value={attemptDate.format("YYYY-MM-DD")}
+                onChange={updateDate}
+              />
+              <input
+                type="time"
+                value={attemptDate.format("HH:mm")}
+                onChange={updateTime}
               />
             </label>
             <img
@@ -46,6 +53,20 @@ export default function ContactStatusInput(props: ContactStatusInputProps) {
       )}
     </tr>
   );
+
+  function updateDate(evt) {
+    const [year, month, day] = evt.target.value.split("-");
+    const date = new Date(contactAttempt);
+    date.setFullYear(year, month - 1, day);
+    setContactAttempt(date.toISOString());
+  }
+
+  function updateTime(evt) {
+    const [hours, mins] = evt.target.value.split(":");
+    const date = new Date(contactAttempt);
+    date.setHours(hours, mins);
+    setContactAttempt(date.toISOString());
+  }
 }
 
 const css = `

@@ -1,5 +1,6 @@
 import React from "react";
 import { capitalize } from "lodash-es";
+import { useCss } from "kremling";
 
 export default function BasicLeadInformationInputs(
   props: BasicLeadInformationInputsProps
@@ -8,8 +9,15 @@ export default function BasicLeadInformationInputs(
   const [lastName, setLastName] = React.useState(props.lead.lastName || "");
   const [gender, setGender] = React.useState(props.lead.gender || "female");
   const [age, setAge] = React.useState(props.lead.age);
+  const scope = useCss(css);
+
   return (
-    <form onSubmit={handleSubmit} autoComplete="off" className="edit-form">
+    <form
+      onSubmit={handleSubmit}
+      autoComplete="off"
+      className="edit-form"
+      {...scope}
+    >
       <div>
         <label>
           <span>First Name</span>
@@ -80,6 +88,13 @@ export default function BasicLeadInformationInputs(
     });
   }
 }
+
+const css = `
+& div > label > span {
+  display: inline-block;
+  width: 10rem;
+}
+`;
 
 type BasicLeadInformationInputsProps = {
   lead: BasicInfoLead;

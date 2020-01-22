@@ -1,5 +1,6 @@
 import React from "react";
 import PhoneInput from "../../util/phone-input.component";
+import { useCss } from "kremling";
 
 export default function LeadContactInformationInputs(
   props: LeadContactInformationInputsProps
@@ -9,18 +10,24 @@ export default function LeadContactInformationInputs(
     props.lead.smsConsent || false
   );
   const [zip, setZip] = React.useState(props.lead.zip || "");
+  const scope = useCss(css);
 
   return (
-    <form onSubmit={handleSubmit} autoComplete="off" className="edit-form">
+    <form
+      onSubmit={handleSubmit}
+      autoComplete="off"
+      className="edit-form"
+      {...scope}
+    >
       <div>
         <label>
-          <span>Phone number</span>
+          <span>Phone number:</span>
           <PhoneInput phone={phone} setPhone={setPhone} autoFocus />
         </label>
       </div>
       <div>
         <label>
-          <span>Wants text messages</span>
+          <span>Wants text messages:</span>
           <input
             type="checkbox"
             name="smsConsent"
@@ -32,7 +39,7 @@ export default function LeadContactInformationInputs(
       </div>
       <div>
         <label>
-          <span>Zip Code</span>
+          <span>Zip Code:</span>
           <input
             type="text"
             value={zip}
@@ -54,6 +61,17 @@ export default function LeadContactInformationInputs(
     });
   }
 }
+
+const css = `
+& div > label > span {
+  display: inline-block;
+  width: 19.6rem;
+}
+
+& div > label > input[type="text"], & div > label > input[type="tel"] {
+  width: 14rem;
+}
+`;
 
 type LeadContactInformationInputsProps = {
   lead: LeadContactInfo;
