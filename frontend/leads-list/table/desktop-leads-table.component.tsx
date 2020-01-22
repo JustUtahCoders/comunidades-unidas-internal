@@ -61,8 +61,6 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
                 {sortableColumnIcon(SortField.firstName, SortField.lastName)}
               </button>
             </th>
-            <th>ID</th>
-            <th>Name</th>
             <th>Phone</th>
             <th>Event</th>
             <th>
