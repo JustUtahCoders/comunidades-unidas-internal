@@ -86,7 +86,7 @@ app.patch("/api/leads/:id", (req, res, next) => {
 
     const leadServicesChanged = atLeastOne(req.body, "leadServices");
 
-    if (leadServicesChanged && fullLead.leadServices.length > 0) {
+    if (leadServicesChanged || fullLead.leadServices.length > 0) {
       queries.push("UPDATE leads SET modifiedBy = ? WHERE id = ?;");
       queryData.push(userId, leadId);
 
@@ -122,6 +122,21 @@ app.patch("/api/leads/:id", (req, res, next) => {
           );
           queryData.push(leadId, serviceId);
         }
+      }
+    }
+
+    if (oldLead.eventSources.length < fullLead.eventSources.length) {
+      const oldLeadEventIds = oldLead.eventSources.map(event => event.eventId);
+
+      const newLeadEventIds = _.difference(
+        fullLead.eventSources,
+        oldLeadEventIds
+      );
+
+      for (let i = 0; i < newLeadEventIds.length; i++) {
+        const eventId = newLeadEventIds[i];
+        queries.push("INSERT INTO leadEvents (leadId, eventId) VALUES (?, ?);");
+        queryData.push(leadId, eventId);
       }
     }
 
