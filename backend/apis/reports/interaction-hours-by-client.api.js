@@ -1,15 +1,9 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
 const {
   checkValid,
-  nullableNonEmptyString,
   nullableValidInteger
 } = require("../utils/validation-utils");
-const {
-  responseFullName,
-  requestPhone,
-  responseBoolean,
-  responseDateWithoutTime
-} = require("../utils/transform-utils");
+const { responseFullName } = require("../utils/transform-utils");
 const mysql = require("mysql");
 
 const pageSize = 100;
@@ -80,7 +74,7 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
         lastName: c.lastName,
         fullName: responseFullName(c.firstName, c.lastName),
         gender: c.gender,
-        birthday: c.gender,
+        birthday: c.birthday,
         totalDuration: c.totalDuration,
         numInteractions: c.numInteractions
       })),

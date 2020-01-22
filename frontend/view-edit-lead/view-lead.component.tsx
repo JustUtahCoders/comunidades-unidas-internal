@@ -1,7 +1,7 @@
 import React from "react";
 import easyFetch from "../util/easy-fetch";
-import { useCss, always } from "kremling";
-import { Link, Router } from "@reach/router";
+import { useCss } from "kremling";
+import { Router } from "@reach/router";
 import PageHeader from "../page-header.component";
 import LeadHome from "./lead-home/lead-home.component";
 
@@ -50,12 +50,6 @@ export default function ViewLead(props: ViewLeadProps) {
     }
   }
 
-  function getLinkProps({ isCurrent }) {
-    return {
-      className: always("secondary-nav-link").maybe("active", isCurrent)
-    };
-  }
-
   function fetchLead() {
     const abortController = new AbortController();
 
@@ -72,14 +66,6 @@ export default function ViewLead(props: ViewLeadProps) {
       });
 
     return () => abortController.abort();
-  }
-
-  function possessiveLeadName() {
-    if (lead) {
-      return lead.firstName + (lead.firstName.endsWith("s") ? "'" : "'s");
-    } else {
-      return "Lead's";
-    }
   }
 }
 
@@ -101,7 +87,10 @@ const css = `
   }
 
   & .edit-form {
-    width: 55%;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   & .edit-form > div {

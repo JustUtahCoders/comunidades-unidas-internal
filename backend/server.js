@@ -114,6 +114,7 @@ require("./apis/events/add-event.api");
 require("./apis/leads/update-lead.api");
 require("./apis/events/delete-event.api");
 require("./apis/reports/interaction-hours-by-client.api");
+require("./apis/leads/delete-lead.api");
 
 require("./apis/default-404.api.js");
 require("./index-html.js");

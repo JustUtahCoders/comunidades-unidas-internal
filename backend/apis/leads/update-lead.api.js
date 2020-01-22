@@ -17,7 +17,8 @@ const {
   nullableValidBoolean,
   nullableValidInteger,
   nullableValidPhone,
-  nullableValidZip
+  nullableValidZip,
+  nullableValidEnum
 } = require("../utils/validation-utils");
 const { atLeastOne } = require("../utils/patch-utils");
 const { getLeadById } = require("./get-lead.api");
@@ -28,6 +29,18 @@ app.patch("/api/leads/:id", (req, res, next) => {
   const bodyValidationErrors = checkValid(
     req.body,
     nullableValidDate("dateOfSignUp"),
+    nullableValidEnum("leadStatus", "active", "inactive", "convertedToClient"),
+    nullableValidDate("firstContactStatus"),
+    nullableValidDate("secondContactStatus"),
+    nullableValidDate("thirdContactStatus"),
+    nullableValidEnum(
+      "inactivityReason",
+      "doNotCallRequest",
+      "threeAttemptsNoResponse",
+      "wrongNumber",
+      "noLongerInterested",
+      "relocated"
+    ),
     nullableNonEmptyString("firstName"),
     nullableNonEmptyString("lastName"),
     nullableValidPhone("phone"),
@@ -84,9 +97,67 @@ app.patch("/api/leads/:id", (req, res, next) => {
       );
     }
 
+    const leadContactInfoChanged = atLeastOne(
+      req.body,
+      "phone",
+      "smsConsent",
+      "zip"
+    );
+
+    if (leadContactInfoChanged) {
+      const leadContactInfoQuery =
+        "UPDATE leads SET phone = ?, smsConsent = ?, zip = ?, modifiedBy = ? WHERE id = ?;";
+      queries.push(leadContactInfoQuery);
+      queryData.push(
+        fullLead.phone,
+        fullLead.smsConsent,
+        fullLead.zip,
+        userId,
+        leadId
+      );
+    }
+
+    const leadContactStatusChanged = atLeastOne(
+      req.body,
+      "dateOfSignUp",
+      "leadStatus",
+      "inactivityReason",
+      "first",
+      "second",
+      "third"
+    );
+
+    if (leadContactStatusChanged) {
+      let newInactivityReason = fullLead.inactivityReason;
+
+      if (fullLead.leadStatus === "active") {
+        newInactivityReason = null;
+      }
+
+      const leadContactStatusInfo =
+        "UPDATE leads SET dateOfSignUp = ?, leadStatus = ?, inactivityReason = ?, firstContactAttempt = ?, secondContactAttempt = ?, thirdContactAttempt = ?, modifiedBy = ? WHERE id = ?";
+      queries.push(leadContactStatusInfo);
+      queryData.push(
+        fullLead.dateOfSignUp,
+        fullLead.leadStatus,
+        newInactivityReason,
+        fullLead.contactStage.first
+          ? new Date(fullLead.contactStage.first)
+          : null,
+        fullLead.contactStage.second
+          ? new Date(fullLead.contactStage.second)
+          : null,
+        fullLead.contactStage.third
+          ? new Date(fullLead.contactStage.third)
+          : null,
+        userId,
+        leadId
+      );
+    }
+
     const leadServicesChanged = atLeastOne(req.body, "leadServices");
 
-    if (leadServicesChanged && fullLead.leadServices.length > 0) {
+    if (leadServicesChanged) {
       queries.push("UPDATE leads SET modifiedBy = ? WHERE id = ?;");
       queryData.push(userId, leadId);
 
@@ -125,6 +196,21 @@ app.patch("/api/leads/:id", (req, res, next) => {
       }
     }
 
+    if (oldLead.eventSources.length < fullLead.eventSources.length) {
+      const oldLeadEventIds = oldLead.eventSources.map(event => event.eventId);
+
+      const newLeadEventIds = _.difference(
+        fullLead.eventSources,
+        oldLeadEventIds
+      );
+
+      for (let i = 0; i < newLeadEventIds.length; i++) {
+        const eventId = newLeadEventIds[i];
+        queries.push("INSERT INTO leadEvents (leadId, eventId) VALUES (?, ?);");
+        queryData.push(leadId, eventId);
+      }
+    }
+
     if (queries.length === 0) {
       res.send(oldLead);
       return;
@@ -151,6 +237,7 @@ app.patch("/api/leads/:id", (req, res, next) => {
         if (selectErr) {
           return databaseError(req, res, selectErr, connection);
         }
+
         res.send({
           lead
         });

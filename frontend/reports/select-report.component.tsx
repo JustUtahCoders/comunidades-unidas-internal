@@ -12,7 +12,7 @@ export default function SelectReport(props: SelectReportProps) {
           <label id="select-report-label">Report: </label>
           <select
             onChange={evt => navigate(`/reports/${evt.target.value}`)}
-            style={{ maxWidth: "100%", width: "100%" }}
+            style={{ maxWidth: "100%" }}
             aria-labelledby="select-report-label"
           >
             {React.Children.map(

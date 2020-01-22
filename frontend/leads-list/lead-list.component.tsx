@@ -7,9 +7,23 @@ import PageHeader from "../page-header.component";
 import ReportIssue from "../report-issue/report-issue.component";
 import LeadsTable from "./table/leads-table.component";
 import LeadsTableToolbar from "./toolbar/leads-table-toolbar.component";
+import Modal from "../util/modal.component";
 
 export default function LeadList(props: LeadListProps) {
+  const [modalOptions, setModalOptions] = React.useState({
+    isOpen: false,
+    headerText: null,
+    primaryText: null,
+    primaryAction: null,
+    secondaryText: null,
+    secondaryAction: null,
+    children: null
+  });
+
+  const [selectedLeads, setSelectedLeads] = React.useState<SelectedLeads>({});
+
   const featureEnabled = Boolean(localStorage.getItem("leads"));
+
   useFullWidth(featureEnabled);
 
   const [apiState, dispatchApiState] = React.useReducer(
@@ -37,12 +51,42 @@ export default function LeadList(props: LeadListProps) {
             fetchingLead={fetchingLead}
             refetchLeads={refetchLeads}
             setSearch={setSearch}
+            selectedLeads={selectedLeads}
+            setSelectedLeads={setSelectedLeads}
+            modalOptions={modalOptions}
+            setModalOptions={setModalOptions}
           />
           <LeadsTable
             leads={apiState.apiData.leads}
             fetchingLeads={fetchingLead}
             page={apiState.page}
+            newSortOrder={newSortOrder}
+            sortField={apiState.sortField}
+            sortOrder={apiState.sortOrder}
+            selectedLeads={selectedLeads}
+            setSelectedLeads={setSelectedLeads}
           />
+          {modalOptions.isOpen === true && (
+            <Modal
+              close={() =>
+                setModalOptions({
+                  isOpen: false,
+                  headerText: null,
+                  primaryText: null,
+                  primaryAction: null,
+                  secondaryText: null,
+                  secondaryAction: null,
+                  children: null
+                })
+              }
+              headerText={modalOptions.headerText}
+              primaryText={modalOptions.primaryText}
+              primaryAction={modalOptions.primaryAction}
+              secondaryText={modalOptions.secondaryText}
+              secondaryAction={modalOptions.secondaryAction}
+              children={modalOptions.children}
+            />
+          )}
         </>
       ) : (
         <ReportIssue missingFeature hideHeader />
@@ -67,6 +111,14 @@ export default function LeadList(props: LeadListProps) {
     dispatchApiState({
       type: ActionTypes.newSearch,
       search
+    });
+  }
+
+  function newSortOrder(sortField: SortField, sortOrder: SortOrder) {
+    dispatchApiState({
+      type: ActionTypes.newSort,
+      sortField,
+      sortOrder
     });
   }
 }
@@ -111,6 +163,14 @@ function reduceApiState(state: ApiState, action: ApiStateAction) {
         ...state,
         status: ApiStateStatus.shouldFetch
       };
+    case ActionTypes.newSort:
+      return {
+        ...state,
+        status: ApiStateStatus.shouldFetch,
+        sortField: action.sortField,
+        sortOrder: action.sortOrder,
+        page: 1
+      };
     default:
       throw Error();
   }
@@ -122,6 +182,8 @@ function useLeadsApi(apiState, dispatchApiState) {
       const abortController = new AbortController();
       const query = queryString.stringify({
         ...apiState.search,
+        sortField: apiState.sortField,
+        sortOrder: apiState.sortOrder,
         page: apiState.page
       });
       easyFetch(`/api/leads?${query}`)
@@ -195,6 +257,8 @@ function useFrontendUrlParams(apiState, dispatchApiState) {
   React.useEffect(() => {
     const queryParams = queryString.stringify({
       page: apiState.page,
+      sortField: apiState.sortField,
+      sortOrder: apiState.sortOrder,
       ...apiState.search
     });
 
@@ -218,8 +282,20 @@ function getInitialState(): ApiState {
     }
   }
 
+  let sortField = queryParams.sortField as SortField;
+  if (!SortField[sortField]) {
+    sortField = SortField.lastName;
+  }
+
+  let sortOrder = queryParams.sortOrder as SortOrder;
+  if (!Object.values(SortOrder).includes(sortOrder)) {
+    sortOrder = SortOrder.ascending;
+  }
+
   const search = { ...queryParams };
   delete search.page;
+  delete search.sortField;
+  delete search.sortOrder;
 
   return {
     status: ApiStateStatus.uninitialized,
@@ -233,8 +309,16 @@ function getInitialState(): ApiState {
       leads: []
     },
     page,
-    search
+    search,
+    sortField,
+    sortOrder
   };
+}
+
+export function reversedSortOrder(oldOrder: SortOrder) {
+  return oldOrder === SortOrder.ascending
+    ? SortOrder.descending
+    : SortOrder.ascending;
 }
 
 enum ApiStateStatus {
@@ -251,7 +335,20 @@ enum ActionTypes {
   newQueryParams = "newQueryParams",
   apiError = "apiError",
   shouldFetch = "shouldFetch",
-  newSearch = "newSearch"
+  newSearch = "newSearch",
+  newSort = "newSort"
+}
+
+export enum SortField {
+  id = "id",
+  firstName = "firstName",
+  lastName = "lastName",
+  dateOfSignUp = "dateOfSignUp"
+}
+
+export enum SortOrder {
+  ascending = "asc",
+  descending = "desc"
 }
 
 type ApiStateAction =
@@ -261,13 +358,16 @@ type ApiStateAction =
   | FetchedAction
   | ShouldFetchAction
   | ApiErrorAction
-  | NewSearchAction;
+  | NewSearchAction
+  | NewSortAction;
 
 type ApiState = {
   status: ApiStateStatus;
   page: number;
   apiData: LeadApiData;
   search: SearchParseValues;
+  sortField: SortField;
+  sortOrder: SortOrder;
 };
 
 type FetchedAction = {
@@ -305,6 +405,12 @@ type NewParamsAction = {
   };
 };
 
+type NewSortAction = {
+  type: ActionTypes.newSort;
+  sortField: SortField;
+  sortOrder: SortOrder;
+};
+
 type NewSearchAction = {
   type: ActionTypes.newSearch;
   search: SearchParseValues;
@@ -326,8 +432,10 @@ export type EventSources = {
 };
 
 export type LeadServices = {
-  id: number;
+  serviceId: number;
   serviceName: string;
+  programId: number;
+  programName: string;
 };
 
 export type LeadListLead = {
@@ -356,4 +464,8 @@ export type LeadListLead = {
     fullName: string;
     timestamp: string;
   };
+};
+
+export type SelectedLeads = {
+  [leadId: number]: LeadListLead;
 };

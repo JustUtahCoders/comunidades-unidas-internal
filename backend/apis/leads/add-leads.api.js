@@ -14,9 +14,10 @@ app.post("/api/leads", (req, res) => {
   const user = req.session.passport.user;
 
   if (!Array.isArray(leads)) {
-    return invalidRequest(res, [
+    return invalidRequest(
+      res,
       `POST /api/leads must be called with an array of leads in the request body`
-    ]);
+    );
   }
 
   for (let i = 0; i < leads.length; i++) {
@@ -46,7 +47,7 @@ app.post("/api/leads", (req, res) => {
     const lead = leads[i];
 
     const addToLeadQuery =
-      "INSERT INTO leads (dateOfSignUp, firstName, lastName, phone, smsConsent, zip, age, gender, addedBy, modifiedBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+      "INSERT INTO leads (dateOfSignUp, firstName, lastName, phone, smsConsent, zip, age, gender, addedBy, modifiedBy, firstContactAttempt, secondContactAttempt, thirdContactAttempt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, null, null, null);";
     const setLeadId = "SET @leadId = LAST_INSERT_ID();";
 
     leadDataArray.push(
@@ -114,8 +115,6 @@ app.post("/api/leads", (req, res) => {
       return databaseError(req, res, err);
     }
 
-    const leadIds = result.map(data => data.insertId).join(", ");
-
-    res.json({ message: `Created leads ${leadIds}.` });
+    res.json({ message: `Created ${leads.length} leads.` });
   });
 });

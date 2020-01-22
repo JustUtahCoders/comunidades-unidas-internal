@@ -1,6 +1,7 @@
 import React from "react";
 import AddLeadRow from "./add-lead-row.component";
 import { useCss } from "kremling";
+import easyFetch from "../util/easy-fetch";
 
 export default function AddLeadsTable({
   leads,
@@ -8,19 +9,35 @@ export default function AddLeadsTable({
   updateLead
 }: AddLeadsTableProps) {
   const scope = useCss(css);
+  const [services, setServices] = React.useState([]);
+
+  React.useEffect(() => {
+    const abortController = new AbortController();
+    easyFetch(`/api/services`, {
+      signal: abortController.signal
+    })
+      .then(data => {
+        setServices(data.services);
+      })
+      .catch(err => {
+        setTimeout(() => {
+          throw err;
+        });
+      });
+  }, []);
 
   return (
     <table style={{ width: "100%" }} {...scope}>
       <thead>
         <tr>
-          <th style={{ width: "18%" }}>First</th>
-          <th style={{ width: "18%" }}>Last</th>
-          <th style={{ width: "15%" }}>Phone</th>
+          <th style={{ width: "15%" }}>First</th>
+          <th style={{ width: "15%" }}>Last</th>
+          <th style={{ width: "18%" }}>Phone</th>
           <th style={{ width: "10%" }}>Zip</th>
           <th style={{ width: "10%" }}>Age</th>
           <th style={{ width: "15%" }}>Gender</th>
-          <th style={{ width: "5%" }}>Texts?</th>
-          <th style={{ width: "5%" }}></th>
+          <th style={{ width: "8%" }}>Interests</th>
+          <th style={{ width: "5%" }}>SMS</th>
           <th style={{ width: "4%" }}></th>
         </tr>
       </thead>
@@ -34,6 +51,7 @@ export default function AddLeadsTable({
             canDelete={leads.length > 1}
             isFirstLead={i === 0}
             isLastLead={i === leads.length - 1}
+            services={services}
           />
         ))}
       </tbody>

@@ -15,7 +15,8 @@ const {
   validEnum,
   validCountry,
   validArray,
-  validInteger
+  validInteger,
+  nullableValidId
 } = require("../utils/validation-utils");
 const { getClientById } = require("./get-client.api");
 const {
@@ -89,7 +90,8 @@ app.post("/api/clients", (req, res, next) => {
         "other"
       ),
       validBoolean("couldVolunteer"),
-      validArray("intakeServices", validInteger)
+      validArray("intakeServices", validInteger),
+      nullableValidId("leadId")
     );
 
     if (validityErrors.length > 0) {
@@ -164,6 +166,16 @@ app.post("/api/clients", (req, res, next) => {
               req.body,
               req.session.passport.user.id
             )}
+
+            ${
+              req.body.leadId
+                ? convertLeadToClient(
+                    req.body.leadId,
+                    clientId,
+                    req.session.passport.user.id
+                  )
+                : ""
+            }
           `);
 
           connection.query(insertOther, (err, results, fields) => {

@@ -1,4 +1,7 @@
 import React from "react";
+import Modal from "../util/modal.component";
+import IntakeServicesInputs from "../util/services-inputs.component";
+import { ProgressPlugin } from "webpack";
 
 export default function LeadRow({
   lead,
@@ -6,9 +9,12 @@ export default function LeadRow({
   updateLead,
   canDelete,
   isLastLead,
-  isFirstLead
+  isFirstLead,
+  services
 }) {
   const required = isFirstLead || !isLastLead;
+  const [showInterests, setShowInterests] = React.useState(false);
+  const intakeServicesInputsRef = React.useRef(null);
 
   const input = (field, label) => (
     <input
@@ -21,25 +27,70 @@ export default function LeadRow({
   );
 
   return (
-    <tr>
-      <td>{input("firstName", "First")}</td>
-      <td>{input("lastName", "Last")}</td>
-      <td>{input("phone", "Phone")}</td>
-      <td>{input("zip", "Zip")}</td>
-      <td>{input("age", "Age")}</td>
-      <td>
-        <select style={{ width: "100%" }} required={required}>
-          <option></option>
-          <option>Female</option>
-          <option>Male</option>
-          <option>Other</option>
-        </select>
-      </td>
-      <td>
-        <input type="checkbox" />
-      </td>
-      <td></td>
-      <td>{canDelete && <button onClick={deleteLead}>x</button>}</td>
-    </tr>
+    <>
+      <tr>
+        <td>{input("firstName", "First")}</td>
+        <td>{input("lastName", "Last")}</td>
+        <td>{input("phone", "Phone")}</td>
+        <td>{input("zip", "Zip")}</td>
+        <td>{input("age", "Age")}</td>
+        <td>
+          <select
+            style={{ width: "100%" }}
+            required={required}
+            value={lead.gender || "female"}
+            onChange={evt => updateLead("gender", evt.target.value)}
+          >
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+            <option value="nonbinary">Nonbinary</option>
+            <option value="transgender">Transgender</option>
+            <option value="other">Other</option>
+          </select>
+        </td>
+        <td>
+          <button
+            className="secondary"
+            type="button"
+            onClick={() => setShowInterests(true)}
+          >
+            Edit
+          </button>
+        </td>
+        <td>
+          <input
+            type="checkbox"
+            checked={Boolean(lead.smsConsent)}
+            onChange={evt => updateLead("smsConsent", evt.target.checked)}
+          />
+        </td>
+        <td>{canDelete && <button onClick={deleteLead}>x</button>}</td>
+      </tr>
+      {showInterests && (
+        <Modal
+          headerText="What services are they interested in?"
+          close={closeModal}
+          primaryAction={updateInterests}
+          primaryText="Update interests"
+          secondaryAction={closeModal}
+          secondaryText="Cancel"
+        >
+          <IntakeServicesInputs
+            ref={intakeServicesInputsRef}
+            services={services}
+            checkedServices={lead.leadServices}
+          />
+        </Modal>
+      )}
+    </>
   );
+
+  function closeModal() {
+    setShowInterests(false);
+  }
+
+  function updateInterests() {
+    updateLead("leadServices", intakeServicesInputsRef.current.checkedServices);
+    closeModal();
+  }
 }

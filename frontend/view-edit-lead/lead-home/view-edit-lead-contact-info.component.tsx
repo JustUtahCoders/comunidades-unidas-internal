@@ -54,7 +54,7 @@ export default function ViewEditLeadContactInfo(
             <button
               type="button"
               className="secondary"
-              onClick={() => apiStatus.isEditing}
+              onClick={() => dispatchApiStatus({ type: "reset" })}
               disabled={apiStatus.isUpdating}
             >
               Cancel

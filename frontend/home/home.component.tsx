@@ -8,6 +8,7 @@ import clientListUrl from "../../icons/148705-essential-collection/svg/folder-14
 import caseNoteUrl from "../../icons/148705-essential-collection/svg/note.svg";
 import leadListUrl from "../../icons/148705-essential-collection/svg/list-1.svg";
 import reportsUrl from "../../icons/148705-essential-collection/svg/volume-control-1.svg";
+import addLeadsUrl from "../../icons/148705-essential-collection/svg/windows-3.svg";
 import { useCss } from "kremling";
 
 export default function Home(props: HomeProps) {
@@ -38,6 +39,7 @@ export default function Home(props: HomeProps) {
           link="add-case-note"
         />
         <HomeCard iconUrl={leadListUrl} title="Lead list" link="lead-list" />
+        <HomeCard iconUrl={addLeadsUrl} title="Add Leads" link="add-leads" />
         <HomeCard iconUrl={reportsUrl} title="Reports" link="reports" />
         <HomeCard
           iconUrl={reportIssueUrl}

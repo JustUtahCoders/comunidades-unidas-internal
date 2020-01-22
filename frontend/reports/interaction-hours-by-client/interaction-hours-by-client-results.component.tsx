@@ -6,5 +6,5 @@ export default function InteractionHoursByClientResults(props) {
     `/api/reports/interaction-hours-by-client`
   );
 
-  return <pre>{JSON.stringify(data, null, 2)}</pre>;
+  return <pre style={{ margin: 0 }}>{JSON.stringify(data, null, 2)}</pre>;
 }
