@@ -2,28 +2,13 @@ import React from "react";
 import queryString from "query-string";
 import easyFetch from "../util/easy-fetch";
 import { useFullWidth } from "../navbar/use-full-width.hook";
-import { SearchParseValues } from "../util/list-search/search-dsl.helpers";
 import PageHeader from "../page-header.component";
 import ReportIssue from "../report-issue/report-issue.component";
-import LeadsTable from "./table/leads-table.component";
-import LeadsTableToolbar from "./toolbar/leads-table-toolbar.component";
-import Modal from "../util/modal.component";
+import EventTableToolbar from "./event-table-toolbar.component";
+import EventTable from "./event-table.component";
 
-export default function LeadList(props: LeadListProps) {
-  const [modalOptions, setModalOptions] = React.useState({
-    isOpen: false,
-    headerText: null,
-    primaryText: null,
-    primaryAction: null,
-    secondaryText: null,
-    secondaryAction: null,
-    children: null
-  });
-
-  const [selectedLeads, setSelectedLeads] = React.useState<SelectedLeads>({});
-
-  const featureEnabled = Boolean(localStorage.getItem("leads"));
-
+export default function EventList(props: EventListProps) {
+  const featureEnabled = Boolean(localStorage.getItem("events"));
   useFullWidth(featureEnabled);
 
   const [apiState, dispatchApiState] = React.useReducer(
@@ -33,60 +18,32 @@ export default function LeadList(props: LeadListProps) {
   );
 
   useAlwaysValidPage(apiState, dispatchApiState);
-  useLeadsApi(apiState, dispatchApiState);
+  useEventsApi(apiState, dispatchApiState);
   useFrontendUrlParams(apiState, dispatchApiState);
 
-  const fetchingLead = apiState.status !== ApiStateStatus.fetched;
+  const fetchingEvents = apiState.status != ApiStateStatus.fetched;
 
   return (
     <>
-      <PageHeader title="Lead List" fullScreen={featureEnabled} />
-      {localStorage.getItem("leads") ? (
+      <PageHeader title="Events List" fullScreen={featureEnabled} />
+      {localStorage.getItem("events") ? (
         <>
-          <LeadsTableToolbar
-            numLeads={apiState.apiData.pagination.numLeads}
+          <EventTableToolbar
+            numEvents={apiState.apiData.pagination.numEvents}
             page={apiState.page}
             pageSize={apiState.apiData.pagination.pageSize}
             setPage={newPage}
-            fetchingLead={fetchingLead}
-            refetchLeads={refetchLeads}
-            setSearch={setSearch}
-            selectedLeads={selectedLeads}
-            setSelectedLeads={setSelectedLeads}
-            modalOptions={modalOptions}
-            setModalOptions={setModalOptions}
+            fetchingEvents={fetchingEvents}
+            refetchEvents={refetchEvents}
           />
-          <LeadsTable
-            leads={apiState.apiData.leads}
-            fetchingLeads={fetchingLead}
+          <EventTable
+            events={apiState.apiData.events}
+            fetchingEvents={fetchingEvents}
             page={apiState.page}
             newSortOrder={newSortOrder}
             sortField={apiState.sortField}
             sortOrder={apiState.sortOrder}
-            selectedLeads={selectedLeads}
-            setSelectedLeads={setSelectedLeads}
           />
-          {modalOptions.isOpen === true && (
-            <Modal
-              close={() =>
-                setModalOptions({
-                  isOpen: false,
-                  headerText: null,
-                  primaryText: null,
-                  primaryAction: null,
-                  secondaryText: null,
-                  secondaryAction: null,
-                  children: null
-                })
-              }
-              headerText={modalOptions.headerText}
-              primaryText={modalOptions.primaryText}
-              primaryAction={modalOptions.primaryAction}
-              secondaryText={modalOptions.secondaryText}
-              secondaryAction={modalOptions.secondaryAction}
-              children={modalOptions.children}
-            />
-          )}
         </>
       ) : (
         <ReportIssue missingFeature hideHeader />
@@ -101,16 +58,9 @@ export default function LeadList(props: LeadListProps) {
     });
   }
 
-  function refetchLeads() {
+  function refetchEvents() {
     dispatchApiState({
       type: ActionTypes.shouldFetch
-    });
-  }
-
-  function setSearch(search) {
-    dispatchApiState({
-      type: ActionTypes.newSearch,
-      search
     });
   }
 
@@ -142,12 +92,6 @@ function reduceApiState(state: ApiState, action: ApiStateAction) {
         status: ApiStateStatus.shouldFetch,
         page: action.page
       };
-    case ActionTypes.newSearch:
-      return {
-        ...state,
-        status: ApiStateStatus.shouldFetch,
-        search: action.search
-      };
     case ActionTypes.newQueryParams:
       return {
         ...state,
@@ -176,17 +120,16 @@ function reduceApiState(state: ApiState, action: ApiStateAction) {
   }
 }
 
-function useLeadsApi(apiState, dispatchApiState) {
+function useEventsApi(apiState, dispatchApiState) {
   React.useEffect(() => {
     if (apiState.status === ApiStateStatus.shouldFetch) {
       const abortController = new AbortController();
       const query = queryString.stringify({
-        ...apiState.search,
+        page: apiState.page,
         sortField: apiState.sortField,
-        sortOrder: apiState.sortOrder,
-        page: apiState.page
+        sortOrder: apiState.sortOrder
       });
-      easyFetch(`/api/leads?${query}`)
+      easyFetch(`/api/events?${query}`)
         .then(data => {
           dispatchApiState({
             type: ActionTypes.fetched,
@@ -216,7 +159,7 @@ function useAlwaysValidPage(apiState, dispatchApiState) {
     }
 
     const lastPage = Math.ceil(
-      apiState.apiData.pagination.numLeads /
+      apiState.apiData.pagination.numEvents /
         apiState.apiData.pagination.pageSize
     );
 
@@ -258,8 +201,7 @@ function useFrontendUrlParams(apiState, dispatchApiState) {
     const queryParams = queryString.stringify({
       page: apiState.page,
       sortField: apiState.sortField,
-      sortOrder: apiState.sortOrder,
-      ...apiState.search
+      sortOrder: apiState.sortOrder
     });
 
     window.history.replaceState(
@@ -283,11 +225,13 @@ function getInitialState(): ApiState {
   }
 
   let sortField = queryParams.sortField as SortField;
+
   if (!SortField[sortField]) {
-    sortField = SortField.lastName;
+    sortField = SortField.eventDate;
   }
 
   let sortOrder = queryParams.sortOrder as SortOrder;
+
   if (!Object.values(SortOrder).includes(sortOrder)) {
     sortOrder = SortOrder.ascending;
   }
@@ -303,13 +247,12 @@ function getInitialState(): ApiState {
       pagination: {
         currentPage: 0,
         numPages: 0,
-        numLeads: 0,
+        numEvents: 0,
         pageSize: 0
       },
-      leads: []
+      events: []
     },
     page,
-    search,
     sortField,
     sortOrder
   };
@@ -335,15 +278,15 @@ enum ActionTypes {
   newQueryParams = "newQueryParams",
   apiError = "apiError",
   shouldFetch = "shouldFetch",
-  newSearch = "newSearch",
   newSort = "newSort"
 }
 
 export enum SortField {
   id = "id",
-  firstName = "firstName",
-  lastName = "lastName",
-  dateOfSignUp = "dateOfSignUp"
+  eventName = "eventName",
+  eventDate = "eventDate",
+  eventLocation = "eventLocation",
+  totalAttendance = "totalAttendance"
 }
 
 export enum SortOrder {
@@ -358,38 +301,36 @@ type ApiStateAction =
   | FetchedAction
   | ShouldFetchAction
   | ApiErrorAction
-  | NewSearchAction
   | NewSortAction;
 
 type ApiState = {
   status: ApiStateStatus;
   page: number;
-  apiData: LeadApiData;
-  search: SearchParseValues;
+  apiData: EventApiData;
   sortField: SortField;
   sortOrder: SortOrder;
 };
 
 type FetchedAction = {
   type: ActionTypes.fetched;
-  apiData: LeadApiData;
+  apiData: EventApiData;
 };
 
 type FetchingAction = {
   type: ActionTypes.fetching;
 };
 
-type LeadApiData = {
-  leads: LeadListLead[];
+type EventApiData = {
+  events: EventListEvent[];
   pagination: {
-    numLeads: number;
+    numEvents: number;
     currentPage: number;
     pageSize: number;
     numPages: number;
   };
 };
 
-type LeadListProps = {
+type EventListProps = {
   path: string;
 };
 
@@ -400,20 +341,9 @@ type NewPageAction = {
 
 type NewParamsAction = {
   type: ActionTypes.newQueryParams;
-  params: SearchParseValues & {
+  params: {
     page: number;
   };
-};
-
-type NewSortAction = {
-  type: ActionTypes.newSort;
-  sortField: SortField;
-  sortOrder: SortOrder;
-};
-
-type NewSearchAction = {
-  type: ActionTypes.newSearch;
-  search: SearchParseValues;
 };
 
 type ShouldFetchAction = {
@@ -425,47 +355,21 @@ type ApiErrorAction = {
   err: any;
 };
 
-export type EventSources = {
-  eventId: number;
+type NewSortAction = {
+  type: ActionTypes.newSort;
+  sortField: SortField;
+  sortOrder: SortOrder;
+};
+
+export type EventListEvent = {
+  id: number;
+  eventDate: string;
   eventName: string;
   eventLocation: string;
-};
-
-export type LeadServices = {
-  serviceId: number;
-  serviceName: string;
-  programId: number;
-  programName: string;
-};
-
-export type LeadListLead = {
-  id: number;
-  dateOfSignUp: string;
-  leadStatus: string;
-  contactStage: {
-    first: string;
-    second: string;
-    third: string;
-  };
-  inactivityReason: string;
-  eventSources: Array<EventSources>;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  phone: string;
-  smsConsent: boolean;
-  zip: string;
-  age: number;
-  gender: string;
-  leadServices: Array<LeadServices>;
-  clientId: number;
+  totalAttendance: number;
   createdBy: {
     userId: number;
     fullName: string;
     timestamp: string;
   };
-};
-
-export type SelectedLeads = {
-  [leadId: number]: LeadListLead;
 };

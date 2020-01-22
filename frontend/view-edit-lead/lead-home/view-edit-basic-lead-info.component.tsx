@@ -7,7 +7,6 @@ import BasicLeadInformationInputs from "../edit-lead-inputs/basic-lead-informati
 export default function ViewEditBasicLeadInfo(
   props: ViewEditBasicLeadInfoProps
 ) {
-  const [editing, setEditing] = React.useState(false);
   const [apiStatus, dispatchApiStatus] = React.useReducer(updatingReducer, {
     isEditing: false,
     isUpdating: false,
