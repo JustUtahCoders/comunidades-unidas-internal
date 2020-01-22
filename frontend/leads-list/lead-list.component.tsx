@@ -326,7 +326,7 @@ export type EventSources = {
 };
 
 export type LeadServices = {
-  id: number;
+  serviceId: number;
   serviceName: string;
 };
 

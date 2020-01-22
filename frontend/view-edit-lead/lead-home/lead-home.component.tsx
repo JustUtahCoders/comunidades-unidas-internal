@@ -19,7 +19,7 @@ export default function LeadHome(props: LeadHomeProps) {
       <ViewEditLeadContactInfo lead={lead} leadUpdated={setLead} />
       <ViewEditLeadContactStatus lead={lead} />
       <ViewEditLeadServicesInfo lead={lead} leadUpdated={setLead} />
-      <ViewEditLeadEventInfo lead={lead} />
+      <ViewEditLeadEventInfo lead={lead} leadUpdated={setLead} />
     </div>
   );
 }

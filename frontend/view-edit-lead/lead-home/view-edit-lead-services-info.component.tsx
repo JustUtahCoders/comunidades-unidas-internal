@@ -73,24 +73,28 @@ export default function ViewEditLeadServicesInfo(
         </LeadServicesInformationInputs>
       ) : (
         <>
-          <table className="lead-service-table">
-            <thead>
-              <tr>
-                <th>Name of Service</th>
-                <th>Program</th>
-              </tr>
-            </thead>
-            <tbody>
-              {lead.leadServices.map(service => {
-                return (
-                  <tr key={service.id}>
-                    <td align="left">{service.serviceName}</td>
-                    <td align="center">{service.programName}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          {lead.leadServices.length > 0 ? (
+            <table className="lead-service-table">
+              <thead>
+                <tr>
+                  <th>Name of Service</th>
+                  <th>Program</th>
+                </tr>
+              </thead>
+              <tbody>
+                {lead.leadServices.map(service => {
+                  return (
+                    <tr key={service.id}>
+                      <td align="left">{service.serviceName}</td>
+                      <td align="center">{service.programName}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          ) : (
+            <p>No have been services selected</p>
+          )}
           {props.editable && (
             <button
               className="secondary edit-button"

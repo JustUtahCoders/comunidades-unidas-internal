@@ -182,6 +182,12 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
 }
 
 const css = `
+@media print {
+  & .clients-table-toolbar {
+    display: none;
+  }
+}
+
 & .clients-table-toolbar {
   background-color: white;
   position: sticky;

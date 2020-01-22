@@ -57,12 +57,16 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
                     </Link>
                   </td>
                   <td className="capitalize">
-                    <Link to={`/leads/${lead.id}`} className="unstyled">
-                      {
-                        lead.eventSources[lead.eventSources.length - 1]
-                          .eventName
-                      }
-                    </Link>
+                    {lead.eventSources.length > 0 ? (
+                      <Link to={`/leads/${lead.id}`} className="unstyled">
+                        {
+                          lead.eventSources[lead.eventSources.length - 1]
+                            .eventName
+                        }
+                      </Link>
+                    ) : (
+                      "\u2014"
+                    )}
                   </td>
                   <td>
                     <Link to={`/leads/${lead.id}`} className="unstyled">
