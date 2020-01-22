@@ -114,8 +114,6 @@ app.post("/api/leads", (req, res) => {
       return databaseError(req, res, err);
     }
 
-    const leadIds = result.map(data => data.insertId).join(", ");
-
-    res.json({ message: `Created leads ${leadIds}.` });
+    res.json({ message: `Created ${leads.length} leads.` });
   });
 });

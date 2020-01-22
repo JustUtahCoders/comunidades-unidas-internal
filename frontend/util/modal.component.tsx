@@ -1,11 +1,25 @@
-import React from "react";
+import React, { DOMElement } from "react";
+import ReactDOM from "react-dom";
 import { useCss } from "kremling";
-import { mediaDesktop, mediaMobile } from "../styleguide.component";
+import Styleguide, { mediaDesktop, mediaMobile } from "../styleguide.component";
 
 export default function Modal(props: ModalProps) {
   const scope = useCss(css);
-  return (
-    <>
+  const [containerEl, setContainerEl] = React.useState<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const el = document.createElement("div");
+    el.id = "modal";
+    document.body.appendChild(el);
+    setContainerEl(el);
+  }, []);
+
+  if (!containerEl) {
+    return null;
+  }
+
+  return ReactDOM.createPortal(
+    <Styleguide>
       <div className="modal-screen" {...scope} />
       <div className="modal-dialog" {...scope}>
         <div className="modal-header">
@@ -33,7 +47,8 @@ export default function Modal(props: ModalProps) {
           </div>
         </div>
       </div>
-    </>
+    </Styleguide>,
+    containerEl
   );
 }
 
