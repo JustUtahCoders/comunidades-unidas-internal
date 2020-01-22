@@ -1,5 +1,10 @@
 import React from "react";
-import { LeadListLead, SortField, SortOrder } from "../lead-list.component";
+import {
+  LeadListLead,
+  SortField,
+  SortOrder,
+  SelectedLeads
+} from "../lead-list.component";
 import DesktopLeadsTable from "./desktop-leads-table.component";
 
 export default function LeadsTable(props: LeadsTableProps) {
@@ -13,4 +18,6 @@ export type LeadsTableProps = {
   newSortOrder: (sortField: SortField, sortOrder: SortOrder) => any;
   sortField: SortField;
   sortOrder: SortOrder;
+  selectedLeads: SelectedLeads;
+  setSelectedLeads: (selectedLeads: SelectedLeads) => any;
 };

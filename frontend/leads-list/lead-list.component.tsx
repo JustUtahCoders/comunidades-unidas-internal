@@ -7,9 +7,23 @@ import PageHeader from "../page-header.component";
 import ReportIssue from "../report-issue/report-issue.component";
 import LeadsTable from "./table/leads-table.component";
 import LeadsTableToolbar from "./toolbar/leads-table-toolbar.component";
+import Modal from "../util/modal.component";
 
 export default function LeadList(props: LeadListProps) {
+  const [modalOptions, setModalOptions] = React.useState({
+    isOpen: false,
+    headerText: null,
+    primaryText: null,
+    primaryAction: null,
+    secondaryText: null,
+    secondaryAction: null,
+    children: null
+  });
+
+  const [selectedLeads, setSelectedLeads] = React.useState<SelectedLeads>({});
+
   const featureEnabled = Boolean(localStorage.getItem("leads"));
+
   useFullWidth(featureEnabled);
 
   const [apiState, dispatchApiState] = React.useReducer(
@@ -37,6 +51,10 @@ export default function LeadList(props: LeadListProps) {
             fetchingLead={fetchingLead}
             refetchLeads={refetchLeads}
             setSearch={setSearch}
+            selectedLeads={selectedLeads}
+            setSelectedLeads={setSelectedLeads}
+            modalOptions={modalOptions}
+            setModalOptions={setModalOptions}
           />
           <LeadsTable
             leads={apiState.apiData.leads}
@@ -45,7 +63,30 @@ export default function LeadList(props: LeadListProps) {
             newSortOrder={newSortOrder}
             sortField={apiState.sortField}
             sortOrder={apiState.sortOrder}
+            selectedLeads={selectedLeads}
+            setSelectedLeads={setSelectedLeads}
           />
+          {modalOptions.isOpen === true && (
+            <Modal
+              close={() =>
+                setModalOptions({
+                  isOpen: false,
+                  headerText: null,
+                  primaryText: null,
+                  primaryAction: null,
+                  secondaryText: null,
+                  secondaryAction: null,
+                  children: null
+                })
+              }
+              headerText={modalOptions.headerText}
+              primaryText={modalOptions.primaryText}
+              primaryAction={modalOptions.primaryAction}
+              secondaryText={modalOptions.secondaryText}
+              secondaryAction={modalOptions.secondaryAction}
+              children={modalOptions.children}
+            />
+          )}
         </>
       ) : (
         <ReportIssue missingFeature hideHeader />
@@ -391,8 +432,10 @@ export type EventSources = {
 };
 
 export type LeadServices = {
-  id: number;
+  serviceId: number;
   serviceName: string;
+  programId: number;
+  programName: string;
 };
 
 export type LeadListLead = {
@@ -421,4 +464,8 @@ export type LeadListLead = {
     fullName: string;
     timestamp: string;
   };
+};
+
+export type SelectedLeads = {
+  [leadId: number]: LeadListLead;
 };
