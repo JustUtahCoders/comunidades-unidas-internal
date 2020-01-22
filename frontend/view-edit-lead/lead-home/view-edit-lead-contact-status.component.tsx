@@ -87,7 +87,7 @@ export default function ViewEditLeadContactStatus(
                 <td>First Contact Attempt:</td>
                 <td>
                   {lead.contactStage.first === null
-                    ? "Attempt not yet made"
+                    ? "\u2014"
                     : dayjs(lead.contactStage.first).format(
                         "YYYY-MM-DD h:mm a"
                       )}
@@ -97,7 +97,7 @@ export default function ViewEditLeadContactStatus(
                 <td>Second Contact Attempt:</td>
                 <td>
                   {lead.contactStage.second === null
-                    ? "Attempt not yet made"
+                    ? "\u2014"
                     : dayjs(lead.contactStage.second).format(
                         "YYYY-MM-DD h:mm a"
                       )}
@@ -107,7 +107,7 @@ export default function ViewEditLeadContactStatus(
                 <td>Third Contact Attempt:</td>
                 <td>
                   {lead.contactStage.third === null
-                    ? "Attempt not yet made"
+                    ? "\u2014"
                     : dayjs(lead.contactStage.third).format(
                         "YYYY-MM-DD h:mm a"
                       )}

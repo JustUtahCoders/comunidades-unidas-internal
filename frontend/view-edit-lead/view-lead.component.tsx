@@ -87,7 +87,10 @@ const css = `
   }
 
   & .edit-form {
-    width: 55%;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   & .edit-form > div {

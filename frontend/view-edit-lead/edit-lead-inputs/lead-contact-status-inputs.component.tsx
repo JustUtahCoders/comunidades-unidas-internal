@@ -2,8 +2,7 @@ import React from "react";
 import dateformat from "dateformat";
 import { useCss } from "kremling";
 import DateInput from "../../util/date-input.component";
-import ContactAttemptStatus from "./contact-attempt-input.component";
-import { first } from "lodash-es";
+import ContactAttemptInput from "./contact-attempt-input.component";
 
 export default function LeadContactStatusInputs(
   props: LeadContactStatusInputsProps
@@ -43,11 +42,11 @@ export default function LeadContactStatusInputs(
       <DateInput
         ref={dateInputRef}
         date={dateOfSignUp}
-        labelName="Date of sign-up"
+        labelName="Date of sign-up:"
       />
       <div>
         <label>
-          <span>Status</span>
+          <span>Status:</span>
           <select
             value={leadStatus}
             onChange={evt => setLeadStatus(evt.target.value)}
@@ -87,21 +86,21 @@ export default function LeadContactStatusInputs(
         <table className="attempt-table">
           <tbody>
             {firstContactAttempt && (
-              <ContactAttemptStatus
+              <ContactAttemptInput
                 contactAttempt={firstContactAttempt}
                 setContactAttempt={setFirstContactAttempt}
                 rowName="First attempt"
               />
             )}
             {secondContactAttempt && (
-              <ContactAttemptStatus
+              <ContactAttemptInput
                 contactAttempt={secondContactAttempt}
                 setContactAttempt={setSecondContactAttempt}
                 rowName="Second attempt"
               />
             )}
             {thirdContactAttempt && (
-              <ContactAttemptStatus
+              <ContactAttemptInput
                 contactAttempt={thirdContactAttempt}
                 setContactAttempt={setThirdContactAttempt}
                 rowName="Third attempt"
@@ -131,15 +130,15 @@ export default function LeadContactStatusInputs(
       contactStage: {
         first:
           firstContactAttempt !== null
-            ? dateformat(firstContactAttempt, "yyyy-mm-dd hh:MM:ss")
+            ? new Date(firstContactAttempt).toISOString()
             : null,
         second:
           secondContactAttempt !== null
-            ? dateformat(secondContactAttempt, "yyyy-mm-dd hh:MM:ss")
+            ? new Date(secondContactAttempt).toISOString()
             : null,
         third:
           thirdContactAttempt !== null
-            ? dateformat(thirdContactAttempt, "yyyy-mm-dd hh:MM:ss")
+            ? new Date(thirdContactAttempt).toISOString()
             : null
       },
       inactivityReason: inactivityReason
@@ -168,7 +167,7 @@ export default function LeadContactStatusInputs(
 
 const css = `
   & .contact-status-form {
-    width: 75%;
+    width: 85%;
   }
 
   & .no-contact-attempt {

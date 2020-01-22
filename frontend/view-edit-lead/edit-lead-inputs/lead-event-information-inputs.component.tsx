@@ -65,6 +65,12 @@ export default function LeadEventsInformationInputs(
 
   function handleSubmit(evt) {
     evt.preventDefault();
+
+    if (selectedEvent === 0) {
+      // "Select an event" option
+      return;
+    }
+
     return props.handleSubmit(evt, {
       eventSources: [...leadEvents, selectedEvent]
     });
