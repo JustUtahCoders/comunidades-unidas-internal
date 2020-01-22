@@ -1,185 +1,65 @@
 import React from "react";
 import { useCss } from "kremling";
-import preventiveHealthIcon from "../../../icons/148705-essential-collection/svg/003-caduceus.svg";
-import nutritionIcon from "../../../icons/148705-essential-collection/svg/009-fruit.svg";
-import immigrationIcon from "../../../icons/148705-essential-collection/svg/027-usa-today-2.svg";
-import financeIcon from "../../../icons/148705-essential-collection/svg/038-money-2.svg";
-import workerRightsIcon from "../../../icons/148705-essential-collection/svg/064-hand-holding-up-a-wrench.svg";
-import familySupportIcon from "../../../icons/148705-essential-collection/svg/061-family-house.svg";
-import communityEngagementIcon from "../../../icons/148705-essential-collection/svg/055-megaphone.svg";
-import focusGroupsIcon from "../../../icons/148705-essential-collection/svg/070-lightbulb-idea.svg";
+import preventiveHealthIcon from "../../../icons/services-icons/svg/003-caduceus.svg";
+import nutritionIcon from "../../../icons/services-icons/svg/009-fruit.svg";
+import immigrationIcon from "../../../icons/services-icons/svg/027-usa-today-2.svg";
+import financeIcon from "../../../icons/services-icons/svg/038-money-2.svg";
+import workerRightsIcon from "../../../icons/services-icons/svg/064-hand-holding-up-a-wrench.svg";
+import familySupportIcon from "../../../icons/services-icons/svg/061-family-house.svg";
+import communityEngagementIcon from "../../../icons/services-icons/svg/055-megaphone.svg";
+import focusGroupsIcon from "../../../icons/services-icons/svg/070-lightbulb-idea.svg";
+import unknownIcon from "../../../icons/148705-essential-collection/svg/info.svg";
+import { LeadServices } from "../lead-list.component";
+import { groupBy } from "lodash-es";
 
 export default function LeadServicesCell(props: LeadServicesCellProps) {
   const { leadServices } = props;
-
-  const [healthServices, setHealthServices] = React.useState<HealthService[]>(
-    []
-  );
-  const [nutritionServices, setNutritionServices] = React.useState<
-    NutritionService[]
-  >([]);
-  const [immigrationServices, setImmigrationServices] = React.useState<
-    ImmigrationService[]
-  >([]);
-  const [financialServices, setFinancialServices] = React.useState<
-    FinancialService[]
-  >([]);
-  const [workersRightsServices, setWorkersRightsServices] = React.useState<
-    WorkersRightsService[]
-  >([]);
-  const [familySupportServices, setFamilySupportServices] = React.useState<
-    FamilySupportService[]
-  >([]);
-  const [
-    communityEngagementServices,
-    setCommunityEngagementServices
-  ] = React.useState<CommunityEngagementService[]>([]);
-  const [focusGroupServices, setFocusGroupServices] = React.useState<
-    FocusGroupService[]
-  >([]);
-
   const scope = useCss(css);
-
-  React.useEffect(() => {
-    const filterHealthServices = leadServices.filter(
-      service => service.programId === 1
-    );
-    setHealthServices(filterHealthServices);
-
-    const filterNutritionServices = leadServices.filter(
-      service => service.programId === 2
-    );
-    setNutritionServices(filterNutritionServices);
-
-    const filterImmigrationServices = leadServices.filter(
-      service => service.programId === 3
-    );
-    setImmigrationServices(filterImmigrationServices);
-
-    const filterFinancialServices = leadServices.filter(
-      service => service.programId === 4
-    );
-    setFinancialServices(filterFinancialServices);
-
-    const filterWorkersRightsServices = leadServices.filter(
-      service => service.programId === 5
-    );
-    setWorkersRightsServices(filterWorkersRightsServices);
-
-    const filterFamilySupportServices = leadServices.filter(
-      service => service.programId === 6
-    );
-    setFamilySupportServices(filterFamilySupportServices);
-
-    const filterCommunityServices = leadServices.filter(
-      service => service.programId === 7
-    );
-    setCommunityEngagementServices(filterCommunityServices);
-
-    const filterFocusGroupServices = leadServices.filter(
-      service => service.programId === 8
-    );
-    setFocusGroupServices(filterFocusGroupServices);
-  }, []);
+  const leadServicesByName = groupBy(leadServices, "programName");
 
   return (
     <>
-      {leadServices.length > 0 ? (
-        <div className="programs-cell" {...scope}>
-          {healthServices.length > 0 && (
+      <div className="programs-cell" {...scope}>
+        {leadServices.length > 0 ? (
+          Object.keys(leadServicesByName).map(programName => (
             <div className="icon-container">
               <img
                 className="program-icon"
-                alt="health-icon"
-                src={preventiveHealthIcon}
-                title="Preventive Health"
+                alt={`icon - ${leadServicesByName}`}
+                src={getIconUrl(programName)}
+                title={`${programName} (${leadServicesByName[programName].length})`}
               />
-              <span>( {healthServices.length} )</span>
             </div>
-          )}
-          {nutritionServices.length > 0 && (
-            <div className="icon-container">
-              <img
-                className="program-icon"
-                alt="nutrition-icon"
-                src={nutritionIcon}
-                title="Nutrition / CRYS / SNAP"
-              />
-              <span>( {nutritionServices.length} )</span>
-            </div>
-          )}
-          {immigrationServices.length > 0 && (
-            <div className="icon-container">
-              <img
-                className="program-icon"
-                alt="immigration-icon"
-                src={immigrationIcon}
-                title="Immigration"
-              />
-              <span>( {immigrationServices.length} )</span>
-            </div>
-          )}
-          {financialServices.length > 0 && (
-            <div className="icon-container">
-              <img
-                className="program-icon"
-                alt="financial-icon"
-                src={financeIcon}
-                title="Financial Education / Coaching"
-              />
-              <span>( {financialServices.length} )</span>
-            </div>
-          )}
-          {workersRightsServices.length > 0 && (
-            <div className="icon-container">
-              <img
-                className="program-icon"
-                alt="workers-rights-icon"
-                src={workerRightsIcon}
-                title="Workers' Rights"
-              />
-              <span>( {workersRightsServices.length} )</span>
-            </div>
-          )}
-          {familySupportServices.length > 0 && (
-            <div className="icon-container">
-              <img
-                className="program-icon"
-                alt="family-services-icon"
-                src={familySupportIcon}
-                title="Family Support"
-              />
-              <span>( {familySupportServices.length} )</span>
-            </div>
-          )}
-          {communityEngagementServices.length > 0 && (
-            <div className="icon-container">
-              <img
-                className="program-icon"
-                alt="community-engagement-icon"
-                src={communityEngagementIcon}
-                title="Community Engagement and Organizing"
-              />
-              <span>( {communityEngagementServices.length} )</span>
-            </div>
-          )}
-          {focusGroupServices.length > 0 && (
-            <div className="icon-container">
-              <img
-                className="program-icon"
-                alt="focus-groups-icon"
-                src={focusGroupsIcon}
-                title="Focus Group"
-              />
-              <span>( {focusGroupServices.length} )</span>
-            </div>
-          )}
-        </div>
-      ) : (
-        <p>No services selected</p>
-      )}
+          ))
+        ) : (
+          <p>{"\u2014"}</p>
+        )}
+      </div>
     </>
   );
+
+  function getIconUrl(programName) {
+    switch (programName) {
+      case "Preventive Health":
+        return preventiveHealthIcon;
+      case "Nutrition / CRYS / SNAP":
+        return nutritionIcon;
+      case "Immigration":
+        return immigrationIcon;
+      case "Financial Education / Coaching":
+        return financeIcon;
+      case "Workers' Rights":
+        return workerRightsIcon;
+      case "Family Support":
+        return familySupportIcon;
+      case "Community Engagement and Organizing":
+        return communityEngagementIcon;
+      case "Focus Groups":
+        return focusGroupsIcon;
+      default:
+        return unknownIcon;
+    }
+  }
 }
 
 const css = `
@@ -207,68 +87,5 @@ const css = `
 `;
 
 type LeadServicesCellProps = {
-  leadServices: Array<LeadService>;
-};
-
-type LeadService = {
-  id?: number;
-  serviceName?: string;
-  programId?: number;
-  programName?: string;
-};
-
-type HealthService = {
-  id?: number;
-  serviceName?: string;
-  programId?: number;
-  programName?: string;
-};
-
-type NutritionService = {
-  id?: number;
-  serviceName?: string;
-  programId?: number;
-  programName?: string;
-};
-
-type ImmigrationService = {
-  id?: number;
-  serviceName?: string;
-  programId?: number;
-  programName?: string;
-};
-
-type FinancialService = {
-  id?: number;
-  serviceName?: string;
-  programId?: number;
-  programName?: string;
-};
-
-type WorkersRightsService = {
-  id?: number;
-  serviceName?: string;
-  programId?: number;
-  programName?: string;
-};
-
-type FamilySupportService = {
-  id?: number;
-  serviceName?: string;
-  programId?: number;
-  programName?: string;
-};
-
-type CommunityEngagementService = {
-  id?: number;
-  serviceName?: string;
-  programId?: number;
-  programName?: string;
-};
-
-type FocusGroupService = {
-  id?: number;
-  serviceName?: string;
-  programId?: number;
-  programName?: string;
+  leadServices: Array<LeadServices>;
 };
