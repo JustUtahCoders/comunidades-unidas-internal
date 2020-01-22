@@ -15,6 +15,7 @@ import AddClientInteraction from "./view-edit-client/interactions/add-client-int
 import AddLeads from "./add-leads/add-leads.component";
 import LeadList from "./leads-list/lead-list.component";
 import ViewLead from "./view-edit-lead/view-lead.component";
+import NotFound from "./not-found/not-found.component";
 
 export default function Root() {
   return (
@@ -22,6 +23,7 @@ export default function Root() {
       <Styleguide>
         <Router basepath="/" primary>
           <Navbars path="/">
+            <NotFound path="*" />
             <Home path="/" />
             <AddClient path="add-client" />
             <ClientList path="client-list" />
