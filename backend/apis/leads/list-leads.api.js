@@ -63,7 +63,7 @@ app.get("/api/leads", (req, res, next) => {
 
   if (req.query.id) {
     whereClause += `AND leads.id = ? `;
-    whereClauseValues.push(req.query.id);
+    whereClauseValues.push(Number(req.query.id));
   }
 
   if (req.query.phone) {
@@ -96,11 +96,11 @@ app.get("/api/leads", (req, res, next) => {
           AND leadEvents.eventId IN (
               SELECT id 
               FROM events 
-              WHERE eventId = events.id
+              WHERE eventId = ?
             )
       ) > 0
     `;
-    whereClauseValues.push(req.query.event);
+    whereClauseValues.push(Number(req.query.event));
   }
 
   const sortOrder = req.query.sortOrder === "desc" ? "DESC" : "ASC";
