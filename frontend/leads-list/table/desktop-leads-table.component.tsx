@@ -1,24 +1,76 @@
 import React from "react";
 import { Link } from "@reach/router";
-import { useCss } from "kremling";
+import { useCss, a } from "kremling";
 import dateformat from "dateformat";
 import { LeadsTableProps } from "./leads-table.component";
+import {
+  reversedSortOrder,
+  SortField,
+  SortOrder
+} from "../lead-list.component";
 import { formatPhone } from "../../util/formatters";
+import LeadServicesCell from "./lead-services-cell.component";
 import targetImg from "../../../icons/148705-essential-collection/svg/target.svg";
+import { startCase } from "lodash-es";
 
 export default function DesktopLeadsTable(props: LeadsTableProps) {
   const scope = useCss(css);
+  const [selectAll, setSelectAll] = React.useState(false);
+
+  React.useEffect(() => {
+    if (selectAll) {
+      props.setSelectedLeads(
+        props.leads.reduce((result, lead) => {
+          result[lead.id] = lead;
+          return result;
+        }, {})
+      );
+    } else {
+      props.setSelectedLeads({});
+    }
+  }, [selectAll, props.leads]);
 
   return (
     <div className="table-container" {...scope}>
       <table className="leads-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Name</th>
+            <th>
+              <input
+                type="checkbox"
+                checked={selectAll}
+                onChange={evt => setSelectAll(evt.target.checked)}
+                name="select-all"
+                aria-label="Select all leads"
+              />
+            </th>
+            <th>
+              <button
+                className="unstyled"
+                onClick={sortColumnClicked(SortField.id)}
+              >
+                ID{sortableColumnIcon(SortField.id)}
+              </button>
+            </th>
+            <th>
+              <button className="unstyled" onClick={sortNameClicked}>
+                {props.sortField === SortField.firstName ||
+                props.sortField === SortField.lastName
+                  ? startCase(props.sortField)
+                  : "Name"}
+                {sortableColumnIcon(SortField.firstName, SortField.lastName)}
+              </button>
+            </th>
             <th>Phone</th>
             <th>Event</th>
-            <th>Signup Date</th>
+            <th>
+              <button
+                className="unstyled"
+                onClick={sortColumnClicked(SortField.dateOfSignUp)}
+              >
+                Signup Date{sortableColumnIcon(SortField.dateOfSignUp)}
+              </button>
+            </th>
             <th>Status</th>
             <th>Interests</th>
           </tr>
@@ -40,6 +92,16 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
             props.leads.map(lead => {
               return (
                 <tr key={lead.id}>
+                  <td onClick={() => handleCheckBoxChange(lead)}>
+                    <input
+                      type="checkbox"
+                      name="lead-checked"
+                      aria-label={`Selected ${lead.fullName}`}
+                      value={lead.id}
+                      checked={Boolean(props.selectedLeads[lead.id])}
+                      onChange={() => {}}
+                    />
+                  </td>
                   <td>
                     <Link to={`/leads/${lead.id}`} className="unstyled">
                       {lead.id}
@@ -56,12 +118,16 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
                     </Link>
                   </td>
                   <td className="capitalize">
-                    <Link to={`/leads/${lead.id}`} className="unstyled">
-                      {
-                        lead.eventSources[lead.eventSources.length - 1]
-                          .eventName
-                      }
-                    </Link>
+                    {lead.eventSources.length > 0 ? (
+                      <Link to={`/leads/${lead.id}`} className="unstyled">
+                        {
+                          lead.eventSources[lead.eventSources.length - 1]
+                            .eventName
+                        }
+                      </Link>
+                    ) : (
+                      "\u2014"
+                    )}
                   </td>
                   <td>
                     <Link to={`/leads/${lead.id}`} className="unstyled">
@@ -83,13 +149,7 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
                   </td>
                   <td className="interests-cell">
                     <Link to={`/leads/${lead.id}`} className="unstyled">
-                      <ul>
-                        {lead.leadServices.map(service => {
-                          return (
-                            <li key={service.id}>{service.serviceName}</li>
-                          );
-                        })}
-                      </ul>
+                      <LeadServicesCell leadServices={lead.leadServices} />
                     </Link>
                   </td>
                 </tr>
@@ -173,6 +233,58 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
       return "Status unknown";
     }
   }
+
+  function sortColumnClicked(sortField: SortField) {
+    return () => {
+      if (props.sortField === sortField) {
+        props.newSortOrder(sortField, reversedSortOrder(props.sortOrder));
+      } else {
+        props.newSortOrder(sortField, SortOrder.ascending);
+      }
+    };
+  }
+
+  function sortNameClicked() {
+    if (props.sortField === SortField.firstName) {
+      if (props.sortOrder === SortOrder.ascending) {
+        props.newSortOrder(SortField.firstName, SortOrder.descending);
+      } else {
+        props.newSortOrder(SortField.lastName, SortOrder.ascending);
+      }
+    } else if (props.sortField === SortField.lastName) {
+      if (props.sortOrder === SortOrder.ascending) {
+        props.newSortOrder(SortField.lastName, SortOrder.descending);
+      } else {
+        props.newSortOrder(SortField.firstName, SortOrder.ascending);
+      }
+    } else {
+      props.newSortOrder(SortField.lastName, SortOrder.ascending);
+    }
+  }
+
+  function sortableColumnIcon(...sortFields: SortField[]) {
+    return (
+      <span
+        className={a("sort-icon").m(
+          "visible",
+          sortFields.includes(props.sortField)
+        )}
+      >
+        {props.sortOrder === SortOrder.ascending ? "\u2191" : "\u2193"}
+      </span>
+    );
+  }
+
+  function handleCheckBoxChange(lead) {
+    const newSelectedLeads = Object.assign({}, props.selectedLeads);
+    if (props.selectedLeads[lead.id]) {
+      delete newSelectedLeads[lead.id];
+    } else {
+      newSelectedLeads[lead.id] = lead;
+    }
+
+    props.setSelectedLeads(newSelectedLeads);
+  }
 }
 
 const css = `
@@ -185,20 +297,22 @@ const css = `
     width: 100%;
     height: 100%;
     border-spacing: 0;
+    font-size: 1.5rem;
   }
 
   & .leads-table th {
     position: sticky;
-    top: 6rem;
-    background-color: var(--very-light-grey);
+    top: 5.5rem;
+    background-color: var(--very-light-gray);
     box-shadow: 0 .2rem 0.2rem var(--medium-gray);
     padding: 0 1rem 0 1rem;
+    font-size: 1.5rem;
   }
 
   & .leads-table th button {
     display: block !important;
     width: 100% !important;
-    height: 6rem !important;
+    height: 4rem !important;
     cursor: pointer;
   }
 
@@ -211,7 +325,7 @@ const css = `
   }
 
   & .leads-table thead tr {
-    height: 6rem;
+    height: 4rem;
   }
 
   & .leads-table tbody {
@@ -296,4 +410,7 @@ const css = `
     margin-bottom: 0.75rem;
   }
 
+  button {
+    outline: none;
+  }
 `;

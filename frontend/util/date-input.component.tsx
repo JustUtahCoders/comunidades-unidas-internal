@@ -1,17 +1,18 @@
 import React from "react";
+import dateformat from "dateformat";
 import { useCss } from "kremling";
 
-export default React.forwardRef<IntakeDateInputRef, IntakeDateInputProps>(
-  function IntakeDateInput(props: IntakeDateInputProps, ref) {
-    const [date, setDate] = React.useState(props.date);
+export default React.forwardRef<DateInputRef, DateInputProps>(
+  function DateInput(props: DateInputProps, ref) {
+    const [date, setDate] = React.useState(props.date || null);
     const scope = useCss(css);
 
     return (
       <div {...scope}>
         <label>
-          <span className="intake-span">Intake Date</span>
+          <span className="intake-span">{props.labelName}</span>
           <input
-            type="date"
+            type={"date"}
             value={date}
             onChange={evt => setDate(evt.target.value)}
             ref={ref}
@@ -28,8 +29,9 @@ const css = `
   }
 `;
 
-type IntakeDateInputProps = {
+type DateInputProps = {
   date: string;
+  labelName: string;
 };
 
-type IntakeDateInputRef = HTMLInputElement;
+type DateInputRef = HTMLInputElement;
