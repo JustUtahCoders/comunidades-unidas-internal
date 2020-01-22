@@ -1,10 +1,9 @@
 import React from "react";
 import easyFetch from "../util/easy-fetch";
-import { useCss, always } from "kremling";
-import { Link, Router } from "@reach/router";
+import { useCss } from "kremling";
+import { Router } from "@reach/router";
 import PageHeader from "../page-header.component";
 import LeadHome from "./lead-home/lead-home.component";
-import StickySecondaryNav from "../navbar/sticky-secondary-nav.component";
 
 export default function ViewLead(props: ViewLeadProps) {
   const [lead, setLead] = React.useState<SingleLead>(null);
