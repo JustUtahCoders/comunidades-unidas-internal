@@ -20,7 +20,7 @@ export const mediaDesktop: String = `@media screen and (min-width: 800px)`;
 
 const css = `
 :root {
-  font-size: 10px;
+  font-size: 62.5%;
   font-family: 'Montserrat', sans-serif;
   background-color: #efefef;
   --very-light-gray: #F3F3F3;

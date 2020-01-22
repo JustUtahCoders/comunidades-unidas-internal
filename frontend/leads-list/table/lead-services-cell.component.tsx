@@ -22,7 +22,7 @@ export default function LeadServicesCell(props: LeadServicesCellProps) {
       <div className="programs-cell" {...scope}>
         {leadServices.length > 0 ? (
           Object.keys(leadServicesByName).map(programName => (
-            <div className="icon-container">
+            <div className="icon-container" key={programName}>
               <img
                 className="program-icon"
                 alt={`icon - ${leadServicesByName}`}

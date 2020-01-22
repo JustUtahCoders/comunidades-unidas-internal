@@ -5,6 +5,7 @@ import ViewEditLeadEventInfo from "./view-edit-lead-event-info.component";
 import ViewEditLeadContactInfo from "./view-edit-lead-contact-info.component";
 import ViewEditLeadContactStatus from "./view-edit-lead-contact-status.component";
 import ViewEditLeadServicesInfo from "./view-edit-lead-services-info.component";
+import ConvertToClientCard from "./convert-to-client-card.component";
 
 export default function LeadHome(props: LeadHomeProps) {
   const { lead, setLead } = props;
@@ -20,6 +21,7 @@ export default function LeadHome(props: LeadHomeProps) {
       <ViewEditLeadContactStatus lead={lead} leadUpdated={setLead} />
       <ViewEditLeadServicesInfo lead={lead} leadUpdated={setLead} />
       <ViewEditLeadEventInfo lead={lead} leadUpdated={setLead} />
+      <ConvertToClientCard lead={lead} />
     </div>
   );
 }

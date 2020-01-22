@@ -184,53 +184,44 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
     inactivityReason
   ) {
     if (leadStatus === "convertedToClient") {
-      return `Converted to client (see client #${clientId}`;
+      return `Client #${clientId}`;
     } else if (leadStatus === "active") {
       if (contactStage.first === null) {
-        return "Not yet contacted";
+        return "No contact";
+      } else if (contactStage.second === null) {
+        return (
+          <span title={dateformat(contactStage.first, "m/d/yyyy")}>1 call</span>
+        );
+      } else if (contactStage.third === null) {
+        return (
+          <span title={dateformat(contactStage.second, "m/d/yyyy")}>
+            2 calls
+          </span>
+        );
       } else {
-        if (contactStage.second === null) {
-          return `First contact attempt made on ${dateformat(
-            contactStage.first,
-            "m/d/yyyy"
-          )}`;
-        } else {
-          if (contactStage.third === null) {
-            return `Second contact attempt made on ${dateformat(
-              contactStage.second,
-              "m/d/yyyy"
-            )}`;
-          } else {
-            return `Third contact attempt made on ${dateformat(
-              contactStage.third,
-              "m/d/yyyy"
-            )}`;
-          }
-        }
+        return (
+          <span title={dateformat(contactStage.third, "m/d/yyyy")}>
+            3 calls
+          </span>
+        );
       }
     } else if (leadStatus === "inactive") {
       switch (inactivityReason) {
         case "doNotCallRequest":
-          return "Do not call request";
-          break;
+          return "Do not call";
         case "threeAttemptsNoResponse":
-          return "Three attempts made, no response";
-          break;
+          return "No response";
         case "wrongNumber":
           return "Wrong number";
-          break;
         case "noLongerInterested":
-          return "No longer interested";
-          break;
+          return "Not interested";
         case "relocated":
-          return "No longer in Utah";
-          break;
+          return "Relocated";
         default:
-          return "Inactive - no reason provided";
-          break;
+          return "Inactive";
       }
     } else {
-      return "Status unknown";
+      return "Unknown";
     }
   }
 

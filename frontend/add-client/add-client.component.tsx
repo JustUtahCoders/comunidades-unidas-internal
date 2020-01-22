@@ -23,7 +23,9 @@ export default function AddClient(props: AddClientProps) {
   const scope = useCss(css);
 
   const [step, setStep] = useState<Step>(Step.CHECK_DUPLICATE);
-  const [clientState, setClientState] = useState<ClientState>({});
+  const [clientState, setClientState] = useState<ClientState>(
+    props.initialClientState || {}
+  );
   const [duplicateWarning, setDuplicateWarning] = useState<DuplicateWarning>(
     null
   );
@@ -104,6 +106,7 @@ const stepComponents = {
 
 type AddClientProps = {
   path: string;
+  initialClientState?: ClientState;
 };
 
 export type ClientState = {
