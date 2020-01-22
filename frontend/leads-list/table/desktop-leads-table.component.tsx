@@ -4,6 +4,7 @@ import { useCss } from "kremling";
 import dateformat from "dateformat";
 import { LeadsTableProps } from "./leads-table.component";
 import { formatPhone } from "../../util/formatters";
+import LeadServicesCell from "./lead-services-cell.component";
 import targetImg from "../../../icons/148705-essential-collection/svg/target.svg";
 
 export default function DesktopLeadsTable(props: LeadsTableProps) {
@@ -87,15 +88,7 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
                   </td>
                   <td className="interests-cell">
                     <Link to={`/leads/${lead.id}`} className="unstyled">
-                      <ul>
-                        {lead.leadServices.map(service => {
-                          return (
-                            <li key={service.serviceId}>
-                              {service.serviceName}
-                            </li>
-                          );
-                        })}
-                      </ul>
+                      <LeadServicesCell leadServices={lead.leadServices} />
                     </Link>
                   </td>
                 </tr>
@@ -191,20 +184,22 @@ const css = `
     width: 100%;
     height: 100%;
     border-spacing: 0;
+    font-size: 1.5rem;
   }
 
   & .leads-table th {
     position: sticky;
-    top: 6rem;
-    background-color: var(--very-light-grey);
+    top: 5.5rem;
+    background-color: var(--very-light-gray);
     box-shadow: 0 .2rem 0.2rem var(--medium-gray);
     padding: 0 1rem 0 1rem;
+    font-size: 1.5rem;
   }
 
   & .leads-table th button {
     display: block !important;
     width: 100% !important;
-    height: 6rem !important;
+    height: 4rem !important;
     cursor: pointer;
   }
 
@@ -217,7 +212,7 @@ const css = `
   }
 
   & .leads-table thead tr {
-    height: 6rem;
+    height: 4rem;
   }
 
   & .leads-table tbody {

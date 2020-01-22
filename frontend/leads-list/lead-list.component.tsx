@@ -328,6 +328,8 @@ export type EventSources = {
 export type LeadServices = {
   serviceId: number;
   serviceName: string;
+  programId: number;
+  programName: string;
 };
 
 export type LeadListLead = {
