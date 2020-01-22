@@ -9,12 +9,35 @@ import targetImg from "../../../icons/148705-essential-collection/svg/target.svg
 
 export default function DesktopLeadsTable(props: LeadsTableProps) {
   const scope = useCss(css);
+  const [selectAll, setSelectAll] = React.useState(false);
+
+  React.useEffect(() => {
+    if (selectAll) {
+      props.setSelectedLeads(
+        props.leads.reduce((result, lead) => {
+          result[lead.id] = lead;
+          return result;
+        }, {})
+      );
+    } else {
+      props.setSelectedLeads({});
+    }
+  }, [selectAll, props.leads]);
 
   return (
     <div className="table-container" {...scope}>
       <table className="leads-table">
         <thead>
           <tr>
+            <th>
+              <input
+                type="checkbox"
+                checked={selectAll}
+                onChange={evt => setSelectAll(evt.target.checked)}
+                name="select-all"
+                aria-label="Select all leads"
+              />
+            </th>
             <th>ID</th>
             <th>Name</th>
             <th>Phone</th>
@@ -41,6 +64,16 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
             props.leads.map(lead => {
               return (
                 <tr key={lead.id}>
+                  <td onClick={() => handleCheckBoxChange(lead)}>
+                    <input
+                      type="checkbox"
+                      name="lead-checked"
+                      aria-label={`Selected ${lead.fullName}`}
+                      value={lead.id}
+                      checked={Boolean(props.selectedLeads[lead.id])}
+                      onChange={() => {}}
+                    />
+                  </td>
                   <td>
                     <Link to={`/leads/${lead.id}`} className="unstyled">
                       {lead.id}
@@ -171,6 +204,16 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
     } else {
       return "Status unknown";
     }
+  }
+
+  function handleCheckBoxChange(lead) {
+    const newSelectedLeads = Object.assign({}, props.selectedLeads);
+    if (props.selectedLeads[lead.id]) {
+      delete newSelectedLeads[lead.id];
+    } else {
+      newSelectedLeads[lead.id] = lead;
+    }
+    props.setSelectedLeads(newSelectedLeads);
   }
 }
 
