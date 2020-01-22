@@ -188,6 +188,8 @@ app.get("/api/leads", (req, res, next) => {
         return databaseError(req, res, err);
       }
 
+      console.log("results", results);
+
       const leads = leadRows.map((lead, i) => {
         let leadServices = [];
         let leadEvents = [];
@@ -260,7 +262,7 @@ app.get("/api/leads", (req, res, next) => {
       });
 
       res.send({
-        leads: [...leads],
+        leads,
         pagination: {
           currentPage: zeroBasedPage + 1,
           pageSize,
