@@ -18,6 +18,7 @@ import ViewLead from "./view-edit-lead/view-lead.component";
 import NotFound from "./not-found/not-found.component";
 import ViewEvent from "./view-edit-events/view-event.component";
 import EventList from "./event-list/event-list.component";
+import ConvertLead from "./view-edit-lead/convert-lead-to-client.component";
 
 export default function Root() {
   return (
@@ -34,6 +35,7 @@ export default function Root() {
             <AddCaseNote isGlobalAdd path="add-case-note" />
             <LeadList path="lead-list" />
             <ViewLead path="leads/:leadId" />
+            <ConvertLead path="leads/:leadId/convert-to-client" />
             <ReportIssue path="report-issue" />
             <ReportIssueSuccess path="report-issue/:issueId" />
             <AddLeads path="add-leads/*" />

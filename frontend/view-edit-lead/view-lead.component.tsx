@@ -4,6 +4,7 @@ import { useCss, always } from "kremling";
 import { Link, Router } from "@reach/router";
 import PageHeader from "../page-header.component";
 import LeadHome from "./lead-home/lead-home.component";
+import StickySecondaryNav from "../navbar/sticky-secondary-nav.component";
 
 export default function ViewLead(props: ViewLeadProps) {
   const [lead, setLead] = React.useState<SingleLead>(null);
@@ -50,12 +51,6 @@ export default function ViewLead(props: ViewLeadProps) {
     }
   }
 
-  function getLinkProps({ isCurrent }) {
-    return {
-      className: always("secondary-nav-link").maybe("active", isCurrent)
-    };
-  }
-
   function fetchLead() {
     const abortController = new AbortController();
 
@@ -72,14 +67,6 @@ export default function ViewLead(props: ViewLeadProps) {
       });
 
     return () => abortController.abort();
-  }
-
-  function possessiveLeadName() {
-    if (lead) {
-      return lead.firstName + (lead.firstName.endsWith("s") ? "'" : "'s");
-    } else {
-      return "Lead's";
-    }
   }
 }
 
