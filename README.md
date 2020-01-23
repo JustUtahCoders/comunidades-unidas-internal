@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/JustUtahCoders/comunidades-unidas-internal.svg?branch=master)](https://travis-ci.org/JustUtahCoders/comunidades-unidas-internal)
 
-The code for comunidades unidas internal website
+The code for comunidades unidas internal website.
 
 This project uses Node + Express to interact with a MySQL Database and provide JSON APIs. The frontend is a React SPA that uses Typescript, babel, and webpack.
 
