@@ -22,9 +22,7 @@ export default function LeadList(props: LeadListProps) {
 
   const [selectedLeads, setSelectedLeads] = React.useState<SelectedLeads>({});
 
-  const featureEnabled = Boolean(localStorage.getItem("leads"));
-
-  useFullWidth(featureEnabled);
+  useFullWidth(true);
 
   const [apiState, dispatchApiState] = React.useReducer(
     reduceApiState,
@@ -40,56 +38,50 @@ export default function LeadList(props: LeadListProps) {
 
   return (
     <>
-      <PageHeader title="Lead List" fullScreen={featureEnabled} />
-      {localStorage.getItem("leads") ? (
-        <>
-          <LeadsTableToolbar
-            numLeads={apiState.apiData.pagination.numLeads}
-            page={apiState.page}
-            pageSize={apiState.apiData.pagination.pageSize}
-            setPage={newPage}
-            fetchingLead={fetchingLead}
-            refetchLeads={refetchLeads}
-            setSearch={setSearch}
-            selectedLeads={selectedLeads}
-            setSelectedLeads={setSelectedLeads}
-            modalOptions={modalOptions}
-            setModalOptions={setModalOptions}
-          />
-          <LeadsTable
-            leads={apiState.apiData.leads}
-            fetchingLeads={fetchingLead}
-            page={apiState.page}
-            newSortOrder={newSortOrder}
-            sortField={apiState.sortField}
-            sortOrder={apiState.sortOrder}
-            selectedLeads={selectedLeads}
-            setSelectedLeads={setSelectedLeads}
-          />
-          {modalOptions.isOpen === true && (
-            <Modal
-              close={() =>
-                setModalOptions({
-                  isOpen: false,
-                  headerText: null,
-                  primaryText: null,
-                  primaryAction: null,
-                  secondaryText: null,
-                  secondaryAction: null,
-                  children: null
-                })
-              }
-              headerText={modalOptions.headerText}
-              primaryText={modalOptions.primaryText}
-              primaryAction={modalOptions.primaryAction}
-              secondaryText={modalOptions.secondaryText}
-              secondaryAction={modalOptions.secondaryAction}
-              children={modalOptions.children}
-            />
-          )}
-        </>
-      ) : (
-        <ReportIssue missingFeature hideHeader />
+      <PageHeader title="Lead List" fullScreen={true} />
+      <LeadsTableToolbar
+        numLeads={apiState.apiData.pagination.numLeads}
+        page={apiState.page}
+        pageSize={apiState.apiData.pagination.pageSize}
+        setPage={newPage}
+        fetchingLead={fetchingLead}
+        refetchLeads={refetchLeads}
+        setSearch={setSearch}
+        selectedLeads={selectedLeads}
+        setSelectedLeads={setSelectedLeads}
+        modalOptions={modalOptions}
+        setModalOptions={setModalOptions}
+      />
+      <LeadsTable
+        leads={apiState.apiData.leads}
+        fetchingLeads={fetchingLead}
+        page={apiState.page}
+        newSortOrder={newSortOrder}
+        sortField={apiState.sortField}
+        sortOrder={apiState.sortOrder}
+        selectedLeads={selectedLeads}
+        setSelectedLeads={setSelectedLeads}
+      />
+      {modalOptions.isOpen === true && (
+        <Modal
+          close={() =>
+            setModalOptions({
+              isOpen: false,
+              headerText: null,
+              primaryText: null,
+              primaryAction: null,
+              secondaryText: null,
+              secondaryAction: null,
+              children: null
+            })
+          }
+          headerText={modalOptions.headerText}
+          primaryText={modalOptions.primaryText}
+          primaryAction={modalOptions.primaryAction}
+          secondaryText={modalOptions.secondaryText}
+          secondaryAction={modalOptions.secondaryAction}
+          children={modalOptions.children}
+        />
       )}
     </>
   );
