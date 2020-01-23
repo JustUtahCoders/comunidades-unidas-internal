@@ -47,20 +47,26 @@ export default function Reports(props: ReportsProps) {
               title="Interactions by Service"
             />
             <InteractionsByServiceResults path="interactions-by-service/results" />
-            <PovertyLineParams path="poverty-line" title="Poverty Line" />
+            <PovertyLineParams
+              path="poverty-line"
+              title="Client Poverty Line"
+            />
             <PovertyLineResults path="poverty-line/results" />
-            <GenderParams path="genders" title="Gender" />
+            <GenderParams path="genders" title="Client Gender" />
             <GenderResults path="genders/results" />
-            <EnglishLevelsParams path="english-levels" title="English Levels" />
+            <EnglishLevelsParams
+              path="english-levels"
+              title="Client English Levels"
+            />
             <EnglishLevelsResults path="english-levels/results" />
             <CountryOfOriginParams
               path="countries-of-origin"
-              title="Countries of Origin"
+              title="Client Countries of Origin"
             />
             <CountryOfOriginResults path="countries-of-origin/results" />
             <ClientSourcesParams path="client-sources" title="Client Sources" />
             <ClientSourcesResults path="client-sources/results" />
-            <AgesParams path="ages" title="Client Age" />
+            <AgesParams path="ages" title="Age" />
             <AgesResults path="ages/results" />
           </Router>
         </SelectReport>

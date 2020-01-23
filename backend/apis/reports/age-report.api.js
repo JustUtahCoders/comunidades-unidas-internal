@@ -28,6 +28,20 @@ app.get(`/api/reports/ages`, (req, res) => {
       GROUP BY ageRange
       ORDER BY ageRange ASC
       ;
+
+      SELECT COUNT(*) total, CASE
+        WHEN age between 0 and 17 then '0-17'
+        WHEN age between 18 and 24 then '18-24'
+        WHEN age between 25 and 34 then '25-34'
+        WHEN age between 35 and 44 then '35-44'
+        WHEN age between 45 and 54 then '45-54'
+        WHEN age between 55 and 64 then '55-64'
+        ELSE '65+'
+        END AS ageRange
+      FROM leads
+      GROUP BY ageRange
+      ORDER BY ageRange ASC
+      ;
     `,
     []
   );
@@ -37,8 +51,14 @@ app.get(`/api/reports/ages`, (req, res) => {
       return databaseError(req, res, err);
     }
 
+    const [clientResults, leadResults] = result;
+
     res.send({
-      ages: result.reduce((acc, row) => {
+      clients: clientResults.reduce((acc, row) => {
+        acc[row.ageRange] = row.total;
+        return acc;
+      }, {}),
+      leads: leadResults.reduce((acc, row) => {
         acc[row.ageRange] = row.total;
         return acc;
       }, {}),
