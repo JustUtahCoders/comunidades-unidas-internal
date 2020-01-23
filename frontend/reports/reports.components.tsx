@@ -14,6 +14,8 @@ import GenderParams from "./gender/gender-params.component";
 import GenderResults from "./gender/gender-results.component";
 import EnglishLevelsParams from "./english-levels/english-levels-params.component";
 import EnglishLevelsResults from "./english-levels/english-levels-results.component";
+import CountryOfOriginParams from "./country-of-origin/country-of-origin-params.component";
+import CountryOfOriginResults from "./country-of-origin/country-of-origin-results.component";
 
 export default function Reports(props: ReportsProps) {
   useFullWidth();
@@ -47,6 +49,11 @@ export default function Reports(props: ReportsProps) {
             <GenderResults path="genders/results" />
             <EnglishLevelsParams path="english-levels" title="English Levels" />
             <EnglishLevelsResults path="english-levels/results" />
+            <CountryOfOriginParams
+              path="countries-of-origin"
+              title="Countries of Origin"
+            />
+            <CountryOfOriginResults path="countries-of-origin/results" />
           </Router>
         </SelectReport>
       </div>
