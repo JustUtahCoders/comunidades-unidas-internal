@@ -156,7 +156,16 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       program.totalDuration = toDuration(program.totalInteractionSeconds);
     });
 
+    const grandTotal = {
+      numInteractions: _.sum(programTotals.map(p => p.numInteractions)),
+      totalInteractionSeconds: _.sum(
+        programTotals.map(p => p.totalInteractionSeconds)
+      )
+    };
+    grandTotal.totalDuration = toDuration(grandTotal.totalInteractionSeconds);
+
     res.send({
+      grandTotal,
       programs: programTotals,
       services: serviceTotals,
       reportParameters: {
