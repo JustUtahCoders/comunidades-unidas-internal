@@ -8,8 +8,7 @@ import EventTableToolbar from "./event-table-toolbar.component";
 import EventTable from "./event-table.component";
 
 export default function EventList(props: EventListProps) {
-  const featureEnabled = Boolean(localStorage.getItem("events"));
-  useFullWidth(featureEnabled);
+  useFullWidth(true);
 
   const [apiState, dispatchApiState] = React.useReducer(
     reduceApiState,
@@ -25,29 +24,23 @@ export default function EventList(props: EventListProps) {
 
   return (
     <>
-      <PageHeader title="Events List" fullScreen={featureEnabled} />
-      {localStorage.getItem("events") ? (
-        <>
-          <EventTableToolbar
-            numEvents={apiState.apiData.pagination.numEvents}
-            page={apiState.page}
-            pageSize={apiState.apiData.pagination.pageSize}
-            setPage={newPage}
-            fetchingEvents={fetchingEvents}
-            refetchEvents={refetchEvents}
-          />
-          <EventTable
-            events={apiState.apiData.events}
-            fetchingEvents={fetchingEvents}
-            page={apiState.page}
-            newSortOrder={newSortOrder}
-            sortField={apiState.sortField}
-            sortOrder={apiState.sortOrder}
-          />
-        </>
-      ) : (
-        <ReportIssue missingFeature hideHeader />
-      )}
+      <PageHeader title="Events List" fullScreen={true} />
+      <EventTableToolbar
+        numEvents={apiState.apiData.pagination.numEvents}
+        page={apiState.page}
+        pageSize={apiState.apiData.pagination.pageSize}
+        setPage={newPage}
+        fetchingEvents={fetchingEvents}
+        refetchEvents={refetchEvents}
+      />
+      <EventTable
+        events={apiState.apiData.events}
+        fetchingEvents={fetchingEvents}
+        page={apiState.page}
+        newSortOrder={newSortOrder}
+        sortField={apiState.sortField}
+        sortOrder={apiState.sortOrder}
+      />
     </>
   );
 

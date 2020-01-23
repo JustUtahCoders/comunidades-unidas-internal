@@ -69,13 +69,9 @@ export default function ViewEvent(props: ViewEventProps) {
           </div>
         </StickySecondaryNav>
       )}
-      {localStorage.getItem("events") ? (
-        <Router>
-          <EventHome path="/" {...childProps} />
-        </Router>
-      ) : (
-        <ReportIssue missingFeature hideHeader />
-      )}
+      <Router>
+        <EventHome path="/" {...childProps} />
+      </Router>
     </>
   );
 

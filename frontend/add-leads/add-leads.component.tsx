@@ -6,8 +6,6 @@ import PageHeader from "../page-header.component";
 import { Router } from "@reach/router";
 
 export default function AddLeads(props: AddLeadsProps) {
-  const featureEnabled = localStorage.getItem("leads");
-
   if (window.location.pathname === "/add-leads") {
     props["navigate"]("/add-leads/event");
   }
@@ -18,16 +16,12 @@ export default function AddLeads(props: AddLeadsProps) {
         title="Add new leads"
         fullScreen={/\/add-leads\/event\/.+/.test(window.location.pathname)}
       />
-      {featureEnabled ? (
-        <div className="card">
-          <Router>
-            <AddLeadsStep path="event/:eventId" />
-            <AddEventStep path="event" />
-          </Router>
-        </div>
-      ) : (
-        <ReportIssue missingFeature hideHeader />
-      )}
+      <div className="card">
+        <Router>
+          <AddLeadsStep path="event/:eventId" />
+          <AddEventStep path="event" />
+        </Router>
+      </div>
     </>
   );
 }
