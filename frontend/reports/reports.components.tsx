@@ -3,9 +3,11 @@ import PageHeader from "../page-header.component";
 import { useFullWidth } from "../navbar/use-full-width.hook";
 import { Router, Redirect } from "@reach/router";
 import SelectReport from "./select-report.component";
+import { useCss } from "kremling";
 import InteractionHoursByClientParams from "./interaction-hours-by-client/interaction-hours-by-client-params.component";
 import InteractionHoursByClientResults from "./interaction-hours-by-client/interaction-hours-by-client-results.component";
-import { useCss } from "kremling";
+import InteractionsByServiceParams from "./interactions-by-service/interactions-by-service-params.component";
+import InteractionsByServiceResults from "./interactions-by-service/interactions-by-service-results.component";
 
 export default function Reports(props: ReportsProps) {
   useFullWidth();
@@ -25,9 +27,14 @@ export default function Reports(props: ReportsProps) {
             />
             <InteractionHoursByClientParams
               path="interaction-hours-by-client"
-              title="Clients with interaction hours"
+              title="Interaction Hours By Client"
             />
             <InteractionHoursByClientResults path="interaction-hours-by-client/results" />
+            <InteractionsByServiceParams
+              path="interactions-by-service"
+              title="Interactions by Service"
+            />
+            <InteractionsByServiceResults path="interactions-by-service/results" />
           </Router>
         </SelectReport>
       </div>

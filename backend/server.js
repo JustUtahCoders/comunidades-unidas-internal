@@ -113,8 +113,9 @@ require("./apis/leads/add-leads.api");
 require("./apis/events/add-event.api");
 require("./apis/leads/update-lead.api");
 require("./apis/events/delete-event.api");
-require("./apis/reports/interaction-hours-by-client.api");
 require("./apis/leads/delete-lead.api");
+require("./apis/reports/interaction-hours-by-client.api");
+require("./apis/reports/interactions-by-service.api");
 
 require("./apis/default-404.api.js");
 require("./index-html.js");
