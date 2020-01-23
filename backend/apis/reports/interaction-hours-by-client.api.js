@@ -31,7 +31,7 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
 
   const sql = mysql.format(
     `
-      SELECT SQL_CALC_FOUND_ROWS clients.id, clients.firstName, clients.lastName, clients.gender, clients.birthday, SEC_TO_TIME(clientHours.totalInteractionSeconds) totalDuration, clientHours.numInteractions
+      SELECT SQL_CALC_FOUND_ROWS clients.id, clients.firstName, clients.lastName, clients.gender, clients.birthday, SEC_TO_TIME(clientHours.totalInteractionSeconds) totalDuration, clientHours.totalInteractionSeconds, clientHours.numInteractions
       FROM
         clients
         INNER JOIN 
@@ -49,6 +49,7 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
         ON clients.id = clientHours.clientId
       WHERE
         clientHours.totalInteractionSeconds >= ?
+        AND clients.isDeleted = false
       ORDER BY clients.lastName ASC, clients.firstName
       LIMIT ?, ?
       ;
@@ -76,6 +77,7 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
         gender: c.gender,
         birthday: c.birthday,
         totalDuration: c.totalDuration,
+        totalInteractionSeconds: c.totalInteractionSeconds,
         numInteractions: c.numInteractions
       })),
       pagination: {
