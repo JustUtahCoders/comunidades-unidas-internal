@@ -52,8 +52,6 @@ export default function Reports(props: ReportsProps) {
               title="Client Poverty Line"
             />
             <PovertyLineResults path="poverty-line/results" />
-            <GenderParams path="genders" title="Client Gender" />
-            <GenderResults path="genders/results" />
             <EnglishLevelsParams
               path="english-levels"
               title="Client English Levels"
@@ -68,6 +66,8 @@ export default function Reports(props: ReportsProps) {
             <ClientSourcesResults path="client-sources/results" />
             <AgesParams path="ages" title="Age" />
             <AgesResults path="ages/results" />
+            <GenderParams path="genders" title="Gender" />
+            <GenderResults path="genders/results" />
           </Router>
         </SelectReport>
       </div>
