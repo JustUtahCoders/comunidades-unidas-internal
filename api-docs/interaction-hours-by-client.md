@@ -9,7 +9,7 @@ _The request should accept query parameters indicating a time range, number of c
 Example case:
 
 ```http
-GET /api/reports/interaction-hours-by-client?start=2019-05-06T0&end=2019-05-08T0&minInteractionMinutes=21600&page=1
+GET /api/reports/interaction-hours-by-client?start=2019-05-06&end=2019-05-08&minInteractionSeconds=21600&page=1
 ```
 
 Notes:
@@ -62,8 +62,8 @@ Notes:
     "numPages": 1
   },
   "reportParameters": {
-    "start": "2019-05-06T0",
-    "end": "2019-05-06T0",
+    "start": "2019-05-06",
+    "end": "2019-05-06",
     "minInteractionSeconds": 21600,
     "page": 1
   }

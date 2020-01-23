@@ -3,10 +3,10 @@ import queryString from "query-string";
 import { identity } from "lodash-es";
 
 export function useQueryParamState(
-  name,
-  initialValue = "",
-  transformer = identity
-) {
+  name: string,
+  initialValue: string = "",
+  transformer: Transformer = identity
+): [string | string[], Setter] {
   const [value, setValue] = React.useState(
     () => queryString.parse(window.location.search)[name] || initialValue
   );
@@ -29,3 +29,7 @@ export function useQueryParamState(
 
   return [transformer(value), setValue];
 }
+
+type Setter = (val: string) => any;
+
+type Transformer = (val: string | string[]) => string;
