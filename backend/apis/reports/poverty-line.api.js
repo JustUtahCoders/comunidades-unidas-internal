@@ -96,7 +96,7 @@ function povertyLineQuery(year) {
     WHERE
       clients.isDeleted = false
       AND
-      householdIncome <= (${firstPerson} + ${additionalPerson} * houseHoldSize)
+      householdIncome <= (${firstPerson} + ${additionalPerson} * (houseHoldSize - 1))
     ;
   `;
 }
