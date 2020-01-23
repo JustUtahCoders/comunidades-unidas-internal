@@ -121,6 +121,7 @@ require("./apis/reports/gender-report.api");
 require("./apis/reports/english-level.api");
 require("./apis/reports/country-of-origin-report.api");
 require("./apis/reports/client-sources-report.api");
+require("./apis/reports/age-report.api");
 
 require("./apis/default-404.api.js");
 require("./index-html.js");

@@ -18,6 +18,8 @@ import CountryOfOriginParams from "./country-of-origin/country-of-origin-params.
 import CountryOfOriginResults from "./country-of-origin/country-of-origin-results.component";
 import ClientSourcesParams from "./client-sources/client-sources-params.component";
 import ClientSourcesResults from "./client-sources/client-sources-results.component";
+import AgesParams from "./ages/ages-params.component";
+import AgesResults from "./ages/ages-results.components";
 
 export default function Reports(props: ReportsProps) {
   useFullWidth();
@@ -58,6 +60,8 @@ export default function Reports(props: ReportsProps) {
             <CountryOfOriginResults path="countries-of-origin/results" />
             <ClientSourcesParams path="client-sources" title="Client Sources" />
             <ClientSourcesResults path="client-sources/results" />
+            <AgesParams path="ages" title="Client Age" />
+            <AgesResults path="ages/results" />
           </Router>
         </SelectReport>
       </div>
