@@ -20,6 +20,8 @@ import ClientSourcesParams from "./client-sources/client-sources-params.componen
 import ClientSourcesResults from "./client-sources/client-sources-results.component";
 import AgesParams from "./ages/ages-params.component";
 import AgesResults from "./ages/ages-results.components";
+import ServiceInterestsParams from "./service-interests/service-interests-params.component";
+import ServiceInterestsResults from "./service-interests/service-interests-results.component";
 
 export default function Reports(props: ReportsProps) {
   useFullWidth();
@@ -47,6 +49,11 @@ export default function Reports(props: ReportsProps) {
               title="Interactions by Service"
             />
             <InteractionsByServiceResults path="interactions-by-service/results" />
+            <ServiceInterestsParams
+              path="service-interests"
+              title="Interest in Programs / Services"
+            />
+            <ServiceInterestsResults path="service-interests/results" />
             <PovertyLineParams
               path="poverty-line"
               title="Client Poverty Line"
