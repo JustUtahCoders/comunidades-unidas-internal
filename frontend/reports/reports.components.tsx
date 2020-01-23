@@ -16,6 +16,8 @@ import EnglishLevelsParams from "./english-levels/english-levels-params.componen
 import EnglishLevelsResults from "./english-levels/english-levels-results.component";
 import CountryOfOriginParams from "./country-of-origin/country-of-origin-params.component";
 import CountryOfOriginResults from "./country-of-origin/country-of-origin-results.component";
+import ClientSourcesParams from "./client-sources/client-sources-params.component";
+import ClientSourcesResults from "./client-sources/client-sources-results.component";
 
 export default function Reports(props: ReportsProps) {
   useFullWidth();
@@ -54,6 +56,8 @@ export default function Reports(props: ReportsProps) {
               title="Countries of Origin"
             />
             <CountryOfOriginResults path="countries-of-origin/results" />
+            <ClientSourcesParams path="client-sources" title="Client Sources" />
+            <ClientSourcesResults path="client-sources/results" />
           </Router>
         </SelectReport>
       </div>
