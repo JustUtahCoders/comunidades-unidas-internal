@@ -43,13 +43,12 @@ app.get(`/api/reports/poverty-lines`, (req, res) => {
       SELECT COUNT(*) total
       FROM
         (
-          SELECT MAX(dateAdded) latestDateAdded, clientId, householdIncome, householdSize FROM demographics GROUP BY clientId, householdIncome, householdSize
+          SELECT MAX(dateAdded) latestDateAdded, clientId FROM demographics GROUP BY clientId
         ) latestDems
-        JOIN
-        clients
-        ON latestDems.clientId = clients.id
+        JOIN demographics ON latestDems.latestDateAdded = demographics.dateAdded
+        JOIN clients ON clients.id = demographics.id
       WHERE
-        latestDems.householdIncome < 200
+        demographics.householdIncome < 200
         AND
         clients.isDeleted = false;
       ;
@@ -88,15 +87,14 @@ function povertyLineQuery(year) {
     SELECT COUNT(*) belowPovertyLine
     FROM
       (
-        SELECT MAX(dateAdded) latestDateAdded, clientId, householdIncome, householdSize FROM demographics GROUP BY clientId, householdIncome, householdSize
+        SELECT MAX(dateAdded) latestDateAdded, clientId FROM demographics GROUP BY clientId
       ) latestDems
-      JOIN
-      clients
-      ON latestDems.clientId = clients.id
+      JOIN demographics ON latestDems.latestDateAdded = demographics.dateAdded
+      JOIN clients ON clients.id = demographics.clientId
     WHERE
       clients.isDeleted = false
       AND
-      householdIncome <= (${firstPerson} + ${additionalPerson} * (houseHoldSize - 1))
+      demographics.householdIncome <= (${firstPerson} + ${additionalPerson} * (houseHoldSize - 1))
     ;
   `;
 }
