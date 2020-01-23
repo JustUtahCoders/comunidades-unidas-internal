@@ -8,11 +8,13 @@ const mysql = require("mysql");
 
 const pageSize = 100;
 const sixHoursInSeconds = 6 * 60 * 60;
+const tenThousandHoursInSeconds = 10000 * 60 * 60;
 
 app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
   const validationErrors = checkValid(
     req.query,
-    nullableValidInteger("minInteractionSeconds")
+    nullableValidInteger("minInteractionSeconds"),
+    nullableValidInteger("maxInteractionSeconds")
   );
 
   if (validationErrors.length > 0) {
@@ -25,6 +27,9 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
 
   const minInteractionSeconds =
     Number(req.query.minInteractionSeconds) || sixHoursInSeconds;
+
+  const maxInteractionSeconds =
+    Number(req.query.maxInteractionSeconds) || tenThousandHoursInSeconds;
 
   const startDate = req.query.start || "2000-01-01T0";
   const endDate = req.query.end || "3000-01-01T0";
@@ -49,6 +54,7 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
         ON clients.id = clientHours.clientId
       WHERE
         clientHours.totalInteractionSeconds >= ?
+        AND clientHours.totalInteractionSeconds <= ?
         AND clients.isDeleted = false
       ORDER BY clients.lastName ASC, clients.firstName
       LIMIT ?, ?
@@ -56,7 +62,14 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
 
       SELECT FOUND_ROWS();
     `,
-    [startDate, endDate, minInteractionSeconds, mysqlOffset, pageSize]
+    [
+      startDate,
+      endDate,
+      minInteractionSeconds,
+      maxInteractionSeconds,
+      mysqlOffset,
+      pageSize
+    ]
   );
 
   pool.query(sql, (err, result) => {

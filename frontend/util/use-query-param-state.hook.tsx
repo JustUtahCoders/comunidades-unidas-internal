@@ -7,6 +7,8 @@ export function useQueryParamState(
   initialValue: string = "",
   transformer: Transformer = identity
 ): [string | string[], Setter] {
+  const [bool, setBool] = React.useState(false);
+
   const [value, setValue] = React.useState(
     () => queryString.parse(window.location.search)[name] || initialValue
   );
@@ -25,6 +27,8 @@ export function useQueryParamState(
       document.title,
       location.pathname + "?" + queryString.stringify(query)
     );
+
+    setBool(!bool);
   }, [value]);
 
   return [transformer(value), setValue];
