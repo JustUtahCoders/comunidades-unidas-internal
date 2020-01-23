@@ -10,6 +10,8 @@ import InteractionsByServiceParams from "./interactions-by-service/interactions-
 import InteractionsByServiceResults from "./interactions-by-service/interactions-by-service-results.component";
 import PovertyLineParams from "./poverty-line/poverty-line-params.component";
 import PovertyLineResults from "./poverty-line/poverty-line-results.component";
+import GenderParams from "./gender/gender-params.component";
+import GenderResults from "./gender/gender-results.component";
 
 export default function Reports(props: ReportsProps) {
   useFullWidth();
@@ -39,6 +41,8 @@ export default function Reports(props: ReportsProps) {
             <InteractionsByServiceResults path="interactions-by-service/results" />
             <PovertyLineParams path="poverty-line" title="Poverty Line" />
             <PovertyLineResults path="poverty-line/results" />
+            <GenderParams path="genders" title="Gender" />
+            <GenderResults path="genders/results" />
           </Router>
         </SelectReport>
       </div>

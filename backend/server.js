@@ -117,6 +117,7 @@ require("./apis/leads/delete-lead.api");
 require("./apis/reports/interaction-hours-by-client.api");
 require("./apis/reports/interactions-by-service.api");
 require("./apis/reports/poverty-line.api");
+require("./apis/reports/gender-report.api");
 
 require("./apis/default-404.api.js");
 require("./index-html.js");
