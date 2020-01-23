@@ -8,6 +8,8 @@ import InteractionHoursByClientParams from "./interaction-hours-by-client/intera
 import InteractionHoursByClientResults from "./interaction-hours-by-client/interaction-hours-by-client-results.component";
 import InteractionsByServiceParams from "./interactions-by-service/interactions-by-service-params.component";
 import InteractionsByServiceResults from "./interactions-by-service/interactions-by-service-results.component";
+import PovertyLineParams from "./poverty-line/poverty-line-params.component";
+import PovertyLineResults from "./poverty-line/poverty-line-results.component";
 
 export default function Reports(props: ReportsProps) {
   useFullWidth();
@@ -35,6 +37,8 @@ export default function Reports(props: ReportsProps) {
               title="Interactions by Service"
             />
             <InteractionsByServiceResults path="interactions-by-service/results" />
+            <PovertyLineParams path="poverty-line" title="Poverty Line" />
+            <PovertyLineResults path="poverty-line/results" />
           </Router>
         </SelectReport>
       </div>

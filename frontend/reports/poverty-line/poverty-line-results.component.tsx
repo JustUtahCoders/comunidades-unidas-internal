@@ -1,9 +1,9 @@
 import React from "react";
 import { useReportsApi } from "../shared/use-reports-api";
 
-export default function InteractionsByService(props) {
+export default function PovertyLineResults(props) {
   const { isLoading, data, error } = useReportsApi(
-    `/api/reports/interactions-by-service`
+    `/api/reports/poverty-lines`
   );
 
   return <pre style={{ margin: 0 }}>{JSON.stringify(data, null, 2)}</pre>;

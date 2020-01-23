@@ -1,10 +1,6 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
 const { checkValid, nullableValidDate } = require("../utils/validation-utils");
-const { responseFullName } = require("../utils/transform-utils");
 const mysql = require("mysql");
-
-const pageSize = 100;
-const sixHoursInSeconds = 6 * 60 * 60;
 
 app.get(`/api/reports/interactions-by-service`, (req, res) => {
   const validationErrors = checkValid(
@@ -38,8 +34,6 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
     `,
     [startDate, endDate]
   );
-
-  console.log(sql);
 
   pool.query(sql, (err, result) => {
     if (err) {
