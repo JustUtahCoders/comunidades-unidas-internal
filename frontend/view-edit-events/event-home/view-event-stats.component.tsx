@@ -13,17 +13,25 @@ export default function ViewEventStats(props: ViewEventStatsProps) {
         <tbody>
           <tr>
             <td># of Clients</td>
-            <td>{event.totalConvertedToClients}</td>
+            <td>{event.totalConvertedToClients || 0}</td>
           </tr>
           <tr>
             <td># of Leads:</td>
-            <td>
-              {event.totalConvertedToClients / event.totalAttendance || 0}
-            </td>
+            <td>{event.totalLeads || 0}</td>
           </tr>
           <tr>
             <td>Total Attendance:</td>
+            <td>{event.totalAttendance || 0}</td>
+          </tr>
+          <tr>
+            <td>% converted to lead:</td>
             <td>{event.totalLeads / event.totalAttendance || 0}</td>
+          </tr>
+          <tr>
+            <td>% converted to client:</td>
+            <td>
+              {event.totalConvertedToClients / event.totalAttendance || 0}
+            </td>
           </tr>
         </tbody>
       </table>

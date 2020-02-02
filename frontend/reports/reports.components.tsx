@@ -46,7 +46,7 @@ export default function Reports(props: ReportsProps) {
             <InteractionHoursByClientResults path="interaction-hours-by-client/results" />
             <InteractionsByServiceParams
               path="interactions-by-service"
-              title="Interactions by Service"
+              title="Interactions by Program / Service"
             />
             <InteractionsByServiceResults path="interactions-by-service/results" />
             <ServiceInterestsParams
