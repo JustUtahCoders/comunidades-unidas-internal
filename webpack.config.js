@@ -3,8 +3,9 @@ const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
 const ManifestPlugin = require("webpack-manifest-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
-module.exports = env => ({
+module.exports = (env, argv) => ({
   entry: {
     "comunidades-unidas-internal": "./frontend/comunidades-unidas-internal.tsx"
   },
@@ -51,6 +52,14 @@ module.exports = env => ({
     new ManifestPlugin()
   ],
   optimization: {
-    namedChunks: true
+    namedChunks: true,
+    minimize: argv.mode === "production",
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          safari10: true
+        }
+      })
+    ]
   }
 });
