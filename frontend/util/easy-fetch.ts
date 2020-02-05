@@ -1,3 +1,5 @@
+import "abortcontroller-polyfill/dist/polyfill-patch-fetch";
+
 export default function easyFetch(url: string, opts?: any) {
   if (!opts) {
     opts = {};

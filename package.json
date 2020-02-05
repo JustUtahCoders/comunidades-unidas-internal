@@ -39,6 +39,7 @@
     "@types/lodash-es": "^4.17.3",
     "@types/reach__router": "^1.2.6",
     "@types/react-dom": "^16.9.5",
+    "abortcontroller-polyfill": "^1.4.0",
     "axios": "^0.19.2",
     "bandicoot": "^4.0.0",
     "btoa": "^1.2.1",
