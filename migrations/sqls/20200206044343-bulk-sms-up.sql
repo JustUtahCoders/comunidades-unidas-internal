@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS bulkSms (
   leadsMatched INT NOT NULL,
   leadsWithPhone INT NOT NULL,
   uniquePhoneNumbers INT NOT NULL,
+  smsBody VARCHAR(2048) NOT NULL,
   addedBy INT NOT NULL,
   dateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (addedBy) REFERENCES users(id)

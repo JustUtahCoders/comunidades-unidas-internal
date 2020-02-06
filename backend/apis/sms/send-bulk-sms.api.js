@@ -96,7 +96,8 @@ app.post(`/api/bulk-texts`, (req, res) => {
           response,
           notification.sid,
           clientsWithPhone,
-          req.session.passport.user.id
+          req.session.passport.user.id,
+          req.body.smsBody
         );
 
         pool.query(insertSql, (err, result) => {
@@ -113,9 +114,16 @@ app.post(`/api/bulk-texts`, (req, res) => {
   });
 });
 
-function insertBulkSmsQuery(totals, twilioSid, clientsWithPhone, userId) {
+function insertBulkSmsQuery(
+  totals,
+  twilioSid,
+  clientsWithPhone,
+  userId,
+  smsBody
+) {
   const values = [
     twilioSid,
+    smsBody,
     totals.clientsMatched,
     totals.clientsWithPhone,
     0,
@@ -131,9 +139,9 @@ function insertBulkSmsQuery(totals, twilioSid, clientsWithPhone, userId) {
   return mysql.format(
     `
     INSERT INTO bulkSms
-      (twilioSid, clientsMatched, clientsWithPhone, leadsMatched, leadsWithPhone, uniquePhoneNumbers, addedBy)
+      (twilioSid, smsBody, clientsMatched, clientsWithPhone, leadsMatched, leadsWithPhone, uniquePhoneNumbers, addedBy)
     VALUES
-      (?, ?, ?, ?, ?, ?, ?);
+      (?, ?, ?, ?, ?, ?, ?, ?);
 
     SET @bulkSmsId := LAST_INSERT_ID();
 
