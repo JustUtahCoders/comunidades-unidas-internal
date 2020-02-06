@@ -87,8 +87,6 @@ app.post(`/api/bulk-texts`, (req, res) => {
       body: req.body.smsBody
     };
 
-    console.log(notificationOpts);
-
     twilio.notify
       .services(process.env.TWILIO_SMS_SERVICE_SID)
       .notifications.create(notificationOpts)
