@@ -49,6 +49,9 @@ KEYGRIP_SECRET=123
 # GUEST_GITHUB_KEY=<insert_github_key_here>
 # JPLS_USERNAME=<juntos_por_la_salud_ventanilla_username>
 # JPLS_PASSWORD=<juntos_por_la_salud_ventanilla_password>
+# TWILIO_ACCOUNT_SID=<twilio account sid>
+# TWILIO_AUTH_TOKEN=<twilio auth token>
+# TWILIO_SMS_SERVICE_SID=<twilio sid for the SMS service account>
 ```
 
 Now run the following command:

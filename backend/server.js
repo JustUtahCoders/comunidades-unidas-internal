@@ -114,6 +114,8 @@ require("./apis/events/add-event.api");
 require("./apis/leads/update-lead.api");
 require("./apis/events/delete-event.api");
 require("./apis/leads/delete-lead.api");
+require("./apis/sms/send-bulk-sms.api");
+
 require("./apis/reports/interaction-hours-by-client.api");
 require("./apis/reports/interactions-by-service.api");
 require("./apis/reports/poverty-line.api");
