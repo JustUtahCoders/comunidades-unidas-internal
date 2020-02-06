@@ -10,6 +10,7 @@ const {
   clientListQuery
 } = require("../clients/list-clients.api");
 const { checkValid, nonEmptyString } = require("../utils/validation-utils");
+const mysql = require("mysql");
 
 let twilio;
 if (
@@ -91,10 +92,63 @@ app.post(`/api/bulk-texts`, (req, res) => {
       .services(process.env.TWILIO_SMS_SERVICE_SID)
       .notifications.create(notificationOpts)
       .then(notification => {
-        res.send(response);
+        const insertSql = insertBulkSmsQuery(
+          response,
+          notification.sid,
+          clientsWithPhone,
+          req.session.passport.user.id
+        );
+
+        pool.query(insertSql, (err, result) => {
+          if (err) {
+            return databaseError(req, res, err);
+          }
+
+          res.send(response);
+        });
       })
       .catch(err => {
         internalError(req, res, err);
       });
   });
 });
+
+function insertBulkSmsQuery(totals, twilioSid, clientsWithPhone, userId) {
+  const values = [
+    twilioSid,
+    totals.clientsMatched,
+    totals.clientsWithPhone,
+    0,
+    0,
+    totals.uniquePhoneNumbers,
+    userId
+  ];
+
+  clientsWithPhone.forEach(c => {
+    values.push(c.primaryPhone, null, c.clientId);
+  });
+
+  return mysql.format(
+    `
+    INSERT INTO bulkSms
+      (twilioSid, clientsMatched, clientsWithPhone, leadsMatched, leadsWithPhone, uniquePhoneNumbers, addedBy)
+    VALUES
+      (?, ?, ?, ?, ?, ?, ?);
+
+    SET @bulkSmsId := LAST_INSERT_ID();
+
+    ${clientsWithPhone
+      .map(
+        c => `
+      INSERT INTO bulkSmsRecipients
+        (bulkSmsId, phone, leadId, clientId)
+      VALUES
+        (@bulkSmsId, ?, ?, ?);
+    `
+      )
+      .join("\n")}
+
+  `,
+    values
+  );
+}
