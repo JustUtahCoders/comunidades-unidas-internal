@@ -5,7 +5,8 @@ const {
   nullableValidInteger,
   nullableNonEmptyString,
   nullableValidId,
-  nullableValidEnum
+  nullableValidEnum,
+  nullableValidBoolean
 } = require("../utils/validation-utils");
 const {
   responseFullName,
@@ -15,15 +16,7 @@ const {
 } = require("../utils/transform-utils");
 
 app.get("/api/clients", (req, res, next) => {
-  const validationErrors = checkValid(
-    req.query,
-    nullableValidInteger("page"),
-    nullableValidId("id"),
-    nullableNonEmptyString("phone"),
-    nullableValidId("program"),
-    nullableValidEnum("sortField", "id", "firstName", "lastName", "birthday"),
-    nullableValidEnum("sortOrder", "asc", "desc")
-  );
+  const validationErrors = validateClientListQuery(req.query);
 
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
@@ -40,94 +33,7 @@ app.get("/api/clients", (req, res, next) => {
 
   const pageSize = 100;
 
-  let whereClause = `WHERE isDeleted = false `;
-  let whereClauseValues = [];
-
-  if (req.query.name) {
-    whereClause += `AND CONCAT(cl.firstName, ' ', cl.lastName) LIKE ? `;
-    whereClauseValues.push(`%${req.query.name}%`);
-  }
-
-  if (req.query.zip) {
-    whereClause += `AND ct.zip = ? `;
-    whereClauseValues.push(req.query.zip);
-  }
-
-  if (req.query.id) {
-    whereClause += `AND cl.id = ? `;
-    whereClauseValues.push(req.query.id);
-  }
-
-  if (req.query.phone) {
-    whereClause += `AND ct.primaryPhone LIKE ? `;
-    whereClauseValues.push("%" + requestPhone(req.query.phone) + "%");
-  }
-
-  let joinIntakeServices = "";
-  if (req.query.program) {
-    joinIntakeServices = `
-      JOIN 
-      (
-        SELECT id intakeDId, clientId
-        FROM
-          intakeData innerIntakeD
-          JOIN
-          (
-            SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
-            FROM intakeData GROUP BY clientId
-          ) latestIntakeD
-          ON latestIntakeD.latestDateAdded = innerIntakeD.dateAdded AND latestIntakeD.latestClientId = innerIntakeD.clientId
-      ) intakeD ON cl.id = intakeD.clientId
-    `;
-    whereClause += `
-      AND (SELECT COUNT(*) FROM intakeServices WHERE intakeDataId = intakeDId AND intakeServices.serviceId IN (SELECT id FROM services WHERE programId = ?)) > 0
-    `;
-    whereClauseValues.push(req.query.program);
-  }
-
-  const sortOrder = req.query.sortOrder === "desc" ? "DESC" : "ASC";
-
-  let columnsToOrder = `cl.lastName ${sortOrder}, cl.firstName ${sortOrder}`;
-  if (req.query.sortField) {
-    columnsToOrder = `cl.${req.query.sortField} ${sortOrder}`;
-  }
-
-  let queryString = `
-    SELECT SQL_CALC_FOUND_ROWS
-      cl.id, cl.firstName, cl.lastName, cl.birthday, cl.isDeleted, ct.email, 
-      ct.zip, ct.primaryPhone, cl.addedBy as addedById, us.firstName as addedByFirstName,
-      us.lastname as addedByLastName, cl.dateAdded
-    FROM 
-      clients cl 
-    JOIN 
-      (
-        SELECT *
-        FROM
-          contactInformation innerCt
-          JOIN
-          (
-            SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
-            FROM contactInformation GROUP BY clientId
-          ) latestCt
-          ON latestCt.latestDateAdded = innerCt.dateAdded AND latestCt.latestClientId = innerCt.clientId
-      ) ct ON cl.id = ct.clientId
-    JOIN 
-      users us ON cl.addedBy = us.id 
-    ${joinIntakeServices}
-    ${whereClause}
-    ORDER BY ${columnsToOrder}
-    LIMIT ?, ?;
-    
-    SELECT FOUND_ROWS();
-  `;
-
-  const zeroBasedPage = req.query.page ? requestPage - 1 : 0;
-  const mysqlOffset = zeroBasedPage * pageSize;
-  const getClientList = mysql.format(queryString, [
-    ...whereClauseValues,
-    mysqlOffset,
-    pageSize
-  ]);
+  const getClientList = clientListQuery(req.query, requestPage, pageSize);
 
   pool.query(getClientList, function(err, result, fields) {
     if (err) {
@@ -158,7 +64,7 @@ app.get("/api/clients", (req, res, next) => {
         }
       })),
       pagination: {
-        currentPage: zeroBasedPage + 1,
+        currentPage: requestPage,
         pageSize,
         numClients: totalCount,
         numPages: Math.ceil(totalCount / pageSize)
@@ -166,3 +72,119 @@ app.get("/api/clients", (req, res, next) => {
     });
   });
 });
+
+exports.clientListQuery = clientListQuery;
+exports.validateClientListQuery = validateClientListQuery;
+
+function clientListQuery(query, pageNum, pageSize) {
+  let whereClause = `WHERE isDeleted = false `;
+  let whereClauseValues = [];
+
+  if (query.name) {
+    whereClause += `AND CONCAT(cl.firstName, ' ', cl.lastName) LIKE ? `;
+    whereClauseValues.push(`%${query.name}%`);
+  }
+
+  if (query.zip) {
+    whereClause += `AND ct.zip = ? `;
+    whereClauseValues.push(query.zip);
+  }
+
+  if (query.id) {
+    whereClause += `AND cl.id = ? `;
+    whereClauseValues.push(query.id);
+  }
+
+  if (query.phone) {
+    whereClause += `AND ct.primaryPhone LIKE ? `;
+    whereClauseValues.push("%" + requestPhone(query.phone) + "%");
+  }
+
+  let joinIntakeServices = "";
+  if (query.program) {
+    joinIntakeServices = `
+      JOIN 
+      (
+        SELECT id intakeDId, clientId
+        FROM
+          intakeData innerIntakeD
+          JOIN
+          (
+            SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
+            FROM intakeData GROUP BY clientId
+          ) latestIntakeD
+          ON latestIntakeD.latestDateAdded = innerIntakeD.dateAdded AND latestIntakeD.latestClientId = innerIntakeD.clientId
+      ) intakeD ON cl.id = intakeD.clientId
+    `;
+    whereClause += `
+      AND (SELECT COUNT(*) FROM intakeServices WHERE intakeDataId = intakeDId AND intakeServices.serviceId IN (SELECT id FROM services WHERE programId = ?)) > 0
+    `;
+    whereClauseValues.push(query.program);
+  }
+
+  if (query.wantsSMS) {
+    whereClause += `AND ct.textMessages = TRUE `;
+  }
+
+  const sortOrder = query.sortOrder === "desc" ? "DESC" : "ASC";
+
+  let columnsToOrder = `cl.lastName ${sortOrder}, cl.firstName ${sortOrder}`;
+  if (query.sortField) {
+    columnsToOrder = `cl.${query.sortField} ${sortOrder}`;
+  }
+
+  const limitBy = pageNum ? `LIMIT ?, ?` : "";
+
+  let queryString = `
+    SELECT SQL_CALC_FOUND_ROWS
+      cl.id, cl.firstName, cl.lastName, cl.birthday, cl.isDeleted, ct.email, 
+      ct.zip, ct.primaryPhone, cl.addedBy as addedById, us.firstName as addedByFirstName,
+      us.lastname as addedByLastName, cl.dateAdded
+    FROM 
+      clients cl 
+    JOIN 
+      (
+        SELECT *
+        FROM
+          contactInformation innerCt
+          JOIN
+          (
+            SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
+            FROM contactInformation GROUP BY clientId
+          ) latestCt
+          ON latestCt.latestDateAdded = innerCt.dateAdded AND latestCt.latestClientId = innerCt.clientId
+      ) ct ON cl.id = ct.clientId
+    JOIN 
+      users us ON cl.addedBy = us.id 
+    ${joinIntakeServices}
+    ${whereClause}
+    ORDER BY ${columnsToOrder}
+    ${limitBy}
+    ;
+    
+    SELECT FOUND_ROWS();
+  `;
+
+  const mysqlValues = [...whereClauseValues];
+
+  if (pageNum) {
+    const zeroBasedPage = pageNum ? pageNum - 1 : 0;
+    const mysqlOffset = zeroBasedPage * pageSize;
+    mysqlValues.push(mysqlOffset, pageSize);
+  }
+
+  return mysql.format(queryString, mysqlValues);
+}
+
+function validateClientListQuery(query) {
+  return checkValid(
+    query,
+    nullableValidInteger("page"),
+    nullableValidId("id"),
+    nullableNonEmptyString("phone"),
+    nullableValidId("program"),
+    nullableValidEnum("sortField", "id", "firstName", "lastName", "birthday"),
+    nullableValidEnum("sortOrder", "asc", "desc"),
+    nullableValidBoolean("wantsSMS")
+  );
+}
