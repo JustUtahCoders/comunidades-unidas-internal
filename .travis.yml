@@ -11,13 +11,14 @@ before_deploy:
   - which python3
   - alias pip=pip3
   - alias python=python3
-
+  - python --version
+  - pip --version
   - pip install awsebcli --user
   - ls -al
 deploy:
   provider: script
   before_script:
-  script: echo "Deploying with ebcli" && eb deploy comunidades-unidas-internal-prod
+  script: alias pip=pip3 && alias python=python3 && echo "Deploying with ebcli" && eb deploy comunidades-unidas-internal-prod
   on:
     branch: master
   skip_cleanup: true
