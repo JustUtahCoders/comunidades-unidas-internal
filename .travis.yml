@@ -7,12 +7,13 @@ script:
   - yarn lint
   - yarn build
 before_deploy:
-  - pip3 install awsebcli --user
+  # See https://travis-ci.org/JustUtahCoders/comunidades-unidas-internal/builds/647606213
+  - virtualenv -p /opt/pyenv/shims/python3 p3 && source p3/bin/activate && python --version && pip --version && pip install awasebcli --user
   - ls -al
 deploy:
   provider: script
   before_script:
-  script: alias python=python3 && echo "Deploying with ebcli" && eb deploy comunidades-unidas-internal-prod
+  script: virtualenv -p /opt/pyenv/shims/python3 p3 && source p3/bin/activate && echo "Deploying with ebcli" && eb deploy comunidades-unidas-internal-prod
   on:
     branch: master
   skip_cleanup: true
