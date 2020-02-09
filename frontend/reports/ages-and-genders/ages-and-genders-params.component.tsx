@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "@reach/router";
 
-export default function GenderParams(props) {
+export default function AgesAndGendersParams(props) {
   return (
     <div className="actions">
       <Link

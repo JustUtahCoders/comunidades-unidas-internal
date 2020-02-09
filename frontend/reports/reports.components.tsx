@@ -10,16 +10,14 @@ import InteractionsByServiceParams from "./interactions-by-service/interactions-
 import InteractionsByServiceResults from "./interactions-by-service/interactions-by-service-results.component";
 import PovertyLineParams from "./poverty-line/poverty-line-params.component";
 import PovertyLineResults from "./poverty-line/poverty-line-results.component";
-import GenderParams from "./gender/gender-params.component";
-import GenderResults from "./gender/gender-results.component";
 import EnglishLevelsParams from "./english-levels/english-levels-params.component";
 import EnglishLevelsResults from "./english-levels/english-levels-results.component";
 import CountryOfOriginParams from "./country-of-origin/country-of-origin-params.component";
 import CountryOfOriginResults from "./country-of-origin/country-of-origin-results.component";
 import ClientSourcesParams from "./client-sources/client-sources-params.component";
 import ClientSourcesResults from "./client-sources/client-sources-results.component";
-import AgesParams from "./ages/ages-params.component";
-import AgesResults from "./ages/ages-results.components";
+import AgesAndGendersParams from "./ages-and-genders/ages-and-genders-params.component";
+import AgesAndGendersResults from "./ages-and-genders/ages-and-genders-results.components";
 import ServiceInterestsParams from "./service-interests/service-interests-params.component";
 import ServiceInterestsResults from "./service-interests/service-interests-results.component";
 
@@ -71,10 +69,11 @@ export default function Reports(props: ReportsProps) {
             <CountryOfOriginResults path="countries-of-origin/results" />
             <ClientSourcesParams path="client-sources" title="Client Sources" />
             <ClientSourcesResults path="client-sources/results" />
-            <AgesParams path="ages" title="Age" />
-            <AgesResults path="ages/results" />
-            <GenderParams path="genders" title="Gender" />
-            <GenderResults path="genders/results" />
+            <AgesAndGendersParams
+              path="ages-and-genders"
+              title="Ages and Genders"
+            />
+            <AgesAndGendersResults path="ages-and-genders/results" />
           </Router>
         </SelectReport>
       </div>

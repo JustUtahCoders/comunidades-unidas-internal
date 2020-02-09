@@ -12,6 +12,10 @@ export default function SelectReport(props: SelectReportProps) {
           <label id="select-report-label">Report: </label>
           <select
             onChange={evt => navigate(`/reports/${evt.target.value}`)}
+            value={
+              window.location.pathname.slice("/reports/".length) ||
+              "interaction-hours-by-client"
+            }
             style={{ maxWidth: "100%", width: "100%" }}
             aria-labelledby="select-report-label"
           >
