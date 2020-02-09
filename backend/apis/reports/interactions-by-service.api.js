@@ -68,8 +68,21 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
         ) clientHours
         ON services.id = clientHours.serviceId
       ;
+
+      -- num total clients
+      SELECT COUNT(DISTINCT clientInteractions.clientId) numClients
+        FROM clientInteractions
+        JOIN clients
+        ON clients.id = clientInteractions.clientId
+      WHERE
+        clients.isDeleted = false
+        AND clientInteractions.isDeleted = false
+        AND clientInteractions.dateOfInteraction >= ?
+        AND clientInteractions.dateOfInteraction <= ?
     `,
     [
+      startDate,
+      endDate,
       startDate,
       endDate,
       startDate,
@@ -90,7 +103,8 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       serviceInteractions,
       serviceClients,
       programClients,
-      serviceHours
+      serviceHours,
+      totalClients
     ] = result;
 
     const groupedServiceInteractions = _.groupBy(
@@ -158,6 +172,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
 
     const grandTotal = {
       numInteractions: _.sum(programTotals.map(p => p.numInteractions)),
+      numClients: totalClients[0].numClients,
       totalInteractionSeconds: _.sum(
         programTotals.map(p => p.totalInteractionSeconds)
       )

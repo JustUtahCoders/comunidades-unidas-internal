@@ -119,11 +119,10 @@ require("./apis/sms/send-bulk-sms.api");
 require("./apis/reports/interaction-hours-by-client.api");
 require("./apis/reports/interactions-by-service.api");
 require("./apis/reports/poverty-line.api");
-require("./apis/reports/gender-report.api");
 require("./apis/reports/english-level.api");
 require("./apis/reports/country-of-origin-report.api");
 require("./apis/reports/client-sources-report.api");
-require("./apis/reports/age-report.api");
+require("./apis/reports/ages-and-genders-report.api");
 require("./apis/reports/service-interest-report.api");
 
 require("./apis/default-404.api.js");
