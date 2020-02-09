@@ -6,7 +6,12 @@ script:
   - yarn check-format
   - yarn lint
   - yarn build
-before_deploy: 
+before_deploy:
+  # See https://travis-ci.org/JustUtahCoders/comunidades-unidas-internal/builds/647606213
+  # and https://stackoverflow.com/questions/43267157/python-attributeerror-module-object-has-no-attribute-ssl-st-init
+  - pip uninstall pyopenssl
+  - pip install pyopenssl
+
   - pip install awsebcli --user
   - ls -al
 deploy:
