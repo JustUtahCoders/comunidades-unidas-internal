@@ -8,7 +8,7 @@ script:
   - yarn build
 before_deploy:
   # See https://travis-ci.org/JustUtahCoders/comunidades-unidas-internal/builds/647606213
-  - virtualenv -p /opt/pyenv/shims/python3 p3 && source p3/bin/activate && python --version && pip --version && pip install awasebcli --user
+  - virtualenv -p /opt/pyenv/shims/python3 p3 && source p3/bin/activate && python --version && pip --version && pip install awasebcli
   - ls -al
 deploy:
   provider: script
