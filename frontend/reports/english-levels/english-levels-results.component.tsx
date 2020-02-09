@@ -47,7 +47,7 @@ export default function EnglishLevelsResults(props) {
         <>
           <tr>
             <th>Total</th>
-            <td>{totalClients}</td>
+            <td>{totalClients.toLocaleString()}</td>
             <td>100%</td>
           </tr>
         </>

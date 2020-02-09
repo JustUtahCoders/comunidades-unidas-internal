@@ -27,7 +27,7 @@ export default function ServiceInterestsResults(props) {
   return (
     <BasicTableReport
       tableStyle={{ width: "100%" }}
-      title={`Interactions by Program and Service`}
+      title={`Interest in C.U. Programs and Services`}
       headerRows={
         <tr>
           <th>Program</th>

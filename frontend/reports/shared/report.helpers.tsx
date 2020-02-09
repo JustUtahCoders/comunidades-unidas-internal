@@ -12,7 +12,8 @@ export function formatDuration(duration) {
   seconds = Number(seconds);
 
   const hoursStr = hours === "1" ? "1 hour" : `${hours} hours`;
-  const minutesStr = minutes === 0 ? "" : `, ${minutes} minutes`;
+  const minutesStr =
+    minutes === 0 ? "" : `, ${minutes} minute${minutes === 1 ? "" : "s"}`;
 
   return hoursStr + minutesStr;
 }

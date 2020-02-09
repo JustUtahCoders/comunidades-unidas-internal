@@ -28,6 +28,22 @@ export default function PovertyLineResults(props) {
             <td>100%</td>
           </tr>
           <tr>
+            <th>Clients above poverty line</th>
+            <td>
+              {data &&
+                data.results.totalClients -
+                  data.results.clientsBelowPovertyLine}
+            </td>
+            <td>
+              {data &&
+                formatPercentage(
+                  data.results.totalClients -
+                    data.results.clientsBelowPovertyLine,
+                  data.results.totalClients
+                )}
+            </td>
+          </tr>
+          <tr>
             <th>Below $200 annual income</th>
             <td>{data && data.results.clientsBelow200DollarsAnnually}</td>
             <td>
