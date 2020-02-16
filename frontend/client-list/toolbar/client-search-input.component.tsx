@@ -9,12 +9,14 @@ import {
   serializeSearch
 } from "../../util/list-search/search-dsl.helpers";
 import easyFetch from "../../util/easy-fetch";
+import ProgramOrService from "./program-or-service.component";
 
 const searchFields = {
   id: "Client ID",
   zip: "ZIP Code",
   phone: "Phone",
-  program: "Interest in Program"
+  program: "Interest",
+  service: "Interest"
 };
 
 export default function ClientSearchInput(props: ClientSearchInputProps) {
@@ -27,7 +29,7 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
     getInitialSearch(searchFields)
   );
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const [programs, setPrograms] = React.useState([]);
+  const [serviceData, setServiceData] = React.useState([]);
 
   React.useEffect(() => {
     inputRef.current.setCustomValidity(search.parseResult.errors.join(", "));
@@ -36,9 +38,7 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
   React.useEffect(() => {
     const abortController = new AbortController();
     easyFetch(`/api/services`, { signal: abortController.signal })
-      .then(json => {
-        setPrograms(json.programs);
-      })
+      .then(setServiceData)
       .catch(err => {
         setTimeout(() => {
           throw err;
@@ -106,7 +106,7 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
                 onChange={evt => updateAdvancedSearch("name", evt.target.value)}
               />
               {Object.entries(searchFields).map(([fieldKey, fieldName]) =>
-                fieldKey !== "program" ? (
+                fieldKey !== "program" && fieldKey !== "service" ? (
                   <React.Fragment key={fieldKey}>
                     <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
                     <input
@@ -119,25 +119,13 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
                       placeholder={getPlaceholder(fieldKey)}
                     />
                   </React.Fragment>
-                ) : (
-                  <React.Fragment key={fieldKey}>
-                    <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
-                    <select
-                      value={search.parseResult.parse[fieldKey]}
-                      onChange={evt => {
-                        updateAdvancedSearch(fieldKey, evt.target.value);
-                      }}
-                    >
-                      <option value="">No program selected</option>
-                      {programs.map(program => (
-                        <option key={program.id} value={program.id}>
-                          {program.programName}
-                        </option>
-                      ))}
-                    </select>
-                  </React.Fragment>
-                )
+                ) : null
               )}
+              <ProgramOrService
+                search={search}
+                serviceData={serviceData}
+                updateAdvancedSearch={updateAdvancedSearch}
+              />
             </div>
             <button
               type="button"
