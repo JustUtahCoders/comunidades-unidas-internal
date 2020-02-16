@@ -34,7 +34,7 @@ export default function AddLeadsStep(props: AddLeadsStepProps) {
           smsConsent: Boolean(l.smsConsent),
           zip: l.zip,
           age: l.age,
-          gender: l.gender || "female",
+          gender: !l.gender || l.gender === "unknown" ? null : l.gender,
           eventSources: [props.eventId],
           leadServices: (l.leadServices || []).map(s => s.id)
         }))

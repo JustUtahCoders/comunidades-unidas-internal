@@ -42,10 +42,9 @@ export default function LeadContactInformationInputs(
           <span>Zip Code:</span>
           <input
             type="text"
-            value={zip}
+            value={zip || ""}
             onChange={evt => setZip(evt.target.value)}
             autoComplete="new-password"
-            required
           />
         </label>
       </div>

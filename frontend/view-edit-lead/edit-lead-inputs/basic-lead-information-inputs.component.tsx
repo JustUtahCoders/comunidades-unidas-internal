@@ -7,7 +7,7 @@ export default function BasicLeadInformationInputs(
 ) {
   const [firstName, setFirstName] = React.useState(props.lead.firstName || "");
   const [lastName, setLastName] = React.useState(props.lead.lastName || "");
-  const [gender, setGender] = React.useState(props.lead.gender || "female");
+  const [gender, setGender] = React.useState(props.lead.gender || "unknown");
   const [age, setAge] = React.useState(props.lead.age);
   const scope = useCss(css);
 
@@ -50,11 +50,10 @@ export default function BasicLeadInformationInputs(
           <input
             type="number"
             name="age"
-            value={age}
+            value={age || ""}
             onChange={evt => setAge(parseInt(evt.target.value))}
             autoComplete="new-password"
             autoFocus
-            required
           />
         </label>
       </div>
@@ -65,8 +64,8 @@ export default function BasicLeadInformationInputs(
             value={gender}
             onChange={evt => setGender(evt.target.value)}
             autoComplete="new-password"
-            required
           >
+            <option value="unknown">Unknown</option>
             <option value="female">Female</option>
             <option value="male">Male</option>
             <option value="nonbinary">Non-binary</option>

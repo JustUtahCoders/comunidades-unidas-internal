@@ -16,13 +16,13 @@ export default function LeadRow({
   const [showInterests, setShowInterests] = React.useState(false);
   const intakeServicesInputsRef = React.useRef(null);
 
-  const input = (field, label) => (
+  const input = (field, label, fieldRequired: boolean = required) => (
     <input
       style={{ width: "100%" }}
       value={lead[field] || ""}
       onChange={e => updateLead(field, e.target.value)}
       aria-label={label}
-      required={required}
+      required={fieldRequired}
     />
   );
 
@@ -32,15 +32,16 @@ export default function LeadRow({
         <td>{input("firstName", "First")}</td>
         <td>{input("lastName", "Last")}</td>
         <td>{input("phone", "Phone")}</td>
-        <td>{input("zip", "Zip")}</td>
-        <td>{input("age", "Age")}</td>
+        <td>{input("zip", "Zip", false)}</td>
+        <td>{input("age", "Age", false)}</td>
         <td>
           <select
             style={{ width: "100%" }}
             required={required}
-            value={lead.gender || "female"}
+            value={lead.gender || "unknown"}
             onChange={evt => updateLead("gender", evt.target.value)}
           >
+            <option value="unknown">Unknown</option>
             <option value="female">Female</option>
             <option value="male">Male</option>
             <option value="nonbinary">Nonbinary</option>
