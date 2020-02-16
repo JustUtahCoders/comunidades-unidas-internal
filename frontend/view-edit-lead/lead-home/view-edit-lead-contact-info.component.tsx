@@ -20,7 +20,10 @@ export default function ViewEditLeadContactInfo(
       const abortController = new AbortController();
       easyFetch(`/api/leads/${lead.id}`, {
         method: "PATCH",
-        body: apiStatus.newLeadData,
+        body: {
+          ...apiStatus.newLeadData,
+          zip: apiStatus.newLeadData.zip || null
+        },
         signal: abortController.signal
       })
         .then(data => {
@@ -82,7 +85,7 @@ export default function ViewEditLeadContactInfo(
               </tr>
               <tr>
                 <td>Zip:</td>
-                <td>{lead.zip}</td>
+                <td>{lead.zip || "\u2014"}</td>
               </tr>
             </tbody>
           </table>

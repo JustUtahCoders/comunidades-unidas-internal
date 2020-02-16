@@ -19,7 +19,13 @@ export default function ViewEditBasicLeadInfo(
       const abortController = new AbortController();
       easyFetch(`/api/leads/${lead.id}`, {
         method: "PATCH",
-        body: apiStatus.newLeadData,
+        body: {
+          ...apiStatus.newLeadData,
+          gender:
+            apiStatus.newLeadData.gender === "unknown"
+              ? null
+              : apiStatus.newLeadData.gender
+        },
         signal: abortController.signal
       })
         .then(data => {
@@ -82,11 +88,11 @@ export default function ViewEditBasicLeadInfo(
               </tr>
               <tr>
                 <td>Age:</td>
-                <td>{lead.age}</td>
+                <td>{lead.age || "\u2014"}</td>
               </tr>
               <tr>
                 <td>Gender:</td>
-                <td>{lead.gender}</td>
+                <td>{lead.gender || "\u2014"}</td>
               </tr>
             </tbody>
           </table>

@@ -6,7 +6,9 @@ const {
   validArray,
   validBoolean,
   validDate,
-  validInteger
+  validInteger,
+  nullableNonEmptyString,
+  nullableValidInteger
 } = require("../utils/validation-utils");
 
 app.post("/api/leads", (req, res) => {
@@ -28,9 +30,9 @@ app.post("/api/leads", (req, res) => {
       nonEmptyString("lastName"),
       nonEmptyString("phone"),
       validBoolean("smsConsent"),
-      nonEmptyString("zip"),
-      validInteger("age"),
-      nonEmptyString("gender"),
+      nullableNonEmptyString("zip"),
+      nullableValidInteger("age"),
+      nullableNonEmptyString("gender"),
       validArray("eventSources", validInteger),
       validArray("leadServices", validInteger)
     );
