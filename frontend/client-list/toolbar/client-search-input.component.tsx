@@ -198,9 +198,15 @@ function searchReducer(state: Search, action: SearchAction): Search {
       parseResult = parseSearch(searchFields, action.value);
       return { value: action.value, parseResult };
     case SearchTypes.newAdvancedValue:
-      parseResult = parseSearch(searchFields, action.currentSearch, {
+      const newVals = {
         [action.fieldKey]: action.value
-      });
+      };
+      if (action.fieldKey === "program") {
+        newVals.service = "";
+      } else if (action.fieldKey === "service") {
+        newVals.program = "";
+      }
+      parseResult = parseSearch(searchFields, action.currentSearch, newVals);
       const newSearchValue = serializeSearch(searchFields, parseResult.parse);
       return { value: newSearchValue, parseResult };
     default:
