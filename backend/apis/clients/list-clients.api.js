@@ -31,6 +31,13 @@ app.get("/api/clients", (req, res, next) => {
     );
   }
 
+  if (req.query.program && req.query.service) {
+    return invalidRequest(
+      res,
+      `You may only provide one of the following query params: 'program' or 'service'`
+    );
+  }
+
   const pageSize = 100;
 
   const getClientList = clientListQuery(req.query, requestPage, pageSize);
@@ -101,7 +108,7 @@ function clientListQuery(query, pageNum, pageSize) {
   }
 
   let joinIntakeServices = "";
-  if (query.program) {
+  if (query.program || query.service) {
     joinIntakeServices = `
       JOIN 
       (
@@ -116,10 +123,13 @@ function clientListQuery(query, pageNum, pageSize) {
           ON latestIntakeD.latestDateAdded = innerIntakeD.dateAdded AND latestIntakeD.latestClientId = innerIntakeD.clientId
       ) intakeD ON cl.id = intakeD.clientId
     `;
+    const serviceId = query.program
+      ? `IN (SELECT id FROM services WHERE programId = ?)`
+      : "= ?";
     whereClause += `
-      AND (SELECT COUNT(*) FROM intakeServices WHERE intakeDataId = intakeDId AND intakeServices.serviceId IN (SELECT id FROM services WHERE programId = ?)) > 0
+      AND (SELECT COUNT(*) FROM intakeServices WHERE intakeDataId = intakeDId AND intakeServices.serviceId ${serviceId}) > 0
     `;
-    whereClauseValues.push(query.program);
+    whereClauseValues.push(query.program || query.service);
   }
 
   if (query.wantsSMS) {

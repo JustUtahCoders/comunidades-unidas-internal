@@ -4,7 +4,7 @@ API is provided to query a list of clients from the database.
 
 ## Request
 
-GET /api/clients?name=Mario%20Luigi&zip=84107&page=1&phone=8015558888&id=2&program=1&sortField=firstName&sortOrder=asc&wantsSMS=true
+GET /api/clients?name=Mario%20Luigi&zip=84107&page=1&phone=8015558888&id=2&program=1&sortField=firstName&sortOrder=asc&wantsSMS=true&service=2
 
 Notes:
 
@@ -14,7 +14,9 @@ Notes:
 - "name" can be partial
 - "phone" can be partial
 - If no search terms are provided, the top 100 rows will be returned ordered by lastName, firstName
-- "program" is the mysql program id
+- "program" is the program id.
+- "service" is the service id.
+- You may only provide eitehr program or service. Not both.
 - "sortField" is one of the following: `id`, `firstName`, `lastName`, `birthday`
 - "sortOrder" is one of the following: `asc`, `desc`
 - "wantsSMS" is one of the following: `true`, `false`
