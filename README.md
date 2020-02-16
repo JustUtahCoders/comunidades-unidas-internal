@@ -73,7 +73,7 @@ You can see all current and previous deployments at https://travis-ci.org/JustUt
 If you need to make a change to the database schema, create a database migration by running the following command:
 
 ```sh
-npx db-migrate create name-of-the-migration --sql-file
+yarn db-migrate create name-of-the-migration --sql-file
 ```
 
 This will create a directory in the `migrations` folder that has an "up" and a "down" sql file. The up file should create tables or modify columns,
