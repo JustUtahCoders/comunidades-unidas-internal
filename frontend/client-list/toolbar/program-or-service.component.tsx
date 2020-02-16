@@ -8,7 +8,6 @@ export default function ProgramOrService({
 }) {
   const [programOrService, setProgramOrService] = React.useState("program");
   const groupedServices = groupBy(serviceData.services, "programName");
-  console.log("groupedServices", groupedServices);
 
   return (
     <>
