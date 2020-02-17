@@ -8,9 +8,11 @@ import workerRightsIcon from "../../../icons/services-icons/svg/064-hand-holding
 import familySupportIcon from "../../../icons/services-icons/svg/061-family-house.svg";
 import communityEngagementIcon from "../../../icons/services-icons/svg/055-megaphone.svg";
 import focusGroupsIcon from "../../../icons/services-icons/svg/070-lightbulb-idea.svg";
+import snapIcon from "../../../icons/services-icons/svg/stamp.png";
 import unknownIcon from "../../../icons/148705-essential-collection/svg/info.svg";
 import { LeadServices } from "../lead-list.component";
 import { groupBy } from "lodash-es";
+import singleClientSearchInputComponent from "../../client-search/single-client/single-client-search-input.component";
 
 export default function LeadServicesCell(props: LeadServicesCellProps) {
   const { leadServices } = props;
@@ -42,7 +44,7 @@ export default function LeadServicesCell(props: LeadServicesCellProps) {
     switch (programName) {
       case "Preventive Health":
         return preventiveHealthIcon;
-      case "Nutrition / CRYS / SNAP":
+      case "Nutrition / CRYS":
         return nutritionIcon;
       case "Immigration":
         return immigrationIcon;
@@ -56,6 +58,8 @@ export default function LeadServicesCell(props: LeadServicesCellProps) {
         return communityEngagementIcon;
       case "Focus Groups":
         return focusGroupsIcon;
+      case "SNAP":
+        return snapIcon;
       default:
         return unknownIcon;
     }
