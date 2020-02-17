@@ -21,6 +21,7 @@ export default function ClientList(props: ClientListProps) {
   const [selectedClients, setSelectedClients] = React.useState<SelectedClients>(
     {}
   );
+  const [advancedSearchOpen, setAdvancedSearchOpen] = React.useState(false);
 
   useFullWidth();
   const [apiState, dispatchApiState] = React.useReducer(
@@ -50,6 +51,8 @@ export default function ClientList(props: ClientListProps) {
         modalOptions={modalOptions}
         setModalOptions={setModalOptions}
         refetchClients={refetchClients}
+        advancedSearchOpen={advancedSearchOpen}
+        setAdvancedSearchOpen={setAdvancedSearchOpen}
       />
       <ClientsTable
         clients={apiState.apiData.clients}
@@ -60,6 +63,7 @@ export default function ClientList(props: ClientListProps) {
         sortOrder={apiState.sortOrder}
         selectedClients={selectedClients}
         setSelectedClients={setSelectedClients}
+        advancedSearchOpen={advancedSearchOpen}
       />
       {modalOptions.isOpen === true && (
         <Modal

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { useCss } from "kremling";
 import easyFetch from "../../util/easy-fetch";
 import backIcon from "../../../icons/148705-essential-collection/svg/back.svg";
@@ -12,7 +12,6 @@ import DropDownMenuModal from "../../util/dropdown-menu-modal.component";
 export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
   const scope = useCss(css);
   const advancedSearchRef = React.useRef(null);
-  const [bulkActionMenuIsOpen, setBulkActionMenuIsOpen] = React.useState(false);
 
   const lastPage = Math.ceil(props.numClients / props.pageSize);
 
@@ -34,6 +33,8 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
             initialValueFromQueryParams
             disabled={props.fetchingClient}
             advancedSearchRef={advancedSearchRef}
+            advancedSearchOpen={props.advancedSearchOpen}
+            setAdvancedSearchOpen={props.setAdvancedSearchOpen}
           />
         </div>
         {lastPage !== 0 && (
@@ -261,4 +262,6 @@ type ClientsTableToolbarProps = {
   modalOptions: object;
   setModalOptions: (modalOptions: object) => any;
   refetchClients: () => any;
+  advancedSearchOpen: boolean;
+  setAdvancedSearchOpen: Dispatch<SetStateAction<boolean>>;
 };

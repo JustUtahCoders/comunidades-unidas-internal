@@ -28,4 +28,5 @@ export type ClientsTableProps = {
   sortOrder: SortOrder;
   selectedClients: SelectedClients;
   setSelectedClients: (selectedClients: SelectedClients) => any;
+  advancedSearchOpen: boolean;
 };

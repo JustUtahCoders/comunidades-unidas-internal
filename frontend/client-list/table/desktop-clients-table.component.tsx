@@ -32,7 +32,12 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
 
   return (
     <div className="table-container" {...scope}>
-      <table className="clients-table">
+      <table
+        className={a("clients-table").m(
+          "advanced-search",
+          props.advancedSearchOpen
+        )}
+      >
         <thead>
           <tr>
             <th>
@@ -209,6 +214,10 @@ const css = `
   top: 6rem;
   background-color: var(--very-light-gray);
   box-shadow: 0 .2rem .2rem var(--medium-gray);
+}
+
+& .clients-table.advanced-search th {
+  top: 43.3rem;
 }
 
 @media print {

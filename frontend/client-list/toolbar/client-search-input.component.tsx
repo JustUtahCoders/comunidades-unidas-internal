@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
 import { useCss } from "kremling";
 import {
@@ -21,9 +21,6 @@ const searchFields = {
 
 export default function ClientSearchInput(props: ClientSearchInputProps) {
   const scope = useCss(css);
-  const [showingAdvancedSearch, setShowingAdvancedSearch] = React.useState(
-    false
-  );
   const [search, dispatchSearch] = React.useReducer(
     searchReducer,
     getInitialSearch(searchFields)
@@ -65,13 +62,13 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
           aria-label="Search for clients"
           placeholder="Search for clients"
         />
-        {!showingAdvancedSearch && (
+        {!props.advancedSearchOpen && (
           <>
             <button
               type="button"
               className="secondary"
               disabled={props.disabled}
-              onClick={() => setShowingAdvancedSearch(true)}
+              onClick={() => props.setAdvancedSearchOpen(true)}
             >
               Advanced
             </button>
@@ -81,7 +78,7 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
           </>
         )}
       </form>
-      {showingAdvancedSearch &&
+      {props.advancedSearchOpen &&
         props.advancedSearchRef &&
         ReactDOM.createPortal(
           <form
@@ -131,7 +128,7 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
               type="button"
               className="secondary"
               disabled={props.disabled}
-              onClick={() => setShowingAdvancedSearch(false)}
+              onClick={() => props.setAdvancedSearchOpen(false)}
             >
               Done
             </button>
@@ -285,4 +282,6 @@ type ClientSearchInputProps = {
   performSearch(parseResult: SearchParseValues): any;
   disabled: boolean;
   advancedSearchRef: React.MutableRefObject<HTMLElement>;
+  advancedSearchOpen: boolean;
+  setAdvancedSearchOpen: Dispatch<SetStateAction<boolean>>;
 };
