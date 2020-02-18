@@ -122,7 +122,7 @@ GET /api/leads?name=John&page=1
       "zip": "84115",
       "age": 25,
       "gender": "male",
-      "leadServices": [2, 4 6],
+      "leadServices": [2, 4, 6],
       "clientId": 1
     }
   ],

@@ -10,13 +10,14 @@ import communityEngagementIcon from "../../../icons/services-icons/svg/055-megap
 import focusGroupsIcon from "../../../icons/services-icons/svg/070-lightbulb-idea.svg";
 import snapIcon from "../../../icons/services-icons/svg/stamp.png";
 import unknownIcon from "../../../icons/148705-essential-collection/svg/info.svg";
-import { LeadServices } from "../lead-list.component";
 import { groupBy } from "lodash-es";
-import singleClientSearchInputComponent from "../../client-search/single-client/single-client-search-input.component";
 
 export default function LeadServicesCell(props: LeadServicesCellProps) {
-  const { leadServices } = props;
   const scope = useCss(css);
+  const allServices = props.programData.services || [];
+  const leadServices = props.leadServices.map(sid =>
+    allServices.find(ser => ser.id === sid)
+  );
   const leadServicesByName = groupBy(leadServices, "programName");
 
   return (
@@ -91,5 +92,6 @@ const css = `
 `;
 
 type LeadServicesCellProps = {
-  leadServices: Array<LeadServices>;
+  leadServices: Array<number>;
+  programData: any;
 };

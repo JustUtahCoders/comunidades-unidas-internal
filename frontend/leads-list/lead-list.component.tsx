@@ -21,6 +21,8 @@ export default function LeadList(props: LeadListProps) {
   });
 
   const [selectedLeads, setSelectedLeads] = React.useState<SelectedLeads>({});
+  const [programData, setProgramData] = React.useState([]);
+  const [events, setEvents] = React.useState([]);
 
   useFullWidth(true);
 
@@ -35,6 +37,36 @@ export default function LeadList(props: LeadListProps) {
   useFrontendUrlParams(apiState, dispatchApiState);
 
   const fetchingLead = apiState.status !== ApiStateStatus.fetched;
+
+  React.useEffect(() => {
+    const abortController = new AbortController();
+    easyFetch(`/api/services`, { signal: abortController.signal })
+      .then(json => {
+        setProgramData(json);
+      })
+      .catch(err => {
+        setTimeout(() => {
+          throw err;
+        });
+      });
+
+    return () => abortController.abort();
+  }, []);
+
+  React.useEffect(() => {
+    const abortController = new AbortController();
+    easyFetch(`/api/events`, { signal: abortController.signal })
+      .then(json => {
+        setEvents(json.events);
+      })
+      .catch(err => {
+        setTimeout(() => {
+          throw err;
+        });
+      });
+
+    return () => abortController.abort();
+  }, []);
 
   return (
     <>
@@ -51,6 +83,8 @@ export default function LeadList(props: LeadListProps) {
         setSelectedLeads={setSelectedLeads}
         modalOptions={modalOptions}
         setModalOptions={setModalOptions}
+        programData={programData}
+        events={events}
       />
       <LeadsTable
         leads={apiState.apiData.leads}
@@ -61,6 +95,8 @@ export default function LeadList(props: LeadListProps) {
         sortOrder={apiState.sortOrder}
         selectedLeads={selectedLeads}
         setSelectedLeads={setSelectedLeads}
+        programData={programData}
+        events={events}
       />
       {modalOptions.isOpen === true && (
         <Modal
@@ -423,13 +459,6 @@ export type EventSources = {
   eventLocation: string;
 };
 
-export type LeadServices = {
-  serviceId: number;
-  serviceName: string;
-  programId: number;
-  programName: string;
-};
-
 export type LeadListLead = {
   id: number;
   dateOfSignUp: string;
@@ -449,7 +478,7 @@ export type LeadListLead = {
   zip: string;
   age: number;
   gender: string;
-  leadServices: Array<LeadServices>;
+  leadServices: Array<number>;
   clientId: number;
   createdBy: {
     userId: number;

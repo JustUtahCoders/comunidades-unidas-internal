@@ -149,7 +149,10 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
                   </td>
                   <td className="interests-cell">
                     <Link to={`/leads/${lead.id}`} className="unstyled">
-                      <LeadServicesCell leadServices={lead.leadServices} />
+                      <LeadServicesCell
+                        leadServices={lead.leadServices}
+                        programData={props.programData}
+                      />
                     </Link>
                   </td>
                 </tr>

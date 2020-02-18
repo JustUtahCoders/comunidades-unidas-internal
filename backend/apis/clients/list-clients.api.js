@@ -31,13 +31,6 @@ app.get("/api/clients", (req, res, next) => {
     );
   }
 
-  if (req.query.program && req.query.service) {
-    return invalidRequest(
-      res,
-      `You may only provide one of the following query params: 'program' or 'service'`
-    );
-  }
-
   const pageSize = 100;
 
   const getClientList = clientListQuery(req.query, requestPage, pageSize);
@@ -187,14 +180,19 @@ function clientListQuery(query, pageNum, pageSize) {
 }
 
 function validateClientListQuery(query) {
-  return checkValid(
-    query,
-    nullableValidInteger("page"),
-    nullableValidId("id"),
-    nullableNonEmptyString("phone"),
-    nullableValidId("program"),
-    nullableValidEnum("sortField", "id", "firstName", "lastName", "birthday"),
-    nullableValidEnum("sortOrder", "asc", "desc"),
-    nullableValidBoolean("wantsSMS")
-  );
+  return [
+    ...checkValid(
+      query,
+      nullableValidInteger("page"),
+      nullableValidId("id"),
+      nullableNonEmptyString("phone"),
+      nullableValidId("program"),
+      nullableValidEnum("sortField", "id", "firstName", "lastName", "birthday"),
+      nullableValidEnum("sortOrder", "asc", "desc"),
+      nullableValidBoolean("wantsSMS")
+    ),
+    req.query && req.program
+      ? `You may only provide one of the following query params: 'program' or 'service'`
+      : null
+  ].filter(Boolean);
 }
