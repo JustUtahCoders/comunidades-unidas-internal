@@ -191,7 +191,7 @@ function validateClientListQuery(query) {
       nullableValidEnum("sortOrder", "asc", "desc"),
       nullableValidBoolean("wantsSMS")
     ),
-    req.query && req.program
+    query.program && query.service
       ? `You may only provide one of the following query params: 'program' or 'service'`
       : null
   ].filter(Boolean);
