@@ -6,7 +6,9 @@ export default function ProgramOrService({
   serviceData,
   updateAdvancedSearch
 }) {
-  const [programOrService, setProgramOrService] = React.useState("program");
+  const [programOrService, setProgramOrService] = React.useState(
+    search.parseResult.parse.service ? "service" : "program"
+  );
   const groupedServices = groupBy(serviceData.services, "programName");
 
   return (

@@ -34,6 +34,8 @@ export default function LeadsTableToolbar(props: LeadsTableToolbarProps) {
             initialValueFromQueryParams
             disabled={props.fetchingLead}
             advancedSearchRef={advancedSearchRef}
+            programData={props.programData}
+            events={props.events}
           />
         </div>
         {lastPage !== 0 && (
@@ -239,4 +241,6 @@ type LeadsTableToolbarProps = {
   setSelectedLeads: (selectedLeads: SelectedLeads) => any;
   modalOptions: object;
   setModalOptions: (modalOptions: object) => any;
+  programData: any;
+  events: Array<any>;
 };

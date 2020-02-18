@@ -20,4 +20,6 @@ export type LeadsTableProps = {
   sortOrder: SortOrder;
   selectedLeads: SelectedLeads;
   setSelectedLeads: (selectedLeads: SelectedLeads) => any;
+  programData: any;
+  events: Array<any>;
 };

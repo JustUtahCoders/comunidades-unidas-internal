@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import easyFetch from "../../util/easy-fetch";
 import { useCss } from "kremling";
 import {
   SearchParseValues,
@@ -9,12 +8,14 @@ import {
   deserializeSearch,
   serializeSearch
 } from "../../util/list-search/search-dsl.helpers";
+import ProgramOrService from "../../client-list/toolbar/program-or-service.component";
 
 const searchFields = {
   id: "Lead ID",
   zip: "ZIP Code",
   phone: "Phone",
-  program: "Interest in Program",
+  program: "Interest",
+  service: "Interest",
   event: "Event Attended"
 };
 
@@ -28,42 +29,10 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
     getInitialSearch(searchFields)
   );
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const [programs, setPrograms] = React.useState([]);
-  const [events, setEvents] = React.useState([]);
 
   React.useEffect(() => {
     inputRef.current.setCustomValidity(search.parseResult.errors.join(". "));
   }, [search]);
-
-  React.useEffect(() => {
-    const abortController = new AbortController();
-    easyFetch(`/api/services`, { signal: abortController.signal })
-      .then(json => {
-        setPrograms(json.programs);
-      })
-      .catch(err => {
-        setTimeout(() => {
-          throw err;
-        });
-      });
-
-    return () => abortController.abort();
-  }, []);
-
-  React.useEffect(() => {
-    const abortController = new AbortController();
-    easyFetch(`/api/events`, { signal: abortController.signal })
-      .then(json => {
-        setEvents(json.events);
-      })
-      .catch(err => {
-        setTimeout(() => {
-          throw err;
-        });
-      });
-
-    return () => abortController.abort();
-  }, []);
 
   return (
     <div className="search-container" {...scope}>
@@ -122,45 +91,49 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
                 type="text"
                 value={search.parseResult.parse.name || ""}
               />
-              {Object.entries(searchFields).map(([fieldKey, fieldName]) =>
-                fieldKey === "program" || fieldKey === "event" ? (
-                  <React.Fragment key={fieldKey}>
-                    <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
-                    <select
-                      onChange={evt => {
-                        updateAdvancedSearch(fieldKey, evt.target.value);
-                      }}
-                      value={search.parseResult.parse[fieldKey]}
-                    >
-                      <option value="">No {fieldKey} selected</option>
-                      {fieldKey === "program"
-                        ? programs.map(program => (
-                            <option key={program.id} value={program.id}>
-                              {program.programName}
-                            </option>
-                          ))
-                        : events.map(event => (
-                            <option key={event.id} value={event.id}>
-                              {event.eventName}
-                            </option>
-                          ))}
-                    </select>
-                  </React.Fragment>
-                ) : (
-                  <React.Fragment key={fieldKey}>
-                    <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
-                    <input
-                      aria-labelledby={"advanced-search-" + fieldKey}
-                      onChange={evt =>
-                        updateAdvancedSearch(fieldKey, evt.target.value)
-                      }
-                      placeholder={getPlaceholder(fieldKey)}
-                      type="text"
-                      value={search.parseResult.parse[fieldKey] || ""}
-                    />
-                  </React.Fragment>
+              {Object.entries(searchFields)
+                .filter(
+                  ([fieldKey]) =>
+                    fieldKey !== "program" && fieldKey !== "service"
                 )
-              )}
+                .map(([fieldKey, fieldName]) =>
+                  fieldKey === "event" ? (
+                    <React.Fragment key={fieldKey}>
+                      <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
+                      <select
+                        onChange={evt => {
+                          updateAdvancedSearch(fieldKey, evt.target.value);
+                        }}
+                        value={search.parseResult.parse[fieldKey]}
+                      >
+                        <option value="">No {fieldKey} selected</option>
+                        {props.events.map(event => (
+                          <option key={event.id} value={event.id}>
+                            {event.eventName}
+                          </option>
+                        ))}
+                      </select>
+                    </React.Fragment>
+                  ) : (
+                    <React.Fragment key={fieldKey}>
+                      <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
+                      <input
+                        aria-labelledby={"advanced-search-" + fieldKey}
+                        onChange={evt =>
+                          updateAdvancedSearch(fieldKey, evt.target.value)
+                        }
+                        placeholder={getPlaceholder(fieldKey)}
+                        type="text"
+                        value={search.parseResult.parse[fieldKey] || ""}
+                      />
+                    </React.Fragment>
+                  )
+                )}
+              <ProgramOrService
+                search={search}
+                serviceData={props.programData}
+                updateAdvancedSearch={updateAdvancedSearch}
+              />
             </div>
             <button
               type="button"
@@ -232,9 +205,15 @@ function searchReducer(state: Search, action: SearchAction): Search {
       parseResult = parseSearch(searchFields, action.value);
       return { value: action.value, parseResult };
     case SearchTypes.newAdvancedValue:
-      parseResult = parseSearch(searchFields, action.currentSearch, {
+      const newVal = {
         [action.fieldKey]: action.value
-      });
+      };
+      if (action.fieldKey === "program") {
+        newVal.service = null;
+      } else if (action.fieldKey === "service") {
+        newVal.program = null;
+      }
+      parseResult = parseSearch(searchFields, action.currentSearch, newVal);
       const newSearchValue = serializeSearch(searchFields, parseResult.parse);
       return { value: newSearchValue, parseResult };
     default:
@@ -314,4 +293,6 @@ type LeadSearchInputProps = {
   performSearch(parseResult: SearchParseValues): any;
   disabled: boolean;
   advancedSearchRef: React.MutableRefObject<HTMLElement>;
+  programData: any;
+  events: Array<any>;
 };
