@@ -2,17 +2,9 @@ import React from "react";
 import { useCss } from "kremling";
 import kabobIcon from "../../icons/148705-essential-collection/svg/more-1.svg";
 
-export default function DropDownMenuModal(props: DropDownMenuModalProps) {
+export default function DropDownMenuModal(props) {
   const scope = useCss(css);
   const [dropDownOpen, setDropDownOpen] = React.useState(false);
-
-  const mapMenuButtons = props.buttonData.map((button, i) => {
-    return (
-      <li onClick={button.buttonAction} key={`dropdown-menu-button-${i}`}>
-        {button.buttonText}
-      </li>
-    );
-  });
 
   return (
     <>
@@ -28,7 +20,7 @@ export default function DropDownMenuModal(props: DropDownMenuModalProps) {
             className="popup dropdown-dialog-box"
             onClick={() => setDropDownOpen(!dropDownOpen)}
           >
-            <ul>{mapMenuButtons}</ul>
+            <ul>{props.children}</ul>
           </div>
         )}
       </div>
@@ -61,7 +53,7 @@ const css = `
 
 & .dropdown-dialog-box {
   margin-top: 1rem;
-  padding: 1rem;
+  padding: 1rem 0;
   z-index: 1000;
 }
 
@@ -73,8 +65,4 @@ const css = `
 export type ButtonOptionsProps = {
   buttonText: string;
   buttonAction?(): any;
-};
-
-type DropDownMenuModalProps = {
-  buttonData: Array<ButtonOptionsProps>;
 };

@@ -6,18 +6,8 @@ import ClientsTable from "./table/clients-table.component";
 import easyFetch from "../util/easy-fetch";
 import { SearchParseValues } from "../util/list-search/search-dsl.helpers";
 import queryString from "query-string";
-import Modal from "../util/modal.component";
 
 export default function ClientList(props: ClientListProps) {
-  const [modalOptions, setModalOptions] = React.useState({
-    isOpen: false,
-    headerText: null,
-    primaryText: null,
-    primaryAction: null,
-    secondaryText: null,
-    secondaryAction: null,
-    children: null
-  });
   const [selectedClients, setSelectedClients] = React.useState<SelectedClients>(
     {}
   );
@@ -48,8 +38,6 @@ export default function ClientList(props: ClientListProps) {
         fetchingClient={fetchingClient}
         selectedClients={selectedClients}
         setSelectedClients={setSelectedClients}
-        modalOptions={modalOptions}
-        setModalOptions={setModalOptions}
         refetchClients={refetchClients}
         advancedSearchOpen={advancedSearchOpen}
         setAdvancedSearchOpen={setAdvancedSearchOpen}
@@ -65,27 +53,6 @@ export default function ClientList(props: ClientListProps) {
         setSelectedClients={setSelectedClients}
         advancedSearchOpen={advancedSearchOpen}
       />
-      {modalOptions.isOpen === true && (
-        <Modal
-          close={() =>
-            setModalOptions({
-              isOpen: false,
-              headerText: null,
-              primaryText: null,
-              primaryAction: null,
-              secondaryText: null,
-              secondaryAction: null,
-              children: null
-            })
-          }
-          headerText={modalOptions.headerText}
-          primaryText={modalOptions.primaryText}
-          primaryAction={modalOptions.primaryAction}
-          secondaryText={modalOptions.secondaryText}
-          secondaryAction={modalOptions.secondaryAction}
-          children={modalOptions.children}
-        />
-      )}
     </>
   );
 

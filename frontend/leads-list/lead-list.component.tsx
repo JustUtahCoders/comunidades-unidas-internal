@@ -4,22 +4,10 @@ import easyFetch from "../util/easy-fetch";
 import { useFullWidth } from "../navbar/use-full-width.hook";
 import { SearchParseValues } from "../util/list-search/search-dsl.helpers";
 import PageHeader from "../page-header.component";
-import ReportIssue from "../report-issue/report-issue.component";
 import LeadsTable from "./table/leads-table.component";
 import LeadsTableToolbar from "./toolbar/leads-table-toolbar.component";
-import Modal from "../util/modal.component";
 
 export default function LeadList(props: LeadListProps) {
-  const [modalOptions, setModalOptions] = React.useState({
-    isOpen: false,
-    headerText: null,
-    primaryText: null,
-    primaryAction: null,
-    secondaryText: null,
-    secondaryAction: null,
-    children: null
-  });
-
   const [selectedLeads, setSelectedLeads] = React.useState<SelectedLeads>({});
   const [programData, setProgramData] = React.useState([]);
   const [events, setEvents] = React.useState([]);
@@ -81,8 +69,6 @@ export default function LeadList(props: LeadListProps) {
         setSearch={setSearch}
         selectedLeads={selectedLeads}
         setSelectedLeads={setSelectedLeads}
-        modalOptions={modalOptions}
-        setModalOptions={setModalOptions}
         programData={programData}
         events={events}
       />
@@ -98,27 +84,6 @@ export default function LeadList(props: LeadListProps) {
         programData={programData}
         events={events}
       />
-      {modalOptions.isOpen === true && (
-        <Modal
-          close={() =>
-            setModalOptions({
-              isOpen: false,
-              headerText: null,
-              primaryText: null,
-              primaryAction: null,
-              secondaryText: null,
-              secondaryAction: null,
-              children: null
-            })
-          }
-          headerText={modalOptions.headerText}
-          primaryText={modalOptions.primaryText}
-          primaryAction={modalOptions.primaryAction}
-          secondaryText={modalOptions.secondaryText}
-          secondaryAction={modalOptions.secondaryAction}
-          children={modalOptions.children}
-        />
-      )}
     </>
   );
 
