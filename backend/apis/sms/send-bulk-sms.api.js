@@ -24,7 +24,7 @@ if (
   );
 }
 
-app.post(`/api/bulk-texts`, (req, res) => {
+app.post(`/api/send-bulk-texts`, (req, res) => {
   const validationErrors = [
     ...validateClientListQuery(req.query),
     ...checkValid(req.body, nonEmptyString("smsBody"))
