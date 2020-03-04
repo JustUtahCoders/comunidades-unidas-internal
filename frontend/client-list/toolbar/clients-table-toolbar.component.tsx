@@ -9,11 +9,12 @@ import { SelectedClients } from "../client-list.component";
 import DropDownMenuModal from "../../util/dropdown-menu-modal.component";
 import DeleteBulkClientModal from "./delete-bulk-client-modal.component";
 import Modal from "../../util/modal.component";
+import BulkSmsModal from "../../bulk-sms/bulk-sms-modal.component";
 
 const BulkActionModals = {
   bulkDelete: DeleteBulkClientModal,
-  noClients: NoClients
-  // bulkSms: BulkSmsModal,
+  noClients: NoClients,
+  bulkSms: BulkSmsModal
 };
 
 export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
@@ -24,6 +25,7 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
   const lastPage = Math.ceil(props.numClients / props.pageSize);
 
   const Modal = modal && BulkActionModals[modal];
+  console.log("modal", modal, Modal);
 
   return (
     <div className="clients-table-toolbar" {...scope}>
@@ -95,6 +97,7 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
   }
 
   function openModal(name) {
+    console.log("HERE");
     if (Object.keys(props.selectedClients).length === 0) {
       setModal("noClients");
     } else {
