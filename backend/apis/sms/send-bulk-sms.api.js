@@ -9,6 +9,10 @@ const {
   validateClientListQuery,
   clientListQuery
 } = require("../clients/list-clients.api");
+const {
+  validateListLeadsQuery,
+  listLeadsQuery
+} = require("../leads/list-leads.api");
 const { checkValid, nonEmptyString } = require("../utils/validation-utils");
 const mysql = require("mysql");
 
@@ -24,9 +28,10 @@ if (
   );
 }
 
-app.post(`/api/send-bulk-texts`, (req, res) => {
+app.post(`/api/bulk-texts`, (req, res) => {
   const validationErrors = [
     ...validateClientListQuery(req.query),
+    ...validateListLeadsQuery(req.query),
     ...checkValid(req.body, nonEmptyString("smsBody"))
   ];
 
@@ -48,29 +53,26 @@ app.post(`/api/send-bulk-texts`, (req, res) => {
   // We always want to only select clients who want text messages
   req.query.wantsSMS = true;
 
-  const mysqlStr = clientListQuery(req.query);
+  const clientQuery = clientListQuery(req.query);
+  const leadsQuery = listLeadsQuery(req.query);
+  const finalQuery = clientQuery + leadsQuery;
 
-  pool.query(mysqlStr, (err, result) => {
+  pool.query(finalQuery, (err, result) => {
     if (err) {
       return databaseError(req, res, err);
     }
 
-    const [clientRows] = result;
-
-    const clientsWithPhone = clientRows
-      .map(row => ({
-        clientId: row.id,
-        primaryPhone: row.primaryPhone
-      }))
-      .filter(c => Boolean(c.primaryPhone));
+    const [clientRows, totalCountClientRows, leadRows] = result;
 
     const phoneNumbers = Array.from(
-      new Set(clientsWithPhone.map(c => c.primaryPhone))
+      new Set(
+        clientRows.map(c => c.primaryPhone).concat(leadRows.map(r => r.phone))
+      )
     );
 
     const response = {
       clientsMatched: clientRows.length,
-      clientsWithPhone: clientsWithPhone.length,
+      leadsMatched: leadRows.length,
       uniquePhoneNumbers: phoneNumbers.length
     };
 
@@ -95,7 +97,8 @@ app.post(`/api/send-bulk-texts`, (req, res) => {
         const insertSql = insertBulkSmsQuery(
           response,
           notification.sid,
-          clientsWithPhone,
+          clientRows,
+          leadRows,
           req.session.passport.user.id,
           req.body.smsBody
         );
@@ -118,6 +121,7 @@ function insertBulkSmsQuery(
   totals,
   twilioSid,
   clientsWithPhone,
+  leadsWithPhone,
   userId,
   smsBody
 ) {
@@ -125,15 +129,19 @@ function insertBulkSmsQuery(
     twilioSid,
     smsBody,
     totals.clientsMatched,
-    totals.clientsWithPhone,
-    0,
-    0,
+    totals.clientsMatched,
+    totals.leadsMatched,
+    totals.leadsMatched,
     totals.uniquePhoneNumbers,
     userId
   ];
 
   clientsWithPhone.forEach(c => {
-    values.push(c.primaryPhone, null, c.clientId);
+    values.push(c.primaryPhone, null, c.id);
+  });
+
+  leadsWithPhone.forEach(l => {
+    values.push(l.phone, l.leadId, null);
   });
 
   return mysql.format(
@@ -156,6 +164,16 @@ function insertBulkSmsQuery(
       )
       .join("\n")}
 
+    ${leadsWithPhone
+      .map(
+        c => `
+      INSERT INTO bulkSmsRecipients
+        (bulkSmsId, phone, leadId, clientId)
+      VALUES
+        (@bulkSmsId, ?, ?, ?);
+    `
+      )
+      .join("\n")}
   `,
     values
   );

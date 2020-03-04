@@ -125,6 +125,7 @@ function clientListQuery(query, pageNum, pageSize) {
     whereClauseValues.push(query.program || query.service);
   }
 
+  console.log("wantsSMS", query.wantsSMS);
   if (query.wantsSMS) {
     whereClause += `AND ct.textMessages = TRUE `;
   }

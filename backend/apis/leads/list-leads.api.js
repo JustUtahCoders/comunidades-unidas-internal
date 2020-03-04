@@ -204,7 +204,7 @@ function listLeadsQuery(query, pageNum) {
     columnsToOrder = `leads.${query.sortField} ${sortOrder}`;
   }
 
-  if (query.smsConsent) {
+  if (query.wantsSMS) {
     whereClause += `
       AND leads.smsConsent = true
     `;
