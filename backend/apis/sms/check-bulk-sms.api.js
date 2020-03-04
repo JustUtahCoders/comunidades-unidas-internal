@@ -36,8 +36,6 @@ app.post(`/api/check-bulk-texts`, (req, res) => {
 
     const [clientRows, totalCountClientRows, leadRows] = result;
 
-    console.log(clientRows, leadRows);
-
     const phoneNumbers = Array.from(
       new Set(
         clientRows.map(r => r.primaryPhone).concat(leadRows.map(r => r.phone))
