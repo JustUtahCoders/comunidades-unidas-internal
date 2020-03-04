@@ -33,7 +33,7 @@ app.get("/api/leads", (req, res, next) => {
     );
   }
 
-  const getLeads = listLeadsQuery(req.query);
+  const getLeads = listLeadsQuery(req.query, req.page || 0);
 
   pool.query(getLeads, (err, results, fields) => {
     if (err) {
@@ -128,7 +128,7 @@ function validateListLeadsQuery(query) {
   return validationErrors;
 }
 
-function listLeadsQuery(query) {
+function listLeadsQuery(query, pageNum) {
   let whereClause = `WHERE leads.isDeleted = false `;
   let whereClauseValues = [];
 
@@ -204,6 +204,23 @@ function listLeadsQuery(query) {
     columnsToOrder = `leads.${query.sortField} ${sortOrder}`;
   }
 
+  if (query.wantsSMS) {
+    whereClause += `
+      AND leads.smsConsent = true
+    `;
+  }
+
+  if (pageNum) {
+    const zeroBasedPage = pageNum ? pageNum - 1 : 0;
+    const mysqlOffset = zeroBasedPage * pageSize;
+    whereClauseValues.push(mysqlOffset, pageSize);
+  }
+
+  const limitBy = pageNum ? `LIMIT ?, ?` : "";
+  const zeroBasedPage = pageNum ? pageNum - 1 : 0;
+  const mysqlOffset = zeroBasedPage * pageSize;
+  whereClauseValues.push(mysqlOffset, pageSize);
+
   let mysqlQuery = `
     SELECT SQL_CALC_FOUND_ROWS
       leads.id AS leadId,
@@ -247,17 +264,16 @@ function listLeadsQuery(query) {
         ON servicesForLeads.leadId = leads.id
     ${whereClause}
     ORDER BY ${columnsToOrder}
-    LIMIT ?, ?;
+    ${limitBy}
+    ;
+
     SELECT FOUND_ROWS();
   `;
 
-  const zeroBasedPage = query.page ? query.page - 1 : 0;
-  const mysqlOffset = zeroBasedPage * pageSize;
-  const getLeads = mysql.format(mysqlQuery, [
-    ...whereClauseValues,
-    mysqlOffset,
-    pageSize
-  ]);
+  const getLeads = mysql.format(mysqlQuery, whereClauseValues);
 
   return getLeads;
 }
+
+exports.validateListLeadsQuery = validateListLeadsQuery;
+exports.listLeadsQuery = listLeadsQuery;
