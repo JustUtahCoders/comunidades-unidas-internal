@@ -1,32 +1,41 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { useCss } from "kremling";
-import easyFetch from "../../util/easy-fetch";
 import backIcon from "../../../icons/148705-essential-collection/svg/back.svg";
 import nextIcon from "../../../icons/148705-essential-collection/svg/next.svg";
 import ClientSearchInput from "./client-search-input.component";
 import { SearchParseValues } from "../../util/list-search/search-dsl.helpers";
 import { mediaDesktop, mediaMobile } from "../../styleguide.component";
-import { SelectedClients, ClientListClient } from "../client-list.component";
+import { SelectedClients } from "../client-list.component";
 import DropDownMenuModal from "../../util/dropdown-menu-modal.component";
+import DeleteBulkClientModal from "./delete-bulk-client-modal.component";
+import Modal from "../../util/modal.component";
+
+const BulkActionModals = {
+  bulkDelete: DeleteBulkClientModal,
+  noClients: NoClients
+  // bulkSms: BulkSmsModal,
+};
 
 export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
   const scope = useCss(css);
   const advancedSearchRef = React.useRef(null);
+  const [modal, setModal] = React.useState<null | string>(null);
 
   const lastPage = Math.ceil(props.numClients / props.pageSize);
+
+  const Modal = modal && BulkActionModals[modal];
 
   return (
     <div className="clients-table-toolbar" {...scope}>
       <div className="desktop-table-toolbar">
         <div className="left">
-          <DropDownMenuModal
-            buttonData={[
-              {
-                buttonText: "Delete Client(s)",
-                buttonAction: () => openModal("deleting")
-              }
-            ]}
-          />
+          <DropDownMenuModal>
+            <li onClick={() => openModal("bulkSms")}>Bulk text (SMS)</li>
+            <li onClick={() => openModal("bulkDelete")}>Delete clients</li>
+          </DropDownMenuModal>
+          {Modal && (
+            <Modal close={closeModal} selectedClients={props.selectedClients} />
+          )}
           <ClientSearchInput
             autoFocus
             performSearch={performSearch}
@@ -85,100 +94,19 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
     props.setSearch(searchParse);
   }
 
-  function openModal(option) {
+  function openModal(name) {
     if (Object.keys(props.selectedClients).length === 0) {
-      props.setModalOptions({
-        isOpen: true,
-        headerText: "No Clients Selected",
-        primaryText: "Okay",
-        primaryAction: () =>
-          props.setModalOptions({
-            isOpen: false,
-            headerText: null,
-            primaryText: null,
-            primaryAction: null,
-            secondaryText: null,
-            secondaryAction: null,
-            children: null
-          }),
-        children: (
-          <p>
-            You must select a client from the list before this action can be
-            taken.
-          </p>
-        )
-      });
+      setModal("noClients");
     } else {
-      if (option === "deleting") {
-        const clientsToDelete = Object.values(
-          props.selectedClients
-        ) as ClientListClient[];
-        const mapSelectedClients = clientsToDelete.map(client => {
-          return (
-            <li key={client.id}>
-              #{client.id} - {client.fullName}
-            </li>
-          );
-        });
-        props.setModalOptions({
-          isOpen: true,
-          headerText: "Delete Selected Client(s)",
-          primaryText: "No",
-          primaryAction: () =>
-            props.setModalOptions({
-              isOpen: false,
-              headerText: null,
-              primaryText: null,
-              primaryAction: null,
-              secondaryText: null,
-              secondaryAction: null,
-              children: null
-            }),
-          secondaryText: "Yes",
-          secondaryAction: () => deleteSelectedClients(),
-          children: (
-            <>
-              <p>
-                Are you sure you want to delete the following selected
-                client(s)?
-              </p>
-              <ul>{mapSelectedClients}</ul>
-            </>
-          )
-        });
-      }
+      setModal(name);
     }
   }
 
-  function deleteSelectedClients() {
-    const clientsToDelete = Object.values(props.selectedClients);
-    Promise.all(
-      clientsToDelete.map(client => {
-        return easyFetch(`/api/clients/${client.id}`, {
-          method: "DELETE"
-        });
-      })
-    )
-      .then(function() {
-        () =>
-          props.setModalOptions({
-            isOpen: false,
-            headerText: null,
-            primaryText: null,
-            primaryAction: null,
-            secondaryText: null,
-            secondaryAction: null,
-            children: null
-          });
-        props.setModalOptions({});
-        props.setSelectedClients([]);
-        props.refetchClients();
-      })
-      .catch(err => {
-        setTimeout(() => {
-          throw err;
-        });
-      });
+  function closeModal(shouldRefetch) {
+    setModal(null);
+    if (shouldRefetch) {
+      props.refetchClients();
+    }
   }
 }
 
@@ -259,9 +187,20 @@ type ClientsTableToolbarProps = {
   fetchingClient: boolean;
   selectedClients: SelectedClients;
   setSelectedClients: (selectedClients: SelectedClients) => any;
-  modalOptions: object;
-  setModalOptions: (modalOptions: object) => any;
   refetchClients: () => any;
   advancedSearchOpen: boolean;
   setAdvancedSearchOpen: Dispatch<SetStateAction<boolean>>;
 };
+
+function NoClients(props) {
+  return (
+    <Modal
+      close={props.close}
+      headerText="Select clients"
+      primaryAction={props.close}
+      primaryText="Close"
+    >
+      <p>You must select one or more clients before taking this action.</p>
+    </Modal>
+  );
+}

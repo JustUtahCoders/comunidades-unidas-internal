@@ -1,33 +1,41 @@
 import React from "react";
 import { useCss } from "kremling";
-import easyFetch from "../../util/easy-fetch";
 import { mediaDesktop, mediaMobile } from "../../styleguide.component";
 import { SearchParseValues } from "../../util/list-search/search-dsl.helpers";
-import { LeadListLead, SelectedLeads } from "../lead-list.component";
+import { SelectedLeads } from "../lead-list.component";
 import LeadSearchInput from "./lead-search-input.component";
 import backIcon from "../../../icons/148705-essential-collection/svg/back.svg";
 import nextIcon from "../../../icons/148705-essential-collection/svg/next.svg";
 import DropDownMenuModal from "../../util/dropdown-menu-modal.component";
+import Modal from "../../util/modal.component";
+import DeleteBulkLeadsModal from "./delete-bulk-leads-modal.component";
+
+const BulkActionModals = {
+  bulkDelete: DeleteBulkLeadsModal,
+  noLeads: NoLeads
+  // bulkSms: BulkSmsModal,
+};
 
 export default function LeadsTableToolbar(props: LeadsTableToolbarProps) {
   const scope = useCss(css);
   const advancedSearchRef = React.useRef(null);
-  const [bulkActionMenuIsOpen, setBulkActionMenuIsOpen] = React.useState(false);
+  const [modal, setModal] = React.useState<null | string>(null);
 
   const lastPage = Math.ceil(props.numLeads / props.pageSize);
+
+  const Modal = modal && BulkActionModals[modal];
 
   return (
     <div className="leads-table-toolbar" {...scope}>
       <div className="desktop-table-toolbar">
         <div className="left">
-          <DropDownMenuModal
-            buttonData={[
-              {
-                buttonText: "Delete Lead(s)",
-                buttonAction: () => openModal("deleting")
-              }
-            ]}
-          />
+          <DropDownMenuModal>
+            <li onClick={() => openModal("bulkSms")}>Bulk text (SMS)</li>
+            <li onClick={() => openModal("bulkDelete")}>Delete leads</li>
+          </DropDownMenuModal>
+          {Modal && (
+            <Modal close={closeModal} selectedLeads={props.selectedLeads} />
+          )}
           <LeadSearchInput
             autoFocus
             performSearch={performSearch}
@@ -86,99 +94,19 @@ export default function LeadsTableToolbar(props: LeadsTableToolbarProps) {
     props.setSearch(searchParse);
   }
 
-  function openModal(option) {
-    if (Object.keys(props.selectedLeads).length === 0) {
-      props.setModalOptions({
-        isOpen: true,
-        headerText: "No Leads Selected",
-        primaryText: "Okay",
-        primaryAction: () =>
-          props.setModalOptions({
-            isOpen: false,
-            headerText: null,
-            primaryText: null,
-            primaryAction: null,
-            secondaryText: null,
-            secondaryAction: null,
-            children: null
-          }),
-        children: (
-          <p>
-            You must select a lead from the list before this action can be
-            taken.
-          </p>
-        )
-      });
-    } else {
-      if (option === "deleting") {
-        const leadsToDelete = Object.values(
-          props.selectedLeads
-        ) as LeadListLead[];
-        const mapSelectedLeads = leadsToDelete.map(lead => {
-          return (
-            <li key={lead.id}>
-              #{lead.id} - {lead.fullName}
-            </li>
-          );
-        });
-        props.setModalOptions({
-          isOpen: true,
-          headerText: "Delete Selected Lead(s)",
-          primaryText: "No",
-          primaryAction: () =>
-            props.setModalOptions({
-              isOpen: false,
-              headerText: null,
-              primaryText: null,
-              primaryAction: null,
-              secondaryText: null,
-              secondaryAction: null,
-              children: null
-            }),
-          secondaryText: "Yes",
-          secondaryAction: () => deleteSelectedLeads(),
-          children: (
-            <>
-              <p>
-                Are you sure you want to delete the following selected lead(s)?
-              </p>
-              <ul>{mapSelectedLeads}</ul>
-            </>
-          )
-        });
-      }
+  function closeModal(shouldRefetch?: boolean) {
+    setModal(null);
+    if (shouldRefetch) {
+      props.refetchLeads();
     }
   }
 
-  function deleteSelectedLeads() {
-    const leadsToDelete = Object.values(props.selectedLeads);
-    Promise.all(
-      leadsToDelete.map(lead => {
-        return easyFetch(`/api/leads/${lead.id}`, {
-          method: "DELETE"
-        });
-      })
-    )
-      .then(function() {
-        () =>
-          props.setModalOptions({
-            isOpen: false,
-            headerText: null,
-            primaryText: null,
-            primaryAction: null,
-            secondaryText: null,
-            secondaryAction: null,
-            children: null
-          });
-        props.setModalOptions({});
-        props.setSelectedLeads([]);
-        props.refetchLeads();
-      })
-      .catch(err => {
-        setTimeout(() => {
-          throw err;
-        });
-      });
+  function openModal(name) {
+    if (Object.keys(props.selectedLeads).length === 0) {
+      setModal("noLeads");
+    } else {
+      setModal(name);
+    }
   }
 }
 
@@ -239,8 +167,19 @@ type LeadsTableToolbarProps = {
   refetchLeads: () => any;
   selectedLeads: SelectedLeads;
   setSelectedLeads: (selectedLeads: SelectedLeads) => any;
-  modalOptions: object;
-  setModalOptions: (modalOptions: object) => any;
   programData: any;
   events: Array<any>;
 };
+
+function NoLeads(props) {
+  return (
+    <Modal
+      close={props.close}
+      headerText="Select leads"
+      primaryAction={props.close}
+      primaryText="Close"
+    >
+      <p>You must select one or more leads before taking this action.</p>
+    </Modal>
+  );
+}
