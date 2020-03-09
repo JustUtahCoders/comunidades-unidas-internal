@@ -88,6 +88,6 @@ export default function InteractionHoursByClientResults(props) {
 
   function displayDuration(duration) {
     const [hours, mins, seconds] = duration.split(":");
-    return `${Number(hours)} hrs, ${mins} mins`;
+    return `${Number(hours)} hrs ${mins} mins`;
   }
 }
