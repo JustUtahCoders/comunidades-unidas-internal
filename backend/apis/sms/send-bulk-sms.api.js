@@ -52,9 +52,6 @@ app.post(`/api/bulk-texts`, (req, res) => {
   // Pagination doesn't apply to sending a bulk text
   delete req.query.page;
 
-  // We always want to only select clients who want text messages
-  req.query.wantsSMS = true;
-
   const clientQuery = clientListQuery(req.query);
   const leadsQuery = listLeadsQuery(req.query);
   const finalQuery = clientQuery + leadsQuery;
