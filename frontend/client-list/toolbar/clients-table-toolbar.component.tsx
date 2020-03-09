@@ -9,11 +9,12 @@ import { SelectedClients } from "../client-list.component";
 import DropDownMenuModal from "../../util/dropdown-menu-modal.component";
 import DeleteBulkClientModal from "./delete-bulk-client-modal.component";
 import Modal from "../../util/modal.component";
+import BulkSmsModal from "../../bulk-sms/bulk-sms-modal.component";
 
 const BulkActionModals = {
   bulkDelete: DeleteBulkClientModal,
-  noClients: NoClients
-  // bulkSms: BulkSmsModal,
+  noClients: NoClients,
+  bulkSms: BulkSmsModal
 };
 
 export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
@@ -95,7 +96,7 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
   }
 
   function openModal(name) {
-    if (Object.keys(props.selectedClients).length === 0) {
+    if (Object.keys(props.selectedClients).length === 0 && name !== "bulkSms") {
       setModal("noClients");
     } else {
       setModal(name);

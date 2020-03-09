@@ -21,9 +21,6 @@ app.post(`/api/check-bulk-texts`, (req, res) => {
   // Pagination doesn't apply to sending a bulk text
   delete req.query.page;
 
-  // We always want to only select clients who want text messages
-  req.query.wantsSMS = true;
-
   const clientQuery = clientListQuery(req.query);
   const leadsQuery = listLeadsQuery(req.query);
 
@@ -36,18 +33,51 @@ app.post(`/api/check-bulk-texts`, (req, res) => {
 
     const [clientRows, totalCountClientRows, leadRows] = result;
 
-    const phoneNumbers = Array.from(
-      new Set(
-        clientRows.map(r => r.primaryPhone).concat(leadRows.map(r => r.phone))
-      )
-    );
+    const response = filterResultForBulkText(clientRows, leadRows);
 
-    const response = {
-      clientsMatched: clientRows.length,
-      leadsMatched: leadRows.length,
-      uniquePhoneNumbers: phoneNumbers.length
-    };
+    delete response.data;
 
     res.send(response);
   });
 });
+
+function filterResultForBulkText(clientRows, leadRows) {
+  const clientsWithPhones = clientRows.filter(r => r.primaryPhone);
+  const leadsWithPhones = leadRows.filter(r => r.phone);
+
+  const clientRecipients = clientsWithPhones.filter(c => c.textMessages);
+  const leadRecipients = leadsWithPhones.filter(l => l.smsConsent);
+
+  const phoneNumbers = Array.from(
+    new Set(
+      clientRecipients
+        .map(r => r.primaryPhone)
+        .concat(leadRecipients.map(r => r.phone))
+    )
+  );
+
+  return {
+    searchMatch: {
+      clients: clientRows.length,
+      leads: leadRows.length
+    },
+    withPhone: {
+      clients: clientsWithPhones.length,
+      leads: leadsWithPhones.length
+    },
+    recipients: {
+      clients: clientRecipients.length,
+      leads: leadRecipients.length,
+      uniquePhoneNumbers: phoneNumbers.length
+    },
+    data: {
+      clientsWithPhones,
+      leadsWithPhones,
+      clientRecipients,
+      leadRecipients,
+      phoneNumbers
+    }
+  };
+}
+
+exports.filterResultForBulkText = filterResultForBulkText;

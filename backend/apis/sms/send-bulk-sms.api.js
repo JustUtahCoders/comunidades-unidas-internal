@@ -15,6 +15,8 @@ const {
 } = require("../leads/list-leads.api");
 const { checkValid, nonEmptyString } = require("../utils/validation-utils");
 const mysql = require("mysql");
+const { filterResultForBulkText } = require("./check-bulk-sms.api");
+const queryString = require("query-string");
 
 let twilio;
 if (
@@ -50,9 +52,6 @@ app.post(`/api/bulk-texts`, (req, res) => {
   // Pagination doesn't apply to sending a bulk text
   delete req.query.page;
 
-  // We always want to only select clients who want text messages
-  req.query.wantsSMS = true;
-
   const clientQuery = clientListQuery(req.query);
   const leadsQuery = listLeadsQuery(req.query);
   const finalQuery = clientQuery + leadsQuery;
@@ -64,24 +63,17 @@ app.post(`/api/bulk-texts`, (req, res) => {
 
     const [clientRows, totalCountClientRows, leadRows] = result;
 
-    const phoneNumbers = Array.from(
-      new Set(
-        clientRows.map(c => c.primaryPhone).concat(leadRows.map(r => r.phone))
-      )
-    );
+    const response = filterResultForBulkText(clientRows, leadRows);
 
-    const response = {
-      clientsMatched: clientRows.length,
-      leadsMatched: leadRows.length,
-      uniquePhoneNumbers: phoneNumbers.length
-    };
+    const data = response.data;
+    delete response.data;
 
-    if (phoneNumbers.length === 0) {
+    if (data.phoneNumbers.length === 0) {
       return res.send(response);
     }
 
     const notificationOpts = {
-      toBinding: phoneNumbers.map(address =>
+      toBinding: data.phoneNumbers.map(address =>
         JSON.stringify({
           binding_type: "sms",
           address
@@ -96,11 +88,11 @@ app.post(`/api/bulk-texts`, (req, res) => {
       .then(notification => {
         const insertSql = insertBulkSmsQuery(
           response,
+          data,
           notification.sid,
-          clientRows,
-          leadRows,
           req.session.passport.user.id,
-          req.body.smsBody
+          req.body.smsBody,
+          req.query
         );
 
         pool.query(insertSql, (err, result) => {
@@ -117,43 +109,39 @@ app.post(`/api/bulk-texts`, (req, res) => {
   });
 });
 
-function insertBulkSmsQuery(
-  totals,
-  twilioSid,
-  clientsWithPhone,
-  leadsWithPhone,
-  userId,
-  smsBody
-) {
+function insertBulkSmsQuery(totals, data, twilioSid, userId, smsBody, query) {
   const values = [
     twilioSid,
     smsBody,
-    totals.clientsMatched,
-    totals.clientsMatched,
-    totals.leadsMatched,
-    totals.leadsMatched,
-    totals.uniquePhoneNumbers,
+    totals.searchMatch.clients,
+    totals.withPhone.clients,
+    totals.recipients.clients,
+    totals.searchMatch.leads,
+    totals.withPhone.leads,
+    totals.recipients.leads,
+    totals.recipients.uniquePhoneNumbers,
+    queryString.stringify(query),
     userId
   ];
 
-  clientsWithPhone.forEach(c => {
+  data.clientRecipients.forEach(c => {
     values.push(c.primaryPhone, null, c.id);
   });
 
-  leadsWithPhone.forEach(l => {
+  data.leadRecipients.forEach(l => {
     values.push(l.phone, l.leadId, null);
   });
 
   return mysql.format(
     `
     INSERT INTO bulkSms
-      (twilioSid, smsBody, clientsMatched, clientsWithPhone, leadsMatched, leadsWithPhone, uniquePhoneNumbers, addedBy)
+      (twilioSid, smsBody, clientsMatched, clientsWithPhone, clientRecipients, leadsMatched, leadsWithPhone, leadRecipients, uniquePhoneNumbers, query, addedBy)
     VALUES
-      (?, ?, ?, ?, ?, ?, ?, ?);
+      (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
     SET @bulkSmsId := LAST_INSERT_ID();
 
-    ${clientsWithPhone
+    ${data.clientRecipients
       .map(
         c => `
       INSERT INTO bulkSmsRecipients
@@ -164,7 +152,7 @@ function insertBulkSmsQuery(
       )
       .join("\n")}
 
-    ${leadsWithPhone
+    ${data.leadRecipients
       .map(
         c => `
       INSERT INTO bulkSmsRecipients
