@@ -16,11 +16,15 @@ export default function InteractionHoursByClientParams(props) {
     tenThousandHoursInSeconds.toString()
   );
 
+  const [startDate, setStartDate] = useQueryParamState("start", "");
+  const [endDate, setEndDate] = useQueryParamState("end", "");
+
   return (
     <>
       <div className="report-input">
-        <label id="min-hours-label">Minimum # of interaction hours:</label>
+        <label htmlFor="min-hours">Minimum # of interaction hours:</label>
         <input
+          id="min-hours"
           type="number"
           step=".1"
           value={Number(minInteractionSeconds) / 3600}
@@ -29,12 +33,12 @@ export default function InteractionHoursByClientParams(props) {
               String(Math.round(Number(evt.target.value) * 3600))
             )
           }
-          aria-labelledby="min-hours-label"
         />
       </div>
       <div className="report-input">
-        <label id="max-hours-label">Maximum # of interaction hours:</label>
+        <label htmlFor="max-hours">Maximum # of interaction hours:</label>
         <input
+          id="max-hours"
           type="number"
           step=".1"
           value={Number(maxInteractionsSeconds) / 3600}
@@ -43,7 +47,24 @@ export default function InteractionHoursByClientParams(props) {
               String(Math.round(Number(evt.target.value) * 3600))
             )
           }
-          aria-labelledby="max-hours-label"
+        />
+      </div>
+      <div className="report-input">
+        <label htmlFor="start-date">Start date:</label>
+        <input
+          id="start-date"
+          type="date"
+          value={startDate}
+          onChange={evt => setStartDate(evt.target.value)}
+        />
+      </div>
+      <div className="report-input">
+        <label htmlFor="end-date">End date:</label>
+        <input
+          id="end-date"
+          type="date"
+          value={endDate}
+          onChange={evt => setEndDate(evt.target.value)}
         />
       </div>
       <div className="actions">

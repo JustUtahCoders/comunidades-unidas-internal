@@ -102,7 +102,8 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
       reportParameters: {
         start: startDate,
         end: endDate,
-        minInteractionSeconds
+        minInteractionSeconds,
+        maxInteractionSeconds
       }
     });
   });
