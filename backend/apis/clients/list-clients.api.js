@@ -140,7 +140,7 @@ function clientListQuery(query, pageNum, pageSize) {
 
   let queryString = `
     SELECT SQL_CALC_FOUND_ROWS
-      cl.id, cl.firstName, cl.lastName, cl.birthday, cl.isDeleted, ct.email, 
+      cl.id, cl.firstName, cl.lastName, cl.birthday, cl.isDeleted, ct.email, ct.textMessages,
       ct.zip, ct.primaryPhone, cl.addedBy as addedById, us.firstName as addedByFirstName,
       us.lastname as addedByLastName, cl.dateAdded
     FROM 

@@ -3,6 +3,8 @@ import Modal from "../util/modal.component";
 import easyFetch from "../util/easy-fetch";
 import { showGrowl, GrowlType } from "../growls/growls.component";
 import { useCss } from "kremling";
+import queryString from "query-string";
+import { startCase, entries } from "lodash-es";
 
 export default function BulkSmsModal(props: BulkSmsModalProps) {
   const [step, setStep] = React.useState<Step>(Step.intro);
@@ -14,17 +16,27 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
 
   const primaryActions = {
     [Step.intro]() {
+      setStep(Step.query);
+    },
+    [Step.query]() {
       setStep(Step.preview);
       setCheckingSms(true);
     },
     [Step.preview]() {
-      setStep(Step.draft);
+      if (!smsCheck || smsCheck.recipients.uniquePhoneNumbers === 0) {
+        props.close();
+      } else {
+        setStep(Step.draft);
+      }
     },
     [Step.draft]() {
       if (smsBody.trim().length > 0) {
         setStep(Step.confirmation);
         setSendingTexts(true);
       }
+    },
+    [Step.confirmation]() {
+      props.close();
     }
   };
 
@@ -61,7 +73,7 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
           setSendingTexts(false);
           showGrowl({
             type: GrowlType.success,
-            message: `Sent ${data.uniquePhoneNumbers.toLocaleString()} text messages.`
+            message: `Sent ${data.recipients.uniquePhoneNumbers.toLocaleString()} text messages.`
           });
         })
         .catch(err => {
@@ -83,7 +95,9 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
       headerText={headerText[step]}
       primaryText={
         typeof primaryText[step] === "function"
-          ? primaryText[step](smsCheck.uniquePhoneNumbers)
+          ? primaryText[step](
+              smsCheck ? smsCheck.recipients.uniquePhoneNumbers : 0
+            )
           : primaryText[step]
       }
       primaryAction={primaryActions[step]}
@@ -95,33 +109,121 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
   function content(step: Step) {
     switch (step) {
       case Step.intro:
-        return <div>You can send text messages to both clients and leads</div>;
-      case Step.preview:
-        return smsCheck ? (
+        return (
           <>
-            <div>Number of clients: {smsCheck.clientsMatched}</div>
-            <div>Number of leads: {smsCheck.leadsMatched}</div>
-            <div>
-              Number of unique phone numbers: {smsCheck.uniquePhoneNumbers}
-            </div>
+            <p>Bulk text messages are sent to both clients and leads.</p>
+            <p>
+              You can choose which people receive the text message by doing an
+              Advanced Search. The clients and leads who will receive the text
+              message are those who (1) indicated that they want to receive text
+              messages and (2) match the Advanced Search.
+            </p>
+            <p>
+              You do not need to click on any checkboxes - all clients and leads
+              that match the search and want to receive texts will receive the
+              text.
+            </p>
+            <p>
+              If you would like to see a new way of selecting clients and leads,
+              please file an issue.
+            </p>
           </>
-        ) : (
-          <div>Loading...</div>
+        );
+      case Step.query:
+        const queryValues = queryString.parse(window.location.search);
+        delete queryValues.sortField;
+        delete queryValues.sortOrder;
+        delete queryValues.page;
+        return (
+          <>
+            <p>Does the following Advanced Search look correct?</p>
+            {Object.keys(queryValues).length > 0 ? (
+              <table>
+                <thead>
+                  <tr>
+                    <th>Field</th>
+                    <th>Search value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {entries(queryValues).map(entry => {
+                    const [name, value] = entry;
+                    return (
+                      <tr key={name}>
+                        <td>{startCase(name)}</td>
+                        <td>{value}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            ) : (
+              <p className="warning-all">All clients and leads are selected</p>
+            )}
+          </>
+        );
+      case Step.preview:
+        if (!smsCheck) return <div>Loading...</div>;
+
+        return (
+          <>
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Clients</th>
+                  <th>Leads</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Advanced Search:</th>
+                  <td>{smsCheck.searchMatch.clients}</td>
+                  <td>{smsCheck.searchMatch.leads}</td>
+                </tr>
+                <tr>
+                  <th>And have phone</th>
+                  <td>{smsCheck.withPhone.clients}</td>
+                  <td>{smsCheck.withPhone.leads}</td>
+                </tr>
+                <tr>
+                  <th>And have given SMS consent</th>
+                  <td>{smsCheck.recipients.clients}</td>
+                  <td>{smsCheck.recipients.leads}</td>
+                </tr>
+              </tbody>
+            </table>
+            <p className="warning-all">
+              {smsCheck.recipients.uniquePhoneNumbers.toLocaleString()} unique
+              phone number
+              {smsCheck.recipients.uniquePhoneNumbers === 1 ? "" : "s"} will
+              receive a text.
+            </p>
+          </>
         );
       case Step.draft:
         return (
-          <textarea
-            value={smsBody}
-            onChange={evt => setSmsBody(evt.target.value)}
-            placeholder="Put your bulk text here"
-          />
+          <>
+            <div className="bulk-text-content-top">
+              <label htmlFor="bulk-text-content">
+                Write your bulk text here.
+              </label>
+              <div>{smsBody.length} characters</div>
+            </div>
+            <textarea
+              id="bulk-text-content"
+              value={smsBody}
+              onChange={evt => setSmsBody(evt.target.value)}
+              placeholder="Put your bulk text here"
+            />
+          </>
         );
       case Step.confirmation:
         return (
           <div>
             {sendingTexts
               ? "Sending..."
-              : `${smsCheck.uniquePhoneNumbers} text messages were sent!`}
+              : `${smsCheck.recipients.uniquePhoneNumbers} text messages were sent!`}
           </div>
         );
       default:
@@ -136,6 +238,7 @@ type BulkSmsModalProps = {
 
 enum Step {
   intro = "intro",
+  query = "query",
   preview = "preview",
   draft = "draft",
   confirmation = "confirmation"
@@ -143,6 +246,7 @@ enum Step {
 
 const headerText = {
   [Step.intro]: "Send a bulk text (SMS)",
+  [Step.query]: "Confirm Advanced Search",
   [Step.preview]: "Bulk text preview",
   [Step.draft]: "Draft text message",
   [Step.confirmation]: "Confirmation"
@@ -150,7 +254,9 @@ const headerText = {
 
 const primaryText: any = {
   [Step.intro]: "Begin",
-  [Step.preview]: "Start text message",
+  [Step.query]: "Next step",
+  [Step.preview]: numPhones =>
+    numPhones === 0 ? "Change search" : "Next step",
   [Step.draft]: numPhones =>
     `Send ${numPhones.toLocaleString()} bulk text${numPhones > 1 ? "s" : ""}`,
   [Step.confirmation]: "Done"
@@ -160,5 +266,31 @@ const css = `
 & textarea {
   width: 100%;
   height: 18rem;
+}
+
+& .warning-all {
+  text-decoration: underline;
+  font-style: italic;
+  color: var(--brand-color);
+  text-align: center;
+}
+
+& table {
+  margin: 0 auto;
+}
+
+& table td, & table th {
+  padding: .8rem;
+  text-align: center;
+}
+
+& #bulk-text-content {
+  margin: .8rem 0;
+  padding: .8rem;
+}
+
+& .bulk-text-content-top {
+  display: flex;
+  justify-content: space-between;
 }
 `;

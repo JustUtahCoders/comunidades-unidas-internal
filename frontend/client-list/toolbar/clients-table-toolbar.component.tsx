@@ -25,7 +25,6 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
   const lastPage = Math.ceil(props.numClients / props.pageSize);
 
   const Modal = modal && BulkActionModals[modal];
-  console.log("modal", modal, Modal);
 
   return (
     <div className="clients-table-toolbar" {...scope}>
@@ -97,8 +96,7 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
   }
 
   function openModal(name) {
-    console.log("HERE");
-    if (Object.keys(props.selectedClients).length === 0) {
+    if (Object.keys(props.selectedClients).length === 0 && name !== "bulkSms") {
       setModal("noClients");
     } else {
       setModal(name);

@@ -9,11 +9,12 @@ import nextIcon from "../../../icons/148705-essential-collection/svg/next.svg";
 import DropDownMenuModal from "../../util/dropdown-menu-modal.component";
 import Modal from "../../util/modal.component";
 import DeleteBulkLeadsModal from "./delete-bulk-leads-modal.component";
+import BulkSmsModal from "../../bulk-sms/bulk-sms-modal.component";
 
 const BulkActionModals = {
   bulkDelete: DeleteBulkLeadsModal,
-  noLeads: NoLeads
-  // bulkSms: BulkSmsModal,
+  noLeads: NoLeads,
+  bulkSms: BulkSmsModal
 };
 
 export default function LeadsTableToolbar(props: LeadsTableToolbarProps) {
@@ -102,7 +103,7 @@ export default function LeadsTableToolbar(props: LeadsTableToolbarProps) {
   }
 
   function openModal(name) {
-    if (Object.keys(props.selectedLeads).length === 0) {
+    if (Object.keys(props.selectedLeads).length === 0 && name !== "bulkSms") {
       setModal("noLeads");
     } else {
       setModal(name);
