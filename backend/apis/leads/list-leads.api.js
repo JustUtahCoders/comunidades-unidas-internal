@@ -15,7 +15,7 @@ const {
   responseDateWithoutTime
 } = require("../utils/transform-utils");
 
-const pageSize = 100;
+const pageSize = 2;
 
 app.get("/api/leads", (req, res, next) => {
   const validationErrors = validateListLeadsQuery(req.query);
@@ -33,7 +33,7 @@ app.get("/api/leads", (req, res, next) => {
     );
   }
 
-  const getLeads = listLeadsQuery(req.query, req.page || 0);
+  const getLeads = listLeadsQuery(req.query, req.query.page || 0);
 
   pool.query(getLeads, (err, results, fields) => {
     if (err) {
@@ -210,16 +210,13 @@ function listLeadsQuery(query, pageNum) {
     `;
   }
 
-  if (pageNum) {
+  const paginated = typeof pageNum !== "undefined";
+
+  if (paginated) {
     const zeroBasedPage = pageNum ? pageNum - 1 : 0;
     const mysqlOffset = zeroBasedPage * pageSize;
     whereClauseValues.push(mysqlOffset, pageSize);
   }
-
-  const limitBy = pageNum ? `LIMIT ?, ?` : "";
-  const zeroBasedPage = pageNum ? pageNum - 1 : 0;
-  const mysqlOffset = zeroBasedPage * pageSize;
-  whereClauseValues.push(mysqlOffset, pageSize);
 
   let mysqlQuery = `
     SELECT SQL_CALC_FOUND_ROWS
@@ -264,7 +261,7 @@ function listLeadsQuery(query, pageNum) {
         ON servicesForLeads.leadId = leads.id
     ${whereClause}
     ORDER BY ${columnsToOrder}
-    ${limitBy}
+    ${paginated ? "LIMIT ?, ?" : ""}
     ;
 
     SELECT FOUND_ROWS();

@@ -24,25 +24,30 @@ export default function AddLeadsStep(props: AddLeadsStepProps) {
     if (state.isCreating) {
       const abortController = new AbortController();
 
+      const leads = state.leads.slice(0, state.leads.length - 1).map(l => ({
+        dateOfSignUp: "2019-09-17",
+        firstName: l.firstName,
+        lastName: l.lastName,
+        phone: l.phone,
+        smsConsent: Boolean(l.smsConsent),
+        zip: l.zip,
+        age: l.age,
+        gender: !l.gender || l.gender === "unknown" ? null : l.gender,
+        eventSources: [props.eventId],
+        leadServices: (l.leadServices || []).map(s => s.id)
+      }));
+
       easyFetch(`/api/leads`, {
         method: "POST",
-        body: state.leads.slice(0, state.leads.length - 1).map(l => ({
-          dateOfSignUp: "2019-09-17",
-          firstName: l.firstName,
-          lastName: l.lastName,
-          phone: l.phone,
-          smsConsent: Boolean(l.smsConsent),
-          zip: l.zip,
-          age: l.age,
-          gender: !l.gender || l.gender === "unknown" ? null : l.gender,
-          eventSources: [props.eventId],
-          leadServices: (l.leadServices || []).map(s => s.id)
-        }))
+        signal: abortController.signal,
+        body: leads
       })
         .then(() => {
           showGrowl({
             type: GrowlType.success,
-            message: `${state.leads.length} leads were created`
+            message: `${leads.length} lead${
+              leads.length > 1 ? "s were" : " was"
+            } created`
           });
           navigate(`/lead-list`);
         })
@@ -52,6 +57,10 @@ export default function AddLeadsStep(props: AddLeadsStepProps) {
             throw err;
           });
         });
+
+      return () => {
+        abortController.abort();
+      };
     }
   }, [state.isCreating]);
 
