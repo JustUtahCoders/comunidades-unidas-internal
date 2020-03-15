@@ -12,10 +12,12 @@ import { useCss } from "kremling";
 import ViewEditContactInfo from "../view-edit-client/client-home/view-edit-contact-info.component";
 import ViewEditDemographicsInfo from "../view-edit-client/client-home/view-edit-demographics-info.component";
 import ViewEditIntakeInfo from "../view-edit-client/client-home/view-edit-intake-info.component";
+import { useMatch } from "@reach/router";
 
 export default function Confirm(props: StepComponentProps) {
   const [saving, setSaving] = React.useState(false);
   const scope = useCss(css);
+  const leadMatch = useMatch("/leads/:leadId/convert-to-client");
 
   React.useEffect(() => {
     if (saving) {
@@ -26,6 +28,8 @@ export default function Confirm(props: StepComponentProps) {
         method: "POST",
         signal: abortController.signal,
         body: {
+          // @ts-ignore
+          leadId: leadMatch ? leadMatch.leadId : null,
           dateOfIntake: d.dateOfIntake,
           firstName: d.firstName,
           lastName: d.lastName,

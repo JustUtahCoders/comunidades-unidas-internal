@@ -22,7 +22,8 @@ const { getClientById } = require("./get-client.api");
 const {
   insertContactInformationQuery,
   insertIntakeDataQuery,
-  insertDemographicsInformationQuery
+  insertDemographicsInformationQuery,
+  convertLeadToClient
 } = require("./insert-client.utils");
 const { insertActivityLogQuery } = require("./client-logs/activity-log.utils");
 
