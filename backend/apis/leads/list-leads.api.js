@@ -15,7 +15,7 @@ const {
   responseDateWithoutTime
 } = require("../utils/transform-utils");
 
-const pageSize = 2;
+const pageSize = 100;
 
 app.get("/api/leads", (req, res, next) => {
   const validationErrors = validateListLeadsQuery(req.query);
