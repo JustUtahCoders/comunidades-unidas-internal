@@ -24,7 +24,7 @@ export default function LeadContactStatusInputs(
     props.lead.contactStage.third || null
   );
   const [inactivityReason, setInactivityReason] = React.useState(
-    props.lead.inactivityReason || null
+    props.lead.inactivityReason || ""
   );
   const [errMsg, setErrMsg] = React.useState("");
 
