@@ -1,4 +1,5 @@
 import queryString from "query-string";
+import { LeadStatus } from "../../view-edit-lead/view-lead.component";
 
 export function parseSearch(
   searchFields,
@@ -99,4 +100,5 @@ export type SearchParseValues = {
   event?: string;
   program?: string;
   service?: string;
+  leadStatus?: LeadStatus;
 };

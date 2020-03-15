@@ -1,0 +1,1 @@
+UPDATE leads SET leadStatus = NULL WHERE leadStatus = 'active';

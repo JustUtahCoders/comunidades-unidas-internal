@@ -79,7 +79,7 @@ yarn db-migrate create name-of-the-migration --sql-file
 This will create a directory in the `migrations` folder that has an "up" and a "down" sql file. The up file should create tables or modify columns,
 the down file should drop tables and unmodify columns.
 
-After creating a migration, you'll have to run `npx db-migrate up` to run it against your local database. Alternatively, you can restart your local
+After creating a migration, you'll have to run `yarn db-migrate up` to run it against your local database. Alternatively, you can restart your local
 environment (Ctrl + C and then `yarn develop`). The migration will automatically run on the production database during the deployment in Travis CI.
 
 ## Connecting to the database

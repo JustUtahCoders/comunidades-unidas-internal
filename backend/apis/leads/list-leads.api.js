@@ -50,7 +50,7 @@ app.get("/api/leads", (req, res, next) => {
       leads: leadRows.map(lead => ({
         id: lead.leadId,
         dateOfSignUp: responseDateWithoutTime(lead.dateOfSignUp),
-        leadStatus: lead.leadStatus === null ? "active" : lead.leadStatus,
+        leadStatus: lead.leadStatus,
         contactStage: {
           first: lead.firstContactAttempt,
           second: lead.secondContactAttempt,
@@ -116,7 +116,8 @@ function validateListLeadsQuery(query) {
       "lastName",
       "dateOfSignUp"
     ),
-    nullableValidEnum("sortOrder", "asc", "desc")
+    nullableValidEnum("sortOrder", "asc", "desc"),
+    nullableValidEnum("status", "active", "inactive", "convertedToClient")
   );
 
   if (query.program && query.service) {
@@ -208,6 +209,13 @@ function listLeadsQuery(query, pageNum) {
     whereClause += `
       AND leads.smsConsent = true
     `;
+  }
+
+  if (query.leadStatus) {
+    whereClause += `
+      AND leads.leadStatus = ?
+    `;
+    whereClauseValues.push(query.leadStatus);
   }
 
   const paginated = typeof pageNum !== "undefined";

@@ -49,7 +49,7 @@ app.post("/api/leads", (req, res) => {
     const lead = leads[i];
 
     const addToLeadQuery =
-      "INSERT INTO leads (dateOfSignUp, firstName, lastName, phone, smsConsent, zip, age, gender, addedBy, modifiedBy, firstContactAttempt, secondContactAttempt, thirdContactAttempt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, null, null, null);";
+      "INSERT INTO leads (dateOfSignUp, firstName, lastName, phone, smsConsent, zip, age, gender, addedBy, modifiedBy, firstContactAttempt, secondContactAttempt, thirdContactAttempt, leadStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, null, null, null, 'active');";
     const setLeadId = "SET @leadId = LAST_INSERT_ID();";
 
     leadDataArray.push(

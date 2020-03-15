@@ -155,7 +155,7 @@ export type SingleLead = {
   phone?: string;
   smsConsent?: boolean;
   zip?: string;
-  leadStatus?: string;
+  leadStatus?: LeadStatus;
   inactivityReason?: string;
   clientId?: number;
   contactStage?: ContactStage;
@@ -164,3 +164,9 @@ export type SingleLead = {
   createdBy?: LeadUserRelationship;
   lastUpdatedBy?: LeadUserRelationship;
 };
+
+export enum LeadStatus {
+  active = "active",
+  inactive = "inactive",
+  convertedToClient = "convertedToClient"
+}

@@ -16,7 +16,8 @@ const searchFields = {
   phone: "Phone",
   program: "Interest",
   service: "Interest",
-  event: "Event Attended"
+  event: "Event Attended",
+  leadStatus: "Lead Status"
 };
 
 export default function LeadSearchInput(props: LeadSearchInputProps) {
@@ -94,7 +95,9 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
               {Object.entries(searchFields)
                 .filter(
                   ([fieldKey]) =>
-                    fieldKey !== "program" && fieldKey !== "service"
+                    fieldKey !== "program" &&
+                    fieldKey !== "service" &&
+                    fieldKey !== "leadStatus"
                 )
                 .map(([fieldKey, fieldName]) =>
                   fieldKey === "event" ? (
@@ -134,6 +137,52 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
                 serviceData={props.programData}
                 updateAdvancedSearch={updateAdvancedSearch}
               />
+              <div>Status:</div>
+              <div>
+                <label>
+                  <input
+                    type="radio"
+                    name="lead-status"
+                    value=""
+                    checked={!search.parseResult.parse.leadStatus}
+                    onChange={updateLeadStatus}
+                  />
+                  <span>All</span>
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="lead-status"
+                    value="active"
+                    checked={search.parseResult.parse.leadStatus === "active"}
+                    onChange={updateLeadStatus}
+                  />
+                  <span>Active</span>
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="lead-status"
+                    value="inactive"
+                    checked={search.parseResult.parse.leadStatus === "inactive"}
+                    onChange={updateLeadStatus}
+                  />
+                  <span>Inactive</span>
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="lead-status"
+                    value="convertedToClient"
+                    checked={
+                      search.parseResult.parse.leadStatus ===
+                      "convertedToClient"
+                    }
+                    onChange={updateLeadStatus}
+                  />
+                  <span>Converted To Client</span>
+                </label>
+              </div>
             </div>
             <button
               type="button"
@@ -173,10 +222,12 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
       value = props.initialValue || "";
     }
 
-    return {
+    const result = {
       value,
       parseResult: parseSearch(searchFields, value)
     };
+
+    return result;
   }
 
   function handleSubmit(evt) {
@@ -195,6 +246,10 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
       default:
         return "";
     }
+  }
+
+  function updateLeadStatus(evt) {
+    updateAdvancedSearch("leadStatus", evt.target.value);
   }
 }
 
