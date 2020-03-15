@@ -5,6 +5,7 @@ const {
 } = require("../utils/validation-utils");
 const { responseFullName } = require("../utils/transform-utils");
 const mysql = require("mysql");
+const { toDuration } = require("./report-helpers");
 
 const pageSize = 100;
 const sixHoursInSeconds = 6 * 60 * 60;
@@ -36,7 +37,7 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
 
   const sql = mysql.format(
     `
-      SELECT SQL_CALC_FOUND_ROWS clients.id, clients.firstName, clients.lastName, clients.gender, clients.birthday, SEC_TO_TIME(clientHours.totalInteractionSeconds) totalDuration, clientHours.totalInteractionSeconds, clientHours.numInteractions
+      SELECT SQL_CALC_FOUND_ROWS clients.id, clients.firstName, clients.lastName, clients.gender, clients.birthday, clientHours.totalInteractionSeconds, clientHours.numInteractions
       FROM
         clients
         INNER JOIN 
@@ -89,7 +90,7 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
         fullName: responseFullName(c.firstName, c.lastName),
         gender: c.gender,
         birthday: c.birthday,
-        totalDuration: c.totalDuration,
+        totalDuration: toDuration(c.totalInteractionSeconds),
         totalInteractionSeconds: c.totalInteractionSeconds,
         numInteractions: c.numInteractions
       })),

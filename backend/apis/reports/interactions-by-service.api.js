@@ -2,6 +2,7 @@ const { app, invalidRequest, pool, databaseError } = require("../../server");
 const { checkValid, nullableValidDate } = require("../utils/validation-utils");
 const mysql = require("mysql");
 const _ = require("lodash");
+const { toDuration } = require("./report-helpers");
 
 app.get(`/api/reports/interactions-by-service`, (req, res) => {
   const validationErrors = checkValid(
@@ -52,7 +53,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       GROUP BY services.programId;
 
       -- num hours per service
-      SELECT clientHours.totalInteractionSeconds, SEC_TO_TIME(clientHours.totalInteractionSeconds) totalDuration, services.id serviceId
+      SELECT clientHours.totalInteractionSeconds, services.id serviceId
       FROM
         services
         INNER JOIN 
@@ -62,8 +63,6 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
           WHERE
             clientInteractions.isDeleted = false
             AND clients.isDeleted = false
-            AND clientInteractions.dateOfInteraction >= ?
-            AND clientInteractions.dateOfInteraction <= ?
           GROUP BY serviceId
         ) clientHours
         ON services.id = clientHours.serviceId
@@ -158,7 +157,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
         s => s.serviceId === serviceHour.serviceId
       );
       service.totalInteractionSeconds = serviceHour.totalInteractionSeconds;
-      service.totalDuration = serviceHour.totalDuration;
+      service.totalDuration = toDuration(serviceHour.totalInteractionSeconds);
 
       const program = programTotals.find(
         p => p.programId === service.programId
@@ -190,17 +189,3 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
     });
   });
 });
-
-function toDuration(allSecs) {
-  const hrs = Math.floor(allSecs / (60 * 60));
-  const mins = Math.floor((allSecs - hrs * 60 * 60) / 60);
-  const secs = allSecs - hrs * 60 * 60 - mins * 60;
-
-  return `${atLeastTwoDigits(hrs)}:${atLeastTwoDigits(mins)}:${atLeastTwoDigits(
-    secs
-  )}`;
-}
-
-function atLeastTwoDigits(num) {
-  return num.toString().padStart(2, "0");
-}
