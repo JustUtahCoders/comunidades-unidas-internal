@@ -76,10 +76,9 @@ export default function AddClient(props: AddClientProps) {
     setDuplicateWarning(duplicateWarning);
   }
 
-  function continueAnyway(clientState) {
+  function continueAnyway() {
     setStep(Step.CONTACT_INFORMATION);
     setDuplicateWarning(null);
-    setClientState(clientState);
   }
 }
 

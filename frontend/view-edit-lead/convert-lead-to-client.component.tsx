@@ -19,6 +19,10 @@ export default function ConvertLeadToClient(props: Props) {
             throw err;
           });
         });
+
+      return () => {
+        abortController.abort();
+      };
     }
   }, [props.leadId]);
 

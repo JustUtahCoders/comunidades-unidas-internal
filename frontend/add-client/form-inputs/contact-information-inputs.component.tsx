@@ -9,6 +9,7 @@ export default React.forwardRef(function ContactInformationInputs(
   props: ContactInformationInputsProps,
   ref
 ) {
+  console.log(props.client);
   const [phone, setPhone] = React.useState(props.client.phone || "");
   const [smsConsent, setSmsConsent] = React.useState(
     props.client.smsConsent || false
