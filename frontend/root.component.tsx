@@ -20,6 +20,7 @@ import NotFound from "./not-found/not-found.component";
 import ViewEvent from "./view-edit-events/view-event.component";
 import EventList from "./event-list/event-list.component";
 import ConvertLead from "./view-edit-lead/convert-lead-to-client.component";
+import ProgramsAndServices from "./programs-and-services/programs-and-services.component";
 
 export default function Root() {
   return (
@@ -43,6 +44,7 @@ export default function Root() {
             <Reports path="reports/*" />
             <ViewEvent path="events/:eventId" />
             <EventList path="event-list" />
+            <ProgramsAndServices path="programs-and-services" />
           </Navbars>
         </Router>
         <Growls />

@@ -106,10 +106,16 @@ export type CUService = {
   serviceDescription: string;
   programId: string;
   programName: string;
+  isActive: boolean;
 };
 
 export type CUProgram = {
   id: number;
   programName: string;
   programDescription: string;
+  isActive: boolean;
+};
+
+export type GroupedCUServices = {
+  [programId: number]: CUService[];
 };
