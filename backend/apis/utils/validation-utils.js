@@ -111,7 +111,7 @@ function _validPhone(propertyName) {
 
 function _validBoolean(propertyName) {
   return val =>
-    typeof val === "boolean"
+    typeof val === "boolean" || val === "true" || val === "false"
       ? null
       : `Property ${propertyName} must be a boolean. Received '${val}'`;
 }
