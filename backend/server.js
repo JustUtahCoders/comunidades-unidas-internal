@@ -50,6 +50,11 @@ exports.invalidRequest = function invalidRequest(res, msg, connection) {
   res.status(400).send({ error: msg });
 };
 
+exports.insufficientPrivileges = function insufficientPrivileges(res, msg) {
+  console.log(msg);
+  res.status(401).send({ error: msg });
+};
+
 exports.notFound = function notFound(res, msg) {
   res.status(404).send({ error: msg });
 };
@@ -93,6 +98,8 @@ require("./apis/clients/get-client.api");
 require("./apis/clients/update-client.api");
 require("./apis/clients/delete-client.api");
 require("./apis/services/list-services.api");
+require("./apis/services/patch-services.api");
+require("./apis/services/create-service.api");
 require("./apis/clients/list-clients.api");
 require("./apis/clients/client-audit.api");
 require("./apis/clients/client-logs/get-activity-logs.api");

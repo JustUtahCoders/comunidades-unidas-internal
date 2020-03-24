@@ -65,6 +65,7 @@ if (useGoogleAuth) {
                     firstName: rows[0].firstName,
                     lastName: rows[0].lastName,
                     email: rows[0].email,
+                    accessLevel: rows[0].accessLevel,
                     token: token
                   });
                 }
@@ -98,6 +99,7 @@ if (useGoogleAuth) {
               fullName: responseFullName(user.firstName, user.lastName),
               firstName: user.firstName,
               lastName: user.lastName,
+              accessLevel: user.accessLevel,
               email: user.email
             });
           }
