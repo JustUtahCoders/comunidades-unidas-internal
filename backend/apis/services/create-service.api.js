@@ -46,8 +46,9 @@ app.post("/api/services", (req, res, next) => {
       return databaseError(err);
     }
 
-    if (!result) {
+    if (result.length === 0) {
       return invalidRequest(
+        res,
         `There is no program with id '${req.body.programId}'`
       );
     }
