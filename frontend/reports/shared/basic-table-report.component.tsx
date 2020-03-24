@@ -6,7 +6,7 @@ export default function BasicTableReport(props: BasicTableReportProps) {
 
   return (
     <div className="report" {...scope}>
-      <h2>{props.title}</h2>
+      {props.title && <h2>{props.title}</h2>}
       <table style={props.tableStyle}>
         <thead>{props.headerRows}</thead>
         <tbody>{props.contentRows}</tbody>
@@ -89,7 +89,7 @@ const css = `
 
 type BasicTableReportProps = {
   tableStyle?: any;
-  title: string;
+  title?: string;
   headerRows: JSX.Element | JSX.Element[];
   contentRows: JSX.Element | JSX.Element[];
   footerRows?: JSX.Element | JSX.Element[];
