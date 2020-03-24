@@ -1,0 +1,1 @@
+ALTER TABLE services ADD COLUMN isActive BOOL NOT NULL DEFAULT true;
