@@ -12,13 +12,24 @@ import {
   LoggedInUser,
   UserAccessLevel
 } from "../util/user.context";
-import EditableProgramServiceRow from "./editable-program-service-row.component";
+import EditableServiceRow from "./editable-service-row.component";
+import { useCss } from "kremling";
+import CreateNewServiceModal from "./create-new-service-modal.component";
 
 export default function ProgramsAndServices(props) {
   const [shouldFetchServices, setShouldFetchServices] = React.useState(true);
   const [services, setServices] = React.useState<GroupedCUServices>({});
   const [programs, setPrograms] = React.useState<CUProgram[]>([]);
   const user = React.useContext<LoggedInUser>(UserContext);
+  const scope = useCss(css);
+  const [
+    showingCreateNewServiceModal,
+    setShowingCreateNewServiceModal
+  ] = React.useState(false);
+  const [
+    showingCreateNewProgramModal,
+    setShowingCreateNewProgramModal
+  ] = React.useState(false);
 
   const canEdit = user.accessLevel === UserAccessLevel.Administrator;
 
@@ -49,12 +60,28 @@ export default function ProgramsAndServices(props) {
   return (
     <>
       <PageHeader title="Programs and Services" />
-      <div className="card">
+      <div className="card" {...scope}>
         <p>
           This is the list of all Comunidades Unidas programs and services. A
           program consists of a group of services that are offered to CU's
           clients.
         </p>
+        {canEdit && (
+          <div className="actions">
+            <button
+              className="secondary"
+              onClick={() => setShowingCreateNewProgramModal(true)}
+            >
+              New Program
+            </button>
+            <button
+              className="primary"
+              onClick={() => setShowingCreateNewServiceModal(true)}
+            >
+              New Service
+            </button>
+          </div>
+        )}
         <BasicTableReport
           tableStyle={{ width: "100%" }}
           headerRows={
@@ -92,7 +119,7 @@ export default function ProgramsAndServices(props) {
                     </tr>
                   }
                   collapsibleRows={services[program.id].map(service => (
-                    <EditableProgramServiceRow
+                    <EditableServiceRow
                       key={service.id}
                       canEdit={canEdit}
                       service={service}
@@ -105,7 +132,7 @@ export default function ProgramsAndServices(props) {
                         {service.serviceDescription}
                       </td>
                       <td>{checkmark(service.isActive)}</td>
-                    </EditableProgramServiceRow>
+                    </EditableServiceRow>
                   ))}
                 />
               ))}
@@ -113,6 +140,13 @@ export default function ProgramsAndServices(props) {
           }
         />
       </div>
+      {showingCreateNewServiceModal && (
+        <CreateNewServiceModal
+          programs={programs}
+          close={() => setShowingCreateNewServiceModal(false)}
+          refetch={refetchServices}
+        />
+      )}
     </>
   );
 
@@ -128,3 +162,10 @@ function checkmark(condition) {
     </div>
   );
 }
+
+const css = `
+& .actions {
+  display: flex;
+  justify-content: flex-end;
+}
+`;

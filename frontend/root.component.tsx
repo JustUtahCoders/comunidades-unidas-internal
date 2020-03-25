@@ -21,6 +21,7 @@ import ViewEvent from "./view-edit-events/view-event.component";
 import EventList from "./event-list/event-list.component";
 import ConvertLead from "./view-edit-lead/convert-lead-to-client.component";
 import ProgramsAndServices from "./programs-and-services/programs-and-services.component";
+import "form-request-submit-polyfill";
 
 export default function Root() {
   return (

@@ -90,6 +90,7 @@
     "eslint-config-ts-react-important-stuff": "^2.0.0",
     "file-loader": "^5.1.0",
     "fork-ts-checker-webpack-plugin": "^4.0.5",
+    "form-request-submit-polyfill": "^2.0.0",
     "husky": "^4.2.3",
     "jest": "^25.1.0",
     "jest-cli": "^25.1.0",
