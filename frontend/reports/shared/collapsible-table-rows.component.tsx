@@ -1,5 +1,5 @@
 import React from "react";
-import { maybe, toggle, useCss } from "kremling";
+import { maybe, toggle, useCss, always } from "kremling";
 
 export default function CollapsibleTableRows(props: CollapsibleTableRowsProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(
@@ -22,8 +22,10 @@ export default function CollapsibleTableRows(props: CollapsibleTableRowsProps) {
   return (
     <>
       {React.cloneElement(props.everpresentRow, {
-        onClick: toggleCollapsed,
-        className: "collapsible-row",
+        onClick: handleClick,
+        className: always("collapsible-row").always(
+          props.everpresentRow.props.className
+        ),
         ...scope,
         children: React.Children.map(
           props.everpresentRow.props.children,
@@ -37,6 +39,7 @@ export default function CollapsibleTableRows(props: CollapsibleTableRowsProps) {
                   <button
                     type="button"
                     className={toggle("primary", "secondary", isCollapsed)}
+                    onClick={() => setIsCollapsed(!isCollapsed)}
                   >
                     {isCollapsed ? "Expand" : "Collapse"}
                   </button>
@@ -52,8 +55,10 @@ export default function CollapsibleTableRows(props: CollapsibleTableRowsProps) {
     </>
   );
 
-  function toggleCollapsed() {
-    setIsCollapsed(!isCollapsed);
+  function handleClick(evt) {
+    if (!props.onlyButtonClick) {
+      setIsCollapsed(!isCollapsed);
+    }
   }
 }
 
@@ -96,4 +101,5 @@ type CollapsibleTableRowsProps = {
   startExpanded?: boolean;
   everpresentRow: JSX.Element;
   collapsibleRows: JSX.Element[];
+  onlyButtonClick?: boolean;
 };

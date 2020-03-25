@@ -13,9 +13,15 @@ export default function UserContextComponent(props) {
   );
 }
 
-type LoggedInUser = {
+export type LoggedInUser = {
   fullName: string;
   firstName: string;
   lastName: string;
   email: string;
+  accessLevel: UserAccessLevel;
 };
+
+export enum UserAccessLevel {
+  Administrator = "Administrator",
+  Staff = "Staff"
+}
