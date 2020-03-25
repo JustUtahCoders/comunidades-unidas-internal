@@ -21,7 +21,8 @@ app.use(
           fullName: req.session.passport.user.fullName,
           firstName: req.session.passport.user.firstName,
           lastName: req.session.passport.user.lastName,
-          email: req.session.passport.user.email
+          email: req.session.passport.user.email,
+          accessLevel: req.session.passport.user.accessLevel
         })
       ),
       {

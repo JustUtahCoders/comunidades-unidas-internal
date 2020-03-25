@@ -7,24 +7,44 @@ import CollapsibleTableRows, {
   ToggleCollapseButton
 } from "../reports/shared/collapsible-table-rows.component";
 import { CUProgram, GroupedCUServices } from "../add-client/services.component";
+import {
+  UserContext,
+  LoggedInUser,
+  UserAccessLevel
+} from "../util/user.context";
+import EditableProgramServiceRow from "./editable-program-service-row.component";
 
 export default function ProgramsAndServices(props) {
+  const [shouldFetchServices, setShouldFetchServices] = React.useState(true);
   const [services, setServices] = React.useState<GroupedCUServices>({});
   const [programs, setPrograms] = React.useState<CUProgram[]>([]);
+  const user = React.useContext<LoggedInUser>(UserContext);
+
+  const canEdit = user.accessLevel === UserAccessLevel.Administrator;
 
   React.useEffect(() => {
-    const abortController = new AbortController();
+    if (shouldFetchServices) {
+      const abortController = new AbortController();
 
-    easyFetch("/api/services?includeInactive=true", {
-      signal: abortController.signal
-    }).then(data => {
-      const groupedServices = groupBy(data.services, "programId");
-      setServices(groupedServices);
-      setPrograms(data.programs);
-    });
+      easyFetch("/api/services?includeInactive=true", {
+        signal: abortController.signal
+      }).then(
+        data => {
+          const groupedServices = groupBy(data.services, "programId");
+          setServices(groupedServices);
+          setPrograms(data.programs);
+          setShouldFetchServices(false);
+        },
+        err => {
+          setTimeout(() => {
+            throw err;
+          });
+        }
+      );
 
-    return () => abortController.abort();
-  }, []);
+      return () => abortController.abort();
+    }
+  }, [shouldFetchServices]);
 
   return (
     <>
@@ -58,6 +78,7 @@ export default function ProgramsAndServices(props) {
               {programs.map(program => (
                 <CollapsibleTableRows
                   key={program.id}
+                  onlyButtonClick
                   everpresentRow={
                     <tr>
                       <td>{program.programName}</td>
@@ -71,14 +92,20 @@ export default function ProgramsAndServices(props) {
                     </tr>
                   }
                   collapsibleRows={services[program.id].map(service => (
-                    <tr key={service.id}>
+                    <EditableProgramServiceRow
+                      key={service.id}
+                      canEdit={canEdit}
+                      service={service}
+                      programs={programs}
+                      refetch={refetchServices}
+                    >
                       <td>&mdash;</td>
                       <td>{service.serviceName}</td>
                       <td style={{ fontSize: "1.4rem" }}>
                         {service.serviceDescription}
                       </td>
                       <td>{checkmark(service.isActive)}</td>
-                    </tr>
+                    </EditableProgramServiceRow>
                   ))}
                 />
               ))}
@@ -88,6 +115,10 @@ export default function ProgramsAndServices(props) {
       </div>
     </>
   );
+
+  function refetchServices() {
+    setShouldFetchServices(true);
+  }
 }
 
 function checkmark(condition) {
