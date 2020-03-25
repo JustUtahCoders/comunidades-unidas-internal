@@ -8,7 +8,8 @@ const {
   validDate,
   validInteger,
   nullableNonEmptyString,
-  nullableValidInteger
+  nullableValidInteger,
+  nullableValidArray
 } = require("../utils/validation-utils");
 
 app.post("/api/leads", (req, res) => {
@@ -33,7 +34,7 @@ app.post("/api/leads", (req, res) => {
       nullableNonEmptyString("zip"),
       nullableValidInteger("age"),
       nullableNonEmptyString("gender"),
-      validArray("eventSources", validInteger),
+      nullableValidArray("eventSources", validInteger),
       validArray("leadServices", validInteger)
     );
 
@@ -85,10 +86,10 @@ app.post("/api/leads", (req, res) => {
       leadServicesQuery += ";";
     }
 
-    const leadEvents = lead.eventSources;
+    const leadEvents = lead.eventSources || [];
     let leadEventsQuery = "";
 
-    if (leadEvents > 0) {
+    if (leadEvents.length > 0) {
       leadEventsQuery =
         "INSERT INTO leadEvents (leadId, eventId) VALUES (@leadId, ?)";
 

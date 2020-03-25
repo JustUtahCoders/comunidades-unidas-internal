@@ -19,6 +19,7 @@ export default function AddLeads(props: AddLeadsProps) {
       <div className="card">
         <Router>
           <AddLeadsStep path="event/:eventId" />
+          <AddLeadsStep path="no-event" />
           <AddEventStep path="event" />
         </Router>
       </div>
