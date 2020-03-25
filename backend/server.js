@@ -100,6 +100,8 @@ require("./apis/clients/delete-client.api");
 require("./apis/services/list-services.api");
 require("./apis/services/patch-services.api");
 require("./apis/services/create-service.api");
+require("./apis/services/patch-programs.api");
+require("./apis/services/create-program.api");
 require("./apis/clients/list-clients.api");
 require("./apis/clients/client-audit.api");
 require("./apis/clients/client-logs/get-activity-logs.api");
