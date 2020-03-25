@@ -8,7 +8,9 @@ import { mediaDesktop } from "../styleguide.component";
 
 export default function AddEventStep(props: AddEventStepProps) {
   const scope = useCss(css);
-  const [isExistingEvent, setIsExistingEvent] = React.useState(true);
+  const [eventType, setEventType] = React.useState<EventType>(
+    EventType.existingEvent
+  );
   const [eventDate, setEventDate] = React.useState(
     dayjs().format("YYYY-MM-DD")
   );
@@ -26,7 +28,7 @@ export default function AddEventStep(props: AddEventStepProps) {
     easyFetch(`/api/events`, { signal: abortController.signal })
       .then(data => {
         if (data.events.length === 0) {
-          setIsExistingEvent(false);
+          setEventType(EventType.newEvent);
         }
         setAllEvents(data.events);
       })
@@ -75,38 +77,69 @@ export default function AddEventStep(props: AddEventStepProps) {
         imgSrc={imgSrc}
         imgAlt="Map Location icon"
       />
-      <form
-        className="add-event-form"
-        {...scope}
-        onSubmit={isExistingEvent ? submitExistingEvent : submitNewEvent}
-      >
+      <form className="add-event-form" onSubmit={handleSubmit} {...scope}>
         <div role="radiogroup" aria-labelledby="event-type-label">
-          <label id="event-type-label">Event Type:</label>
+          <label id="event-type-label">Source:</label>
           <div className="radios">
-            <input
-              id="new-event"
-              type="radio"
-              name="event-type"
-              required
-              checked={!isExistingEvent}
-              onChange={evt => setIsExistingEvent(!evt.target.checked)}
-            />
-            <label htmlFor="new-event">New</label>
-            <input
-              id="existing-event"
-              type="radio"
-              name="event-type"
-              required
-              checked={isExistingEvent}
-              onChange={evt => setIsExistingEvent(evt.target.checked)}
-            />
-            <label htmlFor="existing-event">Existing</label>
+            <div>
+              <input
+                id="new-event"
+                type="radio"
+                name="event-type"
+                required
+                checked={eventType === EventType.newEvent}
+                onChange={evt => setEventType(EventType.newEvent)}
+              />
+              <label htmlFor="new-event">New Event</label>
+            </div>
+            <div>
+              <input
+                id="existing-event"
+                type="radio"
+                name="event-type"
+                required
+                checked={eventType === EventType.existingEvent}
+                onChange={evt => setEventType(EventType.existingEvent)}
+              />
+              <label htmlFor="existing-event">Existing Event</label>
+            </div>
+            <div>
+              <input
+                id="no-event"
+                type="radio"
+                name="event-type"
+                required
+                checked={eventType === EventType.other}
+                onChange={evt => setEventType(EventType.other)}
+              />
+              <label htmlFor="no-event">Other</label>
+            </div>
           </div>
         </div>
-        {isExistingEvent ? existingEventInputs() : newEventInputs()}
+        {inputs()}
       </form>
     </>
   );
+
+  function inputs() {
+    if (eventType === EventType.newEvent) {
+      return newEventInputs();
+    } else if (eventType === EventType.existingEvent) {
+      return existingEventInputs();
+    } else {
+      return otherSourceInputs();
+    }
+  }
+
+  function otherSourceInputs() {
+    return (
+      <div className="actions">
+        <button className="primary" type="submit">
+          Next step
+        </button>
+      </div>
+    );
+  }
 
   function existingEventInputs() {
     return (
@@ -188,14 +221,19 @@ export default function AddEventStep(props: AddEventStepProps) {
     );
   }
 
-  function submitExistingEvent(evt) {
+  function handleSubmit(evt) {
     evt.preventDefault();
-    props["navigate"](`/add-leads/event/${existingEventId}`);
-  }
-
-  function submitNewEvent(evt) {
-    evt.preventDefault();
-    setCreateNewEvent(true);
+    switch (eventType) {
+      case EventType.newEvent:
+        setCreateNewEvent(true);
+        return;
+      case EventType.existingEvent:
+        props["navigate"](`/add-leads/event/${existingEventId}`);
+        return;
+      default:
+        props["navigate"](`/add-leads/no-event`);
+        return;
+    }
   }
 }
 
@@ -245,11 +283,6 @@ ${mediaDesktop} {
   margin-right: .4rem;
 }
 
-& .radios {
-  display: flex;
-  align-items: center;
-}
-
 & .radios label {
   margin-right: 1.6rem;
 }
@@ -260,3 +293,9 @@ type AddEventStepProps = {
 };
 
 type ExistingEventId = number | "";
+
+enum EventType {
+  newEvent = "newEvent",
+  existingEvent = "existingEvent",
+  other = "other"
+}

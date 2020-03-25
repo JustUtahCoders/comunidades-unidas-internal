@@ -65,30 +65,34 @@ export default function AddLeadsStep(props: AddLeadsStepProps) {
   }, [state.isCreating]);
 
   React.useEffect(() => {
-    const abortController = new AbortController();
+    if (props.eventId) {
+      const abortController = new AbortController();
 
-    easyFetch(`/api/events/${props.eventId}`)
-      .then(event => {
-        setEvent(event);
+      easyFetch(`/api/events/${props.eventId}`, {
+        signal: abortController.signal
       })
-      .catch(err => {
-        if (err.status === 404) {
-          showGrowl({
-            type: GrowlType.info,
-            message: "Please select a valid event to add the leads to."
-          });
-          // @ts-ignore
-          props.navigate(`/add-leads/event`);
-        } else {
-          setTimeout(() => {
-            throw err;
-          });
-        }
-      });
+        .then(event => {
+          setEvent(event);
+        })
+        .catch(err => {
+          if (err.status === 404) {
+            showGrowl({
+              type: GrowlType.info,
+              message: "Please select a valid event to add the leads to."
+            });
+            // @ts-ignore
+            props.navigate(`/add-leads/event`);
+          } else {
+            setTimeout(() => {
+              throw err;
+            });
+          }
+        });
 
-    return () => {
-      abortController.abort();
-    };
+      return () => {
+        abortController.abort();
+      };
+    }
   }, [props.eventId]);
 
   return (
