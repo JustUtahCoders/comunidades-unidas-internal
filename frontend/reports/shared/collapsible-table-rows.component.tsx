@@ -39,7 +39,10 @@ export default function CollapsibleTableRows(props: CollapsibleTableRowsProps) {
                   <button
                     type="button"
                     className={toggle("primary", "secondary", isCollapsed)}
-                    onClick={() => setIsCollapsed(!isCollapsed)}
+                    onClick={evt => {
+                      evt.stopPropagation();
+                      setIsCollapsed(!isCollapsed);
+                    }}
                   >
                     {isCollapsed ? "Expand" : "Collapse"}
                   </button>

@@ -15,6 +15,8 @@ import {
 import EditableServiceRow from "./editable-service-row.component";
 import { useCss } from "kremling";
 import CreateNewServiceModal from "./create-new-service-modal.component";
+import CreateNewProgramModal from "./create-new-program-modal.component";
+import EditableProgramRow from "./editable-program-row.component";
 
 export default function ProgramsAndServices(props) {
   const [shouldFetchServices, setShouldFetchServices] = React.useState(true);
@@ -42,8 +44,8 @@ export default function ProgramsAndServices(props) {
       }).then(
         data => {
           const groupedServices = groupBy(data.services, "programId");
-          setServices(groupedServices);
           setPrograms(data.programs);
+          setServices(groupedServices);
           setShouldFetchServices(false);
         },
         err => {
@@ -107,7 +109,12 @@ export default function ProgramsAndServices(props) {
                   key={program.id}
                   onlyButtonClick
                   everpresentRow={
-                    <tr>
+                    <EditableProgramRow
+                      refetch={refetchServices}
+                      program={program}
+                      key={program.id}
+                      canEdit={canEdit}
+                    >
                       <td>{program.programName}</td>
                       <td>
                         <ToggleCollapseButton />
@@ -116,9 +123,9 @@ export default function ProgramsAndServices(props) {
                         {program.programDescription}
                       </td>
                       <td>{checkmark(program.isActive)}</td>
-                    </tr>
+                    </EditableProgramRow>
                   }
-                  collapsibleRows={services[program.id].map(service => (
+                  collapsibleRows={(services[program.id] || []).map(service => (
                     <EditableServiceRow
                       key={service.id}
                       canEdit={canEdit}
@@ -144,6 +151,12 @@ export default function ProgramsAndServices(props) {
         <CreateNewServiceModal
           programs={programs}
           close={() => setShowingCreateNewServiceModal(false)}
+          refetch={refetchServices}
+        />
+      )}
+      {showingCreateNewProgramModal && (
+        <CreateNewProgramModal
+          close={() => setShowingCreateNewProgramModal(false)}
           refetch={refetchServices}
         />
       )}
