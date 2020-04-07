@@ -32,7 +32,12 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
 
   return (
     <div className="table-container" {...scope}>
-      <table className="leads-table">
+      <table
+        className={a("leads-table").m(
+          "advanced-search",
+          props.advancedSearchOpen
+        )}
+      >
         <thead>
           <tr>
             <th>
@@ -301,6 +306,10 @@ const css = `
     box-shadow: 0 .2rem 0.2rem var(--medium-gray);
     padding: 0 1rem 0 1rem;
     font-size: 1.5rem;
+  }
+
+  & .leads-table.advanced-search th {
+    top: 50rem;
   }
 
   & .leads-table th button {

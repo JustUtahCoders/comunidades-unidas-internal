@@ -45,6 +45,8 @@ export default function LeadsTableToolbar(props: LeadsTableToolbarProps) {
             advancedSearchRef={advancedSearchRef}
             programData={props.programData}
             events={props.events}
+            showingAdvancedSearch={props.showingAdvancedSearch}
+            setShowingAdvancedSearch={props.setShowingAdvancedSearch}
           />
         </div>
         {lastPage !== 0 && (
@@ -170,6 +172,8 @@ type LeadsTableToolbarProps = {
   setSelectedLeads: (selectedLeads: SelectedLeads) => any;
   programData: any;
   events: Array<any>;
+  showingAdvancedSearch: boolean;
+  setShowingAdvancedSearch(boolean): any;
 };
 
 function NoLeads(props) {

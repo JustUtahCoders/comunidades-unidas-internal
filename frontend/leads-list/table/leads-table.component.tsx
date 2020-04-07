@@ -22,4 +22,5 @@ export type LeadsTableProps = {
   setSelectedLeads: (selectedLeads: SelectedLeads) => any;
   programData: any;
   events: Array<any>;
+  advancedSearchOpen: boolean;
 };
