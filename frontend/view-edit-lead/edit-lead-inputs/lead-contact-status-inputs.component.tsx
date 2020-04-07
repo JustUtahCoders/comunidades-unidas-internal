@@ -124,7 +124,7 @@ export default function LeadContactStatusInputs(
   function handleSubmit(evt) {
     evt.preventDefault();
 
-    return props.handleSubmit(evt, {
+    const lead = {
       dateOfSignUp: dateInputRef.current.value,
       leadStatus: leadStatus,
       contactStage: {
@@ -142,7 +142,15 @@ export default function LeadContactStatusInputs(
             : null
       },
       inactivityReason: inactivityReason
-    });
+    };
+
+    if (!lead.leadStatus) {
+      // https://github.com/JustUtahCoders/comunidades-unidas-internal/issues/478
+      // https://github.com/JustUtahCoders/comunidades-unidas-internal/issues/479
+      delete lead.leadStatus;
+    }
+
+    return props.handleSubmit(evt, lead);
   }
 
   function addContactAttempt(evt) {
