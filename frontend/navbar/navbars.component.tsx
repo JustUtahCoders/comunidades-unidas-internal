@@ -55,6 +55,10 @@ ${mediaDesktop} {
   & .navbar-margin {
     margin-left: 23.6rem;
   }
+
+  body.collapsed-sidebar .navbar-margin {
+    margin-left: 7.2rem;
+  }
 }
 
 ${mediaMobile} {
