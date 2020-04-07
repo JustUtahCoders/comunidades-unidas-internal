@@ -4,7 +4,6 @@ import { useCss, always } from "kremling";
 import easyFetch from "../util/easy-fetch";
 import PageHeader from "../page-header.component";
 import StickySecondaryNav from "../navbar/sticky-secondary-nav.component";
-import ReportIssue from "../report-issue/report-issue.component";
 import EventHome from "./event-home/event-home.component";
 import homeImgUrl from "../../icons/148705-essential-collection/svg/home.svg";
 import leadsImgUrl from "../../icons/148705-essential-collection/svg/archive-1.svg";
@@ -120,6 +119,8 @@ export type SingleEvent = {
   totalAttendance?: number;
   totalLeads?: number;
   totalConvertedToClients?: number;
+  leadGenders?: any;
+  clientGenders?: any;
 };
 
 type ViewEventProps = {

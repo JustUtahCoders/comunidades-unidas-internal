@@ -2,48 +2,64 @@ import React from "react";
 import { useCss } from "kremling";
 import { SingleEvent } from "../view-event.component";
 import EventSection from "./event-section.component";
+import BasicTableReport from "../../reports/shared/basic-table-report.component";
 
 export default function ViewEventStats(props: ViewEventStatsProps) {
   const { event } = props;
-  const scope = useCss(css);
 
   return (
     <EventSection title="Statistics">
-      <table {...scope}>
-        <tbody>
+      <BasicTableReport
+        headerRows={
           <tr>
-            <td># of Clients</td>
-            <td>{event.totalConvertedToClients || 0}</td>
+            <th></th>
+            <th>Men</th>
+            <th>Women</th>
+            <th>All Genders</th>
+            <th>Conversion</th>
           </tr>
+        }
+        contentRows={
+          <>
+            <tr>
+              <td>Leads</td>
+              <td>{event.leadGenders.male || 0}</td>
+              <td>{event.leadGenders.female || 0}</td>
+              <td>{event.totalLeads || 0}</td>
+              <td>{toPercentage(event.totalLeads, event.totalAttendance)}</td>
+            </tr>
+            <tr>
+              <td>Clients</td>
+              <td>{event.clientGenders.male || 0}</td>
+              <td>{event.clientGenders.female || 0}</td>
+              <td>{event.totalConvertedToClients || 0}</td>
+              <td>
+                {toPercentage(
+                  event.totalConvertedToClients,
+                  event.totalAttendance
+                )}
+              </td>
+            </tr>
+          </>
+        }
+        footerRows={
           <tr>
-            <td># of Leads:</td>
-            <td>{event.totalLeads || 0}</td>
-          </tr>
-          <tr>
-            <td>Total Attendance:</td>
+            <td>All Event Attendees</td>
+            <td>&mdash;</td>
+            <td>&mdash;</td>
             <td>{event.totalAttendance || 0}</td>
+            <td>100%</td>
           </tr>
-          <tr>
-            <td>% converted to lead:</td>
-            <td>{event.totalLeads / event.totalAttendance || 0}</td>
-          </tr>
-          <tr>
-            <td>% converted to client:</td>
-            <td>
-              {event.totalConvertedToClients / event.totalAttendance || 0}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        }
+      />
     </EventSection>
   );
 }
 
-const css = `
-& td {
-  padding: 1.6rem;
+function toPercentage(nominator, denominator) {
+  const percentage = Math.round((10000 * nominator) / denominator || 0) / 100;
+  return percentage + "%";
 }
-`;
 
 type ViewEventStatsProps = {
   event: SingleEvent;

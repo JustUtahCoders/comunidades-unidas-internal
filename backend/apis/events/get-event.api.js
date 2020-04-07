@@ -12,6 +12,7 @@ const {
   responseBoolean,
   responseDateWithoutTime,
 } = require("../utils/transform-utils");
+const _ = require("lodash");
 
 app.get("/api/events/:id", (req, res, next) => {
   const validationErrors = checkValid(req.params, validId("id"));
@@ -61,18 +62,9 @@ function getEventById(eventId, cbk, connection) {
       WHERE events.id = ? AND isDeleted = false;
 
       SELECT
-        leadEvents.leadId
-      FROM leadEvents
-      WHERE eventId = ?;
-
-      SELECT
-        leads.id,
-        leadEvents.eventId,
-        leads.leadStatus
-      FROM leads
-        INNER JOIN leadEvents
-          ON leadEvents.leadId = leads.id
-      WHERE leads.leadStatus = "convertedToClient" AND leadEvents.eventId = 1;
+        leadEvents.leadId, leads.gender, leads.leadStatus
+      FROM leadEvents JOIN leads ON leads.id = leadEvents.leadId
+      WHERE leadEvents.eventId = ? AND leads.isDeleted = false;
     `,
     [eventId, eventId, eventId]
   );
@@ -87,8 +79,29 @@ function getEventById(eventId, cbk, connection) {
     }
 
     const e = data[0][0];
-    const eventLeads = data[1];
-    const eventClients = data[2];
+    const leadResult = data[1];
+    const [eventLeads, eventClients] = _.partition(
+      leadResult,
+      (r) => r.leadStatus !== "convertedToClient"
+    );
+
+    const leadGenders = _.groupBy(eventLeads, "gender");
+    const leadGenderCounts = Object.keys(leadGenders).reduce(
+      (result, gender) => {
+        result[gender] = leadGenders[gender].length;
+        return result;
+      },
+      {}
+    );
+
+    const clientGenders = _.groupBy(eventClients, "gender");
+    const clientGenderCounts = Object.keys(clientGenders).reduce(
+      (result, gender) => {
+        result[gender] = clientGenders[gender].length;
+        return result;
+      },
+      {}
+    );
 
     const event = {
       id: e.eventId,
@@ -98,6 +111,8 @@ function getEventById(eventId, cbk, connection) {
       totalAttendance: e.totalAttendance,
       totalLeads: eventLeads.length,
       totalConvertedToClients: eventClients.length,
+      leadGenders: leadGenderCounts,
+      clientGenders: clientGenderCounts,
       isDeleted: responseBoolean(e.isDeleted),
       createdBy: {
         userId: e.createdByUserId,
