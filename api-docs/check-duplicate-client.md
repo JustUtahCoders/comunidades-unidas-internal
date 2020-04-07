@@ -24,6 +24,16 @@ Notes:
       "birthday": "1990-01-30",
       "gender": "male"
     }
+  ],
+  "possibleLeadSources": [
+    {
+      "id": 345,
+      "firstName": "Juan",
+      "lastName": "Rodriguez",
+      "birthday": "1990-01-30",
+      "leadStatus": "active",
+      "gender": "male"
+    }
   ]
 }
 ```

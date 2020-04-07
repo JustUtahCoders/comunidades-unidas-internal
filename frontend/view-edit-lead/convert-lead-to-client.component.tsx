@@ -28,21 +28,24 @@ export default function ConvertLeadToClient(props: Props) {
 
   return (
     lead && (
-      <AddClient path={props.path} initialClientState={initialClientState()} />
+      <AddClient
+        path={props.path}
+        initialClientState={leadToClientState(lead)}
+      />
     )
   );
+}
 
-  function initialClientState(): ClientState {
-    return {
-      firstName: lead.firstName,
-      lastName: lead.lastName,
-      gender: lead.gender,
-      phone: lead.phone,
-      smsConsent: lead.smsConsent,
-      zip: lead.zip,
-      intakeServices: lead.leadServices
-    };
-  }
+export function leadToClientState(lead: SingleLead): ClientState {
+  return {
+    firstName: lead.firstName,
+    lastName: lead.lastName,
+    gender: lead.gender,
+    phone: lead.phone,
+    smsConsent: lead.smsConsent,
+    zip: lead.zip,
+    intakeServices: lead.leadServices
+  };
 }
 
 type Props = {

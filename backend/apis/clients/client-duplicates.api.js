@@ -32,6 +32,15 @@ app.get("/api/client-duplicates", (req, res, next) => {
     (firstName LIKE ? OR lastName LIKE ?)
     AND
     (YEAR(birthday) >= ? AND YEAR(birthday) <= ? AND MONTH(birthday) >= ? AND MONTH(birthday) <= ?)
+    ;
+
+    SELECT id, firstName, lastName, gender, leadStatus
+    FROM leads
+    WHERE
+      isDeleted = false
+      AND (firstName LIKE ? OR lastName LIKE ?)
+      AND leadStatus != 'convertedToClient'
+    ;
   `,
     [
       req.query.firstName,
@@ -39,21 +48,31 @@ app.get("/api/client-duplicates", (req, res, next) => {
       year - 3,
       year + 3,
       Math.max(1, month - 3),
-      Math.min(12, month + 3)
+      Math.min(12, month + 3),
+      req.query.firstName,
+      req.query.lastName
     ]
   );
 
-  pool.query(query, function(err, rows, fields) {
+  pool.query(query, function(err, result, fields) {
     if (err) {
       return databaseError(req, res, err);
     }
+    const [clientRows, leadRows] = result;
     res.send({
-      numDuplicates: rows.length,
-      clientDuplicates: rows.map(row => ({
+      numDuplicates: clientRows.length,
+      clientDuplicates: clientRows.map(row => ({
         id: row.id,
         firstName: row.firstName,
         lastName: row.lastName,
         birthday: row.birthday,
+        gender: row.gender
+      })),
+      possibleLeadSources: leadRows.map(row => ({
+        id: row.id,
+        firstName: row.firstName,
+        lastName: row.lastName,
+        leadStatus: row.leadStatus,
         gender: row.gender
       }))
     });

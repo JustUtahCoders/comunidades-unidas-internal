@@ -23,13 +23,19 @@ export default function Confirm(props: StepComponentProps) {
     if (saving) {
       const d = props.clientState;
       const abortController = new AbortController();
+      let leadId;
+      if (leadMatch) {
+        // @ts-ignore
+        leadId = leadMatch.leadId;
+      } else {
+        leadId = d.leadId;
+      }
 
       easyFetch("/api/clients", {
         method: "POST",
         signal: abortController.signal,
         body: {
-          // @ts-ignore
-          leadId: leadMatch ? leadMatch.leadId : null,
+          leadId: leadId,
           dateOfIntake: d.dateOfIntake,
           firstName: d.firstName,
           lastName: d.lastName,

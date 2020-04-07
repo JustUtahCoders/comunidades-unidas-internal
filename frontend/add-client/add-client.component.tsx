@@ -18,6 +18,9 @@ import Finished from "./finished.component";
 import { mediaMobile, mediaDesktop } from "../styleguide.component";
 import { WeeklyEmployedHours } from "./form-inputs/demographic-information-inputs.component";
 import { IntakeService } from "../util/services-inputs.component";
+import { LeadStatus, SingleLead } from "../view-edit-lead/view-lead.component";
+import easyFetch from "../util/easy-fetch";
+import { leadToClientState } from "../view-edit-lead/convert-lead-to-client.component";
 
 export default function AddClient(props: AddClientProps) {
   const scope = useCss(css);
@@ -30,6 +33,28 @@ export default function AddClient(props: AddClientProps) {
     null
   );
   const StepComponent = stepComponents[step];
+
+  React.useEffect(() => {
+    if (clientState.leadId) {
+      const abortController = new AbortController();
+
+      easyFetch(`/api/leads/${clientState.leadId}`, {
+        signal: abortController.signal
+      })
+        .then(data => {
+          setClientState({ ...clientState, ...leadToClientState(data.lead) });
+        })
+        .catch(err => {
+          setTimeout(() => {
+            throw err;
+          });
+        });
+
+      return () => {
+        abortController.abort();
+      };
+    }
+  }, [clientState.leadId]);
 
   return (
     <div {...scope}>
@@ -119,6 +144,8 @@ export type ClientState = {
   birthday?: string;
   gender?: string;
   duplicates?: [];
+  // Lead source
+  leadId?: number;
   //Contacts
   dateOfIntake?: string;
   phone?: string;
@@ -167,6 +194,7 @@ export type DuplicateWarning = {
   birthday: string;
   gender: string;
   duplicates: Duplicate[];
+  possibleLeadSources: PossibleLeadSource[];
 };
 
 export enum ClientSources {
@@ -189,6 +217,14 @@ type Duplicate = {
   lastName: string;
   birthday: string;
   gender: string;
+};
+
+type PossibleLeadSource = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  leadStatus: LeadStatus;
 };
 
 export const css = `
