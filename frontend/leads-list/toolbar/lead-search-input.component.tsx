@@ -22,14 +22,12 @@ const searchFields = {
 
 export default function LeadSearchInput(props: LeadSearchInputProps) {
   const scope = useCss(css);
-  const [showingAdvancedSearch, setShowingAdvancedSearch] = React.useState(
-    false
-  );
   const [search, dispatchSearch] = React.useReducer(
     searchReducer,
     getInitialSearch(searchFields)
   );
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const { showingAdvancedSearch, setShowingAdvancedSearch } = props;
 
   React.useEffect(() => {
     inputRef.current.setCustomValidity(search.parseResult.errors.join(". "));
@@ -352,4 +350,6 @@ type LeadSearchInputProps = {
   advancedSearchRef: React.MutableRefObject<HTMLElement>;
   programData: any;
   events: Array<any>;
+  showingAdvancedSearch: boolean;
+  setShowingAdvancedSearch(boolean): any;
 };

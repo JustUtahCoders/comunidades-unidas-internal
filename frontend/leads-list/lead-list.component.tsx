@@ -11,6 +11,9 @@ export default function LeadList(props: LeadListProps) {
   const [selectedLeads, setSelectedLeads] = React.useState<SelectedLeads>({});
   const [programData, setProgramData] = React.useState([]);
   const [events, setEvents] = React.useState([]);
+  const [showingAdvancedSearch, setShowingAdvancedSearch] = React.useState(
+    false
+  );
 
   useFullWidth(true);
 
@@ -71,6 +74,8 @@ export default function LeadList(props: LeadListProps) {
         setSelectedLeads={setSelectedLeads}
         programData={programData}
         events={events}
+        showingAdvancedSearch={showingAdvancedSearch}
+        setShowingAdvancedSearch={setShowingAdvancedSearch}
       />
       <LeadsTable
         leads={apiState.apiData.leads}
@@ -83,6 +88,7 @@ export default function LeadList(props: LeadListProps) {
         setSelectedLeads={setSelectedLeads}
         programData={programData}
         events={events}
+        advancedSearchOpen={showingAdvancedSearch}
       />
     </>
   );
