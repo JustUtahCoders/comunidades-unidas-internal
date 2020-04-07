@@ -41,9 +41,7 @@ export default function ViewEditLeadContactInfo(
   }, [apiStatus]);
 
   return (
-    <LeadSection
-      title={apiStatus.isEditing ? "Edit Contact Info" : "Contact Info"}
-    >
+    <LeadSection title={apiStatus.isEditing ? "Edit Lead Info" : "Lead Info"}>
       {apiStatus.isEditing ? (
         <LeadContactInformationInputs
           lead={{

@@ -144,10 +144,10 @@ export default function LeadContactStatusInputs(
       inactivityReason: inactivityReason,
     };
 
-    if (!lead.leadStatus) {
+    if (!lead.inactivityReason) {
       // https://github.com/JustUtahCoders/comunidades-unidas-internal/issues/478
       // https://github.com/JustUtahCoders/comunidades-unidas-internal/issues/479
-      delete lead.leadStatus;
+      delete lead.inactivityReason;
     }
 
     return props.handleSubmit(evt, lead);

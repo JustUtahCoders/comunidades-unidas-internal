@@ -38,7 +38,7 @@ export default function ViewEditLeadContactStatus(
   }, [apiStatus]);
 
   return (
-    <LeadSection title="Contact Status">
+    <LeadSection title="Lead Status">
       {apiStatus.isEditing ? (
         <LeadContactStatusInputs
           lead={{

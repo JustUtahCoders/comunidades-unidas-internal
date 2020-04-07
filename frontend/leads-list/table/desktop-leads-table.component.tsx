@@ -195,7 +195,7 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
       return `Client #${clientId}`;
     } else if (leadStatus === "active") {
       if (contactStage.first === null) {
-        return "No contact";
+        return "0 calls";
       } else if (contactStage.second === null) {
         return (
           <span title={dateformat(contactStage.first, "m/d/yyyy")}>1 call</span>
