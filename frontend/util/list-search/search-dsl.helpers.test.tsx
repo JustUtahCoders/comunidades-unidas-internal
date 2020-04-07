@@ -1,7 +1,7 @@
 import {
   parseSearch,
   serializeSearch,
-  deserializeSearch
+  deserializeSearch,
 } from "./search-dsl.helpers";
 
 describe(`client-search-dsl.helpers`, () => {
@@ -13,7 +13,7 @@ describe(`client-search-dsl.helpers`, () => {
           zip: "ZIP Code",
           phone: "Phone",
           program: "Interest in Program",
-          event: "Event Attended"
+          event: "Event Attended",
         },
         "Freddie Mercury"
       );
@@ -79,7 +79,7 @@ describe(`client-search-dsl.helpers`, () => {
           zip: "ZIP Code",
           phone: "Phone",
           program: "Interest in Program",
-          event: "Event Attended"
+          event: "Event Attended",
         },
         "Yoshi",
         { id: "" }
@@ -100,10 +100,10 @@ describe(`client-search-dsl.helpers`, () => {
             zip: "ZIP Code",
             phone: "Phone",
             program: "Interest in Program",
-            event: "Event Attended"
+            event: "Event Attended",
           },
           {
-            name: "Freddie Mercury"
+            name: "Freddie Mercury",
           }
         )
       ).toEqual("Freddie Mercury");
@@ -131,7 +131,7 @@ describe(`client-search-dsl.helpers`, () => {
             zip: "ZIP Code",
             phone: "Phone",
             program: "Interest in Program",
-            event: "Event Attended"
+            event: "Event Attended",
           },
           "?name=hello there"
         )

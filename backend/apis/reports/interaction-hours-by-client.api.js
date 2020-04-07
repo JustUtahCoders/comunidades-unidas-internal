@@ -1,7 +1,7 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
 const {
   checkValid,
-  nullableValidInteger
+  nullableValidInteger,
 } = require("../utils/validation-utils");
 const { responseFullName } = require("../utils/transform-utils");
 const mysql = require("mysql");
@@ -69,7 +69,7 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
       minInteractionSeconds,
       maxInteractionSeconds,
       mysqlOffset,
-      pageSize
+      pageSize,
     ]
   );
 
@@ -83,7 +83,7 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
     const totalCount = totalCountRows[0]["FOUND_ROWS()"];
 
     res.send({
-      clients: clientRows.map(c => ({
+      clients: clientRows.map((c) => ({
         id: c.id,
         firstName: c.firstName,
         lastName: c.lastName,
@@ -92,20 +92,20 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
         birthday: c.birthday,
         totalDuration: toDuration(c.totalInteractionSeconds),
         totalInteractionSeconds: c.totalInteractionSeconds,
-        numInteractions: c.numInteractions
+        numInteractions: c.numInteractions,
       })),
       pagination: {
         numClients: totalCount,
         currentPage: oneBasedPage,
         pageSize,
-        numPages: Math.ceil(totalCount / pageSize)
+        numPages: Math.ceil(totalCount / pageSize),
       },
       reportParameters: {
         start: startDate,
         end: endDate,
         minInteractionSeconds,
-        maxInteractionSeconds
-      }
+        maxInteractionSeconds,
+      },
     });
   });
 });

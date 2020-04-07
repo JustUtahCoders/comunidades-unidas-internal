@@ -17,14 +17,14 @@ export default function AddLeadsStep(props: AddLeadsStepProps) {
 
   const [state, dispatch] = useReducer(reducer, {
     leads: [{ uuid: uniqueId }],
-    isCreating: false
+    isCreating: false,
   });
 
   React.useEffect(() => {
     if (state.isCreating) {
       const abortController = new AbortController();
 
-      const leads = state.leads.slice(0, state.leads.length - 1).map(l => ({
+      const leads = state.leads.slice(0, state.leads.length - 1).map((l) => ({
         dateOfSignUp: "2019-09-17",
         firstName: l.firstName,
         lastName: l.lastName,
@@ -34,24 +34,24 @@ export default function AddLeadsStep(props: AddLeadsStepProps) {
         age: l.age,
         gender: !l.gender || l.gender === "unknown" ? null : l.gender,
         eventSources: props.eventId ? [props.eventId] : null,
-        leadServices: (l.leadServices || []).map(s => s.id)
+        leadServices: (l.leadServices || []).map((s) => s.id),
       }));
 
       easyFetch(`/api/leads`, {
         method: "POST",
         signal: abortController.signal,
-        body: leads
+        body: leads,
       })
         .then(() => {
           showGrowl({
             type: GrowlType.success,
             message: `${leads.length} lead${
               leads.length > 1 ? "s were" : " was"
-            } created`
+            } created`,
           });
           navigate(`/lead-list`);
         })
-        .catch(err => {
+        .catch((err) => {
           dispatch({ type: "doneCreating" });
           setTimeout(() => {
             throw err;
@@ -69,16 +69,16 @@ export default function AddLeadsStep(props: AddLeadsStepProps) {
       const abortController = new AbortController();
 
       easyFetch(`/api/events/${props.eventId}`, {
-        signal: abortController.signal
+        signal: abortController.signal,
       })
-        .then(event => {
+        .then((event) => {
           setEvent(event);
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.status === 404) {
             showGrowl({
               type: GrowlType.info,
-              message: "Please select a valid event to add the leads to."
+              message: "Please select a valid event to add the leads to.",
             });
             // @ts-ignore
             props.navigate(`/add-leads/event`);
@@ -106,7 +106,7 @@ export default function AddLeadsStep(props: AddLeadsStepProps) {
         <div className="well">
           <AddLeadsTable
             leads={state.leads}
-            deleteLead={index => dispatch({ type: "deleteLead", index })}
+            deleteLead={(index) => dispatch({ type: "deleteLead", index })}
             updateLead={(index, field, value) =>
               dispatch({ type: "updateLead", index, field, value })
             }
@@ -141,31 +141,31 @@ function reducer(state, action) {
       leads = [...state.leads];
       leads[action.index] = {
         ...leads[action.index],
-        [action.field]: action.value
+        [action.field]: action.value,
       };
       if (action.index === leads.length - 1) {
         leads.push({ uuid: ++uniqueId });
       }
       return {
         ...state,
-        leads
+        leads,
       };
     case "deleteLead":
       leads = [...state.leads];
       leads.splice(action.index, 1);
       return {
         ...state,
-        leads
+        leads,
       };
     case "createLeads":
       return {
         ...state,
-        isCreating: true
+        isCreating: true,
       };
     case "doneCreating":
       return {
         ...state,
-        isCreating: false
+        isCreating: false,
       };
     default:
       throw Error();

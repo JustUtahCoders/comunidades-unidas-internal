@@ -15,8 +15,8 @@ import { groupBy } from "lodash-es";
 export default function LeadServicesCell(props: LeadServicesCellProps) {
   const scope = useCss(css);
   const allServices = props.programData.services || [];
-  const leadServices = props.leadServices.map(sid =>
-    allServices.find(ser => ser.id === sid)
+  const leadServices = props.leadServices.map((sid) =>
+    allServices.find((ser) => ser.id === sid)
   );
   const leadServicesByName = groupBy(leadServices, "programName");
 
@@ -24,7 +24,7 @@ export default function LeadServicesCell(props: LeadServicesCellProps) {
     <>
       <div className="programs-cell" {...scope}>
         {leadServices.length > 0 ? (
-          Object.keys(leadServicesByName).map(programName => (
+          Object.keys(leadServicesByName).map((programName) => (
             <div className="icon-container" key={programName}>
               <img
                 className="program-icon"

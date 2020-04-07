@@ -6,7 +6,7 @@ import checkedUrl from "../../../icons/148705-essential-collection/svg/checked-1
 import closeUrl from "../../../icons/148705-essential-collection/svg/close.svg";
 import ContactInformationInputsComponent, {
   ContactInformationFormClient,
-  HousingStatuses
+  HousingStatuses,
 } from "../../add-client/form-inputs/contact-information-inputs.component";
 import easyFetch from "../../util/easy-fetch";
 import { formatPhone } from "../../util/formatters";
@@ -18,7 +18,7 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
   const contactInfoInputsRef = React.useRef(null);
   const [apiStatus, dispatchApiStatus] = React.useReducer(updatingReducer, {
     isUpdating: false,
-    newClientData: null
+    newClientData: null,
   });
 
   React.useEffect(() => {
@@ -32,19 +32,19 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
           street: data.streetAddress,
           city: data.city,
           state: data.state,
-          zip: data.zip
+          zip: data.zip,
         },
         housingStatus: data.housing,
         email: data.email,
-        dateOfIntake: data.dateOfIntake
+        dateOfIntake: data.dateOfIntake,
       };
 
       easyFetch(`/api/clients/${client.id}`, {
         method: "PATCH",
         body: patch,
-        signal: abortController.signal
+        signal: abortController.signal,
       })
-        .then(responseData => {
+        .then((responseData) => {
           props.clientUpdated(responseData.client);
           setIsEditing(false);
         })
@@ -73,7 +73,7 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
             zip: client.homeAddress.zip,
             housing: client.housingStatus,
             email: client.email,
-            dateOfIntake: client.dateOfIntake
+            dateOfIntake: client.dateOfIntake,
           }}
           handleSubmit={handleSubmit}
         >
@@ -177,13 +177,13 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
     evt.preventDefault();
     dispatchApiStatus({
       type: "update",
-      newClientData: contactInfoInputsRef.current.getData()
+      newClientData: contactInfoInputsRef.current.getData(),
     });
   }
 }
 
 ViewEditContactInfo.defaultProps = {
-  editable: true
+  editable: true,
 };
 
 function updatingReducer(state, action: UpdateAction) {

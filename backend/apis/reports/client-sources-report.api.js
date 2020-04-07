@@ -39,7 +39,7 @@ app.get(`/api/reports/client-sources`, (req, res) => {
         acc[row.clientSource] = row.total;
         return acc;
       }, {}),
-      reportParameters: {}
+      reportParameters: {},
     });
   });
 });

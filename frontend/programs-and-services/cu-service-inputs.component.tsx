@@ -12,10 +12,10 @@ export default function CUServiceInputs(props: CUServiceInputsProps) {
         <input
           type="text"
           value={props.service.serviceName}
-          onChange={evt =>
+          onChange={(evt) =>
             props.setService({
               ...props.service,
-              serviceName: evt.target.value
+              serviceName: evt.target.value,
             })
           }
           required
@@ -26,10 +26,10 @@ export default function CUServiceInputs(props: CUServiceInputsProps) {
         <input
           type="text"
           value={props.service.serviceDescription}
-          onChange={evt =>
+          onChange={(evt) =>
             props.setService({
               ...props.service,
-              serviceDescription: evt.target.value
+              serviceDescription: evt.target.value,
             })
           }
           required
@@ -39,14 +39,14 @@ export default function CUServiceInputs(props: CUServiceInputsProps) {
         <label htmlFor="service-program">Part of Program:</label>
         <select
           value={props.service.programId}
-          onChange={evt =>
+          onChange={(evt) =>
             props.setService({
               ...props.service,
-              programId: evt.target.value
+              programId: evt.target.value,
             })
           }
         >
-          {props.programs.map(program => (
+          {props.programs.map((program) => (
             <option key={program.id} value={program.id}>
               {program.programName}
             </option>
@@ -58,10 +58,10 @@ export default function CUServiceInputs(props: CUServiceInputsProps) {
         <input
           type="checkbox"
           checked={props.service.isActive}
-          onChange={evt =>
+          onChange={(evt) =>
             props.setService({
               ...props.service,
-              isActive: evt.target.checked
+              isActive: evt.target.checked,
             })
           }
         />

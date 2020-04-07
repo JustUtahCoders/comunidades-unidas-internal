@@ -3,14 +3,14 @@ const {
   databaseError,
   pool,
   invalidRequest,
-  insufficientPrivileges
+  insufficientPrivileges,
 } = require("../../server");
 const mysql = require("mysql");
 const {
   checkValid,
   validId,
   nonEmptyString,
-  nullableValidBoolean
+  nullableValidBoolean,
 } = require("../utils/validation-utils");
 const { checkUserRole } = require("../utils/auth-utils");
 
@@ -57,7 +57,7 @@ app.post("/api/services", (req, res, next) => {
       serviceName: req.body.serviceName,
       serviceDescription: req.body.serviceDescription,
       programId: req.body.programId,
-      isActive: req.body.hasOwnProperty("isActive") ? req.body.isActive : true
+      isActive: req.body.hasOwnProperty("isActive") ? req.body.isActive : true,
     };
 
     const updateService = mysql.format(
@@ -72,7 +72,7 @@ app.post("/api/services", (req, res, next) => {
         finalService.serviceName,
         finalService.serviceDescription,
         finalService.programId,
-        finalService.isActive
+        finalService.isActive,
       ]
     );
 
@@ -85,7 +85,7 @@ app.post("/api/services", (req, res, next) => {
 
       finalService.id = lastInsertId[0].id;
       res.send({
-        service: finalService
+        service: finalService,
       });
     });
   });

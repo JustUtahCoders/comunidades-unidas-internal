@@ -25,7 +25,7 @@ export default function CurrencyInput(props: CurrencyInputProps) {
 
 CurrencyInput.defaultProps = {
   required: true,
-  placeholder: "40000"
+  placeholder: "40000",
 };
 
 type CurrencyInputProps = {

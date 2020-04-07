@@ -108,49 +108,49 @@ app.get(`/api/reports/service-interests`, (req, res) => {
       clientServiceInterests,
       clientProgramInterests,
       leadServiceInterests,
-      leadProgramInterests
+      leadProgramInterests,
     ] = result;
 
-    const serviceTotals = services.map(s => ({
+    const serviceTotals = services.map((s) => ({
       programName: s.programName,
       serviceName: s.serviceName,
       clientsInterested: 0,
       leadsInterested: 0,
       programId: s.programId,
-      serviceId: s.serviceId
+      serviceId: s.serviceId,
     }));
 
-    const programTotals = programs.map(p => ({
+    const programTotals = programs.map((p) => ({
       programName: p.programName,
       clientsInterested: 0,
       leadsInterested: 0,
-      programId: p.programId
+      programId: p.programId,
     }));
 
-    clientServiceInterests.forEach(clientInterest => {
+    clientServiceInterests.forEach((clientInterest) => {
       const service = serviceTotals.find(
-        s => s.serviceId === clientInterest.serviceId
+        (s) => s.serviceId === clientInterest.serviceId
       );
       service.clientsInterested = clientInterest.clientsInterested;
     });
 
-    clientProgramInterests.forEach(clientInterest => {
+    clientProgramInterests.forEach((clientInterest) => {
       const program = programTotals.find(
-        p => p.programId === clientInterest.programId
+        (p) => p.programId === clientInterest.programId
       );
       program.clientsInterested = clientInterest.clientsInterested;
     });
 
-    leadServiceInterests.forEach(leadInterest => {
+    leadServiceInterests.forEach((leadInterest) => {
       const service = serviceTotals.find(
-        s => s.serviceId === leadInterest.serviceId
+        (s) => s.serviceId === leadInterest.serviceId
       );
       service.leadsInterested = leadInterest.leadsInterested;
     });
 
-    leadProgramInterests.forEach(leadInterest => {
+    leadProgramInterests.forEach((leadInterest) => {
       const program = programTotals.find(
-        p => p.programId === leadInterest.programId
+        (p) => p.programId === leadInterest.programId
       );
       program.leadsInterested = leadInterest.leadsInterested;
     });
@@ -158,7 +158,7 @@ app.get(`/api/reports/service-interests`, (req, res) => {
     res.send({
       programs: programTotals,
       services: serviceTotals,
-      reportParameters: {}
+      reportParameters: {},
     });
   });
 });

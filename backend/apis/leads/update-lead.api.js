@@ -5,7 +5,7 @@ const {
   databaseError,
   pool,
   invalidRequest,
-  notFound
+  notFound,
 } = require("../../server");
 const {
   checkValid,
@@ -18,7 +18,7 @@ const {
   nullableValidInteger,
   nullableValidPhone,
   nullableValidZip,
-  nullableValidEnum
+  nullableValidEnum,
 } = require("../utils/validation-utils");
 const { atLeastOne } = require("../utils/patch-utils");
 const { getLeadById } = require("./get-lead.api");
@@ -161,7 +161,7 @@ app.patch("/api/leads/:id", (req, res, next) => {
       queries.push("UPDATE leads SET modifiedBy = ? WHERE id = ?;");
       queryData.push(userId, leadId);
 
-      const oldLeadServiceIds = oldLead.leadServices.map(service => {
+      const oldLeadServiceIds = oldLead.leadServices.map((service) => {
         return service.id;
       });
 
@@ -197,7 +197,9 @@ app.patch("/api/leads/:id", (req, res, next) => {
     }
 
     if (oldLead.eventSources.length < fullLead.eventSources.length) {
-      const oldLeadEventIds = oldLead.eventSources.map(event => event.eventId);
+      const oldLeadEventIds = oldLead.eventSources.map(
+        (event) => event.eventId
+      );
 
       const newLeadEventIds = _.difference(
         fullLead.eventSources,
@@ -239,7 +241,7 @@ app.patch("/api/leads/:id", (req, res, next) => {
         }
 
         res.send({
-          lead
+          lead,
         });
       });
     });

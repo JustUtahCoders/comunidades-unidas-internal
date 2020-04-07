@@ -32,7 +32,7 @@ export default React.forwardRef(function ContactInformationInputs(
   React.useEffect(() => {
     // @ts-ignore
     ref.current = {
-      getData
+      getData,
     };
   });
 
@@ -46,7 +46,7 @@ export default React.forwardRef(function ContactInformationInputs(
               type="date"
               name="dateOfIntake"
               value={dateOfIntake}
-              onChange={evt => setDateOfIntake(evt.target.value)}
+              onChange={(evt) => setDateOfIntake(evt.target.value)}
               autoFocus
             />
           </label>
@@ -65,7 +65,7 @@ export default React.forwardRef(function ContactInformationInputs(
             type="checkbox"
             name="smsConsent"
             checked={smsConsent}
-            onChange={evt => setSmsConsent(Boolean(evt.target.checked))}
+            onChange={(evt) => setSmsConsent(Boolean(evt.target.checked))}
             className="checkbox"
           />
         </label>
@@ -76,7 +76,7 @@ export default React.forwardRef(function ContactInformationInputs(
           <input
             type="email"
             value={email}
-            onChange={evt => setEmail(evt.target.value)}
+            onChange={(evt) => setEmail(evt.target.value)}
             autoComplete="new-password"
           />
         </label>
@@ -87,7 +87,7 @@ export default React.forwardRef(function ContactInformationInputs(
           <input
             type="text"
             value={streetAddress}
-            onChange={evt => setStreetAddress(evt.target.value)}
+            onChange={(evt) => setStreetAddress(evt.target.value)}
             required
             placeholder="1211 W. 3200 S."
             autoComplete="new-password"
@@ -118,7 +118,7 @@ export default React.forwardRef(function ContactInformationInputs(
             ref={zipRef}
             type="text"
             value={zip}
-            onChange={evt => setZip(evt.target.value)}
+            onChange={(evt) => setZip(evt.target.value)}
             autoComplete="new-password"
             required
           />
@@ -130,10 +130,10 @@ export default React.forwardRef(function ContactInformationInputs(
           <select
             value={housing}
             name="housing"
-            onChange={evt => setHousing(evt.target.value)}
+            onChange={(evt) => setHousing(evt.target.value)}
             required
           >
-            {Object.keys(HousingStatuses).map(key => (
+            {Object.keys(HousingStatuses).map((key) => (
               <option value={key} key={key}>
                 {HousingStatuses[key]}
               </option>
@@ -154,7 +154,7 @@ export default React.forwardRef(function ContactInformationInputs(
       state,
       zip,
       housing,
-      email: email ? email.toLowerCase() : null
+      email: email ? email.toLowerCase() : null,
     };
 
     if (props.showDateOfIntake) {
@@ -173,7 +173,7 @@ function getTodayAsString() {
 function capitalizeAll(str) {
   return str
     .split(/\s/)
-    .map(s => capitalize(s))
+    .map((s) => capitalize(s))
     .join(" ");
 }
 
@@ -199,5 +199,5 @@ export type ContactInformationFormClient = {
 export enum HousingStatuses {
   renter = "Renter",
   homeowner = "Home Owner",
-  other = "With family and friends"
+  other = "With family and friends",
 }

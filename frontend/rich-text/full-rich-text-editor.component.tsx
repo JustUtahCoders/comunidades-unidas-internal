@@ -25,7 +25,7 @@ export default React.forwardRef(function FullRichTextEditor(
     if (externalRef) {
       // @ts-ignore
       externalRef.current = {
-        getHTML: richTextEditorRef.current.getHTML
+        getHTML: richTextEditorRef.current.getHTML,
       };
     }
   }, [externalRef]);

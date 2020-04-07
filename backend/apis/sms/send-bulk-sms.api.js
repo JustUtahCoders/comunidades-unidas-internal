@@ -3,15 +3,15 @@ const {
   invalidRequest,
   pool,
   databaseError,
-  internalError
+  internalError,
 } = require("../../server");
 const {
   validateClientListQuery,
-  clientListQuery
+  clientListQuery,
 } = require("../clients/list-clients.api");
 const {
   validateListLeadsQuery,
-  listLeadsQuery
+  listLeadsQuery,
 } = require("../leads/list-leads.api");
 const { checkValid, nonEmptyString } = require("../utils/validation-utils");
 const mysql = require("mysql");
@@ -34,7 +34,7 @@ app.post(`/api/bulk-texts`, (req, res) => {
   const validationErrors = [
     ...validateClientListQuery(req.query),
     ...validateListLeadsQuery(req.query),
-    ...checkValid(req.body, nonEmptyString("smsBody"))
+    ...checkValid(req.body, nonEmptyString("smsBody")),
   ];
 
   if (validationErrors.length > 0) {
@@ -73,19 +73,19 @@ app.post(`/api/bulk-texts`, (req, res) => {
     }
 
     const notificationOpts = {
-      toBinding: data.phoneNumbers.map(address =>
+      toBinding: data.phoneNumbers.map((address) =>
         JSON.stringify({
           binding_type: "sms",
-          address
+          address,
         })
       ),
-      body: req.body.smsBody
+      body: req.body.smsBody,
     };
 
     twilio.notify
       .services(process.env.TWILIO_SMS_SERVICE_SID)
       .notifications.create(notificationOpts)
-      .then(notification => {
+      .then((notification) => {
         const insertSql = insertBulkSmsQuery(
           response,
           data,
@@ -103,7 +103,7 @@ app.post(`/api/bulk-texts`, (req, res) => {
           res.send(response);
         });
       })
-      .catch(err => {
+      .catch((err) => {
         internalError(req, res, err);
       });
   });
@@ -121,14 +121,14 @@ function insertBulkSmsQuery(totals, data, twilioSid, userId, smsBody, query) {
     totals.recipients.leads,
     totals.recipients.uniquePhoneNumbers,
     queryString.stringify(query),
-    userId
+    userId,
   ];
 
-  data.clientRecipients.forEach(c => {
+  data.clientRecipients.forEach((c) => {
     values.push(c.primaryPhone, null, c.id);
   });
 
-  data.leadRecipients.forEach(l => {
+  data.leadRecipients.forEach((l) => {
     values.push(l.phone, l.leadId, null);
   });
 
@@ -143,7 +143,7 @@ function insertBulkSmsQuery(totals, data, twilioSid, userId, smsBody, query) {
 
     ${data.clientRecipients
       .map(
-        c => `
+        (c) => `
       INSERT INTO bulkSmsRecipients
         (bulkSmsId, phone, leadId, clientId)
       VALUES
@@ -154,7 +154,7 @@ function insertBulkSmsQuery(totals, data, twilioSid, userId, smsBody, query) {
 
     ${data.leadRecipients
       .map(
-        c => `
+        (c) => `
       INSERT INTO bulkSmsRecipients
         (bulkSmsId, phone, leadId, clientId)
       VALUES

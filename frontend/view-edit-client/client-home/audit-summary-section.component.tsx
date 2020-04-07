@@ -3,7 +3,7 @@ import { LastUpdate } from "../view-client.component";
 import { format } from "timeago.js";
 
 export default function AuditSummarySection({
-  auditSection
+  auditSection,
 }: AuditSummarySectionProps) {
   return (
     <div>

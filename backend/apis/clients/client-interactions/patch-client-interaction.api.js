@@ -7,7 +7,7 @@ const {
   nullableValidEnum,
   nullableNonEmptyString,
   nullableValidDate,
-  nullableValidTime
+  nullableValidTime,
 } = require("../../utils/validation-utils");
 const { atLeastOne } = require("../../utils/patch-utils");
 const { getInteraction } = require("./client-interaction.utils");
@@ -36,7 +36,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
         "consulateOffice",
         "communityEvent"
       )
-    )
+    ),
   ];
 
   if (validationErrors.length > 0) {
@@ -71,7 +71,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
         return err(req, res);
       }
 
-      getServiceName(existingInteractionServiceName, serviceName => {
+      getServiceName(existingInteractionServiceName, (serviceName) => {
         const queries = [];
 
         if (shouldUpdateInteraction) {
@@ -95,7 +95,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
                 req.body.duration || existingInteraction.duration,
                 req.body.location || existingInteraction.location,
                 req.session.passport.user.id,
-                existingInteraction.id
+                existingInteraction.id,
               ]
             )
           );
@@ -110,7 +110,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
                 req.body.description || existingInteraction.description,
               logType: "clientInteraction:updated",
               addedBy: req.session.passport.user.id,
-              detailId: existingInteraction.id
+              detailId: existingInteraction.id,
             })
           );
 
@@ -149,7 +149,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
                 "clientInteraction:serviceProvided",
                 req.session.passport.user.id,
                 req.body.dateOfInteraction,
-                existingInteraction.id
+                existingInteraction.id,
               ]
             )
           );

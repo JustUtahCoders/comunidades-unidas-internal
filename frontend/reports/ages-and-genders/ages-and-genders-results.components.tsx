@@ -4,7 +4,7 @@ import BasicTableReport from "../shared/basic-table-report.component";
 import { uniq } from "lodash-es";
 import { capitalize } from "../shared/report.helpers";
 import CollapsibleTableRows, {
-  ToggleCollapseButton
+  ToggleCollapseButton,
 } from "../shared/collapsible-table-rows.component";
 
 export default function AgesAndGendersResults(props) {
@@ -25,7 +25,7 @@ export default function AgesAndGendersResults(props) {
     "35-44",
     "45-54",
     "55-64",
-    "65+"
+    "65+",
   ];
 
   return (
@@ -36,7 +36,7 @@ export default function AgesAndGendersResults(props) {
           <th>Client/Lead</th>
           <th style={{ width: "15%" }}>Gender</th>
           <th>Total</th>
-          {ageGroups.map(ageGroup => (
+          {ageGroups.map((ageGroup) => (
             <th key={ageGroup}>{ageGroup}</th>
           ))}
         </tr>
@@ -51,19 +51,19 @@ export default function AgesAndGendersResults(props) {
                   <ToggleCollapseButton />
                 </th>
                 <td>{data.totals.numClients.toLocaleString()}</td>
-                {ageGroups.map(ageGroup => (
+                {ageGroups.map((ageGroup) => (
                   <td key={ageGroup}>
                     {data.clients.allGenders[ageGroup].toLocaleString()}
                   </td>
                 ))}
               </tr>
             }
-            collapsibleRows={uniqueGenders.map(gender => (
+            collapsibleRows={uniqueGenders.map((gender) => (
               <tr>
                 <th>{"\u2014"}</th>
                 <th>{capitalize(gender)}</th>
                 <td>{data.clients.allAges[gender].toLocaleString()}</td>
-                {ageGroups.map(ageGroup => (
+                {ageGroups.map((ageGroup) => (
                   <td key={ageGroup}>
                     {data.clients[ageGroup][gender].toLocaleString()}
                   </td>
@@ -79,19 +79,19 @@ export default function AgesAndGendersResults(props) {
                   <ToggleCollapseButton />
                 </th>
                 <td>{data.totals.numLeads.toLocaleString()}</td>
-                {ageGroups.map(ageGroup => (
+                {ageGroups.map((ageGroup) => (
                   <td key={ageGroup}>
                     {data.leads.allGenders[ageGroup].toLocaleString()}
                   </td>
                 ))}
               </tr>
             }
-            collapsibleRows={uniqueGenders.map(gender => (
+            collapsibleRows={uniqueGenders.map((gender) => (
               <tr>
                 <th>{"\u2014"}</th>
                 <th>{capitalize(gender)}</th>
                 <td>{data.leads.allAges[gender].toLocaleString()}</td>
-                {ageGroups.map(ageGroup => (
+                {ageGroups.map((ageGroup) => (
                   <td key={ageGroup}>
                     {data.leads[ageGroup][gender].toLocaleString()}
                   </td>
@@ -114,19 +114,19 @@ export default function AgesAndGendersResults(props) {
                   data.totals.numLeads + data.totals.numClients
                 ).toLocaleString()}
               </td>
-              {ageGroups.map(ageGroup => (
+              {ageGroups.map((ageGroup) => (
                 <td key={ageGroup}>
                   {data.totals.ages[ageGroup].toLocaleString()}
                 </td>
               ))}
             </tr>
           }
-          collapsibleRows={uniqueGenders.map(gender => (
+          collapsibleRows={uniqueGenders.map((gender) => (
             <tr>
               <th>{"\u2014"}</th>
               <th>{capitalize(gender)}</th>
               <td>{data.totals.genders[gender].toLocaleString()}</td>
-              {ageGroups.map(ageGroup => (
+              {ageGroups.map((ageGroup) => (
                 <td key={ageGroup}>
                   {(
                     data.clients[ageGroup][gender] +
@@ -139,7 +139,7 @@ export default function AgesAndGendersResults(props) {
         />
       }
       notes={[
-        `The All category will report a double count for a person who started as a Lead and then later became a Client. (Inquire if you want to change this).`
+        `The All category will report a double count for a person who started as a Lead and then later became a Client. (Inquire if you want to change this).`,
       ]}
     />
   );

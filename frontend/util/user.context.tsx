@@ -23,5 +23,5 @@ export type LoggedInUser = {
 
 export enum UserAccessLevel {
   Administrator = "Administrator",
-  Staff = "Staff"
+  Staff = "Staff",
 }

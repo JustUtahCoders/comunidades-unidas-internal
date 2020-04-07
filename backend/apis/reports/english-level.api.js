@@ -38,7 +38,7 @@ app.get(`/api/reports/english-levels`, (req, res) => {
         acc[level.englishProficiency] = level.total;
         return acc;
       }, {}),
-      reportParameters: {}
+      reportParameters: {},
     });
   });
 });

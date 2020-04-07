@@ -1,13 +1,13 @@
 const {
   responseFullName,
-  responseDateWithoutTime
+  responseDateWithoutTime,
 } = require("../../utils/transform-utils");
 const mysql = require("mysql");
 const {
   pool,
   invalidRequest,
   databaseError,
-  notFound
+  notFound,
 } = require("../../../server");
 
 function createResponseInteractionObject(log) {
@@ -25,7 +25,7 @@ function createResponseInteractionObject(log) {
       firstName: log.createdByFirstName,
       lastName: log.createdByLastName,
       fullName: responseFullName(log.createdByFirstName, log.createdByLastName),
-      timestamp: log.dateAdded
+      timestamp: log.dateAdded,
     },
     lastUpdatedBy: {
       userId: log.lastUpdatedById,
@@ -35,8 +35,8 @@ function createResponseInteractionObject(log) {
         log.lastUpdatedByFirstName,
         log.lastUpdatedByLastName
       ),
-      timestamp: log.dateUpdated
-    }
+      timestamp: log.dateUpdated,
+    },
   };
 }
 

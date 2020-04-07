@@ -10,7 +10,7 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
   const [editing, setEditing] = React.useState(false);
   const [apiStatus, dispatchApiStatus] = React.useReducer(updatingReducer, {
     isUpdating: false,
-    newClientData: null
+    newClientData: null,
   });
   const { client } = props;
 
@@ -20,8 +20,8 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
       easyFetch(`/api/clients/${props.client.id}`, {
         method: "PATCH",
         body: apiStatus.newClientData,
-        signal: abortController.signal
-      }).then(data => {
+        signal: abortController.signal,
+      }).then((data) => {
         dispatchApiStatus({ type: "reset" });
         props.clientUpdated(data.client);
         setEditing(false);
@@ -42,7 +42,7 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
             firstName: client.firstName,
             lastName: client.lastName,
             birthday: client.birthday,
-            gender: client.gender
+            gender: client.gender,
           }}
           handleSubmit={handleSubmit}
         >
@@ -102,7 +102,7 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
 }
 
 ViewEditBasicInfo.defaultProps = {
-  editable: true
+  editable: true,
 };
 
 function updatingReducer(state, action) {

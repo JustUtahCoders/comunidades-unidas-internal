@@ -26,13 +26,13 @@ export default function AddEventStep(props: AddEventStepProps) {
   React.useEffect(() => {
     const abortController = new AbortController();
     easyFetch(`/api/events`, { signal: abortController.signal })
-      .then(data => {
+      .then((data) => {
         if (data.events.length === 0) {
           setEventType(EventType.newEvent);
         }
         setAllEvents(data.events);
       })
-      .catch(err => {
+      .catch((err) => {
         setTimeout(() => {
           throw err;
         });
@@ -53,13 +53,13 @@ export default function AddEventStep(props: AddEventStepProps) {
           eventDate,
           eventName,
           eventLocation,
-          totalAttendance
-        }
+          totalAttendance,
+        },
       })
-        .then(event => {
+        .then((event) => {
           props["navigate"](`/add-leads/event/${event.id}`);
         })
-        .catch(err => {
+        .catch((err) => {
           setCreateNewEvent(false);
           setTimeout(() => {
             throw err;
@@ -88,7 +88,7 @@ export default function AddEventStep(props: AddEventStepProps) {
                 name="event-type"
                 required
                 checked={eventType === EventType.newEvent}
-                onChange={evt => setEventType(EventType.newEvent)}
+                onChange={(evt) => setEventType(EventType.newEvent)}
               />
               <label htmlFor="new-event">New Event</label>
             </div>
@@ -99,7 +99,7 @@ export default function AddEventStep(props: AddEventStepProps) {
                 name="event-type"
                 required
                 checked={eventType === EventType.existingEvent}
-                onChange={evt => setEventType(EventType.existingEvent)}
+                onChange={(evt) => setEventType(EventType.existingEvent)}
               />
               <label htmlFor="existing-event">Existing Event</label>
             </div>
@@ -110,7 +110,7 @@ export default function AddEventStep(props: AddEventStepProps) {
                 name="event-type"
                 required
                 checked={eventType === EventType.other}
-                onChange={evt => setEventType(EventType.other)}
+                onChange={(evt) => setEventType(EventType.other)}
               />
               <label htmlFor="no-event">Other</label>
             </div>
@@ -149,10 +149,10 @@ export default function AddEventStep(props: AddEventStepProps) {
           <select
             id="existing-events-list"
             value={existingEventId}
-            onChange={evt => setExistingEventId(Number(evt.target.value))}
+            onChange={(evt) => setExistingEventId(Number(evt.target.value))}
           >
             <option value="">(Select an event)</option>
-            {allEvents.map(event => (
+            {allEvents.map((event) => (
               <option key={event.id} value={event.id}>
                 {event.eventName} ({event.eventDate})
               </option>
@@ -177,7 +177,7 @@ export default function AddEventStep(props: AddEventStepProps) {
             id="event-date"
             type="date"
             value={eventDate}
-            onChange={evt => setEventDate(evt.target.value)}
+            onChange={(evt) => setEventDate(evt.target.value)}
             required
           />
         </div>
@@ -187,7 +187,7 @@ export default function AddEventStep(props: AddEventStepProps) {
             id="event-name"
             type="text"
             value={eventName}
-            onChange={evt => setEventName(evt.target.value)}
+            onChange={(evt) => setEventName(evt.target.value)}
             required
           />
         </div>
@@ -197,7 +197,7 @@ export default function AddEventStep(props: AddEventStepProps) {
             id="event-location"
             type="text"
             value={eventLocation}
-            onChange={evt => setEventLocation(evt.target.value)}
+            onChange={(evt) => setEventLocation(evt.target.value)}
             required
           />
         </div>
@@ -207,7 +207,7 @@ export default function AddEventStep(props: AddEventStepProps) {
             id="event-attendance"
             type="number"
             value={totalAttendance}
-            onChange={evt => setTotalAttendance(Number(evt.target.value))}
+            onChange={(evt) => setTotalAttendance(Number(evt.target.value))}
             required
             min={1}
           />
@@ -297,5 +297,5 @@ type ExistingEventId = number | "";
 enum EventType {
   newEvent = "newEvent",
   existingEvent = "existingEvent",
-  other = "other"
+  other = "other",
 }

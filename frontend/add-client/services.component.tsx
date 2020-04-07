@@ -14,9 +14,9 @@ export default function Services(props: StepComponentProps) {
   React.useEffect(() => {
     const abortController = new AbortController();
 
-    easyFetch("/api/services", { signal: abortController.signal }).then(data =>
-      setServices(data.services)
-    );
+    easyFetch("/api/services", {
+      signal: abortController.signal,
+    }).then((data) => setServices(data.services));
 
     return () => abortController.abort();
   }, []);
@@ -47,7 +47,7 @@ export default function Services(props: StepComponentProps) {
             className="secondary"
             onClick={() =>
               props.goBack(Step.CLIENT_SOURCE, {
-                intakeServices: intakeServicesRef.current.checkedServices
+                intakeServices: intakeServicesRef.current.checkedServices,
               })
             }
           >
@@ -68,7 +68,7 @@ export default function Services(props: StepComponentProps) {
   function handleSubmit(evt) {
     evt.preventDefault();
     props.nextStep(Step.CONFIRM, {
-      intakeServices: intakeServicesRef.current.checkedServices
+      intakeServices: intakeServicesRef.current.checkedServices,
     });
   }
 }

@@ -47,13 +47,13 @@ export default function EventList(props: EventListProps) {
   function newPage(page: number) {
     dispatchApiState({
       type: ActionTypes.newPage,
-      page
+      page,
     });
   }
 
   function refetchEvents() {
     dispatchApiState({
-      type: ActionTypes.shouldFetch
+      type: ActionTypes.shouldFetch,
     });
   }
 
@@ -61,7 +61,7 @@ export default function EventList(props: EventListProps) {
     dispatchApiState({
       type: ActionTypes.newSort,
       sortField,
-      sortOrder
+      sortOrder,
     });
   }
 }
@@ -71,34 +71,34 @@ function reduceApiState(state: ApiState, action: ApiStateAction) {
     case ActionTypes.fetching:
       return {
         ...state,
-        status: ApiStateStatus.fetching
+        status: ApiStateStatus.fetching,
       };
     case ActionTypes.fetched:
       return {
         ...state,
         status: ApiStateStatus.fetched,
-        apiData: action.apiData
+        apiData: action.apiData,
       };
     case ActionTypes.newPage:
       return {
         ...state,
         status: ApiStateStatus.shouldFetch,
-        page: action.page
+        page: action.page,
       };
     case ActionTypes.newQueryParams:
       return {
         ...state,
-        status: ApiStateStatus.shouldFetch
+        status: ApiStateStatus.shouldFetch,
       };
     case ActionTypes.apiError:
       return {
         ...state,
-        status: ApiStateStatus.fetched
+        status: ApiStateStatus.fetched,
       };
     case ActionTypes.shouldFetch:
       return {
         ...state,
-        status: ApiStateStatus.shouldFetch
+        status: ApiStateStatus.shouldFetch,
       };
     case ActionTypes.newSort:
       return {
@@ -106,7 +106,7 @@ function reduceApiState(state: ApiState, action: ApiStateAction) {
         status: ApiStateStatus.shouldFetch,
         sortField: action.sortField,
         sortOrder: action.sortOrder,
-        page: 1
+        page: 1,
       };
     default:
       throw Error();
@@ -120,19 +120,19 @@ function useEventsApi(apiState, dispatchApiState) {
       const query = queryString.stringify({
         page: apiState.page,
         sortField: apiState.sortField,
-        sortOrder: apiState.sortOrder
+        sortOrder: apiState.sortOrder,
       });
       easyFetch(`/api/events?${query}`)
-        .then(data => {
+        .then((data) => {
           dispatchApiState({
             type: ActionTypes.fetched,
-            apiData: data
+            apiData: data,
           });
         })
-        .catch(err => {
+        .catch((err) => {
           dispatchApiState({
             type: ActionTypes.apiError,
-            err
+            err,
           });
 
           setTimeout(() => {
@@ -175,7 +175,7 @@ function useAlwaysValidPage(apiState, dispatchApiState) {
     if (newPage && newPage !== apiState.page) {
       dispatchApiState({
         type: ActionTypes.newPage,
-        page: newPage
+        page: newPage,
       });
     }
   }, [apiState]);
@@ -186,7 +186,7 @@ function useFrontendUrlParams(apiState, dispatchApiState) {
     const params = queryString.parse(window.location.search);
     dispatchApiState({
       type: ActionTypes.newQueryParams,
-      params
+      params,
     });
   }, []);
 
@@ -194,7 +194,7 @@ function useFrontendUrlParams(apiState, dispatchApiState) {
     const queryParams = queryString.stringify({
       page: apiState.page,
       sortField: apiState.sortField,
-      sortOrder: apiState.sortOrder
+      sortOrder: apiState.sortOrder,
     });
 
     window.history.replaceState(
@@ -241,13 +241,13 @@ function getInitialState(): ApiState {
         currentPage: 0,
         numPages: 0,
         numEvents: 0,
-        pageSize: 0
+        pageSize: 0,
       },
-      events: []
+      events: [],
     },
     page,
     sortField,
-    sortOrder
+    sortOrder,
   };
 }
 
@@ -261,7 +261,7 @@ enum ApiStateStatus {
   shouldFetch = "shouldFetch",
   fetching = "fetching",
   fetched = "fetched",
-  uninitialized = "uninitialized"
+  uninitialized = "uninitialized",
 }
 
 enum ActionTypes {
@@ -271,7 +271,7 @@ enum ActionTypes {
   newQueryParams = "newQueryParams",
   apiError = "apiError",
   shouldFetch = "shouldFetch",
-  newSort = "newSort"
+  newSort = "newSort",
 }
 
 export enum SortField {
@@ -279,12 +279,12 @@ export enum SortField {
   eventName = "eventName",
   eventDate = "eventDate",
   eventLocation = "eventLocation",
-  totalAttendance = "totalAttendance"
+  totalAttendance = "totalAttendance",
 }
 
 export enum SortOrder {
   ascending = "asc",
-  descending = "desc"
+  descending = "desc",
 }
 
 type ApiStateAction =

@@ -13,8 +13,8 @@ export default function CityInput(props) {
 
   useEffect(() => {
     import("./city-data.js")
-      .then(m => setStatesToCities(m.citiesForStates))
-      .catch(err =>
+      .then((m) => setStatesToCities(m.citiesForStates))
+      .catch((err) =>
         setTimeout(() => {
           throw err;
         })
@@ -48,7 +48,7 @@ export default function CityInput(props) {
       <input
         type="text"
         value={props.city}
-        onChange={evt => props.setCity(evt.target.value)}
+        onChange={(evt) => props.setCity(evt.target.value)}
         required
         ref={inputRef}
         autoComplete="new-password"

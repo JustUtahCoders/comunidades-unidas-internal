@@ -29,7 +29,7 @@ export default function EnglishLevelsResults(props) {
         <>
           {Object.keys(data.englishLevels)
             .sort(englishLevelComparator)
-            .map(englishLevel => (
+            .map((englishLevel) => (
               <tr key={englishLevel}>
                 <th>{capitalize(englishLevel)}</th>
                 <td>{data.englishLevels[englishLevel].toLocaleString()}</td>
@@ -59,7 +59,7 @@ export default function EnglishLevelsResults(props) {
 const scores = {
   beginner: 0,
   intermediate: 1,
-  advanced: 2
+  advanced: 2,
 };
 
 function englishLevelComparator(level1, level2) {

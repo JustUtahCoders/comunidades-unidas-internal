@@ -4,7 +4,7 @@ import { CUServicesList, CUService } from "../../add-client/services.component";
 import { groupBy } from "lodash-es";
 import dayjs from "dayjs";
 import TimeDurationInput, {
-  TimeDuration
+  TimeDuration,
 } from "../../util/time-duration-input.component";
 import FullRichTextEditorComponent from "../../rich-text/full-rich-text-editor.component";
 
@@ -16,7 +16,7 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
     );
     const [
       selectedInteractionType,
-      setSelectedInteractionType
+      setSelectedInteractionType,
     ] = React.useState(
       props.initialInteraction
         ? props.initialInteraction.interactionType
@@ -33,12 +33,12 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         ? {
             stringValue: props.initialInteraction.duration,
             hours: null,
-            minutes: null
+            minutes: null,
           }
         : {
             hours: 0,
             minutes: 30,
-            stringValue: "00:30:00"
+            stringValue: "00:30:00",
           }
     );
     const [selectedLocation, setSelectedLocation] = React.useState(
@@ -59,8 +59,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 1,
           minutes: 30,
-          stringValue: "01:30:00"
-        }
+          stringValue: "01:30:00",
+        },
       },
       "Chronic Disease Screenings": {
         location: "consulateOffice",
@@ -68,8 +68,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 0,
           minutes: 30,
-          stringValue: "00:30:00"
-        }
+          stringValue: "00:30:00",
+        },
       },
       Citizenship: {
         location: "CUOffice",
@@ -77,8 +77,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 2,
           minutes: 0,
-          stringValue: "02:00:00"
-        }
+          stringValue: "02:00:00",
+        },
       },
       "Cooking Classes": {
         location: "CUOffice",
@@ -86,8 +86,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 2,
           minutes: 0,
-          stringValue: "02:00:00"
-        }
+          stringValue: "02:00:00",
+        },
       },
       DACA: {
         location: "CUOffice",
@@ -95,8 +95,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 2,
           minutes: 0,
-          stringValue: "02:00:00"
-        }
+          stringValue: "02:00:00",
+        },
       },
       "Family Petition - Adjustment of Status": {
         location: "CUOffice",
@@ -104,8 +104,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 2,
           minutes: 0,
-          stringValue: "02:00:00"
-        }
+          stringValue: "02:00:00",
+        },
       },
       "Family Petition - Consular Processing": {
         location: "CUOffice",
@@ -113,8 +113,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 1,
           minutes: 30,
-          stringValue: "01:30:00"
-        }
+          stringValue: "01:30:00",
+        },
       },
       Faxes: {
         location: "CUOffice",
@@ -122,8 +122,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 0,
           minutes: 30,
-          stringValue: "00:30:00"
-        }
+          stringValue: "00:30:00",
+        },
       },
       "Financial Coach": {
         location: "CUOffice",
@@ -131,8 +131,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 1,
           minutes: 0,
-          stringValue: "01:00:00"
-        }
+          stringValue: "01:00:00",
+        },
       },
       "Financial Education": {
         location: "CUOffice",
@@ -140,8 +140,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 1,
           minutes: 0,
-          stringValue: "01:00:00"
-        }
+          stringValue: "01:00:00",
+        },
       },
       FOIA: {
         location: "CUOffice",
@@ -149,8 +149,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 2,
           minutes: 0,
-          stringValue: "02:00:00"
-        }
+          stringValue: "02:00:00",
+        },
       },
       "General Consultation(Immigration)": {
         location: "CUOffice",
@@ -158,8 +158,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 0,
           minutes: 30,
-          stringValue: "00:30:00"
-        }
+          stringValue: "00:30:00",
+        },
       },
       "Green Card Renewal": {
         location: "CUOffice",
@@ -167,8 +167,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 2,
           minutes: 0,
-          stringValue: "02:00:00"
-        }
+          stringValue: "02:00:00",
+        },
       },
       "Grocery Store Tour": {
         location: "communityEvent",
@@ -176,8 +176,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 1,
           minutes: 30,
-          stringValue: "01:30:00"
-        }
+          stringValue: "01:30:00",
+        },
       },
       "HIV / PrEP": {
         location: "consulateOffice",
@@ -185,8 +185,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 1,
           minutes: 30,
-          stringValue: "01:30:00"
-        }
+          stringValue: "01:30:00",
+        },
       },
       "I - 94 Request": {
         location: "CUOffice",
@@ -194,8 +194,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 2,
           minutes: 0,
-          stringValue: "02:00:00"
-        }
+          stringValue: "02:00:00",
+        },
       },
       I765: {
         location: "CUOffice",
@@ -203,8 +203,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 2,
           minutes: 0,
-          stringValue: "02:00:00"
-        }
+          stringValue: "02:00:00",
+        },
       },
       "I821 TPS": {
         location: "CUOffice",
@@ -212,8 +212,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 2,
           minutes: 0,
-          stringValue: "02:00:00"
-        }
+          stringValue: "02:00:00",
+        },
       },
       "LDS Vouchers": {
         location: "CUOffice",
@@ -221,8 +221,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 0,
           minutes: 30,
-          stringValue: "00:30:00"
-        }
+          stringValue: "00:30:00",
+        },
       },
       "Leadership Development - Monthly Meetings": {
         location: "CUOffice",
@@ -230,8 +230,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 2,
           minutes: 0,
-          stringValue: "02:00:00"
-        }
+          stringValue: "02:00:00",
+        },
       },
       "Mobile Clinic": {
         location: "CUOffice",
@@ -239,8 +239,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 1,
           minutes: 0,
-          stringValue: "01:00:00"
-        }
+          stringValue: "01:00:00",
+        },
       },
       Nutrition: {
         location: "communityEvent",
@@ -248,8 +248,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 1,
           minutes: 30,
-          stringValue: "01:30:00"
-        }
+          stringValue: "01:30:00",
+        },
       },
       "Saturday VDS": {
         location: "consulateOffice",
@@ -257,8 +257,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 6,
           minutes: 0,
-          stringValue: "06:00:00"
-        }
+          stringValue: "06:00:00",
+        },
       },
       SNAP: {
         location: "CUOffice",
@@ -266,8 +266,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 2,
           minutes: 0,
-          stringValue: "02:00:00"
-        }
+          stringValue: "02:00:00",
+        },
       },
       "Status Check": {
         location: "CUOffice",
@@ -275,8 +275,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 2,
           minutes: 0,
-          stringValue: "02:00:00"
-        }
+          stringValue: "02:00:00",
+        },
       },
       "Tobacco Prevention and Cessation": {
         location: "consulateOffice",
@@ -284,8 +284,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 1,
           minutes: 30,
-          stringValue: "01:30:00"
-        }
+          stringValue: "01:30:00",
+        },
       },
       Translation: {
         location: "CUOffice",
@@ -293,8 +293,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 0,
           minutes: 30,
-          stringValue: "00:30:00"
-        }
+          stringValue: "00:30:00",
+        },
       },
       "VDS Daily Attention": {
         location: "CUOffice",
@@ -302,8 +302,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 4,
           minutes: 0,
-          stringValue: "04:00:00"
-        }
+          stringValue: "04:00:00",
+        },
       },
       "VDS Mobile": {
         location: "CUOffice",
@@ -311,8 +311,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 4,
           minutes: 0,
-          stringValue: "04:00:00"
-        }
+          stringValue: "04:00:00",
+        },
       },
       "Voter Registration": {
         location: "CUOffice",
@@ -320,8 +320,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 0,
           minutes: 30,
-          stringValue: "00:30:00"
-        }
+          stringValue: "00:30:00",
+        },
       },
       "Workers' Rights and Safety": {
         location: "CUOffice",
@@ -329,8 +329,8 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 1,
           minutes: 30,
-          stringValue: "01:30:00"
-        }
+          stringValue: "01:30:00",
+        },
       },
       "Youth Groups": {
         location: "consulateOffice",
@@ -338,9 +338,9 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         duration: {
           hours: 4,
           minutes: 0,
-          stringValue: "04:00:00"
-        }
-      }
+          stringValue: "04:00:00",
+        },
+      },
     };
 
     React.useEffect(() => {
@@ -359,7 +359,7 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
           dateOfInteraction,
           duration: duration.stringValue,
           location: selectedLocation,
-          description
+          description,
         };
       }
     }, [
@@ -368,7 +368,7 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
       dateOfInteraction,
       duration,
       selectedLocation,
-      descrRef.current
+      descrRef.current,
     ]);
 
     React.useEffect(() => {
@@ -384,7 +384,7 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
           : null;
         setSelectedService(
           serviceId
-            ? props.servicesResponse.services.find(s => s.id === serviceId)
+            ? props.servicesResponse.services.find((s) => s.id === serviceId)
             : null
         );
       }
@@ -436,9 +436,9 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
             <select
               ref={ref}
               value={selectedService ? selectedService.id : ""}
-              onChange={evt =>
+              onChange={(evt) =>
                 setSelectedService(
-                  services.find(s => s.id === Number(evt.target.value))
+                  services.find((s) => s.id === Number(evt.target.value))
                 )
               }
               aria-labelledby={`provided-service-${props.interactionIndex}`}
@@ -449,9 +449,9 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
               <option value="" disabled hidden>
                 Choose here
               </option>
-              {Object.keys(groupedServices).map(programName => (
+              {Object.keys(groupedServices).map((programName) => (
                 <optgroup label={programName} key={programName}>
-                  {groupedServices[programName].map(service => (
+                  {groupedServices[programName].map((service) => (
                     <option key={service.id} value={service.id}>
                       {service.serviceName}
                     </option>
@@ -470,14 +470,14 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
           <label id={`interaction-type-${props.interactionIndex}`}>Type:</label>
           <select
             value={selectedInteractionType || ""}
-            onChange={evt => setSelectedInteractionType(evt.target.value)}
+            onChange={(evt) => setSelectedInteractionType(evt.target.value)}
             aria-labelledby={`interaction-type-${props.interactionIndex}`}
             required
           >
             <option value="" disabled hidden>
               Choose here
             </option>
-            {Object.keys(interactionTypes).map(interactionType => (
+            {Object.keys(interactionTypes).map((interactionType) => (
               <option key={interactionType} value={interactionType}>
                 {interactionTypes[interactionType]}
               </option>
@@ -487,7 +487,7 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
           <input
             type="date"
             value={dateOfInteraction}
-            onChange={evt => setDateOfInteraction(evt.target.value)}
+            onChange={(evt) => setDateOfInteraction(evt.target.value)}
             aria-labelledby={`interaction-date-${props.interactionIndex}`}
             required
           />
@@ -506,14 +506,14 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
               </label>
               <select
                 value={selectedLocation || ""}
-                onChange={evt => setSelectedLocation(evt.target.value)}
+                onChange={(evt) => setSelectedLocation(evt.target.value)}
                 aria-labelledby={`interaction-location-${props.interactionIndex}`}
                 required
               >
                 <option value="" disabled hidden>
                   Choose here
                 </option>
-                {Object.keys(interactionLocations).map(location => (
+                {Object.keys(interactionLocations).map((location) => (
                   <option key={location} value={location}>
                     {interactionLocations[location]}
                   </option>
@@ -598,13 +598,13 @@ export const interactionTypes = {
   byPhone: "By Phone",
   workshopTalk: "Workshop / Talk",
   oneOnOneLightTouch: "One On One / Light Touch",
-  consultation: "Consultation"
+  consultation: "Consultation",
 };
 
 export const interactionLocations = {
   CUOffice: "CU Office",
   consulateOffice: "Consulate Office",
-  communityEvent: "Community Event"
+  communityEvent: "Community Event",
 };
 
 type SingleClientInteractionProps = {

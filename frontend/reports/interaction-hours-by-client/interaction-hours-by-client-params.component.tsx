@@ -28,7 +28,7 @@ export default function InteractionHoursByClientParams(props) {
           type="number"
           step=".1"
           value={Number(minInteractionSeconds) / 3600}
-          onChange={evt =>
+          onChange={(evt) =>
             setMinInteractionSeconds(
               String(Math.round(Number(evt.target.value) * 3600))
             )
@@ -42,7 +42,7 @@ export default function InteractionHoursByClientParams(props) {
           type="number"
           step=".1"
           value={Number(maxInteractionsSeconds) / 3600}
-          onChange={evt =>
+          onChange={(evt) =>
             setMaxInteractionSeconds(
               String(Math.round(Number(evt.target.value) * 3600))
             )
@@ -55,7 +55,7 @@ export default function InteractionHoursByClientParams(props) {
           id="start-date"
           type="date"
           value={startDate}
-          onChange={evt => setStartDate(evt.target.value)}
+          onChange={(evt) => setStartDate(evt.target.value)}
         />
       </div>
       <div className="report-input">
@@ -64,7 +64,7 @@ export default function InteractionHoursByClientParams(props) {
           id="end-date"
           type="date"
           value={endDate}
-          onChange={evt => setEndDate(evt.target.value)}
+          onChange={(evt) => setEndDate(evt.target.value)}
         />
       </div>
       <div className="actions">

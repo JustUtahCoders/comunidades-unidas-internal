@@ -80,7 +80,7 @@ app.get(`/api/clients/:id/audits`, (req, res) => {
       numDemographicsWrites,
       lastDemographics,
       numIntakeDataWrites,
-      lastIntakeData
+      lastIntakeData,
     ] = result;
 
     res.send({
@@ -94,8 +94,8 @@ app.get(`/api/clients/:id/audits`, (req, res) => {
             ),
             firstName: lastClient[0].firstName,
             lastName: lastClient[0].lastName,
-            timestamp: lastClient[0].dateAdded
-          }
+            timestamp: lastClient[0].dateAdded,
+          },
         },
         contactInformation: {
           numWrites: numContactInfoWrites[0]["COUNT(*)"],
@@ -107,8 +107,8 @@ app.get(`/api/clients/:id/audits`, (req, res) => {
             ),
             firstName: lastContactInfo[0].firstName,
             lastName: lastContactInfo[0].lastName,
-            timestamp: lastContactInfo[0].dateAdded
-          }
+            timestamp: lastContactInfo[0].dateAdded,
+          },
         },
         demographics: {
           numWrites: numDemographicsWrites[0]["COUNT(*)"],
@@ -120,8 +120,8 @@ app.get(`/api/clients/:id/audits`, (req, res) => {
             ),
             firstName: lastDemographics[0].firstName,
             lastName: lastDemographics[0].lastName,
-            timestamp: lastDemographics[0].dateAdded
-          }
+            timestamp: lastDemographics[0].dateAdded,
+          },
         },
         intakeData: {
           numWrites: numIntakeDataWrites[0]["COUNT(*)"],
@@ -133,10 +133,10 @@ app.get(`/api/clients/:id/audits`, (req, res) => {
             ),
             firstName: lastIntakeData[0].firstName,
             lastName: lastIntakeData[0].lastName,
-            timestamp: lastIntakeData[0].dateAdded
-          }
-        }
-      }
+            timestamp: lastIntakeData[0].dateAdded,
+          },
+        },
+      },
     });
   });
 });

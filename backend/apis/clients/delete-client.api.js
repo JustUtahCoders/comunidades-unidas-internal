@@ -35,7 +35,7 @@ app.delete("/api/clients/:clientId", (req, res) => {
           title: `Client was deleted`,
           description: null,
           logType: "clientDeleted",
-          addedBy: userId
+          addedBy: userId,
         })}
     `,
       [clientId]

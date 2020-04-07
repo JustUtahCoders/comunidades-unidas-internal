@@ -2,7 +2,7 @@ import React from "react";
 import outdentUrl from "../../../icons/111696-text-editor/svg/text-out.svg";
 import {
   useDocumentExecCommand,
-  useDocumentQueryCommandState
+  useDocumentQueryCommandState,
 } from "bandicoot";
 import { always } from "kremling";
 

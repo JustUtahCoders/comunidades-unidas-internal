@@ -14,8 +14,8 @@ export default function LeadEventsInformationInputs(
     const abortController = new AbortController();
 
     easyFetch("/api/events", { signal: abortController.signal })
-      .then(data => setEvents(data.events))
-      .catch(err => {
+      .then((data) => setEvents(data.events))
+      .catch((err) => {
         setTimeout(() => {
           throw err;
         });
@@ -24,7 +24,7 @@ export default function LeadEventsInformationInputs(
     return () => abortController.abort();
   }, []);
 
-  const mapEvents = events.map(event => {
+  const mapEvents = events.map((event) => {
     let isDisabled = false;
 
     for (let i = 0; i < leadEvents.length; i++) {
@@ -52,7 +52,7 @@ export default function LeadEventsInformationInputs(
           <span>Add an attended event</span>
           <select
             value={selectedEvent}
-            onChange={evt => setSelectedEvent(parseInt(evt.target.value))}
+            onChange={(evt) => setSelectedEvent(parseInt(evt.target.value))}
           >
             <option value={0}>Select an event</option>
             {mapEvents}
@@ -72,7 +72,7 @@ export default function LeadEventsInformationInputs(
     }
 
     return props.handleSubmit(evt, {
-      eventSources: [...leadEvents, selectedEvent]
+      eventSources: [...leadEvents, selectedEvent],
     });
   }
 }

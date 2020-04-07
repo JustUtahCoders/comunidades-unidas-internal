@@ -3,7 +3,7 @@ import { useReportsApi } from "../shared/use-reports-api";
 import BasicTableReport from "../shared/basic-table-report.component";
 import CollapsibleTableRows, {
   ToggleCollapseButton,
-  ToggleAllButton
+  ToggleAllButton,
 } from "../shared/collapsible-table-rows.component";
 
 export default function ServiceInterestsResults(props) {
@@ -20,7 +20,7 @@ export default function ServiceInterestsResults(props) {
     return acc;
   }, {});
 
-  data.services.forEach(service => {
+  data.services.forEach((service) => {
     groupedServices[service.programId].push(service);
   });
 
@@ -36,7 +36,7 @@ export default function ServiceInterestsResults(props) {
           <th>Leads interested</th>
         </tr>
       }
-      contentRows={data.programs.map(program => (
+      contentRows={data.programs.map((program) => (
         <CollapsibleTableRows
           key={program.programId}
           everpresentRow={
@@ -49,7 +49,7 @@ export default function ServiceInterestsResults(props) {
               <td>{program.leadsInterested.toLocaleString()}</td>
             </tr>
           }
-          collapsibleRows={groupedServices[program.programId].map(service => (
+          collapsibleRows={groupedServices[program.programId].map((service) => (
             <tr key={service.id}>
               <td>{"\u2014"}</td>
               <th>{service.serviceName}</th>

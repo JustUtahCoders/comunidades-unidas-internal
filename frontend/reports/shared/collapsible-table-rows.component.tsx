@@ -39,7 +39,7 @@ export default function CollapsibleTableRows(props: CollapsibleTableRowsProps) {
                   <button
                     type="button"
                     className={toggle("primary", "secondary", isCollapsed)}
-                    onClick={evt => {
+                    onClick={(evt) => {
                       evt.stopPropagation();
                       setIsCollapsed(!isCollapsed);
                     }}
@@ -52,7 +52,7 @@ export default function CollapsibleTableRows(props: CollapsibleTableRowsProps) {
               return React.cloneElement(tableCell, { key: index });
             }
           }
-        )
+        ),
       })}
       {!isCollapsed && props.collapsibleRows}
     </>
@@ -86,8 +86,8 @@ export function ToggleAllButton(props) {
     window.dispatchEvent(
       new CustomEvent("toggleReportCollapseRows", {
         detail: {
-          isCollapsed: !isCollapsed
-        }
+          isCollapsed: !isCollapsed,
+        },
       })
     );
     setIsCollapsed(!isCollapsed);

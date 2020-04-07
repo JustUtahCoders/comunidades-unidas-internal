@@ -43,7 +43,7 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
               </tr>
             </thead>
             <tbody>
-              {props.duplicateWarning.possibleLeadSources.map(leadSource => (
+              {props.duplicateWarning.possibleLeadSources.map((leadSource) => (
                 <tr key={leadSource.id} className="lead-row">
                   <td>{leadSource.firstName} </td>
                   <td>{leadSource.lastName}</td>
@@ -60,7 +60,7 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
                   </td>
                 </tr>
               ))}
-              {props.duplicateWarning.duplicates.map(duplicate => (
+              {props.duplicateWarning.duplicates.map((duplicate) => (
                 <tr key={duplicate.id} className="client-row">
                   <td>{duplicate.firstName} </td>
                   <td>{duplicate.lastName}</td>
@@ -100,7 +100,7 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
       firstName,
       lastName,
       birthday,
-      gender
+      gender,
     });
   }
 
@@ -110,7 +110,7 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
       lastName,
       birthday,
       gender,
-      leadId: leadSource.id
+      leadId: leadSource.id,
     });
   }
 }

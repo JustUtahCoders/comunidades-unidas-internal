@@ -41,7 +41,7 @@ export function parseSearch(
 
   Object.assign(parse, forcedValues);
 
-  Object.keys(parse).forEach(key => {
+  Object.keys(parse).forEach((key) => {
     if (!parse[key]) {
       delete parse[key];
     }
@@ -50,7 +50,7 @@ export function parseSearch(
   return {
     isValid: errors.length === 0,
     errors,
-    parse
+    parse,
   };
 }
 

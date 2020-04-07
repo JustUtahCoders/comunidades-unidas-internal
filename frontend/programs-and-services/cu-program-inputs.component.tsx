@@ -13,10 +13,10 @@ export default function CUProgramInputs(props: CUProgramInputsProps) {
           id="program-name"
           type="text"
           value={props.program.programName}
-          onChange={evt =>
+          onChange={(evt) =>
             props.setProgram({
               ...props.program,
-              programName: evt.target.value
+              programName: evt.target.value,
             })
           }
           required
@@ -28,10 +28,10 @@ export default function CUProgramInputs(props: CUProgramInputsProps) {
           id="program-description"
           type="text"
           value={props.program.programDescription}
-          onChange={evt =>
+          onChange={(evt) =>
             props.setProgram({
               ...props.program,
-              programDescription: evt.target.value
+              programDescription: evt.target.value,
             })
           }
           required

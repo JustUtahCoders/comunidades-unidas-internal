@@ -72,7 +72,7 @@ export default function PovertyLineResults(props) {
         </>
       }
       notes={[
-        `The below $200 annually column is included in the poverty line total.`
+        `The below $200 annually column is included in the poverty line total.`,
       ]}
     />
   );

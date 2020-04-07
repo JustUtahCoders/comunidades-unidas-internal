@@ -11,10 +11,10 @@ export default function DeleteBulkLeadModal(props: DeleteBulkLeadModalProps) {
       const abortController = new AbortController();
 
       Promise.all(
-        Object.values(props.selectedLeads).map(c =>
+        Object.values(props.selectedLeads).map((c) =>
           easyFetch(`/api/leads/${c.id}`, {
             method: "DELETE",
-            signal: abortController.signal
+            signal: abortController.signal,
           })
         )
       ).then(() => {
@@ -42,7 +42,7 @@ export default function DeleteBulkLeadModal(props: DeleteBulkLeadModalProps) {
         {Object.keys(props.selectedLeads).length > 0 ? "s" : ""}
       </p>
       <ul>
-        {Object.values(props.selectedLeads).map(lead => (
+        {Object.values(props.selectedLeads).map((lead) => (
           <li key={lead.id}>
             #{lead.id} - {lead.fullName}
           </li>

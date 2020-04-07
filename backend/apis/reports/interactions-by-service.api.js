@@ -89,7 +89,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       startDate,
       endDate,
       startDate,
-      endDate
+      endDate,
     ]
   );
 
@@ -103,7 +103,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       serviceClients,
       programClients,
       serviceHours,
-      totalClients
+      totalClients,
     ] = result;
 
     const groupedServiceInteractions = _.groupBy(
@@ -111,23 +111,23 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       "programId"
     );
     const programTotals = Object.keys(groupedServiceInteractions).map(
-      programId => {
+      (programId) => {
         return {
           programId: Number(programId),
           programName: groupedServiceInteractions[programId][0].programName,
           numInteractions: _.sum(
             groupedServiceInteractions[programId].map(
-              s => s.totalInteractions || 0
+              (s) => s.totalInteractions || 0
             )
           ),
           numClients: 0,
           totalInteractionSeconds: 0,
-          totalDuration: "00:00:00"
+          totalDuration: "00:00:00",
         };
       }
     );
 
-    const serviceTotals = serviceInteractions.map(service => ({
+    const serviceTotals = serviceInteractions.map((service) => ({
       serviceName: service.serviceName,
       programName: service.programName,
       numInteractions: service.totalInteractions || 0,
@@ -135,46 +135,46 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       totalInteractionSeconds: 0,
       totalDuration: "00:00:00",
       serviceId: service.serviceId,
-      programId: service.programId
+      programId: service.programId,
     }));
 
-    serviceClients.forEach(serviceRow => {
+    serviceClients.forEach((serviceRow) => {
       const service = serviceTotals.find(
-        s => s.serviceId === serviceRow.serviceId
+        (s) => s.serviceId === serviceRow.serviceId
       );
       service.numClients = serviceRow.numClients;
     });
 
-    programClients.forEach(programRow => {
+    programClients.forEach((programRow) => {
       const program = programTotals.find(
-        p => p.programId === programRow.programId
+        (p) => p.programId === programRow.programId
       );
       program.numClients = programRow.numClients;
     });
 
-    serviceHours.forEach(serviceHour => {
+    serviceHours.forEach((serviceHour) => {
       const service = serviceTotals.find(
-        s => s.serviceId === serviceHour.serviceId
+        (s) => s.serviceId === serviceHour.serviceId
       );
       service.totalInteractionSeconds = serviceHour.totalInteractionSeconds;
       service.totalDuration = toDuration(serviceHour.totalInteractionSeconds);
 
       const program = programTotals.find(
-        p => p.programId === service.programId
+        (p) => p.programId === service.programId
       );
       program.totalInteractionSeconds += serviceHour.totalInteractionSeconds;
     });
 
-    programTotals.forEach(program => {
+    programTotals.forEach((program) => {
       program.totalDuration = toDuration(program.totalInteractionSeconds);
     });
 
     const grandTotal = {
-      numInteractions: _.sum(programTotals.map(p => p.numInteractions)),
+      numInteractions: _.sum(programTotals.map((p) => p.numInteractions)),
       numClients: totalClients[0].numClients,
       totalInteractionSeconds: _.sum(
-        programTotals.map(p => p.totalInteractionSeconds)
-      )
+        programTotals.map((p) => p.totalInteractionSeconds)
+      ),
     };
     grandTotal.totalDuration = toDuration(grandTotal.totalInteractionSeconds);
 
@@ -184,8 +184,8 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       services: serviceTotals,
       reportParameters: {
         start: startDate,
-        end: endDate
-      }
+        end: endDate,
+      },
     });
   });
 });

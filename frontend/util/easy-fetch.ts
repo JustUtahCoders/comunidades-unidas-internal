@@ -17,7 +17,7 @@ export default function easyFetch(url: string, opts?: any) {
     opts.body = JSON.stringify(opts.body);
   }
 
-  return window.fetch(url, opts).then(response => {
+  return window.fetch(url, opts).then((response) => {
     if (response.ok) {
       if (response.status === 204) {
         return null;
@@ -27,7 +27,7 @@ export default function easyFetch(url: string, opts?: any) {
     } else {
       return response
         .json()
-        .then(json => {
+        .then((json) => {
           const err = new FetchError(
             `Api request to '${url}' failed with HTTP status ${response.status}`
           );
@@ -35,7 +35,7 @@ export default function easyFetch(url: string, opts?: any) {
           err.status = response.status;
           throw err;
         })
-        .catch(err => {
+        .catch((err) => {
           const errorObject = new FetchError(
             `Api request to '${url}' failed with HTTP status ${response.status}`
           );

@@ -10,7 +10,7 @@ export default function ViewEditBasicLeadInfo(
   const [apiStatus, dispatchApiStatus] = React.useReducer(updatingReducer, {
     isEditing: false,
     isUpdating: false,
-    newLeadData: null
+    newLeadData: null,
   });
   const { lead, leadUpdated } = props;
 
@@ -24,14 +24,14 @@ export default function ViewEditBasicLeadInfo(
           gender:
             apiStatus.newLeadData.gender === "unknown"
               ? null
-              : apiStatus.newLeadData.gender
+              : apiStatus.newLeadData.gender,
         },
-        signal: abortController.signal
+        signal: abortController.signal,
       })
-        .then(data => {
+        .then((data) => {
           leadUpdated(data.lead);
         })
-        .catch(err => {
+        .catch((err) => {
           setTimeout(() => {
             throw err;
           });
@@ -56,7 +56,7 @@ export default function ViewEditBasicLeadInfo(
             firstName: lead.firstName,
             lastName: lead.lastName,
             gender: lead.gender,
-            age: lead.age
+            age: lead.age,
           }}
           handleSubmit={handleSubmit}
         >
@@ -116,7 +116,7 @@ export default function ViewEditBasicLeadInfo(
 }
 
 ViewEditBasicLeadInfo.defaultProps = {
-  editable: true
+  editable: true,
 };
 
 function updatingReducer(state, action) {
@@ -127,7 +127,7 @@ function updatingReducer(state, action) {
       return {
         isEditing: false,
         isUpdating: true,
-        newLeadData: action.newLeadData
+        newLeadData: action.newLeadData,
       };
     case "reset":
       return { isEditing: false, isUpdating: false };

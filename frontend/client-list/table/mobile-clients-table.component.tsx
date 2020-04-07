@@ -11,7 +11,7 @@ export default function MobileClientsTable(props: ClientsTableProps) {
 
   return (
     <div {...scope} className="mobile-clients-tables">
-      {props.clients.map(client => (
+      {props.clients.map((client) => (
         <Link
           to={`/clients/${client.id}`}
           className="unstyled client-link"

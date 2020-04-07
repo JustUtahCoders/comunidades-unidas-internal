@@ -4,13 +4,13 @@ import easyFetch from "../util/easy-fetch";
 import { groupBy } from "lodash-es";
 import BasicTableReport from "../reports/shared/basic-table-report.component";
 import CollapsibleTableRows, {
-  ToggleCollapseButton
+  ToggleCollapseButton,
 } from "../reports/shared/collapsible-table-rows.component";
 import { CUProgram, GroupedCUServices } from "../add-client/services.component";
 import {
   UserContext,
   LoggedInUser,
-  UserAccessLevel
+  UserAccessLevel,
 } from "../util/user.context";
 import EditableServiceRow from "./editable-service-row.component";
 import { useCss } from "kremling";
@@ -26,11 +26,11 @@ export default function ProgramsAndServices(props) {
   const scope = useCss(css);
   const [
     showingCreateNewServiceModal,
-    setShowingCreateNewServiceModal
+    setShowingCreateNewServiceModal,
   ] = React.useState(false);
   const [
     showingCreateNewProgramModal,
-    setShowingCreateNewProgramModal
+    setShowingCreateNewProgramModal,
   ] = React.useState(false);
 
   const canEdit = user.accessLevel === UserAccessLevel.Administrator;
@@ -40,15 +40,15 @@ export default function ProgramsAndServices(props) {
       const abortController = new AbortController();
 
       easyFetch("/api/services?includeInactive=true", {
-        signal: abortController.signal
+        signal: abortController.signal,
       }).then(
-        data => {
+        (data) => {
           const groupedServices = groupBy(data.services, "programId");
           setPrograms(data.programs);
           setServices(groupedServices);
           setShouldFetchServices(false);
         },
-        err => {
+        (err) => {
           setTimeout(() => {
             throw err;
           });
@@ -104,7 +104,7 @@ export default function ProgramsAndServices(props) {
           }
           contentRows={
             <>
-              {programs.map(program => (
+              {programs.map((program) => (
                 <CollapsibleTableRows
                   key={program.id}
                   onlyButtonClick
@@ -125,22 +125,24 @@ export default function ProgramsAndServices(props) {
                       <td>{checkmark(program.isActive)}</td>
                     </EditableProgramRow>
                   }
-                  collapsibleRows={(services[program.id] || []).map(service => (
-                    <EditableServiceRow
-                      key={service.id}
-                      canEdit={canEdit}
-                      service={service}
-                      programs={programs}
-                      refetch={refetchServices}
-                    >
-                      <td>&mdash;</td>
-                      <td>{service.serviceName}</td>
-                      <td style={{ fontSize: "1.4rem" }}>
-                        {service.serviceDescription}
-                      </td>
-                      <td>{checkmark(service.isActive)}</td>
-                    </EditableServiceRow>
-                  ))}
+                  collapsibleRows={(services[program.id] || []).map(
+                    (service) => (
+                      <EditableServiceRow
+                        key={service.id}
+                        canEdit={canEdit}
+                        service={service}
+                        programs={programs}
+                        refetch={refetchServices}
+                      >
+                        <td>&mdash;</td>
+                        <td>{service.serviceName}</td>
+                        <td style={{ fontSize: "1.4rem" }}>
+                          {service.serviceDescription}
+                        </td>
+                        <td>{checkmark(service.isActive)}</td>
+                      </EditableServiceRow>
+                    )
+                  )}
                 />
               ))}
             </>

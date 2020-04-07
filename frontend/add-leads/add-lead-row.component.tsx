@@ -10,7 +10,7 @@ export default function LeadRow({
   canDelete,
   isLastLead,
   isFirstLead,
-  services
+  services,
 }) {
   const required = isFirstLead || !isLastLead;
   const [showInterests, setShowInterests] = React.useState(false);
@@ -20,7 +20,7 @@ export default function LeadRow({
     <input
       style={{ width: "100%" }}
       value={lead[field] || ""}
-      onChange={e => updateLead(field, e.target.value)}
+      onChange={(e) => updateLead(field, e.target.value)}
       aria-label={label}
       required={fieldRequired}
     />
@@ -39,7 +39,7 @@ export default function LeadRow({
             style={{ width: "100%" }}
             required={required}
             value={lead.gender || "unknown"}
-            onChange={evt => updateLead("gender", evt.target.value)}
+            onChange={(evt) => updateLead("gender", evt.target.value)}
           >
             <option value="unknown">Unknown</option>
             <option value="female">Female</option>
@@ -62,7 +62,7 @@ export default function LeadRow({
           <input
             type="checkbox"
             checked={Boolean(lead.smsConsent)}
-            onChange={evt => updateLead("smsConsent", evt.target.checked)}
+            onChange={(evt) => updateLead("smsConsent", evt.target.checked)}
           />
         </td>
         <td>{canDelete && <button onClick={deleteLead}>x</button>}</td>

@@ -5,7 +5,7 @@ const axios = require("axios");
 app.post("/api/github-issues", (req, res, next) => {
   if (!process.env.GUEST_GITHUB_KEY) {
     res.status(500).send({
-      error: "The server does not have a github key configured"
+      error: "The server does not have a github key configured",
     });
     return;
   }
@@ -27,20 +27,20 @@ app.post("/api/github-issues", (req, res, next) => {
     url:
       "https://api.github.com/repos/JustUtahCoders/comunidades-unidas-internal/issues",
     headers: {
-      Authorization: `token ${process.env.GUEST_GITHUB_KEY}`
+      Authorization: `token ${process.env.GUEST_GITHUB_KEY}`,
     },
     data: {
       title: req.body.title,
-      body: `From: ${req.body.name}, ${req.body.email}\n\n${req.body.body}`
-    }
+      body: `From: ${req.body.name}, ${req.body.email}\n\n${req.body.body}`,
+    },
   })
-    .then(response => {
+    .then((response) => {
       res.status(200).send({
         issueNumber: response.data.number,
-        issueUrl: `https://github.com/JustUtahCoders/comunidades-unidas-internal/issues/${response.data.number}`
+        issueUrl: `https://github.com/JustUtahCoders/comunidades-unidas-internal/issues/${response.data.number}`,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(err.response.status).send(err.response.data);
     });
 });

@@ -13,10 +13,10 @@ export default function DeleteBulkClientModal(
       const abortController = new AbortController();
 
       Promise.all(
-        Object.values(props.selectedClients).map(c =>
+        Object.values(props.selectedClients).map((c) =>
           easyFetch(`/api/clients/${c.id}`, {
             method: "DELETE",
-            signal: abortController.signal
+            signal: abortController.signal,
           })
         )
       ).then(() => {
@@ -44,7 +44,7 @@ export default function DeleteBulkClientModal(
         {Object.keys(props.selectedClients).length > 0 ? "s" : ""}
       </p>
       <ul>
-        {Object.values(props.selectedClients).map(client => (
+        {Object.values(props.selectedClients).map((client) => (
           <li key={client.id}>
             #{client.id} - {client.fullName}
           </li>

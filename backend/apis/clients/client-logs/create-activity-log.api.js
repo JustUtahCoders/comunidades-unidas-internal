@@ -3,18 +3,18 @@ const {
   databaseError,
   pool,
   invalidRequest,
-  notFound
+  notFound,
 } = require("../../../server");
 const mysql = require("mysql");
 const {
   checkValid,
   validId,
   validEnum,
-  nonEmptyString
+  nonEmptyString,
 } = require("../../utils/validation-utils");
 const {
   modifiableLogTypes,
-  createResponseLogObject
+  createResponseLogObject,
 } = require("./activity-log.utils");
 
 app.post("/clients/:clientId/logs", (req, res) => {
@@ -25,7 +25,7 @@ app.post("/clients/:clientId/logs", (req, res) => {
       validEnum("logType", ...modifiableLogTypes),
       nonEmptyString("title"),
       nonEmptyString("description")
-    )
+    ),
   ];
 
   if (validationErrors.length > 0) {
@@ -46,7 +46,7 @@ app.post("/clients/:clientId/logs", (req, res) => {
       req.body.title,
       req.body.description,
       req.body.logType,
-      user.id
+      user.id,
     ]
   );
 
@@ -65,7 +65,7 @@ app.post("/clients/:clientId/logs", (req, res) => {
         createdById: user.id,
         createdByFirstName: user.firstName,
         createdByLastName: user.lastName,
-        dateAdded: new Date()
+        dateAdded: new Date(),
       })
     );
   });

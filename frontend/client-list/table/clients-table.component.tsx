@@ -6,7 +6,7 @@ import {
   ClientListClient,
   SortField,
   SortOrder,
-  SelectedClients
+  SelectedClients,
 } from "../client-list.component";
 
 export default function ClientsTable(props: ClientsTableProps) {

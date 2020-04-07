@@ -2,7 +2,7 @@ import React from "react";
 import {
   EditIntegrationProps,
   IntegrationStatus,
-  IntegrationPatchRequestBody
+  IntegrationPatchRequestBody,
 } from "./integrations.component";
 import Modal from "../../util/modal.component";
 import easyFetch from "../../util/easy-fetch";
@@ -27,7 +27,7 @@ export default function JuntosPorLaSalud(props: EditIntegrationProps) {
         status:
           modalStatus === ModalStatus.enabling
             ? IntegrationStatus.enabled
-            : IntegrationStatus.disabled
+            : IntegrationStatus.disabled,
       };
       if (participantId) {
         requestBody.externalId = participantId.trim();
@@ -37,11 +37,11 @@ export default function JuntosPorLaSalud(props: EditIntegrationProps) {
         {
           signal: abortController.signal,
           method: "PATCH",
-          body: requestBody
+          body: requestBody,
         }
       )
         .then(props.updateIntegration)
-        .catch(err => {
+        .catch((err) => {
           setTimeout(() => {
             throw err;
           });
@@ -120,7 +120,7 @@ export default function JuntosPorLaSalud(props: EditIntegrationProps) {
               <input
                 type="text"
                 value={participantId}
-                onChange={evt => setParticipantId(evt.target.value)}
+                onChange={(evt) => setParticipantId(evt.target.value)}
                 required
               />
             </label>
@@ -167,7 +167,7 @@ export default function JuntosPorLaSalud(props: EditIntegrationProps) {
   }
 }
 
-JuntosPorLaSalud.getExternalLink = externalId =>
+JuntosPorLaSalud.getExternalLink = (externalId) =>
   `https://ventanillasjpls.org/Registro/Persona.aspx?params=${btoa(
     `ViewMode=ReadOnly&PersonaID=${externalId}`
   )}`;
@@ -175,5 +175,5 @@ JuntosPorLaSalud.getExternalLink = externalId =>
 enum ModalStatus {
   prompting = "prompting",
   enabling = "enabling",
-  disabling = "disabling"
+  disabling = "disabling",
 }

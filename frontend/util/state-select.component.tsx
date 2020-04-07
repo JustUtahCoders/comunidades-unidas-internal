@@ -5,9 +5,9 @@ export default function StateSelect(props: StateSelectProps) {
   return (
     <select
       value={props.state}
-      onChange={evt => props.setState(evt.target.value)}
+      onChange={(evt) => props.setState(evt.target.value)}
     >
-      {statesArray.map(state => (
+      {statesArray.map((state) => (
         <option key={state.key} value={state.key}>
           {state.label}
         </option>
@@ -72,9 +72,9 @@ export const stateNameToAbbreviation = {
   Washington: "WA",
   "West Virginia": "WV",
   Wisconsin: "WI",
-  Wyoming: "WY"
+  Wyoming: "WY",
 };
 
 const statesArray = toPairs(stateNameToAbbreviation)
-  .map(val => ({ key: val[1], label: val[0] }))
+  .map((val) => ({ key: val[1], label: val[0] }))
   .sort((first, second) => (first.label > second.label ? 1 : 0));

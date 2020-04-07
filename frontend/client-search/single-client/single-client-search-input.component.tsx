@@ -22,7 +22,7 @@ export default React.forwardRef<
     if (singleClientSearchInputRef) {
       // @ts-ignore
       singleClientSearchInputRef.current = {
-        clientId: state.clientId
+        clientId: state.clientId,
       };
     }
   });
@@ -40,15 +40,15 @@ export default React.forwardRef<
       const queryParamName = isNaN(Number(state.clientName)) ? "name" : "id";
 
       easyFetch(`/api/clients?${queryParamName}=${state.clientName}`, {
-        signal: abortController.signal
+        signal: abortController.signal,
       })
-        .then(results => {
+        .then((results) => {
           dispatch({
             type: "newPotentialClients",
-            clients: results.clients
+            clients: results.clients,
           });
         })
-        .catch(err => {
+        .catch((err) => {
           setTimeout(() => {
             throw err;
           });
@@ -92,7 +92,7 @@ export default React.forwardRef<
           type="text"
           autoFocus={autoFocus}
           value={state.clientName}
-          onChange={evt =>
+          onChange={(evt) =>
             dispatch({ type: "newClientName", clientName: evt.target.value })
           }
           aria-labelledby="single-client-search"
@@ -113,7 +113,7 @@ export default React.forwardRef<
                   dispatch({
                     type: "setClient",
                     clientId: potentialClient.id,
-                    clientName: potentialClient.fullName
+                    clientName: potentialClient.fullName,
                   })
                 }
               >
@@ -141,7 +141,7 @@ export default React.forwardRef<
       dispatch({
         type: "setClient",
         clientId: state.potentialClients[selectedIndex].id,
-        clientName: state.potentialClients[selectedIndex].fullName
+        clientName: state.potentialClients[selectedIndex].fullName,
       });
     } else if (evt.key === "ArrowDown") {
       setSelectedIndex(
@@ -189,7 +189,7 @@ const css = `
 const initialState: SingleClientSearchInputState = {
   clientName: "",
   potentialClients: [],
-  clientId: null
+  clientId: null,
 };
 
 function reducer(
@@ -207,7 +207,7 @@ function reducer(
       return {
         ...state,
         clientId: action.clientId,
-        clientName: action.clientName
+        clientName: action.clientName,
       };
     default:
       throw Error();

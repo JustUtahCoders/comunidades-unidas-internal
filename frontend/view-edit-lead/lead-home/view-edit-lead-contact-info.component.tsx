@@ -11,7 +11,7 @@ export default function ViewEditLeadContactInfo(
   const [apiStatus, dispatchApiStatus] = React.useReducer(updatingReducer, {
     isUpdating: false,
     isEditing: false,
-    newLeadData: null
+    newLeadData: null,
   });
   const { lead, leadUpdated } = props;
 
@@ -22,15 +22,15 @@ export default function ViewEditLeadContactInfo(
         method: "PATCH",
         body: {
           ...apiStatus.newLeadData,
-          zip: apiStatus.newLeadData.zip || null
+          zip: apiStatus.newLeadData.zip || null,
         },
-        signal: abortController.signal
+        signal: abortController.signal,
       })
-        .then(data => {
+        .then((data) => {
           dispatchApiStatus({ type: "reset" });
           leadUpdated(data.lead);
         })
-        .catch(err => {
+        .catch((err) => {
           setTimeout(() => {
             throw err;
           });
@@ -49,7 +49,7 @@ export default function ViewEditLeadContactInfo(
           lead={{
             phone: lead.phone,
             smsConsent: lead.smsConsent,
-            zip: lead.zip
+            zip: lead.zip,
           }}
           handleSubmit={handleSubmit}
         >
@@ -109,7 +109,7 @@ export default function ViewEditLeadContactInfo(
 }
 
 ViewEditLeadContactInfo.defaultProps = {
-  editable: true
+  editable: true,
 };
 
 function updatingReducer(state, action) {
@@ -120,7 +120,7 @@ function updatingReducer(state, action) {
       return {
         isUpdating: true,
         isEditing: false,
-        newLeadData: action.newLeadData
+        newLeadData: action.newLeadData,
       };
     case "reset":
       return { isUpdating: false };

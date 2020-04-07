@@ -23,7 +23,7 @@ if (useGoogleAuth) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: process.env.GOOGLE_CALLBACK_URL
+        callbackURL: process.env.GOOGLE_CALLBACK_URL,
       },
       (token, refreshToken, profile, done) => {
         pool.query(
@@ -37,7 +37,7 @@ if (useGoogleAuth) {
               profile.name.givenName,
               profile.name.familyName,
               profile.emails[0].value,
-              "Staff" // Start them off as staff, upgrade their access level later
+              "Staff", // Start them off as staff, upgrade their access level later
             ]
           ),
           (err, result) => {
@@ -66,7 +66,7 @@ if (useGoogleAuth) {
                     lastName: rows[0].lastName,
                     email: rows[0].email,
                     accessLevel: rows[0].accessLevel,
-                    token: token
+                    token: token,
                   });
                 }
               });
@@ -100,7 +100,7 @@ if (useGoogleAuth) {
               firstName: user.firstName,
               lastName: user.lastName,
               accessLevel: user.accessLevel,
-              email: user.email
+              email: user.email,
             });
           }
         }
@@ -114,7 +114,7 @@ app.use(
     name: "session",
     keys: require("keygrip")([process.env.KEYGRIP_SECRET], "sha256"),
     maxAge: 144 * 60 * 60 * 1000, // 144 hours
-    secure: process.env.RUNNING_LOCALLY ? false : true
+    secure: process.env.RUNNING_LOCALLY ? false : true,
   })
 );
 
@@ -127,10 +127,10 @@ app.get(
         scope: ["profile", "email"],
         includeGrantedScopes: true,
         hd: "cuutah.org",
-        successRedirect: "/"
+        successRedirect: "/",
       })
     : passport.authenticate("custom", {
-        successRedirect: "/"
+        successRedirect: "/",
       })
 );
 
@@ -141,17 +141,17 @@ app.get(
         scope: ["profile", "email"],
         includeGrantedScopes: true,
         hd: "cuutah.org",
-        prompt: "select_account"
+        prompt: "select_account",
       })
     : passport.authenticate("custom", {
-        successRedirect: "/"
+        successRedirect: "/",
       })
 );
 
 app.get(
   "/api/auth/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "/"
+    failureRedirect: "/",
   }),
   (req, res) => {
     req.session.token = req.user.token;

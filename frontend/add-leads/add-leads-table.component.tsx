@@ -6,7 +6,7 @@ import easyFetch from "../util/easy-fetch";
 export default function AddLeadsTable({
   leads,
   deleteLead,
-  updateLead
+  updateLead,
 }: AddLeadsTableProps) {
   const scope = useCss(css);
   const [services, setServices] = React.useState([]);
@@ -14,12 +14,12 @@ export default function AddLeadsTable({
   React.useEffect(() => {
     const abortController = new AbortController();
     easyFetch(`/api/services`, {
-      signal: abortController.signal
+      signal: abortController.signal,
     })
-      .then(data => {
+      .then((data) => {
         setServices(data.services);
       })
-      .catch(err => {
+      .catch((err) => {
         setTimeout(() => {
           throw err;
         });

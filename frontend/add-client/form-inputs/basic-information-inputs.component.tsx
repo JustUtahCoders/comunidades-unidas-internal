@@ -21,7 +21,7 @@ export default function BasicInformationInputs(
           <input
             type="text"
             value={firstName}
-            onChange={evt => setFirstName(evt.target.value)}
+            onChange={(evt) => setFirstName(evt.target.value)}
             required
             autoComplete="new-password"
             autoFocus
@@ -34,7 +34,7 @@ export default function BasicInformationInputs(
           <input
             type="text"
             value={lastName}
-            onChange={evt => setLastName(evt.target.value)}
+            onChange={(evt) => setLastName(evt.target.value)}
             autoComplete="new-password"
             required
           />
@@ -46,7 +46,7 @@ export default function BasicInformationInputs(
           <input
             type="date"
             value={birthday}
-            onChange={evt => setBirthday(evt.target.value)}
+            onChange={(evt) => setBirthday(evt.target.value)}
             required
           />
         </label>
@@ -56,7 +56,7 @@ export default function BasicInformationInputs(
           <span>Gender</span>
           <select
             value={gender}
-            onChange={evt => setGender(evt.target.value)}
+            onChange={(evt) => setGender(evt.target.value)}
             autoComplete="new-password"
             required
           >
@@ -77,7 +77,7 @@ export default function BasicInformationInputs(
       firstName: capitalize(firstName.trim()),
       lastName: capitalize(lastName.trim()),
       gender,
-      birthday
+      birthday,
     });
   }
 }

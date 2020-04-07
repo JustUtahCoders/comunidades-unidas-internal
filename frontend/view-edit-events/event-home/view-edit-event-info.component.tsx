@@ -48,12 +48,12 @@ function updatingReducer(state, action) {
       return {
         isEditing: false,
         isUpdating: true,
-        newEventData: action.newEventData
+        newEventData: action.newEventData,
       };
     case "reset":
       return {
         isEditing: false,
-        isUpdating: false
+        isUpdating: false,
       };
     default:
       throw Error();

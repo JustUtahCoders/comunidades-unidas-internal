@@ -34,7 +34,7 @@ export default function CountriesOfOriginResults(props) {
       }
       contentRows={
         <>
-          {sortedCountries.map(country => (
+          {sortedCountries.map((country) => (
             <tr key={country[0]}>
               <th>{countryCodeToName[country[0]] || country[0]}</th>
               <td>{country[1].toLocaleString()}</td>

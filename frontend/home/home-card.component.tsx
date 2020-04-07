@@ -4,7 +4,7 @@ import {
   boxShadow1,
   boxShadow2,
   mediaDesktop,
-  mediaMobile
+  mediaMobile,
 } from "../styleguide.component";
 import { Link } from "@reach/router";
 

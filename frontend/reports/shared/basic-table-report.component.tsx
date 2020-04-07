@@ -16,7 +16,7 @@ export default function BasicTableReport(props: BasicTableReportProps) {
         <>
           <h3>How to read this report</h3>
           <ul className="notes">
-            {props.notes.map(note => (
+            {props.notes.map((note) => (
               <li key={note}>{note}</li>
             ))}
           </ul>

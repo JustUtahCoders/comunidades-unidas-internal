@@ -21,18 +21,19 @@ exports.pool = mysql.createPool({
   password: process.env.RDS_PASSWORD || "password",
   database: process.env.RDS_DB_NAME || "local_db",
   port: process.env.RDS_PORT || "3306",
-  multipleStatements: true
+  multipleStatements: true,
 });
 
 const getConnection = exports.pool.getConnection;
 
-exports.pool.getConnection = function(errback) {
+exports.pool.getConnection = function (errback) {
   const startTime = new Date().getTime();
   return getConnection.call(exports.pool, (err, connection) => {
     const endTime = new Date().getTime();
     console.log(
-      `Getting a db connection took ${endTime -
-        startTime} milliseconds. Connection info: ${
+      `Getting a db connection took ${
+        endTime - startTime
+      } milliseconds. Connection info: ${
         exports.pool._freeConnections.length
       } ${exports.pool._allConnections.length} ${
         exports.pool._acquiringConnections.length
@@ -138,7 +139,7 @@ require("./apis/reports/service-interest-report.api");
 require("./apis/default-404.api.js");
 require("./index-html.js");
 
-process.on("uncaughtException", function(err) {
+process.on("uncaughtException", function (err) {
   console.error("Backend error in node server code:");
   console.error(err);
 });

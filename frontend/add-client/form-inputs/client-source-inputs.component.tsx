@@ -17,7 +17,7 @@ export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
         // @ts-ignore
         ref.current = {
           clientSource,
-          couldVolunteer
+          couldVolunteer,
         };
       }
     });
@@ -31,11 +31,11 @@ export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
             </span>
             <select
               value={clientSource}
-              onChange={evt => setClientSource(evt.target.value)}
+              onChange={(evt) => setClientSource(evt.target.value)}
               autoFocus
               required
             >
-              {Object.keys(clientSources).map(clientSource => (
+              {Object.keys(clientSources).map((clientSource) => (
                 <option key={clientSource} value={clientSource}>
                   {clientSources[clientSource]}
                 </option>
@@ -52,7 +52,7 @@ export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
               type="checkbox"
               name="couldVolunteer"
               checked={couldVolunteer}
-              onChange={evt => setCouldVolunteer(Boolean(evt.target.checked))}
+              onChange={(evt) => setCouldVolunteer(Boolean(evt.target.checked))}
             />
           </label>
         </div>
@@ -80,7 +80,7 @@ export const clientSources = {
   radio: "Radio",
   tv: "TV",
   promotora: "Promotora",
-  other: "Other"
+  other: "Other",
 };
 
 type ClientSourceInputsProps = {

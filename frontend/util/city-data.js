@@ -5983,7 +5983,7 @@ export const citiesForStates = groupBy(
     { city: "Zephyrhills", state: "Florida" },
     { city: "Zion", state: "Illinois" },
     { city: "Zionsville", state: "Indiana" },
-    { city: "Zuni Pueblo", state: "New Mexico" }
+    { city: "Zuni Pueblo", state: "New Mexico" },
   ],
-  obj => stateNameToAbbreviation[obj.state]
+  (obj) => stateNameToAbbreviation[obj.state]
 );

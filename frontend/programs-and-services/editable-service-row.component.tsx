@@ -27,19 +27,19 @@ export default function EditableServiceRow(
         signal: abortController.signal,
         body: {
           ...modifiedService,
-          isActive: Boolean(modifiedService.isActive)
-        }
+          isActive: Boolean(modifiedService.isActive),
+        },
       }).then(
         () => {
           showGrowl({
             message: "Service was updated",
-            type: GrowlType.success
+            type: GrowlType.success,
           });
           props.refetch();
           setShowingModal(false);
           setIsSaving(false);
         },
-        err => {
+        (err) => {
           setTimeout(() => {
             throw err;
           });

@@ -6,7 +6,7 @@ import {
   parseSearch,
   SearchParse,
   deserializeSearch,
-  serializeSearch
+  serializeSearch,
 } from "../../util/list-search/search-dsl.helpers";
 import ProgramOrService from "../../client-list/toolbar/program-or-service.component";
 
@@ -17,7 +17,7 @@ const searchFields = {
   program: "Interest",
   service: "Interest",
   event: "Event Attended",
-  leadStatus: "Lead Status"
+  leadStatus: "Lead Status",
 };
 
 export default function LeadSearchInput(props: LeadSearchInputProps) {
@@ -88,7 +88,9 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
               <div id="advanced-search-name">Lead name:</div>
               <input
                 aria-labelledby="advanced-search-name"
-                onChange={evt => updateAdvancedSearch("name", evt.target.value)}
+                onChange={(evt) =>
+                  updateAdvancedSearch("name", evt.target.value)
+                }
                 type="text"
                 value={search.parseResult.parse.name || ""}
               />
@@ -104,13 +106,13 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
                     <React.Fragment key={fieldKey}>
                       <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
                       <select
-                        onChange={evt => {
+                        onChange={(evt) => {
                           updateAdvancedSearch(fieldKey, evt.target.value);
                         }}
                         value={search.parseResult.parse[fieldKey]}
                       >
                         <option value="">No {fieldKey} selected</option>
-                        {props.events.map(event => (
+                        {props.events.map((event) => (
                           <option key={event.id} value={event.id}>
                             {event.eventName}
                           </option>
@@ -122,7 +124,7 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
                       <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
                       <input
                         aria-labelledby={"advanced-search-" + fieldKey}
-                        onChange={evt =>
+                        onChange={(evt) =>
                           updateAdvancedSearch(fieldKey, evt.target.value)
                         }
                         placeholder={getPlaceholder(fieldKey)}
@@ -210,7 +212,7 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
       type: SearchTypes.newAdvancedValue,
       fieldKey,
       value,
-      currentSearch: search.value
+      currentSearch: search.value,
     });
   }
 
@@ -224,7 +226,7 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
 
     const result = {
       value,
-      parseResult: parseSearch(searchFields, value)
+      parseResult: parseSearch(searchFields, value),
     };
 
     return result;
@@ -261,7 +263,7 @@ function searchReducer(state: Search, action: SearchAction): Search {
       return { value: action.value, parseResult };
     case SearchTypes.newAdvancedValue:
       const newVal = {
-        [action.fieldKey]: action.value
+        [action.fieldKey]: action.value,
       };
       if (action.fieldKey === "program") {
         newVal.service = null;
@@ -319,7 +321,7 @@ const css = `
 
 enum SearchTypes {
   newValue = "newValue",
-  newAdvancedValue = "newAdvancedValue"
+  newAdvancedValue = "newAdvancedValue",
 }
 
 export type Search = {

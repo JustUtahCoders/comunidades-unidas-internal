@@ -3,7 +3,7 @@ const {
   databaseError,
   pool,
   invalidRequest,
-  notFound
+  notFound,
 } = require("../../server");
 const mysql = require("mysql");
 const {
@@ -20,7 +20,7 @@ const {
   nullableValidInteger,
   nullableValidPhone,
   nullableValidState,
-  nullableValidZip
+  nullableValidZip,
 } = require("../utils/validation-utils");
 const { atLeastOne } = require("../utils/patch-utils");
 const { getClientById } = require("./get-client.api");
@@ -28,7 +28,7 @@ const {
   insertContactInformationQuery,
   insertDemographicsInformationQuery,
   insertIntakeServicesQuery,
-  insertIntakeDataQuery
+  insertIntakeDataQuery,
 } = require("./insert-client.utils");
 const { insertActivityLogQuery } = require("./client-logs/activity-log.utils");
 const { performAnyIntegrations } = require("./integrations/integrations-utils");
@@ -144,7 +144,7 @@ app.patch("/api/clients/:id", (req, res, next) => {
           clientId,
           title: "Basic information was updated",
           logType: "clientUpdated:basicInformation",
-          addedBy: req.session.passport.user.id
+          addedBy: req.session.passport.user.id,
         })}
       `,
           [
@@ -153,7 +153,7 @@ app.patch("/api/clients/:id", (req, res, next) => {
             fullClient.birthday,
             fullClient.gender,
             req.session.passport.user.id,
-            clientId
+            clientId,
           ]
         )
       );
@@ -233,7 +233,7 @@ app.patch("/api/clients/:id", (req, res, next) => {
           {
             clientId: clientId,
             intakeServices: fullClient.intakeServices,
-            userId: req.session.passport.user.id
+            userId: req.session.passport.user.id,
           },
           true
         )
@@ -242,7 +242,7 @@ app.patch("/api/clients/:id", (req, res, next) => {
 
     if (queries.length === 0) {
       res.send({
-        client: oldClient
+        client: oldClient,
       });
 
       return;
@@ -261,7 +261,7 @@ app.patch("/api/clients/:id", (req, res, next) => {
         performAnyIntegrations(client, req.session.passport.user.id);
 
         res.send({
-          client
+          client,
         });
       });
     });

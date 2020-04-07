@@ -4,7 +4,7 @@ const {
   checkValid,
   nonEmptyString,
   validDate,
-  validInteger
+  validInteger,
 } = require("../utils/validation-utils");
 const { getEventById } = require("./get-event.api");
 
@@ -41,7 +41,7 @@ app.post("/api/events", (req, res) => {
       req.body.eventDate,
       req.body.totalAttendance,
       user.id,
-      user.id
+      user.id,
     ]
   );
 

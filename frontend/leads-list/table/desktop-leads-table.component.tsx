@@ -6,7 +6,7 @@ import { LeadsTableProps } from "./leads-table.component";
 import {
   reversedSortOrder,
   SortField,
-  SortOrder
+  SortOrder,
 } from "../lead-list.component";
 import { formatPhone } from "../../util/formatters";
 import LeadServicesCell from "./lead-services-cell.component";
@@ -39,7 +39,7 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
               <input
                 type="checkbox"
                 checked={selectAll}
-                onChange={evt => setSelectAll(evt.target.checked)}
+                onChange={(evt) => setSelectAll(evt.target.checked)}
                 name="select-all"
                 aria-label="Select all leads"
               />
@@ -89,7 +89,7 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
               </td>
             </tr>
           ) : (
-            props.leads.map(lead => {
+            props.leads.map((lead) => {
               return (
                 <tr key={lead.id}>
                   <td onClick={() => handleCheckBoxChange(lead)}>
@@ -167,15 +167,15 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
   function leadStatusColor(leadStatus) {
     if (leadStatus === "active") {
       return {
-        color: "#000000"
+        color: "#000000",
       };
     } else if (leadStatus === "inactive") {
       return {
-        color: "#B30000"
+        color: "#B30000",
       };
     } else if (leadStatus === "convertedToClient") {
       return {
-        color: "#006600"
+        color: "#006600",
       };
     }
   }

@@ -20,7 +20,7 @@ export default function TimeDurationInput(props: TimeDurationInputProps) {
       props.setDuration({
         hours: Number(match[1]),
         minutes: Number(match[2]),
-        stringValue: props.duration.stringValue
+        stringValue: props.duration.stringValue,
       });
     }
   }, [props.duration, props.setDuration]);
@@ -74,7 +74,7 @@ function createDuration(hours, minutes): TimeDuration {
     hours,
     minutes,
     stringValue:
-      withLeadingZeros(hours) + ":" + withLeadingZeros(minutes) + ":00"
+      withLeadingZeros(hours) + ":" + withLeadingZeros(minutes) + ":00",
   };
 }
 

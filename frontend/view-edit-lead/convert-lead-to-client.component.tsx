@@ -11,10 +11,10 @@ export default function ConvertLeadToClient(props: Props) {
       const abortController = new AbortController();
 
       easyFetch(`/api/leads/${props.leadId}`, {
-        signal: abortController.signal
+        signal: abortController.signal,
       })
-        .then(data => setLead(data.lead))
-        .catch(err => {
+        .then((data) => setLead(data.lead))
+        .catch((err) => {
           setTimeout(() => {
             throw err;
           });
@@ -44,7 +44,7 @@ export function leadToClientState(lead: SingleLead): ClientState {
     phone: lead.phone,
     smsConsent: lead.smsConsent,
     zip: lead.zip,
-    intakeServices: lead.leadServices
+    intakeServices: lead.leadServices,
   };
 }
 

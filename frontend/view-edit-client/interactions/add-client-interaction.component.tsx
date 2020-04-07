@@ -3,7 +3,7 @@ import PageHeader from "../../page-header.component";
 import SingleClientSearchInputComponent from "../../client-search/single-client/single-client-search-input.component";
 import easyFetch from "../../util/easy-fetch";
 import SingleInteractionSlat, {
-  InteractionGetter
+  InteractionGetter,
 } from "./single-interaction-slat.component";
 import { useCss } from "kremling";
 import { showGrowl, GrowlType } from "../../growls/growls.component";
@@ -34,8 +34,8 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
     const abortController = new AbortController();
 
     easyFetch("/api/services", { signal: abortController.signal })
-      .then(data => setServicesResponse(data))
-      .catch(err => {
+      .then((data) => setServicesResponse(data))
+      .catch((err) => {
         setTimeout(() => {
           throw err;
         });
@@ -58,8 +58,8 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
             signal: intakeAbortController.signal,
             method: "PATCH",
             body: {
-              intakeServices: newIntakeServices.map(s => s.id)
-            }
+              intakeServices: newIntakeServices.map((s) => s.id),
+            },
           }).then(() => {
             if (props.refetchClient) {
               props.refetchClient();
@@ -67,7 +67,7 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
           })
         : Promise.resolve();
 
-      const interactions = interactionGetters.map(getter => getter());
+      const interactions = interactionGetters.map((getter) => getter());
 
       const abortControllers = [...Array(interactions.length)].map(
         () => new AbortController()
@@ -75,10 +75,10 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
 
       Promise.all(
         interactions
-          .map(interaction =>
+          .map((interaction) =>
             easyFetch(`/api/clients/${clientId}/interactions`, {
               method: "POST",
-              body: interaction
+              body: interaction,
             })
           )
           .concat(intakeServicesPromise)
@@ -86,11 +86,11 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
         .then(() => {
           showGrowl({
             type: GrowlType.success,
-            message: "Client interactions were created"
+            message: "Client interactions were created",
           });
           navigate(`/clients/${clientId}/history`);
         })
-        .catch(err => {
+        .catch((err) => {
           setTimeout(() => {
             throw err;
           });
@@ -100,7 +100,7 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
         });
 
       return () => {
-        abortControllers.forEach(ac => ac.abort());
+        abortControllers.forEach((ac) => ac.abort());
         intakeAbortController.abort();
       };
     }
@@ -129,7 +129,7 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
               newGetters[index] = getter;
               setInteractionGetters(newGetters);
             }}
-            removeInteractionGetter={index => {
+            removeInteractionGetter={(index) => {
               const newGetters = interactionGetters.filter(
                 (g, i) => i !== index
               );
@@ -180,7 +180,7 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
   function addAnotherInteraction() {
     setTempInteractionIds([
       ...tempInteractionIds,
-      tempInteractionIds[tempInteractionIds.length - 1] + 1
+      tempInteractionIds[tempInteractionIds.length - 1] + 1,
     ]);
   }
 
@@ -196,7 +196,7 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
 
   function removeInteraction(interactionId) {
     setTempInteractionIds(
-      tempInteractionIds.filter(id => id !== interactionId)
+      tempInteractionIds.filter((id) => id !== interactionId)
     );
   }
 }

@@ -31,7 +31,7 @@ exports.insertContactInformationQuery = function insertContactInformationQuery(
             description: null,
             logType: "clientUpdated:contactInformation",
             addedBy: userId,
-            detailIdIsLastInsertId: true
+            detailIdIsLastInsertId: true,
           })
         : ""
     }
@@ -47,7 +47,7 @@ exports.insertContactInformationQuery = function insertContactInformationQuery(
       data.homeAddress.state,
       data.homeAddress.zip,
       requestEnum(data.housingStatus),
-      userId
+      userId,
     ]
   );
 };
@@ -88,7 +88,7 @@ exports.insertDemographicsInformationQuery = function insertDemographicsInformat
             description: null,
             logType: "clientUpdated:demographics",
             addedBy: userId,
-            detailIdIsLastInsertId: true
+            detailIdIsLastInsertId: true,
           })
         : ""
     }
@@ -110,7 +110,7 @@ exports.insertDemographicsInformationQuery = function insertDemographicsInformat
       Boolean(data.eligibleToVote),
       Boolean(data.registeredToVote),
       Boolean(data.isStudent),
-      userId
+      userId,
     ]
   );
 };
@@ -135,7 +135,7 @@ exports.insertIntakeDataQuery = function insertIntakeDataQuery(
       data.dateOfIntake,
       requestEnum(data.clientSource),
       Boolean(data.couldVolunteer),
-      userId
+      userId,
     ]
   );
 };
@@ -156,7 +156,7 @@ exports.insertIntakeServicesQuery = function insertIntakeServicesQuery(
               description: null,
               logType: "clientUpdated:intakeData",
               addedBy: data.userId,
-              detailIdIsLastInsertId: true
+              detailIdIsLastInsertId: true,
             })
           : ""
       }
@@ -172,7 +172,7 @@ exports.insertIntakeServicesQuery = function insertIntakeServicesQuery(
   );
 };
 
-exports.convertLeadToClient = function(leadId, clientId, userId) {
+exports.convertLeadToClient = function (leadId, clientId, userId) {
   return mysql.format(
     "UPDATE leads SET leadStatus = ?, clientId = ?, modifiedBy = ? WHERE leads.id = ?;",
     ["convertedToClient", clientId, userId, leadId]

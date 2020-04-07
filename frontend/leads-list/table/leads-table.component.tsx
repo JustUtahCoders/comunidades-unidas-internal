@@ -3,7 +3,7 @@ import {
   LeadListLead,
   SortField,
   SortOrder,
-  SelectedLeads
+  SelectedLeads,
 } from "../lead-list.component";
 import DesktopLeadsTable from "./desktop-leads-table.component";
 

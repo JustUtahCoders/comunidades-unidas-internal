@@ -63,15 +63,15 @@ app.get(`/api/reports/ages-and-genders`, (req, res) => {
         "35-44": 0,
         "45-54": 0,
         "55-64": 0,
-        "65+": 0
+        "65+": 0,
       },
       genders: {},
       numClients: 0,
-      numLeads: 0
+      numLeads: 0,
     };
 
     const clientResults = getEmptyResult();
-    clientRows.forEach(row => {
+    clientRows.forEach((row) => {
       clientResults[row.ageRange][row.gender] += row.total;
       clientResults.allAges[row.gender] += row.total;
       clientResults.allGenders[row.ageRange] += row.total;
@@ -82,7 +82,7 @@ app.get(`/api/reports/ages-and-genders`, (req, res) => {
     });
 
     const leadResults = getEmptyResult();
-    leadRows.forEach(row => {
+    leadRows.forEach((row) => {
       leadResults[row.ageRange][row.gender] += row.total;
       leadResults.allAges[row.gender] += row.total;
       leadResults.allGenders[row.ageRange] += row.total;
@@ -96,7 +96,7 @@ app.get(`/api/reports/ages-and-genders`, (req, res) => {
       clients: clientResults,
       leads: leadResults,
       totals,
-      reportParameters: {}
+      reportParameters: {},
     });
   });
 });
@@ -108,56 +108,56 @@ function getEmptyResult() {
       female: 0,
       transgender: 0,
       nonbinary: 0,
-      other: 0
+      other: 0,
     },
     "18-24": {
       male: 0,
       female: 0,
       transgender: 0,
       nonbinary: 0,
-      other: 0
+      other: 0,
     },
     "25-34": {
       male: 0,
       female: 0,
       transgender: 0,
       nonbinary: 0,
-      other: 0
+      other: 0,
     },
     "35-44": {
       male: 0,
       female: 0,
       transgender: 0,
       nonbinary: 0,
-      other: 0
+      other: 0,
     },
     "45-54": {
       male: 0,
       female: 0,
       transgender: 0,
       nonbinary: 0,
-      other: 0
+      other: 0,
     },
     "55-64": {
       male: 0,
       female: 0,
       transgender: 0,
       nonbinary: 0,
-      other: 0
+      other: 0,
     },
     "65+": {
       male: 0,
       female: 0,
       transgender: 0,
       nonbinary: 0,
-      other: 0
+      other: 0,
     },
     allAges: {
       male: 0,
       female: 0,
       transgender: 0,
       nonbinary: 0,
-      other: 0
+      other: 0,
     },
     allGenders: {
       "0-17": 0,
@@ -166,7 +166,7 @@ function getEmptyResult() {
       "35-44": 0,
       "45-54": 0,
       "55-64": 0,
-      "65+": 0
-    }
+      "65+": 0,
+    },
   };
 }

@@ -2,7 +2,7 @@ import React from "react";
 import indentUrl from "../../../icons/111696-text-editor/svg/text-in.svg";
 import {
   useDocumentExecCommand,
-  useDocumentQueryCommandState
+  useDocumentQueryCommandState,
 } from "bandicoot";
 import { always } from "kremling";
 

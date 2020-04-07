@@ -3,13 +3,13 @@ const {
   databaseError,
   pool,
   invalidRequest,
-  insufficientPrivileges
+  insufficientPrivileges,
 } = require("../../server");
 const mysql = require("mysql");
 const {
   checkValid,
   validId,
-  nullableNonEmptyString
+  nullableNonEmptyString,
 } = require("../utils/validation-utils");
 const { checkUserRole } = require("../utils/auth-utils");
 const { atLeastOne } = require("../utils/patch-utils");
@@ -27,7 +27,7 @@ app.patch("/api/programs/:programId", (req, res, next) => {
       req.body,
       nullableNonEmptyString("programName"),
       nullableNonEmptyString("programDescription")
-    )
+    ),
   ];
 
   if (validationErrors.length > 0) {
@@ -66,7 +66,7 @@ app.patch("/api/programs/:programId", (req, res, next) => {
       id: originalProgram.id,
       programName: req.body.programName || originalProgram.programName,
       programDescription:
-        req.body.programDescription || originalProgram.programDescription
+        req.body.programDescription || originalProgram.programDescription,
     };
 
     const updateProgram = mysql.format(
@@ -76,7 +76,7 @@ app.patch("/api/programs/:programId", (req, res, next) => {
       [
         finalProgram.programName,
         finalProgram.programDescription,
-        finalProgram.id
+        finalProgram.id,
       ]
     );
 
@@ -86,7 +86,7 @@ app.patch("/api/programs/:programId", (req, res, next) => {
       }
 
       res.send({
-        program: finalProgram
+        program: finalProgram,
       });
     });
   });

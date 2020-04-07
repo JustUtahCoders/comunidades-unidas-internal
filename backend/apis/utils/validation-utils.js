@@ -1,12 +1,12 @@
 const { get, isDefined } = require("lodash");
 const emailValidator = require("email-validator");
 
-exports.checkValid = function(obj, ...rules) {
-  const result = rules.map(rule => rule(obj)).filter(err => err !== null);
+exports.checkValid = function (obj, ...rules) {
+  const result = rules.map((rule) => rule(obj)).filter((err) => err !== null);
   return result;
 };
 
-const checkDefined = cbk => (propertyName, ...args) => obj => {
+const checkDefined = (cbk) => (propertyName, ...args) => (obj) => {
   return typeof get(obj, propertyName) !== "undefined" &&
     get(obj, propertyName) !== null
     ? cbk(propertyName, ...args)(get(obj, propertyName), obj)
@@ -16,7 +16,7 @@ const checkDefined = cbk => (propertyName, ...args) => obj => {
       )}'`;
 };
 
-const nullable = cbk => (propertyName, ...args) => obj =>
+const nullable = (cbk) => (propertyName, ...args) => (obj) =>
   get(obj, propertyName) === null ||
   typeof get(obj, propertyName) === "undefined"
     ? null
@@ -62,31 +62,31 @@ exports.validCountry = checkDefined(_validCountry);
 exports.nullableValidInteger = nullable(_validInteger);
 exports.validInteger = checkDefined(_validInteger);
 
-exports.isDefined = checkDefined(propertyName => val => null);
+exports.isDefined = checkDefined((propertyName) => (val) => null);
 
 function _validDate(propertyName) {
-  return val =>
+  return (val) =>
     /^[0-9]{4}-[01][0-9]-[0123][0-9]$/.test(val) && !isNaN(new Date(val))
       ? null
       : `Property ${propertyName} must be a string date of format YYYY-MM-DD. Received '${val}'`;
 }
 
 function _validTime(propertyName) {
-  return val =>
+  return (val) =>
     /^[0-1][0-9]:[0-5][0-9]:[0-5][0-9]$/.test(val)
       ? null
       : `Property ${propertyName} must be a string time of format HH:MM:SS. Recieved '${val}'`;
 }
 
 function _nonEmptyString(propertyName) {
-  return val =>
+  return (val) =>
     typeof val === "string" && val.trim().length > 0
       ? null
       : `Property ${propertyName} must be a non-whitespace, non-empty string. Received '${val}'`;
 }
 
 function _validEnum(propertyName, ...possibleValues) {
-  return val =>
+  return (val) =>
     possibleValues.includes(val)
       ? null
       : `Property ${propertyName} must be one of the following: ${possibleValues.join(
@@ -95,7 +95,7 @@ function _validEnum(propertyName, ...possibleValues) {
 }
 
 function _validId(propertyName) {
-  return val => {
+  return (val) => {
     return isNaN(Number(val))
       ? `Property '${propertyName}' must be a valid number ID`
       : null;
@@ -103,42 +103,42 @@ function _validId(propertyName) {
 }
 
 function _validPhone(propertyName) {
-  return val =>
+  return (val) =>
     /^[0-9\-\(\) x]+$/.test(val)
       ? null
       : `Property ${propertyName} must be a valid phone number. Received '${val}'`;
 }
 
 function _validBoolean(propertyName) {
-  return val =>
+  return (val) =>
     typeof val === "boolean" || val === "true" || val === "false"
       ? null
       : `Property ${propertyName} must be a boolean. Received '${val}'`;
 }
 
 function _validState(propertyName) {
-  return val =>
+  return (val) =>
     typeof val === "string" && /^[A-Z]{2}$/.test(val)
       ? null
       : `Property ${propertyName} must be a valid, capitalized, two-digit State abbreviation. Received '${val}'`;
 }
 
 function _validZip(propertyName) {
-  return val =>
+  return (val) =>
     typeof val === "string" && /^[0-9\-]+$/.test(val)
       ? null
       : `Property ${propertyName} must be a valid ZIP code. Received '${val}'`;
 }
 
 function _validEmail(propertyName) {
-  return val =>
+  return (val) =>
     emailValidator.validate(val)
       ? null
       : `Property ${propertyName} must be a valid email address. Received '${val}'`;
 }
 
 function _validArray(propertyName, itemValidator, nullable) {
-  return obj => {
+  return (obj) => {
     const val = obj[propertyName];
 
     if (Array.isArray(val)) {
@@ -159,14 +159,14 @@ function _validArray(propertyName, itemValidator, nullable) {
 }
 
 function _validCountry(propertyName) {
-  return val =>
+  return (val) =>
     typeof val === "string" && /^[A-Z]{2}$/.test(val)
       ? null
       : `Property ${propertyName} must be a valid, capitalized, two-digit country code. Received '${val}`;
 }
 
 function _validInteger(propertyName) {
-  return val =>
+  return (val) =>
     Number.isInteger(Number(val))
       ? null
       : `Property ${propertyName} must be an integer. Received '${val}'`;

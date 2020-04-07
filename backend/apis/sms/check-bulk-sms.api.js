@@ -1,17 +1,17 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
 const {
   validateClientListQuery,
-  clientListQuery
+  clientListQuery,
 } = require("../clients/list-clients.api");
 const {
   validateListLeadsQuery,
-  listLeadsQuery
+  listLeadsQuery,
 } = require("../leads/list-leads.api");
 
 app.post(`/api/check-bulk-texts`, (req, res) => {
   const validationErrors = [
     ...validateClientListQuery(req.query),
-    ...validateListLeadsQuery(req.query)
+    ...validateListLeadsQuery(req.query),
   ];
 
   if (validationErrors.length > 0) {
@@ -42,41 +42,41 @@ app.post(`/api/check-bulk-texts`, (req, res) => {
 });
 
 function filterResultForBulkText(clientRows, leadRows) {
-  const clientsWithPhones = clientRows.filter(r => r.primaryPhone);
-  const leadsWithPhones = leadRows.filter(r => r.phone);
+  const clientsWithPhones = clientRows.filter((r) => r.primaryPhone);
+  const leadsWithPhones = leadRows.filter((r) => r.phone);
 
-  const clientRecipients = clientsWithPhones.filter(c => c.textMessages);
-  const leadRecipients = leadsWithPhones.filter(l => l.smsConsent);
+  const clientRecipients = clientsWithPhones.filter((c) => c.textMessages);
+  const leadRecipients = leadsWithPhones.filter((l) => l.smsConsent);
 
   const phoneNumbers = Array.from(
     new Set(
       clientRecipients
-        .map(r => r.primaryPhone)
-        .concat(leadRecipients.map(r => r.phone))
+        .map((r) => r.primaryPhone)
+        .concat(leadRecipients.map((r) => r.phone))
     )
   );
 
   return {
     searchMatch: {
       clients: clientRows.length,
-      leads: leadRows.length
+      leads: leadRows.length,
     },
     withPhone: {
       clients: clientsWithPhones.length,
-      leads: leadsWithPhones.length
+      leads: leadsWithPhones.length,
     },
     recipients: {
       clients: clientRecipients.length,
       leads: leadRecipients.length,
-      uniquePhoneNumbers: phoneNumbers.length
+      uniquePhoneNumbers: phoneNumbers.length,
     },
     data: {
       clientsWithPhones,
       leadsWithPhones,
       clientRecipients,
       leadRecipients,
-      phoneNumbers
-    }
+      phoneNumbers,
+    },
   };
 }
 

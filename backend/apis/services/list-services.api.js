@@ -2,7 +2,7 @@ const { app, databaseError, pool, invalidRequest } = require("../../server");
 const mysql = require("mysql");
 const {
   checkValid,
-  nullableValidBoolean
+  nullableValidBoolean,
 } = require("../utils/validation-utils");
 
 app.get("/api/services", (req, res, next) => {
@@ -38,21 +38,21 @@ app.get("/api/services", (req, res, next) => {
 
     res.send({
       services: services
-        .filter(s => (includeInactive ? true : s.isActive))
-        .map(s => ({
+        .filter((s) => (includeInactive ? true : s.isActive))
+        .map((s) => ({
           id: s.serviceId,
           serviceName: s.serviceName,
           serviceDescription: s.serviceDesc,
           programId: s.programId,
           programName: programMap[s.programId].programName,
-          isActive: Boolean(s.isActive)
+          isActive: Boolean(s.isActive),
         })),
-      programs: programs.map(p => ({
+      programs: programs.map((p) => ({
         id: p.id,
         programName: p.programName,
         programDescription: p.programDescription,
-        isActive: services.some(s => s.programId === p.id && s.isActive)
-      }))
+        isActive: services.some((s) => s.programId === p.id && s.isActive),
+      })),
     });
   });
 });

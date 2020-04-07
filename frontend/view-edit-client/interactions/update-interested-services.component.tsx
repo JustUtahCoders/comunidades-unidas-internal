@@ -21,17 +21,17 @@ export default React.forwardRef(function UpdateInterestedServices(
         intakeServicesRef.current
           ? intakeServicesRef.current.checkedServices
           : [],
-      getOldInterestedServices: () => (client ? client.intakeServices : [])
+      getOldInterestedServices: () => (client ? client.intakeServices : []),
     };
   });
 
   React.useEffect(() => {
     const abortController = new AbortController();
     easyFetch(`/api/services`, { signal: abortController.signal })
-      .then(data => {
+      .then((data) => {
         setIntakeServices(data.services);
       })
-      .catch(err => {
+      .catch((err) => {
         setTimeout(() => {
           throw err;
         });
@@ -42,12 +42,12 @@ export default React.forwardRef(function UpdateInterestedServices(
     if (props.clientToFetch) {
       const abortController = new AbortController();
       easyFetch(`/api/clients/${props.clientToFetch}`, {
-        signal: abortController.signal
+        signal: abortController.signal,
       })
-        .then(d => {
+        .then((d) => {
           setClientInState(d.client);
         })
-        .catch(err => {
+        .catch((err) => {
           setTimeout(() => {
             throw Error(err);
           });

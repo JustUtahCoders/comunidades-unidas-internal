@@ -1,7 +1,7 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
 const {
   checkValid,
-  nullableValidInteger
+  nullableValidInteger,
 } = require("../utils/validation-utils");
 const mysql = require("mysql");
 
@@ -9,12 +9,12 @@ const mysql = require("mysql");
 const povertyLines = {
   "2019": {
     firstPerson: 12490,
-    additionalPerson: 4420
+    additionalPerson: 4420,
   },
   "2020": {
     firstPerson: 12760,
-    additionalPerson: 4480
-  }
+    additionalPerson: 4480,
+  },
 };
 
 app.get(`/api/reports/poverty-lines`, (req, res) => {
@@ -67,15 +67,15 @@ app.get(`/api/reports/poverty-lines`, (req, res) => {
       results: {
         totalClients: resultTotal[0].numClients,
         clientsBelowPovertyLine: resultsYear[0].belowPovertyLine,
-        clientsBelow200DollarsAnnually: badDataResults[0].total
+        clientsBelow200DollarsAnnually: badDataResults[0].total,
       },
       reportParameters: {
         povertyLineYear: year,
         povertyLineInfo:
           "https://aspe.hhs.gov/prior-hhs-poverty-guidelines-and-federal-register-references",
         costFirstPerson: povertyLines[year].firstPerson,
-        costAdditionalPerson: povertyLines[year].additionalPerson
-      }
+        costAdditionalPerson: povertyLines[year].additionalPerson,
+      },
     });
   });
 });

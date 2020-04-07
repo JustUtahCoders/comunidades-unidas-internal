@@ -16,8 +16,8 @@ export default function LeadServicesInformationInputs(
     const abortController = new AbortController();
 
     easyFetch("/api/services", { signal: abortController.signal })
-      .then(data => setServices(data.services))
-      .catch(err => {
+      .then((data) => setServices(data.services))
+      .catch((err) => {
         setTimeout(() => {
           throw err;
         });
@@ -41,8 +41,8 @@ export default function LeadServicesInformationInputs(
     evt.preventDefault();
     return props.handleSubmit(evt, {
       leadServices: leadServicesRef.current.checkedServices.map(
-        service => service.id
-      )
+        (service) => service.id
+      ),
     });
   }
 }

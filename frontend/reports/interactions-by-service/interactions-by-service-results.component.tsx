@@ -4,7 +4,7 @@ import BasicTableReport from "../shared/basic-table-report.component";
 import { formatPercentage, formatDuration } from "../shared/report.helpers";
 import CollapsibleTableRows, {
   ToggleCollapseButton,
-  ToggleAllButton
+  ToggleAllButton,
 } from "../shared/collapsible-table-rows.component";
 
 export default function InteractionsByService(props) {
@@ -21,7 +21,7 @@ export default function InteractionsByService(props) {
     return acc;
   }, {});
 
-  data.services.forEach(service => {
+  data.services.forEach((service) => {
     groupedServices[service.programId].push(service);
   });
 
@@ -38,7 +38,7 @@ export default function InteractionsByService(props) {
           <th>Interaction Hours</th>
         </tr>
       }
-      contentRows={data.programs.map(program => (
+      contentRows={data.programs.map((program) => (
         <CollapsibleTableRows
           key={program.programId}
           everpresentRow={
@@ -52,7 +52,7 @@ export default function InteractionsByService(props) {
               <td>{formatDuration(program.totalDuration)}</td>
             </tr>
           }
-          collapsibleRows={groupedServices[program.programId].map(service => (
+          collapsibleRows={groupedServices[program.programId].map((service) => (
             <tr key={service.serviceId}>
               <td>{"\u2014"}</td>
               <th>{service.serviceName}</th>
