@@ -2,7 +2,7 @@ import React from "react";
 import {
   Step,
   StepComponentProps,
-  ClientSources
+  ClientSources,
 } from "./add-client.component";
 import successIconUrl from "../../icons/148705-essential-collection/svg/success.svg";
 import easyFetch from "../util/easy-fetch";
@@ -47,7 +47,7 @@ export default function Confirm(props: StepComponentProps) {
             street: d.streetAddress,
             city: d.city,
             state: d.state,
-            zip: d.zip
+            zip: d.zip,
           },
           email: d.email,
           civilStatus: d.civilStatus,
@@ -67,14 +67,14 @@ export default function Confirm(props: StepComponentProps) {
           eligibleToVote: d.eligibleToVote,
           clientSource: d.clientSource,
           couldVolunteer: d.couldVolunteer,
-          intakeServices: d.intakeServices.map(service => service.id)
-        }
+          intakeServices: d.intakeServices.map((service) => service.id),
+        },
       })
-        .then(function(data) {
+        .then(function (data) {
           setSaving(false);
           props.nextStep(Step.FINISHED, { id: data.client.id });
         })
-        .catch(err => {
+        .catch((err) => {
           setSaving(false);
           setTimeout(() => {
             throw err;
@@ -100,7 +100,7 @@ export default function Confirm(props: StepComponentProps) {
       city: c.city,
       state: c.state,
       street: c.streetAddress,
-      zip: c.zip
+      zip: c.zip,
     },
     email: c.email,
     civilStatus: c.civilStatus,
@@ -121,7 +121,7 @@ export default function Confirm(props: StepComponentProps) {
     registeredToVote: c.registerToVote,
     clientSource: ClientSources[c.clientSource],
     couldVolunteer: c.couldVolunteer,
-    intakeServices: c.intakeServices
+    intakeServices: c.intakeServices,
   };
 
   return (

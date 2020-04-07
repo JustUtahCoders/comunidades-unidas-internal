@@ -22,18 +22,18 @@ app.use(
           firstName: req.session.passport.user.firstName,
           lastName: req.session.passport.user.lastName,
           email: req.session.passport.user.email,
-          accessLevel: req.session.passport.user.accessLevel
+          accessLevel: req.session.passport.user.accessLevel,
         })
       ),
       {
-        secure: process.env.RUNNING_LOCALLY ? false : true
+        secure: process.env.RUNNING_LOCALLY ? false : true,
       }
     );
     res.setHeader("cache-control", "no-store");
     res.render("index", {
       jsMainFile: process.env.RUNNING_LOCALLY
         ? "http://localhost:9018/comunidades-unidas-internal.js"
-        : require("../static/manifest.json")["comunidades-unidas-internal.js"]
+        : require("../static/manifest.json")["comunidades-unidas-internal.js"],
     });
   }
 );

@@ -11,7 +11,7 @@ export default function SelectReport(props: SelectReportProps) {
         <div className="select-report" {...scope}>
           <label id="select-report-label">Report: </label>
           <select
-            onChange={evt => navigate(`/reports/${evt.target.value}`)}
+            onChange={(evt) => navigate(`/reports/${evt.target.value}`)}
             value={
               window.location.pathname.slice("/reports/".length) ||
               "interaction-hours-by-client"
@@ -21,7 +21,7 @@ export default function SelectReport(props: SelectReportProps) {
           >
             {React.Children.map(
               React.Children.only(props.children).props.children,
-              child =>
+              (child) =>
                 child.props.path &&
                 child.props.title && (
                   <option value={child.props.path}>{child.props.title}</option>

@@ -7,7 +7,7 @@ const {
   nullableNonEmptyString,
   validDate,
   validTime,
-  validInteger
+  validInteger,
 } = require("../../utils/validation-utils");
 const { getInteraction } = require("./client-interaction.utils");
 
@@ -29,7 +29,7 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
       validDate("dateOfInteraction"),
       validTime("duration"),
       validEnum("location", "CUOffice", "consulateOffice", "communityEvent")
-    )
+    ),
   ];
 
   if (validationErrors.length > 0) {
@@ -93,7 +93,7 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
         null,
         "clientInteraction:serviceProvided",
         user.id,
-        req.body.dateOfInteraction
+        req.body.dateOfInteraction,
       ]
     );
 

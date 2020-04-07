@@ -7,27 +7,27 @@ import easyFetch from "../../util/easy-fetch";
 export default function EditCaseNote({
   log,
   actionsRef,
-  clientId
+  clientId,
 }: LogTypeEditProps) {
   const [title, setTitle] = React.useState(log.title);
   const fullEditorRef = React.useRef(null);
   const scope = useCss(css);
 
   React.useEffect(() => {
-    actionsRef.current.save = abortController => {
+    actionsRef.current.save = (abortController) => {
       return easyFetch(`/api/clients/${clientId}/logs/${log.id}`, {
         method: "PATCH",
         signal: abortController.signal,
         body: {
           title,
-          description: fullEditorRef.current.getHTML()
-        }
+          description: fullEditorRef.current.getHTML(),
+        },
       });
     };
 
     actionsRef.current.delete = () => {
       return easyFetch(`/api/clients/${clientId}/logs/${log.id}`, {
-        method: "DELETE"
+        method: "DELETE",
       });
     };
   });
@@ -41,7 +41,7 @@ export default function EditCaseNote({
         <input
           type="text"
           value={title}
-          onChange={evt => setTitle(evt.target.value)}
+          onChange={(evt) => setTitle(evt.target.value)}
           required
           id="case-note-title"
         />

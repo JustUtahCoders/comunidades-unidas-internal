@@ -25,7 +25,7 @@ export default function PageHeader(props: PageHeaderProps) {
 
 PageHeader.defaultProps = {
   title: "Database",
-  backgroundColor: `var(--brand-color)`
+  backgroundColor: `var(--brand-color)`,
 };
 
 type PageHeaderProps = {

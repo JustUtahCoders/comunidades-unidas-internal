@@ -14,7 +14,7 @@ export default function InteractionsByServiceParams(props) {
         <input
           type="date"
           value={startDate}
-          onChange={evt => setStartDate(evt.target.value)}
+          onChange={(evt) => setStartDate(evt.target.value)}
           aria-labelledby="start-date"
         />
       </div>
@@ -23,7 +23,7 @@ export default function InteractionsByServiceParams(props) {
         <input
           type="date"
           value={endDate}
-          onChange={evt => setEndDate(evt.target.value)}
+          onChange={(evt) => setEndDate(evt.target.value)}
           aria-labelledby="end-date"
         />
       </div>

@@ -3,7 +3,7 @@ const {
   databaseError,
   pool,
   invalidRequest,
-  notFound
+  notFound,
 } = require("../../../server");
 const mysql = require("mysql");
 const { checkValid, validId } = require("../../utils/validation-utils");
@@ -19,7 +19,9 @@ app.delete("/api/clients/:clientId/logs/:logId", (req, res) => {
   const clientId = Number(req.params.clientId);
   const logId = Number(req.params.logId);
 
-  const inClause = modifiableLogTypes.map(logType => `'${logType}'`).join(", ");
+  const inClause = modifiableLogTypes
+    .map((logType) => `'${logType}'`)
+    .join(", ");
 
   const deleteLogsQuery = mysql.format(
     `
@@ -76,12 +78,12 @@ app.delete("/api/clients/:clientId/logs/:logId", (req, res) => {
               `Cannot delete log entry that you didn't create.`
             );
           } else if (
-            !modifiableLogTypes.some(logType => logType === row.logType)
+            !modifiableLogTypes.some((logType) => logType === row.logType)
           ) {
             invalidRequest(res, `Log type '${row.logType}' cannot be deleted.`);
           } else {
             res.status(500).send({
-              error: "Unknown error while deleting client log entry"
+              error: "Unknown error while deleting client log entry",
             });
           }
         }

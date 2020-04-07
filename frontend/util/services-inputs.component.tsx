@@ -14,7 +14,7 @@ export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
     React.useEffect(() => {
       // @ts-ignore
       ref.current = {
-        checkedServices
+        checkedServices,
       };
     });
 
@@ -28,14 +28,14 @@ export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
           {Object.entries(groupedServices).map(([programName, services]) => (
             <div key={programName}>
               <h3>{programName}</h3>
-              {services.map(service => (
+              {services.map((service) => (
                 <label key={service.id}>
                   <input
                     type="checkbox"
                     name="services"
                     value={service.id}
                     checked={checkedServices.some(
-                      checkedService => checkedService.id === service.id
+                      (checkedService) => checkedService.id === service.id
                     )}
                     onChange={handleChange}
                   />
@@ -54,11 +54,11 @@ export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
       if (evt.target.checked) {
         newCheckedServices = [
           ...checkedServices,
-          props.services.find(service => service.id === serviceId)
+          props.services.find((service) => service.id === serviceId),
         ];
       } else {
         newCheckedServices = checkedServices.filter(
-          service => service.id !== serviceId
+          (service) => service.id !== serviceId
         );
       }
       setCheckedServices(newCheckedServices);

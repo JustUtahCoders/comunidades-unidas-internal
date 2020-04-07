@@ -84,7 +84,7 @@ export default function InteractionHoursByClientResults(props) {
           }
           contentRows={
             <>
-              {data.clients.map(client => (
+              {data.clients.map((client) => (
                 <tr key={client.id}>
                   <td>
                     <Link to={`/clients/${client.id}`}>{client.id}</Link>

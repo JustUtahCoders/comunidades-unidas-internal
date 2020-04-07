@@ -31,7 +31,7 @@ export default function ViewEvent(props: ViewEventProps) {
     event,
     setEvent,
     eventId,
-    refetchEvent: () => setEventIsStale(true)
+    refetchEvent: () => setEventIsStale(true),
   };
 
   return (
@@ -89,7 +89,7 @@ export default function ViewEvent(props: ViewEventProps) {
 
   function getLinkProps({ isCurrent }) {
     return {
-      className: always("secondary-nav-link").maybe("active", isCurrent)
+      className: always("secondary-nav-link").maybe("active", isCurrent),
     };
   }
 
@@ -97,10 +97,10 @@ export default function ViewEvent(props: ViewEventProps) {
     const abortController = new AbortController();
 
     easyFetch(`/api/events/${eventId}`, { signal: abortController.signal })
-      .then(data => {
+      .then((data) => {
         setEvent(data);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         setError(err);
       })

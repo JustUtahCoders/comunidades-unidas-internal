@@ -3,14 +3,14 @@ const {
   databaseError,
   pool,
   invalidRequest,
-  notFound
+  notFound,
 } = require("../../server");
 const mysql = require("mysql");
 const { checkValid, validId } = require("../utils/validation-utils");
 const {
   responseFullName,
   responseBoolean,
-  responseDateWithoutTime
+  responseDateWithoutTime,
 } = require("../utils/transform-utils");
 
 app.get("/api/events/:id", (req, res, next) => {
@@ -104,15 +104,15 @@ function getEventById(eventId, cbk, connection) {
         firstName: e.createdByFirstName,
         lastName: e.createdByLastName,
         fullName: responseFullName(e.createdByFirstName, e.createdByLastName),
-        timestamp: e.dateAdded
+        timestamp: e.dateAdded,
       },
       lastUpdatedBy: {
         userId: e.modifiedByUserId,
         firstName: e.modifiedByFirstName,
         lastName: e.modifiedByLastName,
         fullName: responseFullName(e.modifiedByFirstName, e.modifiedByLastName),
-        timestamp: e.dateModified
-      }
+        timestamp: e.dateModified,
+      },
     };
 
     cbk(err, event);

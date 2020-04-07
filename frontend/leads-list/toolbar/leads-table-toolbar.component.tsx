@@ -14,7 +14,7 @@ import BulkSmsModal from "../../bulk-sms/bulk-sms-modal.component";
 const BulkActionModals = {
   bulkDelete: DeleteBulkLeadsModal,
   noLeads: NoLeads,
-  bulkSms: BulkSmsModal
+  bulkSms: BulkSmsModal,
 };
 
 export default function LeadsTableToolbar(props: LeadsTableToolbarProps) {

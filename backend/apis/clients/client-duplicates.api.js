@@ -3,7 +3,7 @@ const mysql = require("mysql");
 const {
   checkValid,
   nonEmptyString,
-  validDate
+  validDate,
 } = require("../utils/validation-utils");
 
 app.get("/api/client-duplicates", (req, res, next) => {
@@ -50,31 +50,31 @@ app.get("/api/client-duplicates", (req, res, next) => {
       Math.max(1, month - 3),
       Math.min(12, month + 3),
       req.query.firstName,
-      req.query.lastName
+      req.query.lastName,
     ]
   );
 
-  pool.query(query, function(err, result, fields) {
+  pool.query(query, function (err, result, fields) {
     if (err) {
       return databaseError(req, res, err);
     }
     const [clientRows, leadRows] = result;
     res.send({
       numDuplicates: clientRows.length,
-      clientDuplicates: clientRows.map(row => ({
+      clientDuplicates: clientRows.map((row) => ({
         id: row.id,
         firstName: row.firstName,
         lastName: row.lastName,
         birthday: row.birthday,
-        gender: row.gender
+        gender: row.gender,
       })),
-      possibleLeadSources: leadRows.map(row => ({
+      possibleLeadSources: leadRows.map((row) => ({
         id: row.id,
         firstName: row.firstName,
         lastName: row.lastName,
         leadStatus: row.leadStatus,
-        gender: row.gender
-      }))
+        gender: row.gender,
+      })),
     });
   });
 });

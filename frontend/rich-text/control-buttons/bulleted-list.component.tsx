@@ -2,7 +2,7 @@ import React from "react";
 import bulletsIcon from "../../../icons/111696-text-editor/svg/bullets.svg";
 import {
   useDocumentExecCommand,
-  useDocumentQueryCommandState
+  useDocumentQueryCommandState,
 } from "bandicoot";
 import { always } from "kremling";
 

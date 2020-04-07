@@ -1,4 +1,4 @@
-exports.responseDateWithoutTime = date => {
+exports.responseDateWithoutTime = (date) => {
   const dateFormat = require("dateformat");
   const formattedDate = dateFormat(date, "yyyy-mm-dd");
   return formattedDate;
@@ -7,7 +7,7 @@ exports.responseDateWithoutTime = date => {
 exports.responseFullName = (firstName, lastName) =>
   `${firstName || ""} ${lastName || ""}`.trim();
 
-exports.responseBoolean = val => {
+exports.responseBoolean = (val) => {
   if (typeof val === "string") {
     return val !== "0" && val !== "false";
   } else {
@@ -15,5 +15,5 @@ exports.responseBoolean = val => {
   }
 };
 
-exports.requestEnum = val => (val ? val.toLowerCase() : null);
-exports.requestPhone = val => (val ? val.replace(/[\(\)\-\s]/g, "") : null);
+exports.requestEnum = (val) => (val ? val.toLowerCase() : null);
+exports.requestPhone = (val) => (val ? val.replace(/[\(\)\-\s]/g, "") : null);

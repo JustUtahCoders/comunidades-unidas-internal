@@ -11,13 +11,13 @@ import DemographicInformationInputs, {
   DemographicInformationClient,
   employmentSectors,
   payIntervals,
-  civilStatuses
+  civilStatuses,
 } from "../../add-client/form-inputs/demographic-information-inputs.component";
 import easyFetch from "../../util/easy-fetch";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
-  currency: "USD"
+  currency: "USD",
 });
 
 export default function ViewEditDemographicsInfo(
@@ -27,7 +27,7 @@ export default function ViewEditDemographicsInfo(
   const [editing, setEditing] = React.useState(false);
   const [apiStatus, dispatchApiStatus] = React.useReducer(updatingReducer, {
     isUpdating: false,
-    newClientData: null
+    newClientData: null,
   });
 
   const scope = useCss(css);
@@ -38,14 +38,14 @@ export default function ViewEditDemographicsInfo(
       easyFetch(`/api/clients/${client.id}`, {
         method: "PATCH",
         body: apiStatus.newClientData,
-        signal: abortController.signal
+        signal: abortController.signal,
       })
-        .then(data => {
+        .then((data) => {
           dispatchApiStatus({ type: UpdateActionType.reset });
           setEditing(false);
           props.clientUpdated(data.client);
         })
-        .catch(err => {
+        .catch((err) => {
           setTimeout(() => {
             throw err;
           });
@@ -63,7 +63,7 @@ export default function ViewEditDemographicsInfo(
           client={getDemographicsClient()}
           onSubmit={handleSubmit}
         >
-          {demographicsInfo => (
+          {(demographicsInfo) => (
             <div className="actions">
               <button
                 type="button"
@@ -248,8 +248,8 @@ export default function ViewEditDemographicsInfo(
         isStudent: demographicsInfo.isStudent,
         englishProficiency: demographicsInfo.englishLevel,
         eligibleToVote: demographicsInfo.eligibleToVote,
-        registeredToVote: demographicsInfo.registerToVote
-      }
+        registeredToVote: demographicsInfo.registerToVote,
+      },
     });
   }
 
@@ -269,13 +269,13 @@ export default function ViewEditDemographicsInfo(
       isStudent: client.isStudent,
       englishLevel: client.englishProficiency,
       eligibleToVote: client.eligibleToVote,
-      registerToVote: client.registeredToVote
+      registerToVote: client.registeredToVote,
     };
   }
 }
 
 ViewEditDemographicsInfo.defaultProps = {
-  editable: true
+  editable: true,
 };
 
 function updatingReducer(state, action: UpdateAction) {
@@ -310,5 +310,5 @@ type UpdateAction = {
 
 enum UpdateActionType {
   update = "update",
-  reset = "reset"
+  reset = "reset",
 }

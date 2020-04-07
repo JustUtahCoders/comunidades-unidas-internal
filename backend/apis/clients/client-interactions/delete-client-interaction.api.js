@@ -40,7 +40,7 @@ app.delete("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
           title: `Client interaction for service ${serviceName} was deleted`,
           description: null,
           logType: "clientInteraction:deleted",
-          addedBy: userId
+          addedBy: userId,
         })}
       `,
       [interactionId, interactionId]

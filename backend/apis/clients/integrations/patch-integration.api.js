@@ -4,21 +4,21 @@ const {
   invalidRequest,
   databaseError,
   internalError,
-  notFound
+  notFound,
 } = require("../../../server");
 const {
   checkValid,
   validId,
   validEnum,
   nullableValidEnum,
-  nullableNonEmptyString
+  nullableNonEmptyString,
 } = require("../../utils/validation-utils");
 const { getClientById } = require("../get-client.api");
 const {
   getIntegrationTypes,
   getIntegrationName,
   performIntegration,
-  logIntegrationResult
+  logIntegrationResult,
 } = require("./integrations-utils");
 const mysql = require("mysql");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
@@ -34,7 +34,7 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
       req.body,
       nullableNonEmptyString("externalId"),
       nullableValidEnum("status", "disabled", "enabled", "broken")
-    )
+    ),
   ];
 
   if (validationErrors.length > 0) {
@@ -74,11 +74,11 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
         lastSync: new Date(),
         externalId:
           req.body.externalId ||
-          (existingIntegration ? existingIntegration.externalId : null)
+          (existingIntegration ? existingIntegration.externalId : null),
       };
 
       performIntegration(finalIntegration, client)
-        .then(integrationResult => {
+        .then((integrationResult) => {
           logIntegrationResult(
             clientId,
             finalIntegration,
@@ -101,7 +101,7 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
                 finalIntegration.status,
                 finalIntegration.externalId,
                 clientId,
-                finalIntegration.integrationType
+                finalIntegration.integrationType,
               ]
             );
           } else {
@@ -113,7 +113,7 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
                 clientId,
                 integrationId,
                 finalIntegration.status,
-                finalIntegration.externalId
+                finalIntegration.externalId,
               ]
             );
           }
@@ -135,12 +135,12 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
                 name: finalIntegration.name,
                 status: finalIntegration.status,
                 externalId: finalIntegration.externalId,
-                lastSync: finalIntegration.lastSync
+                lastSync: finalIntegration.lastSync,
               });
             }
           });
         })
-        .catch(err => {
+        .catch((err) => {
           internalError(req, res, err);
         });
     });

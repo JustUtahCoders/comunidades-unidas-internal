@@ -73,7 +73,7 @@ export default function DemographicInformationInputs(
     isStudent,
     eligibleToVote,
     registerToVote,
-    juvenileDependents
+    juvenileDependents,
   };
 
   return (
@@ -84,11 +84,11 @@ export default function DemographicInformationInputs(
           <select
             value={civilStatus}
             name="civilStatus"
-            onChange={evt => setCivilStatus(CivilStatus[evt.target.value])}
+            onChange={(evt) => setCivilStatus(CivilStatus[evt.target.value])}
             required
             autoFocus
           >
-            {Object.keys(civilStatuses).map(statusKey => (
+            {Object.keys(civilStatuses).map((statusKey) => (
               <option key={statusKey} value={statusKey}>
                 {civilStatuses[statusKey]}
               </option>
@@ -112,7 +112,7 @@ export default function DemographicInformationInputs(
           <input
             type="number"
             value={householdSize}
-            onChange={evt => setHouseholdSize(Number(evt.target.value))}
+            onChange={(evt) => setHouseholdSize(Number(evt.target.value))}
             required
             min={1}
             max={30}
@@ -125,7 +125,7 @@ export default function DemographicInformationInputs(
           <input
             type="number"
             value={juvenileDependents}
-            onChange={evt => setJuvenileDependents(Number(evt.target.value))}
+            onChange={(evt) => setJuvenileDependents(Number(evt.target.value))}
             required
             min={0}
             max={30}
@@ -240,7 +240,7 @@ export default function DemographicInformationInputs(
           <select
             value={currentlyEmployed}
             name="currentlyEmployed"
-            onChange={evt => {
+            onChange={(evt) => {
               setCurrentlyEmployed(evt.target.value);
               if (evt.target.value !== "yes") {
                 setEmploymentSector(getInitialEmploymentSector(null));
@@ -265,10 +265,10 @@ export default function DemographicInformationInputs(
               <select
                 value={employmentSector}
                 name="employmentSector"
-                onChange={evt => setEmploymentSector(evt.target.value)}
+                onChange={(evt) => setEmploymentSector(evt.target.value)}
                 required
               >
-                {Object.keys(employmentSectors).map(sectorValue => (
+                {Object.keys(employmentSectors).map((sectorValue) => (
                   <option key={sectorValue} value={sectorValue}>
                     {employmentSectors[sectorValue]}
                   </option>
@@ -283,7 +283,7 @@ export default function DemographicInformationInputs(
                 <input
                   type="text"
                   value={empSectorExplain}
-                  onChange={evt => setEmpSectorExplain(evt.target.value)}
+                  onChange={(evt) => setEmpSectorExplain(evt.target.value)}
                   required
                 />
               </label>
@@ -295,9 +295,11 @@ export default function DemographicInformationInputs(
               <select
                 required
                 value={payInterval}
-                onChange={evt => setPayInterval(PayInterval[evt.target.value])}
+                onChange={(evt) =>
+                  setPayInterval(PayInterval[evt.target.value])
+                }
               >
-                {Object.keys(payIntervals).map(payIntervalName => (
+                {Object.keys(payIntervals).map((payIntervalName) => (
                   <option key={payIntervalName} value={payIntervalName}>
                     {payIntervals[payIntervalName]}
                   </option>
@@ -310,12 +312,12 @@ export default function DemographicInformationInputs(
               <span>Average weekly hours worked</span>
               <select
                 required
-                onChange={evt =>
+                onChange={(evt) =>
                   setWeeklyEmployedHours(WeeklyEmployedHours[evt.target.value])
                 }
                 value={weeklyEmployedHours}
               >
-                {Object.keys(WeeklyEmployedHours).map(weeklyHour => (
+                {Object.keys(WeeklyEmployedHours).map((weeklyHour) => (
                   <option key={weeklyHour} value={weeklyHour}>
                     {WeeklyEmployedHours[weeklyHour]}
                   </option>
@@ -345,7 +347,7 @@ export default function DemographicInformationInputs(
                   : "month"
               }
               value={dateOfUSArrival}
-              onChange={evt => setDateOfUSArrival(evt.target.value)}
+              onChange={(evt) => setDateOfUSArrival(evt.target.value)}
             />
           </label>
         </div>
@@ -357,9 +359,9 @@ export default function DemographicInformationInputs(
             required
             name="homeLanguage"
             value={homeLanguage}
-            onChange={evt => setHomeLanguage(evt.target.value)}
+            onChange={(evt) => setHomeLanguage(evt.target.value)}
           >
-            {Object.keys(languageOptions).map(value => (
+            {Object.keys(languageOptions).map((value) => (
               <option key={value} value={value}>
                 {languageOptions[value]}
               </option>
@@ -375,7 +377,7 @@ export default function DemographicInformationInputs(
               required
               type="text"
               value={otherLanguage}
-              onChange={evt => setOtherLanguage(evt.target.value)}
+              onChange={(evt) => setOtherLanguage(evt.target.value)}
             />
           </label>
         </div>
@@ -386,9 +388,9 @@ export default function DemographicInformationInputs(
           <select
             required
             value={englishLevel}
-            onChange={evt => setEnglishLevel(evt.target.value)}
+            onChange={(evt) => setEnglishLevel(evt.target.value)}
           >
-            {Object.keys(EnglishLevel).map(englishLevelKey => (
+            {Object.keys(EnglishLevel).map((englishLevelKey) => (
               <option value={englishLevelKey} key={englishLevelKey}>
                 {EnglishLevel[englishLevelKey]}
               </option>
@@ -459,14 +461,14 @@ export const employmentSectors = {
   domesticWorker: "Domestic Worker",
   industrial: "Industrial/Warehouse",
   agriculture: "Agriculture",
-  other: "Other (Explain)"
+  other: "Other (Explain)",
 };
 
 export enum languageOptions {
   english = "English",
   spanish = "Spanish",
   englishandspanish = "English And Spanish",
-  other = "Other"
+  other = "Other",
 }
 
 export const payIntervals = {
@@ -474,7 +476,7 @@ export const payIntervals = {
   "every-two-weeks": "Every two weeks",
   "every-month": "Every month",
   "every-quarter": "Every quarter",
-  "every-year": "Every year"
+  "every-year": "Every year",
 };
 
 export enum PayInterval {
@@ -482,7 +484,7 @@ export enum PayInterval {
   "every-two-weeks" = "every-two-weeks",
   "every-month" = "every-month",
   "every-quarter" = "every-quarter",
-  "every-year" = "every-year"
+  "every-year" = "every-year",
 }
 
 type DemographicInformationInputsProps = {
@@ -514,7 +516,7 @@ export type DemographicInformationClient = {
 export const EnglishLevel = {
   beginner: "Beginner",
   intermediate: "Intermediate",
-  advanced: "Advanced"
+  advanced: "Advanced",
 };
 
 export enum CivilStatus {
@@ -523,7 +525,7 @@ export enum CivilStatus {
   commonLawMarriage = "commonLawMarriage",
   divorced = "divorced",
   widowed = "widowed",
-  separated = "separated"
+  separated = "separated",
 }
 
 export const civilStatuses = {
@@ -532,12 +534,12 @@ export const civilStatuses = {
   [CivilStatus.commonLawMarriage]: "Common Law Marriage",
   [CivilStatus.divorced]: "Divorced",
   [CivilStatus.widowed]: "Widowed",
-  [CivilStatus.separated]: "Separated"
+  [CivilStatus.separated]: "Separated",
 };
 
 export enum WeeklyEmployedHours {
   "0-20" = "0-20",
   "21-35" = "21-35",
   "36-40" = "36-40",
-  "41+" = "41+"
+  "41+" = "41+",
 }

@@ -23,19 +23,19 @@ export default function ClientHistory(props: ClientHistoryProps) {
     if (logState.isFetching) {
       const abortController = new AbortController();
       easyFetch(`/api/clients/${props.clientId}/logs`)
-        .then(data => {
+        .then((data) => {
           dispatchLogState({
             type: LogActionTypes.newLogs,
-            newLogs: data.logs.map(log => ({
+            newLogs: data.logs.map((log) => ({
               ...log,
               createdBy: {
                 ...log.createdBy,
-                timestamp: dayjs(log.createdBy.timestamp)
-              }
-            }))
+                timestamp: dayjs(log.createdBy.timestamp),
+              },
+            })),
           });
         })
-        .catch(err => {
+        .catch((err) => {
           setTimeout(() => {
             throw err;
           });
@@ -133,10 +133,10 @@ export default function ClientHistory(props: ClientHistoryProps) {
       {logState.logToModify && (
         <EditLog
           log={logState.logToModify}
-          close={wasModified =>
+          close={(wasModified) =>
             dispatchLogState({
               type: LogActionTypes.doneModifyingLog,
-              wasModified
+              wasModified,
             })
           }
           clientId={props.clientId}
@@ -148,12 +148,12 @@ export default function ClientHistory(props: ClientHistoryProps) {
           log={logState.logToView}
           close={() => {
             dispatchLogState({
-              type: LogActionTypes.doneViewingOutdatedLog
+              type: LogActionTypes.doneViewingOutdatedLog,
             });
           }}
           viewUpdatedVersion={() => {
             const updatedLog = logState.allLogs.find(
-              l => l.id === logState.logToView.idOfUpdatedLog
+              (l) => l.id === logState.logToView.idOfUpdatedLog
             );
             if (!updatedLog) {
               throw Error(
@@ -213,7 +213,7 @@ export default function ClientHistory(props: ClientHistoryProps) {
   function updateFilters(filters: ClientHistoryFilterOptions) {
     dispatchLogState({
       type: LogActionTypes.newFilters,
-      newFilters: filters
+      newFilters: filters,
     });
   }
 
@@ -222,12 +222,12 @@ export default function ClientHistory(props: ClientHistoryProps) {
       if (log.idOfUpdatedLog) {
         dispatchLogState({
           type: LogActionTypes.viewOutdatedLog,
-          log
+          log,
         });
       } else {
         dispatchLogState({
           type: LogActionTypes.modifyLog,
-          log
+          log,
         });
       }
     } else if (log.logType.startsWith("integration:")) {
@@ -245,7 +245,7 @@ function logReducer(state: LogState, action: LogActions): LogState {
         filters: changeFilterAction.newFilters,
         filteredLogs: state.allLogs.filter(
           partial(filterLogs, changeFilterAction.newFilters)
-        )
+        ),
       };
       localStorage.setItem(
         "cu:client-history-filters",
@@ -260,33 +260,33 @@ function logReducer(state: LogState, action: LogActions): LogState {
         allLogs: setLogsAction.newLogs,
         filteredLogs: setLogsAction.newLogs.filter(
           partial(filterLogs, state.filters)
-        )
+        ),
       };
     case LogActionTypes.modifyLog:
       const modifyLogAction = action as ModifyLogAction;
       return {
         ...state,
         logToModify: modifyLogAction.log,
-        logToView: null
+        logToView: null,
       };
     case LogActionTypes.doneModifyingLog:
       const doneModifyingLogAction = action as DoneModifyingLogAction;
       return {
         ...state,
         isFetching: doneModifyingLogAction.wasModified,
-        logToModify: null
+        logToModify: null,
       };
     case LogActionTypes.viewOutdatedLog:
       const viewOutdatedLogAction = action as ViewOutdatedLogAction;
       return {
         ...state,
         logToView: viewOutdatedLogAction.log,
-        logToModify: null
+        logToModify: null,
       };
     case LogActionTypes.doneViewingOutdatedLog:
       return {
         ...state,
-        logToView: null
+        logToView: null,
       };
     default:
       throw Error();
@@ -342,7 +342,7 @@ enum LogActionTypes {
   "modifyLog" = "modifyLog",
   "doneModifyingLog" = "doneModifyingLog",
   "viewOutdatedLog" = "viewOutdatedLog",
-  "doneViewingOutdatedLog" = "doneViewingOutdatedLog"
+  "doneViewingOutdatedLog" = "doneViewingOutdatedLog",
 }
 
 function getBackgroundColor(logType: LogType) {
@@ -498,7 +498,7 @@ export enum LogType {
   "integration:enabled" = "integration:enabled",
   "integration:disabled" = "integration:disabled",
   "integration:broken" = "integration:broken",
-  "integration:sync" = "integration:sync"
+  "integration:sync" = "integration:sync",
 }
 
 const allFiltersOn: ClientHistoryFilterOptions = Object.keys(LogType).reduce(
@@ -514,7 +514,7 @@ function getInitialLogState(): LogState {
   let filters;
   if (localStorageFilters) {
     filters = JSON.parse(localStorageFilters);
-    Object.keys(LogType).forEach(logType => {
+    Object.keys(LogType).forEach((logType) => {
       if (!filters.hasOwnProperty(logType) && logType !== "showOutdated") {
         filters[logType] = true;
       }
@@ -528,7 +528,7 @@ function getInitialLogState(): LogState {
     logToView: null,
     allLogs: [],
     filteredLogs: [],
-    filters
+    filters,
   };
 }
 

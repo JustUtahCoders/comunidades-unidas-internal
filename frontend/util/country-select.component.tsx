@@ -4,18 +4,18 @@ export default function CountrySelect(props: CountrySelectProps) {
   return (
     <select
       value={props.country}
-      onChange={evt => props.setCountry(evt.target.value)}
+      onChange={(evt) => props.setCountry(evt.target.value)}
       autoFocus={props.autoFocus}
     >
       <optgroup label="Most common countries">
-        {Object.keys(mostCommonCountries).map(commonCountryCode => (
+        {Object.keys(mostCommonCountries).map((commonCountryCode) => (
           <option value={commonCountryCode} key={commonCountryCode}>
             {mostCommonCountries[commonCountryCode]}
           </option>
         ))}
       </optgroup>
       <optgroup label="All countries">
-        {Object.keys(otherCountries).map(countryCode => (
+        {Object.keys(otherCountries).map((countryCode) => (
           <option value={countryCode} key={countryCode}>
             {otherCountries[countryCode]}
           </option>
@@ -36,7 +36,7 @@ const mostCommonCountries = {
   NI: "Nicaragua",
   BO: "Bolivia, Plurinational State of",
   VE: "Venezuela, Bolivarian Republic of",
-  CO: "Colombia"
+  CO: "Colombia",
 };
 
 const otherCountries = {
@@ -277,7 +277,7 @@ const otherCountries = {
   EH: "Western Sahara",
   YE: "Yemen",
   ZM: "Zambia",
-  ZW: "Zimbabwe"
+  ZW: "Zimbabwe",
 };
 
 export const countryCodeToName = Object.assign(

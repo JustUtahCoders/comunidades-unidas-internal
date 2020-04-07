@@ -2,7 +2,7 @@
 // But locally we run them this way
 if (process.env.RUNNING_LOCALLY) {
   const dbm = require("db-migrate").getInstance({
-    env: "dev"
+    env: "dev",
   });
 
   const intervalId = setInterval(() => {
@@ -12,7 +12,7 @@ if (process.env.RUNNING_LOCALLY) {
         clearInterval(intervalId);
         console.log("Finished running database migrations");
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("waiting for database", err);
       });
   }, 4000);

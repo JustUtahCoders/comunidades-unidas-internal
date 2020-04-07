@@ -9,7 +9,7 @@ export default function PovertyLineParams(props) {
     <>
       <div className="report-input">
         <label id="year-label">Federal Poverty Line Year:</label>
-        <select value={year} onChange={evt => setYear(evt.target.value)}>
+        <select value={year} onChange={(evt) => setYear(evt.target.value)}>
           <option>2019</option>
           <option>2020</option>
         </select>

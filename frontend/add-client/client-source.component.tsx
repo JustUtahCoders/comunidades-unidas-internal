@@ -52,7 +52,7 @@ export default function ClientSource(props: StepComponentProps) {
     const d = inputsRef.current;
     return {
       clientSource: d.clientSource,
-      couldVolunteer: d.couldVolunteer
+      couldVolunteer: d.couldVolunteer,
     };
   }
 }

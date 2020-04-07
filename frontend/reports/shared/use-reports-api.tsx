@@ -17,10 +17,10 @@ export function useReportsApi(url: string) {
       const abortController = new AbortController();
 
       easyFetch(fullUrl, { signal: abortController.signal }).then(
-        data => {
+        (data) => {
           dispatch({ type: "newData", data });
         },
-        err => {
+        (err) => {
           dispatch({ type: "error", err });
           setTimeout(() => {
             throw err;
@@ -47,13 +47,13 @@ function reducer(state, action) {
       return {
         isLoading: false,
         error: null,
-        data: action.data
+        data: action.data,
       };
     case "error":
       return {
         isLoading: false,
         error: action.err,
-        data: null
+        data: null,
       };
     default:
       throw Error();

@@ -11,7 +11,7 @@ export default function ViewEditLeadContactStatus(
   const [apiStatus, dispatchApiStatus] = React.useReducer(updatingReducer, {
     isUpdating: false,
     isEditing: false,
-    newLeadData: null
+    newLeadData: null,
   });
   const { lead, leadUpdated } = props;
 
@@ -21,13 +21,13 @@ export default function ViewEditLeadContactStatus(
       easyFetch(`/api/leads/${lead.id}`, {
         method: "PATCH",
         body: apiStatus.newLeadData,
-        signal: abortController.signal
+        signal: abortController.signal,
       })
-        .then(data => {
+        .then((data) => {
           dispatchApiStatus({ type: "reset" });
           leadUpdated(data.lead);
         })
-        .catch(err => {
+        .catch((err) => {
           setTimeout(() => {
             throw err;
           });
@@ -47,9 +47,9 @@ export default function ViewEditLeadContactStatus(
             contactStage: {
               first: lead.contactStage.first,
               second: lead.contactStage.second,
-              third: lead.contactStage.third
+              third: lead.contactStage.third,
             },
-            inactivityReason: lead.inactivityReason
+            inactivityReason: lead.inactivityReason,
           }}
           handleSubmit={handleSubmit}
         >
@@ -135,7 +135,7 @@ export default function ViewEditLeadContactStatus(
 }
 
 ViewEditLeadContactStatus.defaultProps = {
-  editable: true
+  editable: true,
 };
 
 function updatingReducer(state, action) {
@@ -146,7 +146,7 @@ function updatingReducer(state, action) {
       return {
         isUpdating: true,
         isEditing: false,
-        newLeadData: action.newLeadData
+        newLeadData: action.newLeadData,
       };
     case "reset":
       return { isUpdating: false };

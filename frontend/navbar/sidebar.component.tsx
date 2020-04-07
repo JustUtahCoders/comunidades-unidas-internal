@@ -19,7 +19,7 @@ export default function Sidebar(props: SidebarProps) {
     <nav
       {...scope}
       className={always("sidebar").maybe("force-show", props.forceShow)}
-      onClick={evt => evt.stopPropagation()}
+      onClick={(evt) => evt.stopPropagation()}
     >
       <div className="navbar-links">
         <ul>

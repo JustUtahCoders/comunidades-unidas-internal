@@ -24,7 +24,7 @@ export default function BasicLeadInformationInputs(
           <input
             type="text"
             value={firstName}
-            onChange={evt => setFirstName(evt.target.value)}
+            onChange={(evt) => setFirstName(evt.target.value)}
             autoComplete="new-password"
             autoFocus
             required
@@ -37,7 +37,7 @@ export default function BasicLeadInformationInputs(
           <input
             type="text"
             value={lastName}
-            onChange={evt => setLastName(evt.target.value)}
+            onChange={(evt) => setLastName(evt.target.value)}
             autoComplete="new-password"
             autoFocus
             required
@@ -51,7 +51,7 @@ export default function BasicLeadInformationInputs(
             type="number"
             name="age"
             value={age || ""}
-            onChange={evt => setAge(parseInt(evt.target.value))}
+            onChange={(evt) => setAge(parseInt(evt.target.value))}
             autoComplete="new-password"
             autoFocus
           />
@@ -62,7 +62,7 @@ export default function BasicLeadInformationInputs(
           <span>Gender</span>
           <select
             value={gender}
-            onChange={evt => setGender(evt.target.value)}
+            onChange={(evt) => setGender(evt.target.value)}
             autoComplete="new-password"
           >
             <option value="unknown">Unknown</option>
@@ -83,7 +83,7 @@ export default function BasicLeadInformationInputs(
       firstName: capitalize(firstName.trim()),
       lastName: capitalize(lastName.trim()),
       gender,
-      age
+      age,
     });
   }
 }

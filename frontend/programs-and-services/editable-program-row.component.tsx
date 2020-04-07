@@ -23,8 +23,8 @@ export default function EditableProgramRow(props: EditableProgramRowProps) {
         method: "PATCH",
         body: {
           programName: program.programName,
-          programDescription: program.programDescription
-        }
+          programDescription: program.programDescription,
+        },
       })
         .then(() => {
           props.refetch();

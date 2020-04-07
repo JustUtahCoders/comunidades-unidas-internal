@@ -9,7 +9,7 @@ If performing an upload you will get a signed url via `/api/signed-file-uploads`
 a PUT request to the url like so
 
 ```javascript
-axios.put(signedRequest, file, options).then(result => {
+axios.put(signedRequest, file, options).then((result) => {
   if (result.data.success) {
     //Make the request to create a client file /api/clients/:clientId/file
   }

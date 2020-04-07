@@ -2,7 +2,7 @@ import React from "react";
 import boldIconUrl from "../../../icons/111696-text-editor/svg/bold-text.svg";
 import {
   useDocumentExecCommand,
-  useDocumentQueryCommandState
+  useDocumentQueryCommandState,
 } from "bandicoot";
 import { always } from "kremling";
 

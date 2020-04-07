@@ -39,7 +39,7 @@ app.get(`/api/reports/countries-of-origin`, (req, res) => {
         acc[row.countryOfOrigin] = row.total;
         return acc;
       }, {}),
-      reportParameters: {}
+      reportParameters: {},
     });
   });
 });

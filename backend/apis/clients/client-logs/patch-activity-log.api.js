@@ -2,7 +2,7 @@ const { app, pool, invalidRequest, databaseError } = require("../../../server");
 const {
   checkValid,
   validId,
-  nullableNonEmptyString
+  nullableNonEmptyString,
 } = require("../../utils/validation-utils");
 const mysql = require("mysql");
 const { modifiableLogTypes } = require("./activity-log.utils");
@@ -14,7 +14,7 @@ app.patch(`/api/clients/:clientId/logs/:logId`, (req, res) => {
       req.body,
       nullableNonEmptyString("title"),
       nullableNonEmptyString("description")
-    )
+    ),
   ];
 
   if (req.body.logType) {
@@ -51,7 +51,7 @@ app.patch(`/api/clients/:clientId/logs/:logId`, (req, res) => {
       }
 
       if (
-        !modifiableLogTypes.some(logType => logType === existingLog.logType)
+        !modifiableLogTypes.some((logType) => logType === existingLog.logType)
       ) {
         return invalidRequest(
           res,
@@ -85,7 +85,7 @@ app.patch(`/api/clients/:clientId/logs/:logId`, (req, res) => {
           req.body.description || existingLog.description,
           existingLog.logType,
           req.session.passport.user.id,
-          existingLog.id
+          existingLog.id,
         ]
       );
 

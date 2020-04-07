@@ -1,1 +1,11 @@
 icons
+*.sql
+yarn.lock
+.prettierignore
+.gitignore
+LICENSE
+*.ejs
+.ebextensions
+.DS_Store
+.env
+.ebignore

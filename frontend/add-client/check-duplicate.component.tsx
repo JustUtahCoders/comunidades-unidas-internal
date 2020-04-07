@@ -46,12 +46,12 @@ export default function CheckDuplicate(props: StepComponentProps) {
         gender
       )}&birthday=${encodeURIComponent(birthday)}`
     )
-      .then(function(data) {
+      .then(function (data) {
         // @ts-ignore
         if (leadMatch && leadMatch.leadId) {
           data.possibleLeadSources = data.possibleLeadSources.filter(
             // @ts-ignore
-            l => String(l.id) !== leadMatch.leadId
+            (l) => String(l.id) !== leadMatch.leadId
           );
         }
         if (
@@ -64,18 +64,18 @@ export default function CheckDuplicate(props: StepComponentProps) {
             birthday,
             gender,
             duplicates: data.clientDuplicates,
-            possibleLeadSources: data.possibleLeadSources
+            possibleLeadSources: data.possibleLeadSources,
           });
         } else {
           props.nextStep(Step.CONTACT_INFORMATION, {
             firstName,
             lastName,
             gender,
-            birthday
+            birthday,
           });
         }
       })
-      .catch(function(err) {
+      .catch(function (err) {
         setTimeout(() => {
           throw err;
         });

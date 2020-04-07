@@ -16,14 +16,14 @@ const {
   validCountry,
   validArray,
   validInteger,
-  nullableValidId
+  nullableValidId,
 } = require("../utils/validation-utils");
 const { getClientById } = require("./get-client.api");
 const {
   insertContactInformationQuery,
   insertIntakeDataQuery,
   insertDemographicsInformationQuery,
-  convertLeadToClient
+  convertLeadToClient,
 } = require("./insert-client.utils");
 const { insertActivityLogQuery } = require("./client-logs/activity-log.utils");
 
@@ -99,7 +99,7 @@ app.post("/api/clients", (req, res, next) => {
       return invalidRequest(res, validityErrors, connection);
     }
 
-    connection.beginTransaction(err => {
+    connection.beginTransaction((err) => {
       if (err) {
         return databaseError(req, res, err, connection);
       }
@@ -123,7 +123,7 @@ app.post("/api/clients", (req, res, next) => {
           req.body.birthday,
           req.body.gender,
           req.session.passport.user.id,
-          req.session.passport.user.id
+          req.session.passport.user.id,
         ]
       );
 
@@ -140,7 +140,7 @@ app.post("/api/clients", (req, res, next) => {
           title: "Client was created",
           description: null,
           logType: "clientCreated",
-          addedBy: req.session.passport.user.id
+          addedBy: req.session.passport.user.id,
         });
 
         connection.query(insertActivityLog, (err, results) => {
@@ -203,7 +203,7 @@ app.post("/api/clients", (req, res, next) => {
 
             const insertIntakeServicesQuery = req.body.intakeServices
               .map(
-                intakeService => `
+                (intakeService) => `
               INSERT INTO intakeServices (intakeDataId, serviceId) VALUES (?, ?);
             `
               )
@@ -237,7 +237,7 @@ app.post("/api/clients", (req, res, next) => {
               connection.release();
 
               res.send({
-                client
+                client,
               });
             },
             connection

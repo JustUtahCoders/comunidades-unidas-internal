@@ -3,7 +3,7 @@ import ClientSection from "./client-section.component";
 import { SingleClient, AuditSummary } from "../view-client.component";
 import dateformat from "dateformat";
 import ClientSourceInputsComponent, {
-  clientSources
+  clientSources,
 } from "../../add-client/form-inputs/client-source-inputs.component";
 import DateInput from "../../util/date-input.component";
 import easyFetch from "../../util/easy-fetch";
@@ -19,7 +19,7 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
   const clientSourceRef = React.useRef(null);
   const [apiStatus, dispatchApiStatus] = React.useReducer(apiStatusReducer, {
     isUpdating: false,
-    newClientData: null
+    newClientData: null,
   });
   const [services, setServices] = React.useState([]);
   const intakeServicesRef = React.useRef(null);
@@ -28,9 +28,9 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
   React.useEffect(() => {
     const abortController = new AbortController();
 
-    easyFetch("/api/services", { signal: abortController.signal }).then(data =>
-      setServices(data.services)
-    );
+    easyFetch("/api/services", {
+      signal: abortController.signal,
+    }).then((data) => setServices(data.services));
 
     return () => abortController.abort();
   }, []);
@@ -42,9 +42,9 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
       easyFetch(`/api/clients/${client.id}`, {
         method: "PATCH",
         body: apiStatus.newClientData,
-        signal: abortController.signal
+        signal: abortController.signal,
       })
-        .then(data => {
+        .then((data) => {
           props.clientUpdated(data.client);
         })
         .finally(() => {
@@ -72,7 +72,7 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
             ref={clientSourceRef}
             client={{
               clientSource: client.clientSource,
-              couldVolunteer: client.couldVolunteer
+              couldVolunteer: client.couldVolunteer,
             }}
           />
           <div>
@@ -127,7 +127,7 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
                   {client.intakeServices.length === 0
                     ? "(None)"
                     : client.intakeServices
-                        .map(service => service.serviceName)
+                        .map((service) => service.serviceName)
                         .join(", ")}
                 </td>
               </tr>
@@ -153,12 +153,12 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
       couldVolunteer: clientSourceRef.current.couldVolunteer,
       clientSource: clientSourceRef.current.clientSource,
       intakeServices: intakeServicesRef.current.checkedServices.map(
-        service => service.id
-      )
+        (service) => service.id
+      ),
     };
     dispatchApiStatus({
       type: "do-patch",
-      newClientData
+      newClientData,
     });
   }
 
@@ -217,7 +217,7 @@ const css = `
 `;
 
 ViewEditIntakeInfo.defaultProps = {
-  editable: true
+  editable: true,
 };
 
 function apiStatusReducer(state, action) {

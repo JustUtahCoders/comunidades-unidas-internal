@@ -7,13 +7,13 @@ const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = (env, argv) => ({
   entry: {
-    "comunidades-unidas-internal": "./frontend/comunidades-unidas-internal.tsx"
+    "comunidades-unidas-internal": "./frontend/comunidades-unidas-internal.tsx",
   },
   output: {
     filename:
       process.env.RUNNING_LOCALLY === "true" ? "[name].js" : "[name].[hash].js",
     path: __dirname + "/static",
-    publicPath: process.env.PUBLIC_PATH || "/static/"
+    publicPath: process.env.PUBLIC_PATH || "/static/",
   },
   devtool: "sourcemap",
   module: {
@@ -21,35 +21,35 @@ module.exports = (env, argv) => ({
       {
         test: /\.tsx$|\.ts|\.js|\.jsx/,
         use: "babel-loader",
-        exclude: /node_modules/
+        exclude: /node_modules/,
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
         use: [
           {
             loader: "file-loader",
-            options: {}
-          }
-        ]
-      }
-    ]
+            options: {},
+          },
+        ],
+      },
+    ],
   },
   devServer: {
     historyApiFallback: true,
     index: "index.html",
     port: 9018,
-    publicPath: "http://localhost:9018/"
+    publicPath: "http://localhost:9018/",
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".jsx", ".js"]
+    extensions: [".tsx", ".ts", ".jsx", ".js"],
   },
   plugins: [
     new CleanWebpackPlugin(),
     new ForkTsCheckerWebpackPlugin(),
     new BundleAnalyzerPlugin({
-      analyzerMode: env && env.analyze ? "server" : "disabled"
+      analyzerMode: env && env.analyze ? "server" : "disabled",
     }),
-    new ManifestPlugin()
+    new ManifestPlugin(),
   ],
   optimization: {
     namedChunks: true,
@@ -57,9 +57,9 @@ module.exports = (env, argv) => ({
     minimizer: [
       new TerserPlugin({
         terserOptions: {
-          safari10: true
-        }
-      })
-    ]
-  }
+          safari10: true,
+        },
+      }),
+    ],
+  },
 });

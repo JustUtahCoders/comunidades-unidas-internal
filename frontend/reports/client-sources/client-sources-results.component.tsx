@@ -34,7 +34,7 @@ export default function ClientSourcesResults(props) {
       }
       contentRows={
         <>
-          {sortedSources.map(source => (
+          {sortedSources.map((source) => (
             <tr key={source[0]}>
               <th>{clientSources[source[0]] || source[0]}</th>
               <td>{source[1].toLocaleString()}</td>

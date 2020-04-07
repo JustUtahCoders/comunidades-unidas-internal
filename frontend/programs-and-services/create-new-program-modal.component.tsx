@@ -19,8 +19,8 @@ export default function CreateNewProgramModal(
         method: "POST",
         body: {
           programName: program.programName,
-          programDescription: program.programDescription
-        }
+          programDescription: program.programDescription,
+        },
       })
         .then(() => {
           props.refetch();
@@ -69,5 +69,5 @@ const emptyProgram: CUProgram = {
   id: null,
   isActive: true,
   programDescription: "",
-  programName: ""
+  programName: "",
 };

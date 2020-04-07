@@ -3,14 +3,14 @@ const {
   databaseError,
   pool,
   invalidRequest,
-  notFound
+  notFound,
 } = require("../../server");
 const mysql = require("mysql");
 const { checkValid, validId } = require("../utils/validation-utils");
 const {
   responseFullName,
   responseBoolean,
-  responseDateWithoutTime
+  responseDateWithoutTime,
 } = require("../utils/transform-utils");
 
 app.get("/api/leads/:id", (req, res, next) => {
@@ -27,7 +27,7 @@ app.get("/api/leads/:id", (req, res, next) => {
 
     if (lead) {
       res.send({
-        lead
+        lead,
       });
     } else {
       notFound(res, `Could not find lead with id ${req.params.id}`);
@@ -120,14 +120,14 @@ function getLeadById(leadId, cbk, connection) {
       contactStage: {
         first: l.firstContactAttempt,
         second: l.secondContactAttempt,
-        third: l.thirdContactAttempt
+        third: l.thirdContactAttempt,
       },
       inactivityReason: l.inactivityReason,
-      eventSources: eventSources.map(event => ({
+      eventSources: eventSources.map((event) => ({
         eventId: event.eventId,
         eventName: event.eventName,
         eventLocation: event.eventLocation,
-        eventDate: responseDateWithoutTime(event.eventDate)
+        eventDate: responseDateWithoutTime(event.eventDate),
       })),
       firstName: l.firstName,
       lastName: l.lastName,
@@ -137,10 +137,10 @@ function getLeadById(leadId, cbk, connection) {
       zip: l.zip,
       age: l.age,
       gender: l.gender,
-      leadServices: leadServices.map(service => ({
+      leadServices: leadServices.map((service) => ({
         id: service.serviceId,
         serviceName: service.serviceName,
-        programName: service.programName
+        programName: service.programName,
       })),
       clientId: l.clientId,
       isDeleted: responseBoolean(l.isDeleted),
@@ -149,15 +149,15 @@ function getLeadById(leadId, cbk, connection) {
         firstName: l.createdByFirstName,
         lastName: l.createdByLastName,
         fullName: responseFullName(l.createdByFirstName, l.createdByLastName),
-        timestamp: l.dateAdded
+        timestamp: l.dateAdded,
       },
       lastUpdatedBy: {
         userId: l.modifiedBy,
         firstName: l.modifiedByFirstName,
         lastName: l.modifiedByLastName,
         fullName: responseFullName(l.modifiedByFirstName, l.modifiedByLastName),
-        timestamp: l.dateModified
-      }
+        timestamp: l.dateModified,
+      },
     };
 
     cbk(err, lead);

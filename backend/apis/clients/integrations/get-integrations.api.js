@@ -3,13 +3,13 @@ const {
   databaseError,
   pool,
   invalidRequest,
-  notFound
+  notFound,
 } = require("../../../server");
 const mysql = require("mysql");
 const { checkValid, validId } = require("../../utils/validation-utils");
 const {
   getIntegrationTypes,
-  getIntegrationName
+  getIntegrationName,
 } = require("./integrations-utils");
 const { getClientById } = require("../get-client.api");
 
@@ -44,16 +44,16 @@ app.get(`/api/clients/:clientId/integrations`, (req, res) => {
       }
 
       res.send(
-        getIntegrationTypes().map(id => {
+        getIntegrationTypes().map((id) => {
           const { status, lastSync, externalId } = data.find(
-            d => d.integrationType === id
+            (d) => d.integrationType === id
           ) || { status: "disabled", lastSync: null, externalId: null };
           return {
             id,
             name: getIntegrationName(id),
             status,
             lastSync,
-            externalId
+            externalId,
           };
         })
       );

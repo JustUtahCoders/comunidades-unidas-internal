@@ -3,14 +3,14 @@ const {
   databaseError,
   pool,
   invalidRequest,
-  notFound
+  notFound,
 } = require("../../server");
 const mysql = require("mysql");
 const { checkValid, validId } = require("../utils/validation-utils");
 const {
   responseFullName,
   responseBoolean,
-  responseDateWithoutTime
+  responseDateWithoutTime,
 } = require("../utils/transform-utils");
 
 app.get("/api/clients/:id", (req, res, next) => {
@@ -27,7 +27,7 @@ app.get("/api/clients/:id", (req, res, next) => {
 
     if (client) {
       res.send({
-        client
+        client,
       });
     } else {
       notFound(res, `Could not find client with id ${req.params.id}`);
@@ -143,7 +143,7 @@ function getClientById(clientId, cbk, connection) {
         street: c.address,
         city: c.city,
         state: c.state,
-        zip: c.zip
+        zip: c.zip,
       },
       email: c.email,
       civilStatus: c.civilStatus,
@@ -165,24 +165,24 @@ function getClientById(clientId, cbk, connection) {
       clientSource: c.clientSource,
       couldVolunteer: responseBoolean(c.couldVolunteer),
       dateOfIntake: responseDateWithoutTime(c.dateOfIntake),
-      intakeServices: intakeServices.map(intakeService => ({
+      intakeServices: intakeServices.map((intakeService) => ({
         id: intakeService.serviceId,
-        serviceName: intakeService.serviceName
+        serviceName: intakeService.serviceName,
       })),
       createdBy: {
         userId: c.createdById,
         firstName: c.createdByFirstName,
         lastName: c.createdByLastName,
         fullName: responseFullName(c.createdByFirstName, c.createdByLastName),
-        timestamp: c.clientDateAdded
+        timestamp: c.clientDateAdded,
       },
       lastUpdatedBy: {
         userId: c.modifiedById,
         firstName: c.modifiedByFirstName,
         lastName: c.modifiedByLastName,
         fullName: responseFullName(c.modifiedByFirstName, c.modifiedByLastName),
-        timestamp: c.clientDateModified
-      }
+        timestamp: c.clientDateModified,
+      },
     };
 
     cbk(err, client);

@@ -12,22 +12,21 @@ POST /api/check-bulk-texts?zip=84103
 
 ```json
 {
-  searchMatch: {
-    clients: clientRows.length,
-    leads: leadRows.length
+  "searchMatch": {
+    "clients": clientRows.length,
+    "leads": leadRows.length
   },
-  withPhone: {
-    clients: clientsWithPhones.length,
-    leads: leadsWithPhones.length
+  "withPhone": {
+    "clients": clientsWithPhones.length,
+    "leads": leadsWithPhones.length
   },
-  recipients: {
-    clients: clientRecipients.length,
-    leads: leadRecipients.length,
-    uniquePhoneNumbers: phoneNumbers.length
+  "recipients": {
+    "clients": clientRecipients.length,
+    "leads": leadRecipients.length,
+    "uniquePhoneNumbers": phoneNumbers.length
   }
 }
 ```
-
 
 ### Notes
 
@@ -53,18 +52,18 @@ POST /api/bulk-texts?zip=84103
 
 ```json
 {
-  searchMatch: {
-    clients: clientRows.length,
-    leads: leadRows.length
+  "searchMatch": {
+    "clients": clientRows.length,
+    "leads": leadRows.length
   },
-  withPhone: {
-    clients: clientsWithPhones.length,
-    leads: leadsWithPhones.length
+  "withPhone": {
+    "clients": clientsWithPhones.length,
+    "leads": leadsWithPhones.length
   },
-  recipients: {
-    clients: clientRecipients.length,
-    leads: leadRecipients.length,
-    uniquePhoneNumbers: phoneNumbers.length
+  "recipients": {
+    "clients": clientRecipients.length,
+    "leads": leadRecipients.length,
+    "uniquePhoneNumbers": phoneNumbers.length
   }
 }
 ```

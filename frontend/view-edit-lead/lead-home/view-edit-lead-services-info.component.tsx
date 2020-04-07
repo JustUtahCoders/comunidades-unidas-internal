@@ -10,7 +10,7 @@ export default function ViewEditLeadServicesInfo(
   const [apiStatus, dispatchApiStatus] = React.useReducer(updatingReducer, {
     isEditing: false,
     isUpdating: false,
-    newLeadData: null
+    newLeadData: null,
   });
   const { lead, leadUpdated } = props;
 
@@ -20,12 +20,12 @@ export default function ViewEditLeadServicesInfo(
       easyFetch(`/api/leads/${lead.id}`, {
         method: "PATCH",
         body: apiStatus.newLeadData,
-        signal: abortController.signal
+        signal: abortController.signal,
       })
-        .then(data => {
+        .then((data) => {
           leadUpdated(data.lead);
         })
-        .catch(err => {
+        .catch((err) => {
           setTimeout(() => {
             throw err;
           });
@@ -49,7 +49,7 @@ export default function ViewEditLeadServicesInfo(
       {apiStatus.isEditing ? (
         <LeadServicesInformationInputs
           lead={{
-            leadServices: lead.leadServices
+            leadServices: lead.leadServices,
           }}
           handleSubmit={handleSubmit}
         >
@@ -82,7 +82,7 @@ export default function ViewEditLeadServicesInfo(
                 </tr>
               </thead>
               <tbody>
-                {lead.leadServices.map(service => {
+                {lead.leadServices.map((service) => {
                   return (
                     <tr key={service.id}>
                       <td align="left">{service.serviceName}</td>
@@ -115,7 +115,7 @@ export default function ViewEditLeadServicesInfo(
 }
 
 ViewEditLeadServicesInfo.defaultProps = {
-  editable: true
+  editable: true,
 };
 
 function updatingReducer(state, action) {
@@ -126,7 +126,7 @@ function updatingReducer(state, action) {
       return {
         isEditing: false,
         isUpdating: true,
-        newLeadData: action.newLeadData
+        newLeadData: action.newLeadData,
       };
     case "reset":
       return { isEditing: false, isUpdating: false };

@@ -26,7 +26,7 @@ export default function ViewLead(props: ViewLeadProps) {
     lead,
     setLead,
     leadId,
-    refetchLead: () => setLeadIsStale(true)
+    refetchLead: () => setLeadIsStale(true),
   };
 
   return (
@@ -54,10 +54,10 @@ export default function ViewLead(props: ViewLeadProps) {
     const abortController = new AbortController();
 
     easyFetch(`/api/leads/${leadId}`, { signal: abortController.signal })
-      .then(data => {
+      .then((data) => {
         setLead(data.lead);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         setError(err);
       })
@@ -168,5 +168,5 @@ export type SingleLead = {
 export enum LeadStatus {
   active = "active",
   inactive = "inactive",
-  convertedToClient = "convertedToClient"
+  convertedToClient = "convertedToClient",
 }

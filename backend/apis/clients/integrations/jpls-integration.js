@@ -5,14 +5,14 @@ module.exports = function juntosPorLaSalud(integration, client) {
     client,
     participantId: integration.externalId,
     username: process.env.JPLS_USERNAME,
-    password: process.env.JPLS_PASSWORD
+    password: process.env.JPLS_PASSWORD,
   }).then(
-    participantId => ({
+    (participantId) => ({
       error: null,
-      externalId: participantId
+      externalId: participantId,
     }),
-    error => ({
-      error
+    (error) => ({
+      error,
     })
   );
 };

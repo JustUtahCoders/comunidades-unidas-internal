@@ -10,7 +10,7 @@ import { format } from "timeago.js";
 import easyFetch from "../../util/easy-fetch";
 
 const EditComps = {
-  JPLS: JuntosPorLaSalud
+  JPLS: JuntosPorLaSalud,
 };
 
 export default function Integrations(props: IntegrationsProps) {
@@ -23,10 +23,10 @@ export default function Integrations(props: IntegrationsProps) {
   React.useEffect(() => {
     const abortController = new AbortController();
     easyFetch(`/api/clients/${props.clientId}/integrations`, {
-      signal: abortController.signal
+      signal: abortController.signal,
     })
       .then(setIntegrations)
-      .catch(err => {
+      .catch((err) => {
         setTimeout(() => {
           throw err;
         });
@@ -38,7 +38,7 @@ export default function Integrations(props: IntegrationsProps) {
     <div className="card" {...scope}>
       <h2 className="header">Integrations</h2>
       <p>Integrations connect CU Database with other software systems.</p>
-      {integrations.map(integration => (
+      {integrations.map((integration) => (
         <React.Fragment key={integration.name}>
           <h3 className="header">{integration.name}</h3>
           {props.client && (
@@ -99,7 +99,7 @@ export default function Integrations(props: IntegrationsProps) {
   function updateIntegration(newIntegration) {
     setIntegrationToEdit(null);
     setIntegrations(
-      integrations.map(i =>
+      integrations.map((i) =>
         i.name === newIntegration.name ? newIntegration : i
       )
     );
@@ -212,7 +212,7 @@ type Integration = {
 export enum IntegrationStatus {
   enabled = "enabled",
   disabled = "disabled",
-  broken = "broken"
+  broken = "broken",
 }
 
 export type EditIntegrationProps = {

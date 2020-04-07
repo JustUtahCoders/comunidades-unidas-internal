@@ -37,7 +37,7 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
     },
     [Step.confirmation]() {
       props.close();
-    }
+    },
   };
 
   React.useEffect(() => {
@@ -46,8 +46,8 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
 
       easyFetch(`/api/check-bulk-texts${window.location.search}`, {
         method: "POST",
-        signal: abortController.signal
-      }).then(data => {
+        signal: abortController.signal,
+      }).then((data) => {
         setSmsCheck(data);
         setCheckingSms(false);
       });
@@ -66,20 +66,20 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
         method: "POST",
         signal: abortController.signal,
         body: {
-          smsBody
-        }
+          smsBody,
+        },
       })
-        .then(data => {
+        .then((data) => {
           setSendingTexts(false);
           showGrowl({
             type: GrowlType.success,
-            message: `Sent ${data.recipients.uniquePhoneNumbers.toLocaleString()} text messages.`
+            message: `Sent ${data.recipients.uniquePhoneNumbers.toLocaleString()} text messages.`,
           });
         })
-        .catch(err => {
+        .catch((err) => {
           showGrowl({
             type: GrowlType.error,
-            message: `Failed to send text messages`
+            message: `Failed to send text messages`,
           });
         });
 
@@ -146,7 +146,7 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
                   </tr>
                 </thead>
                 <tbody>
-                  {entries(queryValues).map(entry => {
+                  {entries(queryValues).map((entry) => {
                     const [name, value] = entry;
                     return (
                       <tr key={name}>
@@ -213,7 +213,7 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
             <textarea
               id="bulk-text-content"
               value={smsBody}
-              onChange={evt => setSmsBody(evt.target.value)}
+              onChange={(evt) => setSmsBody(evt.target.value)}
               placeholder="Put your bulk text here"
             />
           </>
@@ -241,7 +241,7 @@ enum Step {
   query = "query",
   preview = "preview",
   draft = "draft",
-  confirmation = "confirmation"
+  confirmation = "confirmation",
 }
 
 const headerText = {
@@ -249,17 +249,17 @@ const headerText = {
   [Step.query]: "Confirm Advanced Search",
   [Step.preview]: "Bulk text preview",
   [Step.draft]: "Draft text message",
-  [Step.confirmation]: "Confirmation"
+  [Step.confirmation]: "Confirmation",
 };
 
 const primaryText: any = {
   [Step.intro]: "Begin",
   [Step.query]: "Next step",
-  [Step.preview]: numPhones =>
+  [Step.preview]: (numPhones) =>
     numPhones === 0 ? "Change search" : "Next step",
-  [Step.draft]: numPhones =>
+  [Step.draft]: (numPhones) =>
     `Send ${numPhones.toLocaleString()} bulk text${numPhones > 1 ? "s" : ""}`,
-  [Step.confirmation]: "Done"
+  [Step.confirmation]: "Done",
 };
 
 const css = `

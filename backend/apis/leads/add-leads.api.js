@@ -9,7 +9,7 @@ const {
   validInteger,
   nullableNonEmptyString,
   nullableValidInteger,
-  nullableValidArray
+  nullableValidArray,
 } = require("../utils/validation-utils");
 
 app.post("/api/leads", (req, res) => {

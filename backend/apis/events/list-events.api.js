@@ -3,12 +3,12 @@ const mysql = require("mysql");
 const {
   responseFullName,
   responseBoolean,
-  responseDateWithoutTime
+  responseDateWithoutTime,
 } = require("../utils/transform-utils");
 const {
   checkValid,
   nullableValidInteger,
-  nullableValidEnum
+  nullableValidEnum,
 } = require("../utils/validation-utils");
 
 app.get("/api/events", (req, res, next) => {
@@ -83,7 +83,7 @@ app.get("/api/events", (req, res, next) => {
   const getEvents = mysql.format(mysqlQuery, [
     ...whereClauseValues,
     mysqlOffset,
-    pageSize
+    pageSize,
   ]);
 
   pool.query(getEvents, (err, results) => {
@@ -95,7 +95,7 @@ app.get("/api/events", (req, res, next) => {
 
     const totalCount = totalCountRows[0]["FOUND_ROWS()"];
 
-    const mapEventsData = eventRows.map(result => {
+    const mapEventsData = eventRows.map((result) => {
       return {
         id: result.eventId,
         eventName: result.eventName,
@@ -111,7 +111,7 @@ app.get("/api/events", (req, res, next) => {
             result.createdByFirstName,
             result.createdByLastName
           ),
-          timestamp: result.dateAdded
+          timestamp: result.dateAdded,
         },
         lastUpdatedBy: {
           userId: result.modifiedByUserId,
@@ -121,8 +121,8 @@ app.get("/api/events", (req, res, next) => {
             result.modifiedByFirstName,
             result.modifiedByLastName
           ),
-          timestamp: result.dateModified
-        }
+          timestamp: result.dateModified,
+        },
       };
     });
 
@@ -132,8 +132,8 @@ app.get("/api/events", (req, res, next) => {
         currentPage: zeroBasedPage + 1,
         pageSize,
         numEvents: totalCount,
-        numPages: Math.ceil(totalCount / pageSize)
-      }
+        numPages: Math.ceil(totalCount / pageSize),
+      },
     });
   });
 });

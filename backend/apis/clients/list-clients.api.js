@@ -6,13 +6,13 @@ const {
   nullableNonEmptyString,
   nullableValidId,
   nullableValidEnum,
-  nullableValidBoolean
+  nullableValidBoolean,
 } = require("../utils/validation-utils");
 const {
   responseFullName,
   requestPhone,
   responseBoolean,
-  responseDateWithoutTime
+  responseDateWithoutTime,
 } = require("../utils/transform-utils");
 
 app.get("/api/clients", (req, res, next) => {
@@ -35,7 +35,7 @@ app.get("/api/clients", (req, res, next) => {
 
   const getClientList = clientListQuery(req.query, requestPage, pageSize);
 
-  pool.query(getClientList, function(err, result, fields) {
+  pool.query(getClientList, function (err, result, fields) {
     if (err) {
       return databaseError(req, res, err);
     }
@@ -45,7 +45,7 @@ app.get("/api/clients", (req, res, next) => {
     const totalCount = totalCountRows[0]["FOUND_ROWS()"];
 
     res.send({
-      clients: clientRows.map(row => ({
+      clients: clientRows.map((row) => ({
         id: row.id,
         isDeleted: responseBoolean(row.isDeleted),
         firstName: row.firstName,
@@ -60,15 +60,15 @@ app.get("/api/clients", (req, res, next) => {
           firstName: row.addedByFirstName,
           lastName: row.addedByLastName,
           fullName: responseFullName(row.addedByFirstName, row.addedByLastName),
-          timestamp: row.dateAdded
-        }
+          timestamp: row.dateAdded,
+        },
       })),
       pagination: {
         currentPage: requestPage,
         pageSize,
         numClients: totalCount,
-        numPages: Math.ceil(totalCount / pageSize)
-      }
+        numPages: Math.ceil(totalCount / pageSize),
+      },
     });
   });
 });
@@ -193,6 +193,6 @@ function validateClientListQuery(query) {
     ),
     query.program && query.service
       ? `You may only provide one of the following query params: 'program' or 'service'`
-      : null
+      : null,
   ].filter(Boolean);
 }

@@ -14,7 +14,7 @@ export default React.forwardRef<DateInputRef, DateInputProps>(
           <input
             type={"date"}
             value={date}
-            onChange={evt => setDate(evt.target.value)}
+            onChange={(evt) => setDate(evt.target.value)}
             ref={ref}
           />
         </label>

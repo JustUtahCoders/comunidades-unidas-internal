@@ -9,7 +9,7 @@ import { navigate } from "@reach/router";
 
 export default function AddCaseNote({
   isGlobalAdd,
-  clientId: clientIdFromProps
+  clientId: clientIdFromProps,
 }: AddCaseNoteProps) {
   const scope = useCss(css);
   const [title, setTitle] = React.useState("");
@@ -38,14 +38,14 @@ export default function AddCaseNote({
         body: {
           logType: "caseNote",
           title,
-          description: fullEditorRef.current.getHTML()
-        }
+          description: fullEditorRef.current.getHTML(),
+        },
       })
-        .then(data => {
+        .then((data) => {
           showGrowl({ type: GrowlType.success, message: "Created case note" });
           navigate(`/clients/${clientIdForNote}/history`);
         })
-        .catch(err => {
+        .catch((err) => {
           setTimeout(() => {
             throw err;
           });
@@ -87,7 +87,7 @@ export default function AddCaseNote({
           <input
             type="text"
             value={title}
-            onChange={evt => setTitle(evt.target.value)}
+            onChange={(evt) => setTitle(evt.target.value)}
             ref={caseNoteTitleRef}
             required
             id="case-note-title"

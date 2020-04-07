@@ -3,7 +3,7 @@ import { useCss } from "kremling";
 import { StepComponentProps, Step, ClientState } from "./add-client.component";
 import homeUrl from "../../icons/148705-essential-collection/svg/home.svg";
 import ContactInformationInputs, {
-  ContactInformationFormClient
+  ContactInformationFormClient,
 } from "./form-inputs/contact-information-inputs.component";
 
 export default function ContactInformation(props: StepComponentProps) {
@@ -69,7 +69,7 @@ export default function ContactInformation(props: StepComponentProps) {
       zip: inputs.zip,
       housing: inputs.housing,
       email: inputs.email,
-      dateOfIntake: inputs.dateOfIntake
+      dateOfIntake: inputs.dateOfIntake,
     };
   }
 }

@@ -14,7 +14,7 @@ export default function RichTextLink(props: RichTextLinkProps) {
     insertLink,
     selectEntireLink,
     getTextFromBeforeBlur,
-    unlink
+    unlink,
   } = useLink({ processAnchorElement });
   const scope = useCss(css);
 
@@ -70,7 +70,7 @@ export default function RichTextLink(props: RichTextLinkProps) {
       {showingPopup && (
         <form
           className="popup"
-          onClick={evt => evt.stopPropagation()}
+          onClick={(evt) => evt.stopPropagation()}
           onSubmit={handleSubmit}
         >
           <h3>Insert a link</h3>
@@ -80,7 +80,7 @@ export default function RichTextLink(props: RichTextLinkProps) {
             <input
               type="text"
               value={linkLabel}
-              onChange={evt => setLinkLabel(evt.target.value)}
+              onChange={(evt) => setLinkLabel(evt.target.value)}
               aria-labelledby="link-popup-label"
               ref={displayedTextRef}
             />
@@ -90,7 +90,7 @@ export default function RichTextLink(props: RichTextLinkProps) {
             <input
               type="text"
               value={linkUrl}
-              onChange={evt => setLinkUrl(evt.target.value)}
+              onChange={(evt) => setLinkUrl(evt.target.value)}
               aria-labelledby="link-popup-url"
             />
           </div>
@@ -110,7 +110,7 @@ export default function RichTextLink(props: RichTextLinkProps) {
             className="popup"
             {...scope}
             style={popupBelowLinkStyles()}
-            onClick={evt => evt.stopPropagation()}
+            onClick={(evt) => evt.stopPropagation()}
             onSubmit={anchorPopupSubmit}
           >
             <div>
@@ -148,7 +148,7 @@ export default function RichTextLink(props: RichTextLinkProps) {
   function popupBelowLinkStyles() {
     return {
       top: anchorForPopup.offsetTop + anchorForPopup.offsetHeight + 4,
-      left: anchorForPopup.offsetLeft
+      left: anchorForPopup.offsetLeft,
     };
   }
 

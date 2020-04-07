@@ -5,12 +5,12 @@ const modifiableLogTypes = [
   "caseNote",
   "clientInteraction:created",
   "clientInteraction:updated",
-  "clientInteraction:serviceProvided"
+  "clientInteraction:serviceProvided",
 ];
 
 exports.modifiableLogTypes = modifiableLogTypes;
 
-exports.insertActivityLogQuery = function(params) {
+exports.insertActivityLogQuery = function (params) {
   if (params.detailIdIsLastInsertId) {
     return mysql.format(
       `
@@ -22,7 +22,7 @@ exports.insertActivityLogQuery = function(params) {
         params.title,
         params.description,
         params.logType,
-        params.addedBy
+        params.addedBy,
       ]
     );
   } else {
@@ -37,7 +37,7 @@ exports.insertActivityLogQuery = function(params) {
         params.description,
         params.logType,
         params.addedBy,
-        params.detailId
+        params.detailId,
       ]
     );
   }
@@ -49,7 +49,7 @@ exports.createResponseLogObject = function createResponseLogObject(log) {
     title: log.title,
     description: log.description,
     logType: log.logType,
-    canModify: modifiableLogTypes.some(logType => logType === log.logType),
+    canModify: modifiableLogTypes.some((logType) => logType === log.logType),
     isDeleted: Boolean(log.isDeleted),
     detailId: log.detailId,
     idOfUpdatedLog: log.idOfUpdatedLog,
@@ -58,7 +58,7 @@ exports.createResponseLogObject = function createResponseLogObject(log) {
       firstName: log.createdByFirstName,
       lastName: log.createdByLastName,
       fullName: responseFullName(log.createdByFirstName, log.createdByLastName),
-      timestamp: log.dateAdded
-    }
+      timestamp: log.dateAdded,
+    },
   };
 };

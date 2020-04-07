@@ -3,7 +3,7 @@ const {
   databaseError,
   pool,
   invalidRequest,
-  insufficientPrivileges
+  insufficientPrivileges,
 } = require("../../server");
 const mysql = require("mysql");
 const {
@@ -11,7 +11,7 @@ const {
   validId,
   nullableNonEmptyString,
   nullableValidId,
-  nullableValidBoolean
+  nullableValidBoolean,
 } = require("../utils/validation-utils");
 const { checkUserRole } = require("../utils/auth-utils");
 const { atLeastOne } = require("../utils/patch-utils");
@@ -31,7 +31,7 @@ app.patch("/api/services/:serviceId", (req, res, next) => {
       nullableNonEmptyString("serviceDescription"),
       nullableValidId("programId"),
       nullableValidBoolean("isActive")
-    )
+    ),
   ];
 
   if (validationErrors.length > 0) {
@@ -98,7 +98,7 @@ app.patch("/api/services/:serviceId", (req, res, next) => {
       programId: req.body.programId || service.programId,
       isActive: req.body.hasOwnProperty("isActive")
         ? req.body.isActive
-        : Boolean(service.isActive)
+        : Boolean(service.isActive),
     };
 
     const updateService = mysql.format(
@@ -113,7 +113,7 @@ app.patch("/api/services/:serviceId", (req, res, next) => {
         finalService.serviceDescription,
         finalService.programId,
         finalService.isActive,
-        req.params.serviceId
+        req.params.serviceId,
       ]
     );
 
@@ -123,7 +123,7 @@ app.patch("/api/services/:serviceId", (req, res, next) => {
       }
 
       res.send({
-        service: finalService
+        service: finalService,
       });
     });
   });

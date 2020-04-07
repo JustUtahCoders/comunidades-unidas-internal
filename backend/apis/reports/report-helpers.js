@@ -1,4 +1,4 @@
-exports.toDuration = function(allSecs) {
+exports.toDuration = function (allSecs) {
   const hrs = Math.floor(allSecs / (60 * 60));
   const mins = Math.floor((allSecs - hrs * 60 * 60) / 60);
   const secs = allSecs - hrs * 60 * 60 - mins * 60;

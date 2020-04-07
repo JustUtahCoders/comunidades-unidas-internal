@@ -9,7 +9,7 @@ import "./error-listener";
 export function showGrowl(growl: Growl) {
   window.dispatchEvent(
     new CustomEvent("showgrowl", {
-      detail: growl
+      detail: growl,
     })
   );
 }
@@ -96,7 +96,7 @@ export default function Growls(props: GrowlsProps) {
   }
 
   function removeGrowl(growl: Growl) {
-    setGrowls(growls.filter(g => g !== growl));
+    setGrowls(growls.filter((g) => g !== growl));
   }
 
   function handleHover() {
@@ -180,7 +180,7 @@ type GrowlsProps = {};
 export enum GrowlType {
   error = "error",
   info = "info",
-  success = "success"
+  success = "success",
 }
 
 type Growl = {

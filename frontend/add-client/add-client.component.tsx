@@ -10,7 +10,7 @@ import Confirm from "./confirm.component";
 import DemographicInformation from "./demographic-information.component";
 import {
   PayInterval,
-  CivilStatus
+  CivilStatus,
 } from "./form-inputs/demographic-information-inputs.component";
 import Services from "./services.component";
 import Finished from "./finished.component";
@@ -39,12 +39,12 @@ export default function AddClient(props: AddClientProps) {
       const abortController = new AbortController();
 
       easyFetch(`/api/leads/${clientState.leadId}`, {
-        signal: abortController.signal
+        signal: abortController.signal,
       })
-        .then(data => {
+        .then((data) => {
           setClientState({ ...clientState, ...leadToClientState(data.lead) });
         })
-        .catch(err => {
+        .catch((err) => {
           setTimeout(() => {
             throw err;
           });
@@ -104,7 +104,7 @@ export default function AddClient(props: AddClientProps) {
   function continueAnyway(newClientState) {
     setClientState({
       ...clientState,
-      ...newClientState
+      ...newClientState,
     });
     setStep(Step.CONTACT_INFORMATION);
     setDuplicateWarning(null);
@@ -119,7 +119,7 @@ export enum Step {
   CLIENT_SOURCE = "CLIENT_SOURCE",
   SERVICES = "SERVICES",
   CONFIRM = "CONFIRM",
-  FINISHED = "FINISHED"
+  FINISHED = "FINISHED",
 }
 
 const stepComponents = {
@@ -129,7 +129,7 @@ const stepComponents = {
   [Step.CLIENT_SOURCE]: ClientSource,
   [Step.SERVICES]: Services,
   [Step.CONFIRM]: Confirm,
-  [Step.FINISHED]: Finished
+  [Step.FINISHED]: Finished,
 };
 
 type AddClientProps = {
@@ -208,7 +208,7 @@ export enum ClientSources {
   employee = "employee",
   sms = "sms",
   radio = "radio",
-  tv = "tv"
+  tv = "tv",
 }
 
 type Duplicate = {

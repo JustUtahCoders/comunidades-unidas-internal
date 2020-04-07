@@ -27,7 +27,7 @@ export default function DemographicInformation(props: StepComponentProps) {
         client={props.clientState}
         onSubmit={handleSubmit}
       >
-        {demographicInfo => (
+        {(demographicInfo) => (
           <div className="actions">
             <button
               type="button"
@@ -74,7 +74,7 @@ export default function DemographicInformation(props: StepComponentProps) {
       isStudent: demographicInfo.isStudent,
       eligibleToVote: demographicInfo.eligibleToVote,
       juvenileDependents: demographicInfo.juvenileDependents,
-      registerToVote: demographicInfo.registerToVote
+      registerToVote: demographicInfo.registerToVote,
     };
   }
 }

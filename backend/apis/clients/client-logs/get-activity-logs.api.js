@@ -3,7 +3,7 @@ const {
   databaseError,
   pool,
   invalidRequest,
-  notFound
+  notFound,
 } = require("../../../server");
 const mysql = require("mysql");
 const { checkValid, validId } = require("../../utils/validation-utils");
@@ -39,7 +39,7 @@ app.get("/api/clients/:clientId/logs", (req, res, next) => {
       notFound(res, `Client ${req.params.clientId}`);
     } else {
       res.send({
-        logs: logs.map(createResponseLogObject)
+        logs: logs.map(createResponseLogObject),
       });
     }
   });

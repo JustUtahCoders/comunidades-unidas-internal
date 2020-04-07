@@ -2,16 +2,12 @@
   "presets": [
     "@babel/preset-react",
     "@babel/preset-typescript",
-    "@babel/preset-env",
+    "@babel/preset-env"
   ],
-  "plugins": [
-    "@babel/plugin-syntax-dynamic-import",
-  ],
+  "plugins": ["@babel/plugin-syntax-dynamic-import"],
   "env": {
     "test": {
-      "plugins": [
-        "@babel/plugin-transform-modules-commonjs",
-      ],
-    },
-  },
+      "plugins": ["@babel/plugin-transform-modules-commonjs"]
+    }
+  }
 }

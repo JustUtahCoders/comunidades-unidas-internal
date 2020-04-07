@@ -10,18 +10,18 @@ const editLogComponents = {
   caseNote: EditCaseNote,
   ["clientInteraction:created"]: EditClientInteraction,
   ["clientInteraction:updated"]: EditClientInteraction,
-  ["clientInteraction:serviceProvided"]: EditClientInteraction
+  ["clientInteraction:serviceProvided"]: EditClientInteraction,
 };
 
 export default function EditLog({
   log,
   close,
   clientId,
-  clientFullName
+  clientFullName,
 }: EditLogProps) {
   const actionsRef = React.useRef<EditLogActions>({
     save: () => Promise.resolve(),
-    delete: () => Promise.resolve()
+    delete: () => Promise.resolve(),
   });
   const [status, setStatus] = React.useState<EditLogState>(
     EditLogState.editing
@@ -38,11 +38,11 @@ export default function EditLog({
         .then(() => {
           showGrowl({
             type: GrowlType.success,
-            message: `${getInteractionType()} was updated`
+            message: `${getInteractionType()} was updated`,
           });
           close(true);
         })
-        .catch(err => {
+        .catch((err) => {
           close(false);
           setTimeout(() => {
             throw err;
@@ -58,11 +58,11 @@ export default function EditLog({
         .then(() => {
           showGrowl({
             type: GrowlType.success,
-            message: `${getInteractionType()} was deleted`
+            message: `${getInteractionType()} was deleted`,
           });
           close(true);
         })
-        .catch(err => {
+        .catch((err) => {
           close(false);
           setTimeout(() => {
             throw err;
@@ -130,7 +130,7 @@ type EditLogProps = {
 enum EditLogState {
   editing = "editing",
   saving = "saving",
-  deleting = "deleting"
+  deleting = "deleting",
 }
 
 export type LogTypeEditProps = {

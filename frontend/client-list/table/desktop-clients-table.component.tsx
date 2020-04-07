@@ -9,7 +9,7 @@ import targetImg from "../../../icons/148705-essential-collection/svg/target.svg
 import {
   SortField,
   reversedSortOrder,
-  SortOrder
+  SortOrder,
 } from "../client-list.component";
 import { startCase } from "lodash-es";
 
@@ -44,7 +44,7 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
               <input
                 type="checkbox"
                 checked={selectAll}
-                onChange={evt => setSelectAll(evt.target.checked)}
+                onChange={(evt) => setSelectAll(evt.target.checked)}
                 name="select-all"
                 aria-label="Select all clients"
               />
@@ -93,7 +93,7 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
               </td>
             </tr>
           )}
-          {props.clients.map(client => (
+          {props.clients.map((client) => (
             <tr key={client.id}>
               <td onClick={() => handleCheckBoxChange(client)}>
                 <input

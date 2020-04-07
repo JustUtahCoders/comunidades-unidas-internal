@@ -2,7 +2,7 @@ import React from "react";
 import { useCss } from "kremling";
 import {
   LogType,
-  ClientHistoryFilterOptions
+  ClientHistoryFilterOptions,
 } from "./client-history.component";
 import { startCase } from "lodash-es";
 
@@ -30,11 +30,11 @@ export default function ClientHistoryFilters(props: ClientHistoryFiltersProps) {
         <div
           className="popup filter-popup"
           style={{ right: 0, top: "100%" }}
-          onClick={evt => evt.stopPropagation()}
+          onClick={(evt) => evt.stopPropagation()}
         >
           <form onSubmit={handleSubmit}>
             <div className="caption">Event Type:</div>
-            {Object.keys(LogType).map(logTypeKey => (
+            {Object.keys(LogType).map((logTypeKey) => (
               <div key={logTypeKey} className="filter-option">
                 <label>
                   <input
@@ -93,7 +93,7 @@ export default function ClientHistoryFilters(props: ClientHistoryFiltersProps) {
     const logType = evt.target.value;
     props.setFilters({
       ...props.filters,
-      [logType]: evt.target.checked
+      [logType]: evt.target.checked,
     });
   }
 }

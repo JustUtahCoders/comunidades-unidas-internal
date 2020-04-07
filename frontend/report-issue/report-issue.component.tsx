@@ -7,7 +7,7 @@ import easyFetch from "../util/easy-fetch";
 export default function ReportIssue({
   title = "Report an issue",
   missingFeature,
-  hideHeader
+  hideHeader,
 }: ReportIssueProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -24,13 +24,13 @@ export default function ReportIssue({
           name,
           email,
           title: subject,
-          body: description
-        }
+          body: description,
+        },
       })
-        .then(data => {
+        .then((data) => {
           navigate(`/report-issue/${data.issueNumber}`);
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
           setCreatingIssue(false);
         });
@@ -56,7 +56,7 @@ export default function ReportIssue({
                 type="text"
                 name="name"
                 value={name}
-                onChange={evt => setName(evt.target.value)}
+                onChange={(evt) => setName(evt.target.value)}
                 required
                 autoFocus
               />
@@ -69,7 +69,7 @@ export default function ReportIssue({
                 type="email"
                 name="email"
                 value={email}
-                onChange={evt => setEmail(evt.target.value)}
+                onChange={(evt) => setEmail(evt.target.value)}
                 required
               />
             </label>
@@ -82,7 +82,7 @@ export default function ReportIssue({
               type="text"
               name="subject"
               value={subject}
-              onChange={evt => setSubject(evt.target.value)}
+              onChange={(evt) => setSubject(evt.target.value)}
               required
             />
           </div>
@@ -92,7 +92,7 @@ export default function ReportIssue({
               <textarea
                 name="issue-description"
                 value={description}
-                onChange={evt => setDescription(evt.target.value)}
+                onChange={(evt) => setDescription(evt.target.value)}
               />
             </label>
           </div>

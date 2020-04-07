@@ -3,7 +3,7 @@ const {
   databaseError,
   pool,
   invalidRequest,
-  insufficientPrivileges
+  insufficientPrivileges,
 } = require("../../server");
 const mysql = require("mysql");
 const { checkValid, nonEmptyString } = require("../utils/validation-utils");
@@ -47,8 +47,8 @@ app.post("/api/programs", (req, res, next) => {
       program: {
         id: lastIdResult[0].programId,
         programName: req.body.programName,
-        programDescription: req.body.programDescription
-      }
+        programDescription: req.body.programDescription,
+      },
     });
   });
 });

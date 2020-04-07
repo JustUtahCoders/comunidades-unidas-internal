@@ -6,13 +6,13 @@ const {
   nullableNonEmptyString,
   nullableValidId,
   nullableValidZip,
-  nullableValidEnum
+  nullableValidEnum,
 } = require("../utils/validation-utils");
 const {
   responseFullName,
   requestPhone,
   responseBoolean,
-  responseDateWithoutTime
+  responseDateWithoutTime,
 } = require("../utils/transform-utils");
 
 const pageSize = 100;
@@ -47,14 +47,14 @@ app.get("/api/leads", (req, res, next) => {
     const totalCount = totalCountRows[0]["FOUND_ROWS()"];
 
     res.send({
-      leads: leadRows.map(lead => ({
+      leads: leadRows.map((lead) => ({
         id: lead.leadId,
         dateOfSignUp: responseDateWithoutTime(lead.dateOfSignUp),
         leadStatus: lead.leadStatus,
         contactStage: {
           first: lead.firstContactAttempt,
           second: lead.secondContactAttempt,
-          third: lead.thirdContactAttempt
+          third: lead.thirdContactAttempt,
         },
         inactivityReason: lead.inactivityReason,
         eventSources: [],
@@ -77,7 +77,7 @@ app.get("/api/leads", (req, res, next) => {
             lead.createdByFirstName,
             lead.createdByLastName
           ),
-          timestamp: lead.dateAdded
+          timestamp: lead.dateAdded,
         },
         lastUpdatedBy: {
           userId: lead.modifiedBy,
@@ -87,15 +87,15 @@ app.get("/api/leads", (req, res, next) => {
             lead.modifiedByFirstName,
             lead.modifiedByLastName
           ),
-          timestamp: lead.dateModified
-        }
+          timestamp: lead.dateModified,
+        },
       })),
       pagination: {
         currentPage: zeroBasedPage + 1,
         pageSize,
         numLeads: totalCount,
-        numPages: Math.ceil(totalCount / pageSize)
-      }
+        numPages: Math.ceil(totalCount / pageSize),
+      },
     });
   });
 });

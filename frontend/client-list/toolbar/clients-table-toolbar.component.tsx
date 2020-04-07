@@ -14,7 +14,7 @@ import BulkSmsModal from "../../bulk-sms/bulk-sms-modal.component";
 const BulkActionModals = {
   bulkDelete: DeleteBulkClientModal,
   noClients: NoClients,
-  bulkSms: BulkSmsModal
+  bulkSms: BulkSmsModal,
 };
 
 export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {

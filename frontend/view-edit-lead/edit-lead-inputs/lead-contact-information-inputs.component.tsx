@@ -32,7 +32,7 @@ export default function LeadContactInformationInputs(
             type="checkbox"
             name="smsConsent"
             checked={smsConsent}
-            onChange={evt => setSmsConsent(Boolean(evt.target.checked))}
+            onChange={(evt) => setSmsConsent(Boolean(evt.target.checked))}
             className="checkbox"
           />
         </label>
@@ -43,7 +43,7 @@ export default function LeadContactInformationInputs(
           <input
             type="text"
             value={zip || ""}
-            onChange={evt => setZip(evt.target.value)}
+            onChange={(evt) => setZip(evt.target.value)}
             autoComplete="new-password"
           />
         </label>
@@ -56,7 +56,7 @@ export default function LeadContactInformationInputs(
     return props.handleSubmit(evt, {
       phone: phone,
       smsConsent: smsConsent,
-      zip: zip
+      zip: zip,
     });
   }
 }

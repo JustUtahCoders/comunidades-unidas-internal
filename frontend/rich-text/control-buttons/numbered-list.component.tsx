@@ -2,7 +2,7 @@ import React from "react";
 import numbersIcon from "../../../icons/111696-text-editor/svg/numbering.svg";
 import {
   useDocumentExecCommand,
-  useDocumentQueryCommandState
+  useDocumentQueryCommandState,
 } from "bandicoot";
 import { always } from "kremling";
 

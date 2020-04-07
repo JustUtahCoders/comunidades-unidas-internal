@@ -22,8 +22,8 @@ export default function CreateNewServiceModal(
           serviceName: service.serviceName,
           serviceDescription: service.serviceDescription,
           programId: Number(service.programId),
-          isActive: service.isActive
-        }
+          isActive: service.isActive,
+        },
       })
         .then(() => {
           setIsSaving(false);
@@ -31,10 +31,10 @@ export default function CreateNewServiceModal(
           props.close();
           showGrowl({
             type: GrowlType.success,
-            message: `Service '${service.serviceName}' was created.`
+            message: `Service '${service.serviceName}' was created.`,
           });
         })
-        .catch(err => {
+        .catch((err) => {
           setIsSaving(false);
           setTimeout(() => {
             throw err;
@@ -80,5 +80,5 @@ const emptyService: CUService = {
   programName: "",
   serviceDescription: "",
   serviceName: "",
-  isActive: true
+  isActive: true,
 };

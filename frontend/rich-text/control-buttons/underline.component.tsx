@@ -2,7 +2,7 @@ import React from "react";
 import underlineIconUrl from "../../../icons/111696-text-editor/svg/undelined.svg";
 import {
   useDocumentExecCommand,
-  useDocumentQueryCommandState
+  useDocumentQueryCommandState,
 } from "bandicoot";
 import { always } from "kremling";
 

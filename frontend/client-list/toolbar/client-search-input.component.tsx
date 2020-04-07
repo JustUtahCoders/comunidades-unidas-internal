@@ -6,7 +6,7 @@ import {
   SearchParse,
   SearchParseValues,
   deserializeSearch,
-  serializeSearch
+  serializeSearch,
 } from "../../util/list-search/search-dsl.helpers";
 import easyFetch from "../../util/easy-fetch";
 import ProgramOrService from "./program-or-service.component";
@@ -16,7 +16,7 @@ const searchFields = {
   zip: "ZIP Code",
   phone: "Phone",
   program: "Interest",
-  service: "Interest"
+  service: "Interest",
 };
 
 export default function ClientSearchInput(props: ClientSearchInputProps) {
@@ -36,7 +36,7 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
     const abortController = new AbortController();
     easyFetch(`/api/services`, { signal: abortController.signal })
       .then(setServiceData)
-      .catch(err => {
+      .catch((err) => {
         setTimeout(() => {
           throw err;
         });
@@ -100,7 +100,9 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
                 aria-labelledby="advanced-search-name"
                 type="text"
                 value={search.parseResult.parse.name || ""}
-                onChange={evt => updateAdvancedSearch("name", evt.target.value)}
+                onChange={(evt) =>
+                  updateAdvancedSearch("name", evt.target.value)
+                }
               />
               {Object.entries(searchFields).map(([fieldKey, fieldName]) =>
                 fieldKey !== "program" && fieldKey !== "service" ? (
@@ -110,7 +112,7 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
                       aria-labelledby={"advanced-search-" + fieldKey}
                       type="text"
                       value={search.parseResult.parse[fieldKey] || ""}
-                      onChange={evt =>
+                      onChange={(evt) =>
                         updateAdvancedSearch(fieldKey, evt.target.value)
                       }
                       placeholder={getPlaceholder(fieldKey)}
@@ -150,7 +152,7 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
       type: SearchTypes.newAdvancedValue,
       fieldKey,
       value,
-      currentSearch: search.value
+      currentSearch: search.value,
     });
   }
 
@@ -165,7 +167,7 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
 
     return {
       value,
-      parseResult: parseSearch(searchFields, value)
+      parseResult: parseSearch(searchFields, value),
     };
   }
 
@@ -196,7 +198,7 @@ function searchReducer(state: Search, action: SearchAction): Search {
       return { value: action.value, parseResult };
     case SearchTypes.newAdvancedValue:
       const newVals = {
-        [action.fieldKey]: action.value
+        [action.fieldKey]: action.value,
       };
       if (action.fieldKey === "program") {
         newVals.service = "";
@@ -253,7 +255,7 @@ const css = `
 
 enum SearchTypes {
   newValue = "newValue",
-  newAdvancedValue = "newAdvancedValue"
+  newAdvancedValue = "newAdvancedValue",
 }
 
 export type Search = {

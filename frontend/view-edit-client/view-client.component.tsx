@@ -4,7 +4,7 @@ import PageHeader from "../page-header.component";
 import {
   CivilStatus,
   PayInterval,
-  WeeklyEmployedHours
+  WeeklyEmployedHours,
 } from "../add-client/form-inputs/demographic-information-inputs.component";
 import { ClientSources } from "../add-client/add-client.component";
 import StickySecondaryNav from "../navbar/sticky-secondary-nav.component";
@@ -45,12 +45,12 @@ export default function ViewClient(props: ViewClientProps) {
       const abortController = new AbortController();
 
       easyFetch(`/api/clients/${clientId}/audits`, {
-        signal: abortController.signal
+        signal: abortController.signal,
       })
-        .then(data => {
+        .then((data) => {
           setAuditSummary(data.auditSummary);
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
           setError(err);
         });
@@ -64,7 +64,7 @@ export default function ViewClient(props: ViewClientProps) {
     setClient,
     auditSummary,
     clientId,
-    refetchClient: () => setClientIsStale(true)
+    refetchClient: () => setClientIsStale(true),
   };
 
   return (
@@ -138,7 +138,7 @@ export default function ViewClient(props: ViewClientProps) {
 
   function getLinkProps({ isCurrent }) {
     return {
-      className: always("secondary-nav-link").maybe("active", isCurrent)
+      className: always("secondary-nav-link").maybe("active", isCurrent),
     };
   }
 
@@ -146,10 +146,10 @@ export default function ViewClient(props: ViewClientProps) {
     const abortController = new AbortController();
 
     easyFetch(`/api/clients/${clientId}`, { signal: abortController.signal })
-      .then(data => {
+      .then((data) => {
         setClient(data.client);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         setError(err);
       })

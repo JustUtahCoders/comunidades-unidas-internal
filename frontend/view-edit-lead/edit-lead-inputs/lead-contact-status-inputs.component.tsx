@@ -49,7 +49,7 @@ export default function LeadContactStatusInputs(
           <span>Status:</span>
           <select
             value={leadStatus}
-            onChange={evt => setLeadStatus(evt.target.value)}
+            onChange={(evt) => setLeadStatus(evt.target.value)}
             required
           >
             <option value="">Select a status</option>
@@ -67,7 +67,7 @@ export default function LeadContactStatusInputs(
             <span>Inactivity reason</span>
             <select
               value={inactivityReason}
-              onChange={evt => setInactivityReason(evt.target.value)}
+              onChange={(evt) => setInactivityReason(evt.target.value)}
               required
             >
               <option value="">Select an inactivity reason</option>
@@ -112,7 +112,7 @@ export default function LeadContactStatusInputs(
         <p className="no-contact-attempt">No contact attempt has been made</p>
       )}
       <div className="attempts">
-        <button className="primary" onClick={evt => addContactAttempt(evt)}>
+        <button className="primary" onClick={(evt) => addContactAttempt(evt)}>
           Add Contact Attempt
         </button>
         {errMsg && <p className="error-message">{errMsg}</p>}
@@ -139,9 +139,9 @@ export default function LeadContactStatusInputs(
         third:
           thirdContactAttempt !== null
             ? new Date(thirdContactAttempt).toISOString()
-            : null
+            : null,
       },
-      inactivityReason: inactivityReason
+      inactivityReason: inactivityReason,
     };
 
     if (!lead.leadStatus) {

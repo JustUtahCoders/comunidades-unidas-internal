@@ -6,7 +6,7 @@ import { EventTableProps } from "./event-table.component";
 import {
   reversedSortOrder,
   SortField,
-  SortOrder
+  SortOrder,
 } from "./event-list.component";
 import targetImg from "../../icons/148705-essential-collection/svg/target.svg";
 
@@ -71,7 +71,7 @@ export default function DesktopEventTable(props: EventTableProps) {
               </td>
             </tr>
           ) : (
-            props.events.map(event => {
+            props.events.map((event) => {
               return (
                 <tr key={event.id}>
                   <td>

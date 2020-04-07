@@ -1,7 +1,7 @@
 import React from "react";
 import { LogTypeEditProps } from "../client-history/edit-log.component";
 import SingleInteractionSlatComponent, {
-  InteractionGetter
+  InteractionGetter,
 } from "./single-interaction-slat.component";
 import { CUServicesList } from "../../add-client/services.component";
 import easyFetch from "../../util/easy-fetch";
@@ -10,7 +10,7 @@ import { ProgressPlugin } from "webpack";
 export default function EditClientInteraction({
   log,
   actionsRef,
-  clientId
+  clientId,
 }: LogTypeEditProps) {
   const [interactionGetter, setInteractionGetter] = React.useState<
     InteractionGetter
@@ -24,8 +24,8 @@ export default function EditClientInteraction({
     const abortController = new AbortController();
 
     easyFetch("/api/services", { signal: abortController.signal })
-      .then(data => setServicesResponse(data))
-      .catch(err => {
+      .then((data) => setServicesResponse(data))
+      .catch((err) => {
         setTimeout(() => {
           throw err;
         });
@@ -44,30 +44,30 @@ export default function EditClientInteraction({
     const abortController = new AbortController();
 
     easyFetch(`/api/clients/${clientId}/interactions/${log.detailId}`, {
-      signal: abortController.signal
-    }).then(interaction => {
+      signal: abortController.signal,
+    }).then((interaction) => {
       setOriginalInteraction(interaction);
     });
   }, [log.detailId]);
 
   React.useEffect(() => {
-    actionsRef.current.save = abortController => {
+    actionsRef.current.save = (abortController) => {
       return easyFetch(
         `/api/clients/${clientId}/interactions/${originalInteraction.id}`,
         {
           signal: abortController.signal,
           method: "PATCH",
-          body: interactionGetter()
+          body: interactionGetter(),
         }
       );
     };
 
-    actionsRef.current.delete = abortController => {
+    actionsRef.current.delete = (abortController) => {
       return easyFetch(
         `/api/clients/${clientId}/interactions/${originalInteraction.id}`,
         {
           signal: abortController.signal,
-          method: "DELETE"
+          method: "DELETE",
         }
       );
     };
