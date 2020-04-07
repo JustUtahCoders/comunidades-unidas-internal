@@ -21,6 +21,6 @@ const css = `
 & .convert-to-client {
   display: flex;
   justify-content: center;
-  margin-top: 3.2rem;
+  margin: 3.2rem 0;
 }
 `;

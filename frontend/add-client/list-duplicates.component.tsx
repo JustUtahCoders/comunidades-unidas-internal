@@ -12,7 +12,6 @@ type ListDuplicatesProps = {
 };
 
 export default function ListDuplicates(props: ListDuplicatesProps) {
-  const duplicates = props.duplicateWarning.duplicates;
   const firstName = props.duplicateWarning.firstName;
   const lastName = props.duplicateWarning.lastName;
   const birthday = props.duplicateWarning.birthday;
@@ -44,12 +43,29 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
               </tr>
             </thead>
             <tbody>
-              {duplicates.map(duplicate => (
-                <tr key={duplicate.id}>
+              {props.duplicateWarning.possibleLeadSources.map(leadSource => (
+                <tr key={leadSource.id} className="lead-row">
+                  <td>{leadSource.firstName} </td>
+                  <td>{leadSource.lastName}</td>
+                  <td>&mdash;</td>
+                  <td>{leadSource.gender}</td>
+                  <td>
+                    <button
+                      type="button"
+                      className="primary button"
+                      onClick={() => convertLead(leadSource)}
+                    >
+                      Convert Lead
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {props.duplicateWarning.duplicates.map(duplicate => (
+                <tr key={duplicate.id} className="client-row">
                   <td>{duplicate.firstName} </td>
                   <td>{duplicate.lastName}</td>
                   <td>
-                    {dateformat(new Date(duplicate.birthday), "mm-dd-yyyy")}
+                    {dateformat(new Date(duplicate.birthday), "m-d-yyyy")}
                   </td>
                   <td>{duplicate.gender}</td>
                   <td>
@@ -57,7 +73,7 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
                       className="primary button"
                       to={`/clients/${duplicate.id}`}
                     >
-                      <span>Update</span>
+                      Update Client
                     </Link>
                   </td>
                 </tr>
@@ -87,6 +103,16 @@ export default function ListDuplicates(props: ListDuplicatesProps) {
       gender
     });
   }
+
+  function convertLead(leadSource) {
+    props.continueAnyway({
+      firstName,
+      lastName,
+      birthday,
+      gender,
+      leadId: leadSource.id
+    });
+  }
 }
 
 const css = `
@@ -94,13 +120,25 @@ const css = `
   margin: 0 auto;
 }
 
-& table th {
-  padding: .8rem;
+& table {
+  border-collapse: collapse;
+}
+
+& table th, & table td {
+  padding: 1.6rem .8rem;
+  border: .1rem solid black;
 }
 
 & table td {
   text-align: center;
   vertical-align: middle;
-  padding: .8rem;
+}
+
+& .client-row {
+  background-color: navajowhite;
+}
+
+& .lead-row {
+  background-color: lightblue;
 }
 `;

@@ -1,5 +1,5 @@
 import React from "react";
-import { SingleLead } from "../view-lead.component";
+import { SingleLead, LeadStatus } from "../view-lead.component";
 import ViewEditBasicLeadInfo from "./view-edit-basic-lead-info.component";
 import ViewEditLeadEventInfo from "./view-edit-lead-event-info.component";
 import ViewEditLeadContactInfo from "./view-edit-lead-contact-info.component";
@@ -16,12 +16,14 @@ export default function LeadHome(props: LeadHomeProps) {
 
   return (
     <div style={{ marginBottom: "3.2rem" }}>
+      {lead.leadStatus !== LeadStatus.convertedToClient && (
+        <ConvertToClientCard lead={lead} />
+      )}
       <ViewEditBasicLeadInfo lead={lead} leadUpdated={setLead} />
       <ViewEditLeadContactInfo lead={lead} leadUpdated={setLead} />
       <ViewEditLeadContactStatus lead={lead} leadUpdated={setLead} />
       <ViewEditLeadServicesInfo lead={lead} leadUpdated={setLead} />
       <ViewEditLeadEventInfo lead={lead} leadUpdated={setLead} />
-      <ConvertToClientCard lead={lead} />
     </div>
   );
 }
