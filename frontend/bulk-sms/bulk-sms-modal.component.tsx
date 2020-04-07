@@ -19,10 +19,10 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
       setStep(Step.query);
     },
     [Step.query]() {
-      setStep(Step.preview);
+      setStep(Step.previewRecipients);
       setCheckingSms(true);
     },
-    [Step.preview]() {
+    [Step.previewRecipients]() {
       if (!smsCheck || smsCheck.recipients.uniquePhoneNumbers === 0) {
         props.close();
       } else {
@@ -31,9 +31,12 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
     },
     [Step.draft]() {
       if (smsBody.trim().length > 0) {
-        setStep(Step.confirmation);
-        setSendingTexts(true);
+        setStep(Step.previewMessage);
       }
+    },
+    [Step.previewMessage]() {
+      setStep(Step.confirmation);
+      setSendingTexts(true);
     },
     [Step.confirmation]() {
       props.close();
@@ -162,7 +165,7 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
             )}
           </>
         );
-      case Step.preview:
+      case Step.previewRecipients:
         if (!smsCheck) return <div>Loading...</div>;
 
         return (
@@ -178,18 +181,18 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
               <tbody>
                 <tr>
                   <th>Advanced Search:</th>
-                  <td>{smsCheck.searchMatch.clients}</td>
-                  <td>{smsCheck.searchMatch.leads}</td>
+                  <td>{smsCheck.searchMatch.clients.toLocaleString()}</td>
+                  <td>{smsCheck.searchMatch.leads.toLocaleString()}</td>
                 </tr>
                 <tr>
                   <th>And have phone</th>
-                  <td>{smsCheck.withPhone.clients}</td>
-                  <td>{smsCheck.withPhone.leads}</td>
+                  <td>{smsCheck.withPhone.clients.toLocaleString()}</td>
+                  <td>{smsCheck.withPhone.leads.toLocaleString()}</td>
                 </tr>
                 <tr>
                   <th>And have given SMS consent</th>
-                  <td>{smsCheck.recipients.clients}</td>
-                  <td>{smsCheck.recipients.leads}</td>
+                  <td>{smsCheck.recipients.clients.toLocaleString()}</td>
+                  <td>{smsCheck.recipients.leads.toLocaleString()}</td>
                 </tr>
               </tbody>
             </table>
@@ -218,6 +221,22 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
             />
           </>
         );
+      case Step.previewMessage:
+        return (
+          <>
+            <p className="preview-message">
+              You are about to send a bulk text message to the following people:
+            </p>
+            <p>{smsCheck.recipients.clients.toLocaleString()} Client(s)</p>
+            <p>{smsCheck.recipients.leads.toLocaleString()} Lead(s)</p>
+            <p>
+              {smsCheck.recipients.uniquePhoneNumbers.toLocaleString()} unique
+              phone number(s)
+            </p>
+            <h3>Message</h3>
+            <p>{smsBody}</p>
+          </>
+        );
       case Step.confirmation:
         return (
           <div>
@@ -239,25 +258,28 @@ type BulkSmsModalProps = {
 enum Step {
   intro = "intro",
   query = "query",
-  preview = "preview",
+  previewRecipients = "previewRecipients",
   draft = "draft",
+  previewMessage = "previewMessage",
   confirmation = "confirmation",
 }
 
 const headerText = {
   [Step.intro]: "Send a bulk text (SMS)",
   [Step.query]: "Confirm Advanced Search",
-  [Step.preview]: "Bulk text preview",
+  [Step.previewRecipients]: "Bulk text recipients",
   [Step.draft]: "Draft text message",
+  [Step.previewMessage]: "Preview",
   [Step.confirmation]: "Confirmation",
 };
 
 const primaryText: any = {
   [Step.intro]: "Begin",
   [Step.query]: "Next step",
-  [Step.preview]: (numPhones) =>
+  [Step.previewRecipients]: (numPhones) =>
     numPhones === 0 ? "Change search" : "Next step",
-  [Step.draft]: (numPhones) =>
+  [Step.draft]: "Preview message",
+  [Step.previewMessage]: (numPhones) =>
     `Send ${numPhones.toLocaleString()} bulk text${numPhones > 1 ? "s" : ""}`,
   [Step.confirmation]: "Done",
 };
@@ -292,5 +314,9 @@ const css = `
 & .bulk-text-content-top {
   display: flex;
   justify-content: space-between;
+}
+
+& .preview-message {
+  font-style: italic;
 }
 `;
