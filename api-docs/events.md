@@ -23,6 +23,16 @@ GET /api/events/:id
   "totalAttendance": 150,
   "totalLeads": 15,
   "leadsConvertedToClients": 5,
+  "leadGenders": {
+    "male": 2,
+    "female": 3,
+    "transgender": 0
+  },
+  "clientGenders": {
+    "male": 2,
+    "female": 3,
+    "transgender": 0
+  },
   "isDeleted": false,
   "createdBy": {
     "userId": 1,
