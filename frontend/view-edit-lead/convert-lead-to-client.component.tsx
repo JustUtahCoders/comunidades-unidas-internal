@@ -37,15 +37,20 @@ export default function ConvertLeadToClient(props: Props) {
 }
 
 export function leadToClientState(lead: SingleLead): ClientState {
-  return {
+  const clientState: ClientState = {
     firstName: lead.firstName,
     lastName: lead.lastName,
-    gender: lead.gender,
     phone: lead.phone,
     smsConsent: lead.smsConsent,
     zip: lead.zip,
     intakeServices: lead.leadServices,
   };
+
+  if (lead.gender) {
+    clientState.gender = lead.gender;
+  }
+
+  return clientState;
 }
 
 type Props = {
