@@ -88,7 +88,22 @@ app.use(cookieParser());
 app.use((err, req, res, next) => {
   console.error("ERROR: ", err);
 });
-app.use(morgan("tiny"));
+app.use(
+  process.env.RUNNING_LOCALLY
+    ? morgan("dev")
+    : morgan((tokens, req, res) =>
+        [
+          tokens.method(req, res),
+          tokens.url(req, res),
+          tokens.status(req, res),
+          tokens.res(req, res, "content-length"),
+          "-",
+          tokens["response-time"](req, res),
+          "ms",
+          new Date(),
+        ].join(" ")
+      )
+);
 
 require("./apis/health.api");
 require("./apis/login.api");
