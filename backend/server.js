@@ -107,6 +107,8 @@ app.use(
 
 require("./apis/health.api");
 require("./apis/login.api");
+require("./ensure-authenticated.js");
+
 require("./apis/github-issues.api");
 require("./apis/clients/add-client.api");
 require("./apis/clients/client-duplicates.api");
