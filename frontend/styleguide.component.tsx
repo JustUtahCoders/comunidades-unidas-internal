@@ -29,6 +29,7 @@ const css = `
   --very-dark-gray: #3C464D;
   --brand-color: rgba(184, 17, 17, 1);
   --colored-well: blanchedalmond;
+  --immigration-color: #1165b8;
 }
 
 body {

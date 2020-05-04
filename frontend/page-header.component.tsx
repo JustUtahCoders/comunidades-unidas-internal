@@ -1,13 +1,23 @@
 import React, { useEffect } from "react";
 import { useCss, always, maybe } from "kremling";
 import { mediaDesktop, mediaMobile } from "./styleguide.component";
+import { UserModeContext, UserMode } from "./util/user-mode.context";
+import { UserContext } from "./util/user.context";
 
 export default function PageHeader(props: PageHeaderProps) {
   const scope = useCss(css);
+  const user = React.useContext(UserContext);
+  const { userMode, setUserMode } = React.useContext(UserModeContext);
 
   useEffect(() => {
     document.title = props.title + " - Comunidades Unidas";
   });
+
+  const permissionsColor =
+    userMode === UserMode.immigration ? "var(--immigration-color)" : null;
+
+  const backgroundColor =
+    props.backgroundColor || permissionsColor || "var(--brand-color)";
 
   return (
     <div
@@ -16,16 +26,24 @@ export default function PageHeader(props: PageHeaderProps) {
         .maybe(props.className || "", Boolean(props.className))
         .maybe("full-screen", props.fullScreen)
         .maybe("with-secondary-nav", props.withSecondaryNav)}
-      style={{ backgroundColor: props.backgroundColor }}
+      style={{ backgroundColor }}
     >
       <h1>{props.title}</h1>
+      {user.permissions.immigration && (
+        <select
+          value={userMode}
+          onChange={(evt) => setUserMode(UserMode[evt.target.value])}
+        >
+          <option value={UserMode.normal}>Normal</option>
+          <option value={UserMode.immigration}>Immigration</option>
+        </select>
+      )}
     </div>
   );
 }
 
 PageHeader.defaultProps = {
   title: "Database",
-  backgroundColor: `var(--brand-color)`,
 };
 
 type PageHeaderProps = {
@@ -46,10 +64,11 @@ const css = `
 & .page-header {
   height: 10.2rem;
   display: flex;
+  justify-content: space-between;
+  color: white;
 }
 
 & .page-header h1 {
-  color: white;
   font-weight: bold;
   margin: 0;
   padding: 0;
@@ -63,6 +82,10 @@ ${mediaMobile} {
 
   & .page-header h1 {
     font-size: 2.8rem;
+  }
+
+  & .page-header select {
+    align-self: flex-end;
   }
 }
 
@@ -86,6 +109,10 @@ ${mediaDesktop} {
     margin-bottom: 0;
     height: 8rem;
     padding: 1.4rem;
+  }
+
+  & .page-header select {
+    align-self: flex-start;
   }
 }
 `;
