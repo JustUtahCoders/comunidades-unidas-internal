@@ -22,34 +22,37 @@ import EventList from "./event-list/event-list.component";
 import ConvertLead from "./view-edit-lead/convert-lead-to-client.component";
 import ProgramsAndServices from "./programs-and-services/programs-and-services.component";
 import "form-request-submit-polyfill";
+import UserModeContext from "./util/user-mode.context";
 
 export default function Root() {
   return (
     <UserContext>
-      <Styleguide>
-        <Router basepath="/" primary>
-          <Navbars path="/">
-            <NotFound path="*" />
-            <Home path="/" />
-            <AddClient path="add-client" />
-            <ClientList path="client-list" />
-            <AddClientInteraction isGlobalAdd path="add-client-interaction" />
-            <ViewClient path="clients/:clientId/*" />
-            <AddCaseNote isGlobalAdd path="add-case-note" />
-            <LeadList path="lead-list" />
-            <ViewLead path="leads/:leadId" />
-            <ConvertLead path="leads/:leadId/convert-to-client" />
-            <ReportIssue path="report-issue" />
-            <ReportIssueSuccess path="report-issue/:issueId" />
-            <AddLeads path="add-leads/*" />
-            <Reports path="reports/*" />
-            <ViewEvent path="events/:eventId" />
-            <EventList path="event-list" />
-            <ProgramsAndServices path="programs-and-services" />
-          </Navbars>
-        </Router>
-        <Growls />
-      </Styleguide>
+      <UserModeContext>
+        <Styleguide>
+          <Router basepath="/" primary>
+            <Navbars path="/">
+              <NotFound path="*" />
+              <Home path="/" />
+              <AddClient path="add-client" />
+              <ClientList path="client-list" />
+              <AddClientInteraction isGlobalAdd path="add-client-interaction" />
+              <ViewClient path="clients/:clientId/*" />
+              <AddCaseNote isGlobalAdd path="add-case-note" />
+              <LeadList path="lead-list" />
+              <ViewLead path="leads/:leadId" />
+              <ConvertLead path="leads/:leadId/convert-to-client" />
+              <ReportIssue path="report-issue" />
+              <ReportIssueSuccess path="report-issue/:issueId" />
+              <AddLeads path="add-leads/*" />
+              <Reports path="reports/*" />
+              <ViewEvent path="events/:eventId" />
+              <EventList path="event-list" />
+              <ProgramsAndServices path="programs-and-services" />
+            </Navbars>
+          </Router>
+          <Growls />
+        </Styleguide>
+      </UserModeContext>
     </UserContext>
   );
 }
