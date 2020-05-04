@@ -12,9 +12,7 @@ app.use("*", (req, res) => {
         lastName: req.session.passport.user.lastName,
         email: req.session.passport.user.email,
         accessLevel: req.session.passport.user.accessLevel,
-        permissions: {
-          immigration: false,
-        },
+        permissions: req.session.passport.user.permissions,
       })
     ),
     {

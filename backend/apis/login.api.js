@@ -46,7 +46,7 @@ if (useGoogleAuth) {
             } else {
               const getUserQuery = mysql.format(
                 `
-              SELECT * FROM users WHERE googleId = ?
+              SELECT * FROM users LEFT JOIN userPermissions ON users.id = userPermissions.userId WHERE users.googleId = ?;
             `,
                 [profile.id]
               );
@@ -55,6 +55,16 @@ if (useGoogleAuth) {
                 if (err) {
                   done(err);
                 } else {
+                  const permissions = {
+                    immigration: false,
+                  };
+
+                  rows.forEach((r) => {
+                    if (r.permission) {
+                      permissions[r.permission] = true;
+                    }
+                  });
+
                   done(null, {
                     id: rows[0].id,
                     googleProfile: profile,
@@ -66,6 +76,7 @@ if (useGoogleAuth) {
                     lastName: rows[0].lastName,
                     email: rows[0].email,
                     accessLevel: rows[0].accessLevel,
+                    permissions,
                     token: token,
                   });
                 }
@@ -86,13 +97,18 @@ if (useGoogleAuth) {
       VALUES
         (1, 'fakegoogleid', 'Local', 'User', 'localuser@example.com', 'Administrator');
       
+      INSERT IGNORE INTO userPermissions
+        (userId, permission)
+      VALUES
+        (1, 'immigration');
+      
       SELECT id, firstName, lastName, email, accessLevel FROM users WHERE id = 1;
     `,
         (err, results) => {
           if (err) {
             done(err);
           } else {
-            const user = results[1][0];
+            const user = results[2][0];
             done(null, {
               id: user.id,
               googleProfile: null,
@@ -100,6 +116,9 @@ if (useGoogleAuth) {
               firstName: user.firstName,
               lastName: user.lastName,
               accessLevel: user.accessLevel,
+              permissions: {
+                immigration: true,
+              },
               email: user.email,
             });
           }
