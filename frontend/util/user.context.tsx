@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import cookies from "js-cookie";
 
-export const UserContext = React.createContext(null);
+export const UserContext = React.createContext<LoggedInUser>(null);
 
 export default function UserContextComponent(props) {
   const [user] = useState<LoggedInUser>(() => {
