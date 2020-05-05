@@ -13,7 +13,11 @@ const {
 const { atLeastOne } = require("../../utils/patch-utils");
 const { getInteraction } = require("./client-interaction.utils");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
-const { sanitizeTags, insertTags } = require("../../tags/tag.utils");
+const {
+  sanitizeTags,
+  insertTags,
+  insertTagsQuery,
+} = require("../../tags/tag.utils");
 
 app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
   const validationErrors = [
@@ -109,7 +113,11 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
 
           if (tags.length > 0) {
             queries.push(
-              insertTags(existingInteraction.id, "clientInteractions", tags)
+              insertTagsQuery(
+                existingInteraction.id,
+                "clientInteractions",
+                tags
+              )
             );
           }
         }
