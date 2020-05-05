@@ -28,6 +28,7 @@ GET /api/clients/:id/interactions/:id?tags=immigration
   "duration": "1:00:00",
   "location": "CUOffice",
   "isDeleted": false,
+  "redacted": false,
   "createdBy": {
     "userId": 1,
     "firstName": "Joel",
@@ -87,6 +88,7 @@ POST /api/clients/:id/interactions?tags=immigration
   "duration": "1:00:00",
   "location": "CUOffice",
   "isDeleted": false,
+  "redacted": false,
   "createdBy": {
     "userId": 1,
     "firstName": "Joel",

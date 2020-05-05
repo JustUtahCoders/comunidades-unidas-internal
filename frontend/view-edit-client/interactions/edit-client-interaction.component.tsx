@@ -97,7 +97,7 @@ export default function EditClientInteraction({
           by {originalInteraction.createdBy.fullName}
           {originalInteraction.lastUpdatedBy.timestamp !==
             originalInteraction.createdBy.timestamp &&
-            `and was last updated on ${dayjs(
+            ` and was last updated on ${dayjs(
               originalInteraction.lastUpdatedBy.timestamp
             ).format("MMM D, YYYY")} by ${
               originalInteraction.lastUpdatedBy.fullName
