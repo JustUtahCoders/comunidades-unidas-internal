@@ -104,7 +104,7 @@ export type CUService = {
   id: number;
   serviceName: string;
   serviceDescription: string;
-  programId: string;
+  programId: number;
   programName: string;
   isActive: boolean;
 };

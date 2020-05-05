@@ -42,7 +42,7 @@ export default function CUServiceInputs(props: CUServiceInputsProps) {
           onChange={(evt) =>
             props.setService({
               ...props.service,
-              programId: evt.target.value,
+              programId: Number(evt.target.value),
             })
           }
         >

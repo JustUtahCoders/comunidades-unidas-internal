@@ -14,7 +14,7 @@ exports.insertTagsQuery = function insertTags(foreignId, foreignTable, tags) {
       .map((tag) =>
         mysql.format(
           `
-      INSERT INTO tags (foreignId, foreignTable, tag) VALUES (${
+      INSERT IGNORE INTO tags (foreignId, foreignTable, tag) VALUES (${
         foreignId.rawValue || "?"
       }, ?, ?);
     `,

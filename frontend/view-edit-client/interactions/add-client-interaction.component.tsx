@@ -15,6 +15,7 @@ import { useForceUpdate } from "../../util/use-force-update";
 import { differenceBy } from "lodash-es";
 import { UserModeContext, UserMode } from "../../util/user-mode.context";
 import { isServiceWithinImmigrationProgram } from "../../immigration/immigration.utils";
+import { CUServicesList } from "../../add-client/services.component";
 
 export default function AddClientInteraction(props: AddClientInteractionProps) {
   const firstInputRef = React.useRef(null);
@@ -82,7 +83,9 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
           .map((interaction) =>
             easyFetch(
               `/api/clients/${clientId}/interactions${getTagsQuery(
-                interaction
+                userMode.userMode,
+                interaction,
+                servicesResponse
               )}`,
               {
                 method: "POST",
@@ -208,13 +211,17 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
       tempInteractionIds.filter((id) => id !== interactionId)
     );
   }
+}
 
-  function getTagsQuery(interaction: InteractionSlatData) {
-    return userMode.userMode === UserMode.immigration &&
-      isServiceWithinImmigrationProgram(servicesResponse, interaction.serviceId)
-      ? "?tags=immigration"
-      : "";
-  }
+export function getTagsQuery(
+  userMode: UserMode,
+  interaction: InteractionSlatData,
+  servicesResponse: CUServicesList
+) {
+  return userMode === UserMode.immigration &&
+    isServiceWithinImmigrationProgram(servicesResponse, interaction.serviceId)
+    ? "?tags=immigration"
+    : "";
 }
 
 const css = `

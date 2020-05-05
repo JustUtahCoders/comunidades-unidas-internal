@@ -8,8 +8,8 @@ import { SingleClient } from "../view-client.component";
 import ClientHistoryFilters from "./client-history-filters.component";
 import EditLog from "./edit-log.component";
 import ViewOutdatedLog from "./view-outdated-log.component";
-import { partial } from "lodash-es";
-import { any } from "prop-types";
+import { partial, lowerCase } from "lodash-es";
+import { UserModeContext, UserMode } from "../../util/user-mode.context";
 
 export default function ClientHistory(props: ClientHistoryProps) {
   const [logState, dispatchLogState] = React.useReducer(
@@ -19,10 +19,18 @@ export default function ClientHistory(props: ClientHistoryProps) {
   );
   const scope = useCss(css);
 
+  const { userMode } = React.useContext(UserModeContext);
+
+  React.useEffect(() => {
+    dispatchLogState({ type: LogActionTypes.changeUserMode });
+  }, [userMode]);
+
   React.useEffect(() => {
     if (logState.isFetching) {
+      const query =
+        userMode === UserMode.immigration ? `?tags=immigration` : "";
       const abortController = new AbortController();
-      easyFetch(`/api/clients/${props.clientId}/logs`)
+      easyFetch(`/api/clients/${props.clientId}/logs${query}`)
         .then((data) => {
           dispatchLogState({
             type: LogActionTypes.newLogs,
@@ -43,7 +51,7 @@ export default function ClientHistory(props: ClientHistoryProps) {
 
       return () => abortController.abort();
     }
-  }, [props.clientId, logState.isFetching]);
+  }, [props.clientId, logState.isFetching, userMode]);
 
   return (
     <div {...scope} className="card">
@@ -169,11 +177,18 @@ export default function ClientHistory(props: ClientHistoryProps) {
   );
 
   function getTitle(log) {
-    switch (log.logType) {
-      case LogType.caseNote:
-        return "A case note was created";
-      default:
-        return log.title;
+    if (log.redacted) {
+      let [type, action = "created"] = log.logType.split(":");
+      return `An immigration-related ${lowerCase(type)} was ${lowerCase(
+        action
+      )}`;
+    } else {
+      switch (log.logType) {
+        case LogType.caseNote:
+          return "A case note was created";
+        default:
+          return log.title;
+      }
     }
   }
 
@@ -288,6 +303,11 @@ function logReducer(state: LogState, action: LogActions): LogState {
         ...state,
         logToView: null,
       };
+    case LogActionTypes.changeUserMode:
+      return {
+        ...state,
+        isFetching: true,
+      };
     default:
       throw Error();
   }
@@ -301,11 +321,16 @@ function filterLogs(filters, log) {
 
 type LogActions =
   | ChangeFilterAction
+  | ChangeUserMode
   | SetLogsAction
   | ModifyLogAction
   | DoneModifyingLogAction
   | ViewOutdatedLogAction
   | DoneViewingOutdatedLogAction;
+
+type ChangeUserMode = {
+  type: LogActionTypes.changeUserMode;
+};
 
 type ChangeFilterAction = {
   type: LogActionTypes;
@@ -343,6 +368,7 @@ enum LogActionTypes {
   "doneModifyingLog" = "doneModifyingLog",
   "viewOutdatedLog" = "viewOutdatedLog",
   "doneViewingOutdatedLog" = "doneViewingOutdatedLog",
+  "changeUserMode" = "changeUserMode",
 }
 
 function getBackgroundColor(logType: LogType) {

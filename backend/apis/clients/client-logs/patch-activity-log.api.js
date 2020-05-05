@@ -2,12 +2,19 @@ const { app, pool, invalidRequest, databaseError } = require("../../../server");
 const {
   checkValid,
   validId,
+  nullableValidTags,
   nullableNonEmptyString,
 } = require("../../utils/validation-utils");
 const mysql = require("mysql");
-const { modifiableLogTypes } = require("./activity-log.utils");
+const {
+  modifiableLogTypes,
+  insertActivityLogQuery,
+} = require("./activity-log.utils");
+const { sanitizeTags } = require("../../tags/tag.utils");
 
 app.patch(`/api/clients/:clientId/logs/:logId`, (req, res) => {
+  const user = req.session.passport.user;
+
   const validationErrors = [
     ...checkValid(req.params, validId("clientId"), validId("logId")),
     ...checkValid(
@@ -15,6 +22,7 @@ app.patch(`/api/clients/:clientId/logs/:logId`, (req, res) => {
       nullableNonEmptyString("title"),
       nullableNonEmptyString("description")
     ),
+    ...checkValid(req.query, nullableValidTags("tags", user.permissions)),
   ];
 
   if (req.body.logType) {
@@ -24,6 +32,8 @@ app.patch(`/api/clients/:clientId/logs/:logId`, (req, res) => {
   if (validationErrors.length) {
     return invalidRequest(res, validationErrors);
   }
+
+  const tags = sanitizeTags(req.query.tags);
 
   const selectSql = mysql.format(
     `SELECT * FROM clientLogs WHERE clientId = ? AND id = ?`,
@@ -43,7 +53,7 @@ app.patch(`/api/clients/:clientId/logs/:logId`, (req, res) => {
     } else {
       const existingLog = result[0];
 
-      if (existingLog.addedBy !== req.session.passport.user.id) {
+      if (existingLog.addedBy !== user.id) {
         return invalidRequest(
           res,
           `You may not modify a client log that you did not create`
@@ -72,21 +82,18 @@ app.patch(`/api/clients/:clientId/logs/:logId`, (req, res) => {
 
       const updateSql = mysql.format(
         `
-        INSERT INTO clientLogs
-        (clientId, title, description, logType, addedBy)
-        VALUES
-        (?, ?, ?, ?, ?);
+        ${insertActivityLogQuery({
+          clientId: req.params.clientId,
+          title: req.body.title || existingLog.title,
+          description: req.body.description || existingLog.description,
+          logType: existingLog.logType,
+          addedBy: user.id,
+          tags,
+        })}
 
         UPDATE clientLogs SET idOfUpdatedLog = LAST_INSERT_ID() WHERE id = ?;
-        `,
-        [
-          req.params.clientId,
-          req.body.title || existingLog.title,
-          req.body.description || existingLog.description,
-          existingLog.logType,
-          req.session.passport.user.id,
-          existingLog.id,
-        ]
+      `,
+        [existingLog.id]
       );
 
       pool.query(updateSql, (err, result) => {

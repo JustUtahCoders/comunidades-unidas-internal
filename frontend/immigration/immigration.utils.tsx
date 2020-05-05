@@ -1,5 +1,7 @@
+import { CUServicesList } from "../add-client/services.component";
+
 export function isServiceWithinImmigrationProgram(
-  servicesResponse,
+  servicesResponse: CUServicesList,
   serviceId: number
 ): boolean {
   const service = servicesResponse.services.find((s) => s.id === serviceId);

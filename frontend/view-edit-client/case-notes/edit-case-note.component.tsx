@@ -3,6 +3,7 @@ import { LogTypeEditProps } from "../client-history/edit-log.component";
 import FullRichTextEditorComponent from "../../rich-text/full-rich-text-editor.component";
 import { useCss } from "kremling";
 import easyFetch from "../../util/easy-fetch";
+import { UserModeContext, UserMode } from "../../util/user-mode.context";
 
 export default function EditCaseNote({
   log,
@@ -12,10 +13,13 @@ export default function EditCaseNote({
   const [title, setTitle] = React.useState(log.title);
   const fullEditorRef = React.useRef(null);
   const scope = useCss(css);
+  const { userMode } = React.useContext(UserModeContext);
 
   React.useEffect(() => {
     actionsRef.current.save = (abortController) => {
-      return easyFetch(`/api/clients/${clientId}/logs/${log.id}`, {
+      const query =
+        userMode === UserMode.immigration ? `?tags=immigration` : "";
+      return easyFetch(`/api/clients/${clientId}/logs/${log.id}${query}`, {
         method: "PATCH",
         signal: abortController.signal,
         body: {
