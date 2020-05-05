@@ -1,23 +1,21 @@
-const {
-  app,
-  databaseError,
-  pool,
-  invalidRequest,
-  notFound,
-} = require("../../../server");
-const mysql = require("mysql");
+const { app, databaseError, pool, invalidRequest } = require("../../../server");
 const {
   checkValid,
   validId,
   validEnum,
   nonEmptyString,
+  nullableValidTags,
 } = require("../../utils/validation-utils");
 const {
   modifiableLogTypes,
   createResponseLogObject,
+  insertActivityLogQuery,
 } = require("./activity-log.utils");
+const { sanitizeTags } = require("../../tags/tag.utils");
 
 app.post("/clients/:clientId/logs", (req, res) => {
+  const user = req.session.passport.user;
+
   const validationErrors = [
     ...checkValid(req.params, validId("clientId")),
     ...checkValid(
@@ -26,29 +24,23 @@ app.post("/clients/:clientId/logs", (req, res) => {
       nonEmptyString("title"),
       nonEmptyString("description")
     ),
+    ...checkValid(req.query, nullableValidTags("tags", user.permissions)),
   ];
 
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
   }
 
-  const user = req.session.passport.user;
+  const tags = sanitizeTags(req.query.tags);
 
-  const sql = mysql.format(
-    `
-    INSERT INTO clientLogs
-    (clientId, title, description, logType, addedBy)
-    VALUES
-    (?, ?, ?, ?, ?)
-  `,
-    [
-      req.params.clientId,
-      req.body.title,
-      req.body.description,
-      req.body.logType,
-      user.id,
-    ]
-  );
+  const sql = insertActivityLogQuery({
+    clientId: req.params.clientId,
+    title: req.body.title,
+    description: req.body.description,
+    logType: req.body.logType,
+    addedBy: user.id,
+    tags,
+  });
 
   pool.query(sql, (err, result) => {
     if (err) {

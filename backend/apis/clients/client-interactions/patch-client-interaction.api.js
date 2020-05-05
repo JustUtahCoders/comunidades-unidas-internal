@@ -8,10 +8,12 @@ const {
   nullableNonEmptyString,
   nullableValidDate,
   nullableValidTime,
+  nullableValidTags,
 } = require("../../utils/validation-utils");
 const { atLeastOne } = require("../../utils/patch-utils");
 const { getInteraction } = require("./client-interaction.utils");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
+const { sanitizeTags, insertTags } = require("../../tags/tag.utils");
 
 app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
   const validationErrors = [
@@ -36,6 +38,10 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
         "consulateOffice",
         "communityEvent"
       )
+    ),
+    ...checkValid(
+      req.query,
+      nullableValidTags("tags", req.session.passport.user.permissions)
     ),
   ];
 
@@ -62,6 +68,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
 
   const interactionId = Number(req.params.interactionId);
   const clientId = Number(req.params.clientId);
+  const tags = sanitizeTags(req.query.tags);
 
   getInteraction(
     interactionId,
@@ -99,6 +106,12 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
               ]
             )
           );
+
+          if (tags.length > 0) {
+            queries.push(
+              insertTags(existingInteraction.id, "clientInteractions", tags)
+            );
+          }
         }
 
         if (shouldUpdateLog) {
@@ -111,6 +124,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
               logType: "clientInteraction:updated",
               addedBy: req.session.passport.user.id,
               detailId: existingInteraction.id,
+              tags,
             })
           );
 
@@ -136,22 +150,15 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
 
         if (req.body.dateOfInteraction) {
           queries.push(
-            mysql.format(
-              `
-              INSERT INTO clientLogs
-              (clientId, title, description, logType, addedBy, dateAdded, detailId)
-              VALUES (?, ?, ?, ?, ?, ?, ?);
-            `,
-              [
-                clientId,
-                `${serviceName} service was provided`,
-                null,
-                "clientInteraction:serviceProvided",
-                req.session.passport.user.id,
-                req.body.dateOfInteraction,
-                existingInteraction.id,
-              ]
-            )
+            insertActivityLogQuery({
+              clientId,
+              title: `${serviceName} service was provided`,
+              description: null,
+              logType: "clientInteraction:serviceProvided",
+              addedBy: req.session.passport.user.id,
+              detailId: existingInteraction.id,
+              tags,
+            })
           );
 
           queries.push(

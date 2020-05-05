@@ -6,6 +6,7 @@ import FullRichTextEditor from "../../rich-text/full-rich-text-editor.component"
 import easyFetch from "../../util/easy-fetch";
 import { showGrowl, GrowlType } from "../../growls/growls.component";
 import { navigate } from "@reach/router";
+import { UserModeContext, UserMode } from "../../util/user-mode.context";
 
 export default function AddCaseNote({
   isGlobalAdd,
@@ -21,6 +22,7 @@ export default function AddCaseNote({
   const clientIdForNote = singleClientSearchInputRef.current
     ? singleClientSearchInputRef.current.clientId
     : clientIdFromProps;
+  const { userMode } = React.useContext(UserModeContext);
 
   React.useEffect(() => {
     if (!isGlobalAdd) {
@@ -32,7 +34,9 @@ export default function AddCaseNote({
     if (creating) {
       const abortController = new AbortController();
 
-      easyFetch(`/clients/${clientIdForNote}/logs`, {
+      const query =
+        userMode === UserMode.immigration ? `?tags=immigration` : "";
+      easyFetch(`/clients/${clientIdForNote}/logs${query}`, {
         method: "POST",
         signal: abortController.signal,
         body: {

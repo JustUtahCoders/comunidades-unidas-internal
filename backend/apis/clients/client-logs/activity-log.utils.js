@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const { responseFullName } = require("../../utils/transform-utils");
+const { insertTagsQuery } = require("../../tags/tag.utils");
 
 const modifiableLogTypes = [
   "caseNote",
@@ -16,6 +17,10 @@ exports.insertActivityLogQuery = function (params) {
       `
       INSERT INTO clientLogs (clientId, title, description, logType, addedBy, detailId)
       VALUES (?, ?, ?, ?, ?, LAST_INSERT_ID());
+
+      SET @logId := LAST_INSERT_ID();
+      
+      ${insertTagsQuery({ rawValue: "@logId" }, "clientLogs", params.tags)}
     `,
       [
         params.clientId,
@@ -30,6 +35,10 @@ exports.insertActivityLogQuery = function (params) {
       `
       INSERT INTO clientLogs (clientId, title, description, logType, addedBy, detailId)
       VALUES (?, ?, ?, ?, ?, ?);
+
+      SET @logId := LAST_INSERT_ID();
+      
+      ${insertTagsQuery({ rawValue: "@logId" }, "clientLogs", params.tags)}
     `,
       [
         params.clientId,
@@ -43,16 +52,26 @@ exports.insertActivityLogQuery = function (params) {
   }
 };
 
-exports.createResponseLogObject = function createResponseLogObject(log) {
+exports.createResponseLogObject = function createResponseLogObject(
+  log,
+  redactedTags = []
+) {
+  let tags = log.tags || [];
+  if (typeof tags === "string") tags = JSON.parse(tags);
+
+  const redact = tags.some((t) => redactedTags.includes(t));
+
   return {
     id: log.id,
-    title: log.title,
-    description: log.description,
+    title: redact ? null : log.title,
+    description: redact ? null : log.description,
     logType: log.logType,
-    canModify: modifiableLogTypes.some((logType) => logType === log.logType),
+    canModify:
+      !redact && modifiableLogTypes.some((logType) => logType === log.logType),
     isDeleted: Boolean(log.isDeleted),
     detailId: log.detailId,
     idOfUpdatedLog: log.idOfUpdatedLog,
+    redacted: Boolean(redact),
     createdBy: {
       userId: log.createdById,
       firstName: log.createdByFirstName,

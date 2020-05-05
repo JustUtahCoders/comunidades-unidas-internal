@@ -7,6 +7,7 @@ import { CUServicesList } from "../../add-client/services.component";
 import easyFetch from "../../util/easy-fetch";
 import { UserModeContext } from "../../util/user-mode.context";
 import dayjs from "dayjs";
+import { getTagsQuery } from "./add-client-interaction.component";
 
 export default function EditClientInteraction({
   log,
@@ -66,12 +67,15 @@ export default function EditClientInteraction({
 
   React.useEffect(() => {
     actionsRef.current.save = (abortController) => {
+      const interaction = interactionGetter();
       return easyFetch(
-        `/api/clients/${clientId}/interactions/${originalInteraction.id}`,
+        `/api/clients/${clientId}/interactions/${
+          originalInteraction.id
+        }${getTagsQuery(userMode, interaction, servicesResponse)}`,
         {
           signal: abortController.signal,
           method: "PATCH",
-          body: interactionGetter(),
+          body: interaction,
         }
       );
     };

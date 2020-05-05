@@ -75,7 +75,7 @@ type CreateNewServiceModalProps = {
 };
 
 const emptyService: CUService = {
-  programId: "1",
+  programId: 1,
   id: null,
   programName: "",
   serviceDescription: "",
