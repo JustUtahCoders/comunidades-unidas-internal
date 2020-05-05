@@ -69,12 +69,12 @@ exports.getInteraction = function getInteraction(
       ORDER BY l.dateAdded DESC;
 
       SELECT tags.tag
-      FROM clientInteractions JOIN tags
-      WHERE clientInteractions.id = ? AND tags.foreignId = ? AND tags.foreignTable = 'clientInteractions' AND tags.tag IN (${
+      FROM tags
+      WHERE tags.foreignId = ? AND tags.foreignTable = 'clientInteractions' AND tags.tag IN (${
         redactedTags.length > 0 ? redactedTags.map(() => "?").join(", ") : `123`
       });
     `,
-    [interactionId, interactionId, interactionId].concat(redactedTags)
+    [interactionId, interactionId].concat(redactedTags)
   );
 
   pool.query(sql, (err, result) => {
@@ -109,6 +109,7 @@ exports.getInteraction = function getInteraction(
       return;
     }
 
+    console.log(tagResult);
     const redact = tagResult.length > 0;
 
     errBack(

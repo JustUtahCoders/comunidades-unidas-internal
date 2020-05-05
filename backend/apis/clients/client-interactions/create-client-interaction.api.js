@@ -106,8 +106,6 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
       ]
     );
 
-    console.log(insertSql);
-
     pool.query(insertSql, (err, result) => {
       if (err) {
         return databaseError(req, res, err);
