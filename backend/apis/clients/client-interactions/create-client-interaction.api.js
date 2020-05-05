@@ -8,12 +8,17 @@ const {
   validDate,
   validTime,
   validInteger,
+  nullableValidTags,
 } = require("../../utils/validation-utils");
 const { getInteraction } = require("./client-interaction.utils");
+const { insertTagsQuery } = require("../../tags/tag.utils.js");
 
 app.post("/api/clients/:clientId/interactions", (req, res) => {
+  const user = req.session.passport.user;
+
   const validationErrors = [
     ...checkValid(req.params, validId("clientId")),
+    ...checkValid(req.query, nullableValidTags("tags", user.permissions)),
     ...checkValid(
       req.body,
       validInteger("serviceId"),
@@ -35,8 +40,6 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
   }
-
-  const user = req.session.passport.user;
 
   const getServiceSql = mysql.format(
     `SELECT serviceName FROM services WHERE id = ?`,
@@ -73,6 +76,12 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
         INSERT INTO clientLogs
         (clientId, title, description, logType, addedBy, dateAdded, detailId)
         VALUES (?, ?, ?, ?, ?, ?, @interactionId);
+
+        ${insertTagsQuery(
+          { rawValue: "@interactionId" },
+          "clientInteractions",
+          req.query.tags || []
+        )}
       `,
       [
         req.params.clientId,
@@ -96,6 +105,8 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
         req.body.dateOfInteraction,
       ]
     );
+
+    console.log(insertSql);
 
     pool.query(insertSql, (err, result) => {
       if (err) {

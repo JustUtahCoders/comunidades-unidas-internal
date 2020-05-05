@@ -4,6 +4,7 @@ import SingleClientSearchInputComponent from "../../client-search/single-client/
 import easyFetch from "../../util/easy-fetch";
 import SingleInteractionSlat, {
   InteractionGetter,
+  InteractionSlatData,
 } from "./single-interaction-slat.component";
 import { useCss } from "kremling";
 import { showGrowl, GrowlType } from "../../growls/growls.component";
@@ -12,6 +13,8 @@ import UpdateInterestedServices from "./update-interested-services.component";
 import { SingleClient } from "../view-client.component";
 import { useForceUpdate } from "../../util/use-force-update";
 import { differenceBy } from "lodash-es";
+import { UserModeContext, UserMode } from "../../util/user-mode.context";
+import { isServiceWithinImmigrationProgram } from "../../immigration/immigration.utils";
 
 export default function AddClientInteraction(props: AddClientInteractionProps) {
   const firstInputRef = React.useRef(null);
@@ -29,6 +32,7 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
   const clientId = clientSearchRef.current
     ? clientSearchRef.current.clientId
     : props.clientId;
+  const userMode = React.useContext(UserModeContext);
 
   React.useEffect(() => {
     const abortController = new AbortController();
@@ -76,10 +80,15 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
       Promise.all(
         interactions
           .map((interaction) =>
-            easyFetch(`/api/clients/${clientId}/interactions`, {
-              method: "POST",
-              body: interaction,
-            })
+            easyFetch(
+              `/api/clients/${clientId}/interactions${getTagsQuery(
+                interaction
+              )}`,
+              {
+                method: "POST",
+                body: interaction,
+              }
+            )
           )
           .concat(intakeServicesPromise)
       )
@@ -198,6 +207,13 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
     setTempInteractionIds(
       tempInteractionIds.filter((id) => id !== interactionId)
     );
+  }
+
+  function getTagsQuery(interaction: InteractionSlatData) {
+    return userMode.userMode === UserMode.immigration &&
+      isServiceWithinImmigrationProgram(servicesResponse, interaction.serviceId)
+      ? "?tags=immigration"
+      : "";
   }
 }
 

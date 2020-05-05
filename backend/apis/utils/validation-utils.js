@@ -1,5 +1,6 @@
 const { get, isDefined } = require("lodash");
 const emailValidator = require("email-validator");
+const { validTagsList } = require("../tags/tag.utils");
 
 exports.checkValid = function (obj, ...rules) {
   const result = rules.map((rule) => rule(obj)).filter((err) => err !== null);
@@ -61,6 +62,9 @@ exports.validCountry = checkDefined(_validCountry);
 
 exports.nullableValidInteger = nullable(_validInteger);
 exports.validInteger = checkDefined(_validInteger);
+
+exports.nullableValidTags = nullable(_validTags);
+exports.validTags = checkDefined(_validTags);
 
 exports.isDefined = checkDefined((propertyName) => (val) => null);
 
@@ -170,4 +174,28 @@ function _validInteger(propertyName) {
     Number.isInteger(Number(val))
       ? null
       : `Property ${propertyName} must be an integer. Received '${val}'`;
+}
+
+function _validTags(propertyName, userPermissions) {
+  return (val) => {
+    if (typeof val === "string") {
+      val = [val];
+    }
+    if (!Array.isArray(val) || val.some((v) => typeof v !== "string")) {
+      return `Property ${propertyName} must be a string or array of strings`;
+    }
+    let err =
+      val.find((v) =>
+        validTagsList.includes(v)
+          ? null
+          : `Property ${propertyName} has invalid tag value '${v}'`
+      ) || null;
+    if (err) {
+      return err;
+    } else if (val.includes("immigration") && !userPermissions.immigration) {
+      return `User cannot access immigration tag - insufficient permissions`;
+    } else {
+      return null;
+    }
+  };
 }
