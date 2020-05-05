@@ -26,6 +26,7 @@ export default function EditLog({
   const [status, setStatus] = React.useState<EditLogState>(
     EditLogState.editing
   );
+  const [editable, setEditable] = React.useState(true);
 
   const Edit = editLogComponents[log.logType];
 
@@ -79,14 +80,21 @@ export default function EditLog({
 
   return (
     <Modal
-      headerText={`Edit ${getInteractionType()} for ${clientFullName}`}
-      primaryAction={saveLog}
-      primaryText="Save"
-      secondaryAction={deleteLog}
-      secondaryText="Delete"
+      headerText={`${
+        editable ? "Edit " : ""
+      }${getInteractionType()} for ${clientFullName}`}
+      primaryAction={editable ? saveLog : close}
+      primaryText={editable ? "Save" : "Done"}
+      secondaryAction={editable ? deleteLog : null}
+      secondaryText={editable ? "Delete" : null}
       close={close}
     >
-      <Edit log={log} actionsRef={actionsRef} clientId={clientId} />
+      <Edit
+        log={log}
+        actionsRef={actionsRef}
+        clientId={clientId}
+        notEditable={() => setEditable(false)}
+      />
     </Modal>
   );
 
@@ -108,18 +116,6 @@ export default function EditLog({
   }
 }
 
-const css = `
-& .close {
-  width: 3rem;
-  height: 3rem;
-  font-size: 2.4rem;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-`;
-
 type EditLogProps = {
   log: ClientLog;
   close(wasDeleted?: boolean): any;
@@ -137,6 +133,7 @@ export type LogTypeEditProps = {
   log: ClientLog;
   actionsRef: React.MutableRefObject<EditLogActions>;
   clientId: string;
+  notEditable: () => void;
 };
 
 type EditLogActions = {

@@ -1,11 +1,19 @@
 import React from "react";
-import { useCss } from "kremling";
+import { useCss, always } from "kremling";
 import { mediaMobile, mediaDesktop } from "../styleguide.component";
+import { UserModeContext, UserMode } from "../util/user-mode.context";
 
 export default function StickySecondaryNav(props: StickySecondaryNavProps) {
   const scope = useCss(css);
+  const userModeContext = React.useContext(UserModeContext);
   return (
-    <nav className="sticky-secondary-nav" {...scope}>
+    <nav
+      className={always("sticky-secondary-nav").m(
+        "immigration",
+        userModeContext.userMode === UserMode.immigration
+      )}
+      {...scope}
+    >
       {props.children}
     </nav>
   );
@@ -48,6 +56,18 @@ const css = `
 
 & .sticky-secondary-nav a:hover {
   background-color: rgba(139, 0, 0, 0.6);
+}
+
+& .sticky-secondary-nav.immigration {
+  background-color: var(--immigration-color);
+}
+
+& .sticky-secondary-nav.immigration a.active {
+  background-color: #08325c;
+}
+
+& .sticky-secondary-nav.immigration a:hover {
+  background-color: #0c4b8a;
 }
 
 ${mediaMobile} {

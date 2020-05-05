@@ -10,16 +10,17 @@ const {
   notFound,
 } = require("../../../server");
 
-function createResponseInteractionObject(log) {
+function createResponseInteractionObject(log, redact) {
   return {
     id: log.id,
-    serviceId: log.serviceId,
+    serviceId: redact ? null : log.serviceId,
     interactionType: log.interactionType,
-    description: log.description,
+    description: redact ? null : log.description,
     dateOfInteraction: responseDateWithoutTime(log.dateOfInteraction),
-    duration: log.duration,
+    duration: redact ? null : log.duration,
     isDeleted: Boolean(log.isDeleted),
     location: log.location,
+    redacted: Boolean(redact),
     createdBy: {
       userId: log.createdById,
       firstName: log.createdByFirstName,
@@ -43,7 +44,8 @@ function createResponseInteractionObject(log) {
 exports.getInteraction = function getInteraction(
   interactionId,
   clientId,
-  errBack
+  errBack,
+  redactedTags = []
 ) {
   const sql = mysql.format(
     `
@@ -64,9 +66,15 @@ exports.getInteraction = function getInteraction(
           AND l.isDeleted = false
           AND i.isDeleted = false
       )
-      ORDER BY l.dateAdded DESC
+      ORDER BY l.dateAdded DESC;
+
+      SELECT tags.tag
+      FROM tags
+      WHERE tags.foreignId = ? AND tags.foreignTable = 'clientInteractions' AND tags.tag IN (${
+        redactedTags.length > 0 ? redactedTags.map(() => "?").join(", ") : `123`
+      });
     `,
-    [interactionId]
+    [interactionId, interactionId].concat(redactedTags)
   );
 
   pool.query(sql, (err, result) => {
@@ -78,7 +86,9 @@ exports.getInteraction = function getInteraction(
       return;
     }
 
-    if (result.length === 0) {
+    const [interactionResult, tagResult] = result;
+
+    if (interactionResult.length === 0) {
       errBack((req, res) => {
         notFound(res, `No interaction exists with id ${interactionId}`);
       });
@@ -86,7 +96,7 @@ exports.getInteraction = function getInteraction(
       return;
     }
 
-    const row = result[0];
+    const row = interactionResult[0];
 
     if (row.clientId !== clientId) {
       errBack((req, res) => {
@@ -99,6 +109,12 @@ exports.getInteraction = function getInteraction(
       return;
     }
 
-    errBack(null, createResponseInteractionObject(row), row.serviceName);
+    const redact = tagResult.length > 0;
+
+    errBack(
+      null,
+      createResponseInteractionObject(row, redact),
+      row.serviceName
+    );
   });
 };
