@@ -109,7 +109,6 @@ exports.getInteraction = function getInteraction(
       return;
     }
 
-    console.log(tagResult);
     const redact = tagResult.length > 0;
 
     errBack(
