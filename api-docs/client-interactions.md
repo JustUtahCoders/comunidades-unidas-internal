@@ -13,7 +13,7 @@ Here is the list of the valid interaction types:
 ### Request
 
 ```http
-GET /api/clients/:id/interactions/:id
+GET /api/clients/:id/interactions/:id?tags=immigration
 ```
 
 ### Response
@@ -45,77 +45,16 @@ GET /api/clients/:id/interactions/:id
 }
 ```
 
-## Get all of a single Client's Interactions
+### Notes
 
-### Request
-
-```http
-GET /api/clients/:id/interactions/
-```
-
-### Response
-
-```json
-{
-  "interactions": [
-    {
-      "id": 1,
-      "serviceId": 7,
-      "interactionType": "byPhone",
-      "description": "Application successfully filled out. Decision pending.",
-      "dateOfInteraction": "2019-05-06",
-      "duration": "1:00:00",
-      "location": null,
-      "isDeleted": false,
-      "createdBy": {
-        "userId": 1,
-        "firstName": "Joel",
-        "lastName": "Denning",
-        "fullName": "Joel Denning",
-        "timestamp": "2019-05-06T06:00:00.000Z"
-      },
-      "lastUpdatedBy": {
-        "userId": 1,
-        "firstName": "Joel",
-        "lastName": "Denning",
-        "fullName": "Joel Denning",
-        "timestamp": "2019-05-06T06:00:00.000Z"
-      }
-    },
-    {
-      "id": 2,
-      "serviceId": 13,
-      "interactionType": "inPerson",
-      "description": "Appointment setup with financial coach. Client would like to save up enough for a down payment on a car better suited for their work.",
-      "dateofInteraction": "2019-05-06",
-      "duration": "1:00:00",
-      "location": "CUOffice",
-      "isDeleted": false,
-      "createdBy": {
-        "userId": 1,
-        "firstName": "Joel",
-        "lastName": "Denning",
-        "fullName": "Joel Denning",
-        "timestamp": "2019-05-06T06:00:00.000Z"
-      },
-      "lastUpdatedBy": {
-        "userId": 1,
-        "firstName": "Joel",
-        "lastName": "Denning",
-        "fullName": "Joel Denning",
-        "timestamp": "2019-05-06T06:00:00.000Z"
-      }
-    }
-  ]
-}
-```
+The `tags` query parameter controls whether information is redacted or not.
 
 ## Create a Client Interaction
 
 ### Request
 
 ```http
-POST /api/clients/:id/interactions
+POST /api/clients/:id/interactions?tags=immigration
 ```
 
 ```json
@@ -134,6 +73,7 @@ POST /api/clients/:id/interactions
 - `serviceId` list can be found `GET /api/services` and more information can be found on the CU Services database can be found in `api-docs/list-services.md`
 - `interactionType` is an enum with the possible values of `inPerson`, `byPhone`, `workshopTalk`, `oneOnOneLightTouch`, `consultation`
 - `location` is an enum with the possible values of `CUOffice`, `consulate`, and `communityEvent`
+- `tags` controls which tags are applied to the interaction. Immigration tags control whether information is redacted or not.
 
 ### Response
 
