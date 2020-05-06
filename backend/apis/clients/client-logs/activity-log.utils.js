@@ -13,41 +13,64 @@ exports.modifiableLogTypes = modifiableLogTypes;
 
 exports.insertActivityLogQuery = function (params) {
   if (params.detailIdIsLastInsertId) {
+    const data = [
+      params.clientId,
+      params.title,
+      params.description,
+      params.logType,
+      params.addedBy,
+    ];
+
+    if (params.dateAdded) {
+      data.push(params.dateAdded);
+    }
+
     return mysql.format(
       `
-      INSERT INTO clientLogs (clientId, title, description, logType, addedBy, detailId)
-      VALUES (?, ?, ?, ?, ?, LAST_INSERT_ID());
+      INSERT INTO clientLogs (clientId, title, description, logType, addedBy, detailId, ${
+        params.dateAdded ? ", dateAdded" : ""
+      })
+      VALUES (?, ?, ?, ?, ?, LAST_INSERT_ID(), ${
+        params.dateAdded ? ", ?" : ""
+      });
 
       SET @logId := LAST_INSERT_ID();
       
       ${insertTagsQuery({ rawValue: "@logId" }, "clientLogs", params.tags)}
     `,
-      [
-        params.clientId,
-        params.title,
-        params.description,
-        params.logType,
-        params.addedBy,
-      ]
+      data
     );
   } else {
+    const data = [
+      params.clientId,
+      params.title,
+      params.description,
+      params.logType,
+      params.addedBy,
+    ];
+
+    if (params.detailId && !params.detailId.rawValue) {
+      data.push(params.detailId);
+    }
+
+    if (params.dateAdded) {
+      data.push(params.dateAdded);
+    }
+
     return mysql.format(
       `
-      INSERT INTO clientLogs (clientId, title, description, logType, addedBy, detailId)
-      VALUES (?, ?, ?, ?, ?, ?);
+      INSERT INTO clientLogs (clientId, title, description, logType, addedBy, detailId${
+        params.dateAdded ? ", dateAdded" : ""
+      })
+      VALUES (?, ?, ?, ?, ?, ${
+        params.detailId ? params.detailId.rawValue || "?" : ""
+      } ${params.dateAdded ? ", ?" : ""});
 
       SET @logId := LAST_INSERT_ID();
       
       ${insertTagsQuery({ rawValue: "@logId" }, "clientLogs", params.tags)}
     `,
-      [
-        params.clientId,
-        params.title,
-        params.description,
-        params.logType,
-        params.addedBy,
-        params.detailId,
-      ]
+      data
     );
   }
 };

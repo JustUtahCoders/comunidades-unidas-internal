@@ -11,7 +11,8 @@ const {
   nullableValidTags,
 } = require("../../utils/validation-utils");
 const { getInteraction } = require("./client-interaction.utils");
-const { insertTagsQuery } = require("../../tags/tag.utils.js");
+const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
+const { insertTagsQuery, sanitizeTags } = require("../../tags/tag.utils.js");
 
 app.post("/api/clients/:clientId/interactions", (req, res) => {
   const user = req.session.passport.user;
@@ -60,6 +61,8 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
 
     const serviceName = getServiceResult[0].serviceName;
 
+    const tags = sanitizeTags(req.query.tags);
+
     const insertSql = mysql.format(
       `
         INSERT INTO clientInteractions
@@ -69,18 +72,31 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
 
         SET @interactionId := LAST_INSERT_ID();
 
-        INSERT INTO clientLogs
-        (clientId, title, description, logType, addedBy, detailId)
-        VALUES (?, ?, ?, ?, ?, @interactionId);
+        ${insertActivityLogQuery({
+          clientId: req.params.clientId,
+          title: `${serviceName} service was added to the database`,
+          description: req.body.description,
+          logType: "clientInteraction:created",
+          addedBy: user.id,
+          detailId: { rawValue: "@interactionId" },
+          tags,
+        })}
 
-        INSERT INTO clientLogs
-        (clientId, title, description, logType, addedBy, dateAdded, detailId)
-        VALUES (?, ?, ?, ?, ?, ?, @interactionId);
+        ${insertActivityLogQuery({
+          clientId: req.params.clientId,
+          title: `${serviceName} was provided to the client`,
+          description: null,
+          logType: "clientInteraction:serviceProvided",
+          addedBy: user.id,
+          dateAdded: req.body.dateOfInteraction,
+          detailId: { rawValue: "@interactionId" },
+          tags,
+        })}
 
         ${insertTagsQuery(
           { rawValue: "@interactionId" },
           "clientInteractions",
-          req.query.tags || []
+          tags
         )}
       `,
       [
@@ -92,17 +108,6 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
         req.body.location,
         user.id,
         user.id,
-        req.params.clientId,
-        `${serviceName} service added`,
-        req.body.description,
-        "clientInteraction:created",
-        user.id,
-        req.params.clientId,
-        `${serviceName} service was provided`,
-        null,
-        "clientInteraction:serviceProvided",
-        user.id,
-        req.body.dateOfInteraction,
       ]
     );
 
