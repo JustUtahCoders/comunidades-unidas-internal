@@ -3,9 +3,7 @@ const mysql = require("mysql");
 exports.validTagsList = ["immigration"];
 
 exports.insertTagsQuery = function insertTags(foreignId, foreignTable, tags) {
-  if (typeof tags === "string") {
-    tags = [tags];
-  }
+  tags = sanitizeTags(tags);
 
   if (tags.length === 0) {
     return "";
@@ -27,7 +25,9 @@ exports.insertTagsQuery = function insertTags(foreignId, foreignTable, tags) {
   }
 };
 
-exports.sanitizeTags = function sanitizeTags(tags) {
+exports.sanitizeTags = sanitizeTags;
+
+function sanitizeTags(tags) {
   if (typeof tags === "string") {
     return [tags];
   } else if (Array.isArray(tags)) {
@@ -35,4 +35,4 @@ exports.sanitizeTags = function sanitizeTags(tags) {
   } else {
     return [];
   }
-};
+}

@@ -42,6 +42,8 @@ app.post("/clients/:clientId/logs", (req, res) => {
     tags,
   });
 
+  console.log(sql);
+
   pool.query(sql, (err, result) => {
     if (err) {
       return databaseError(req, res, err);

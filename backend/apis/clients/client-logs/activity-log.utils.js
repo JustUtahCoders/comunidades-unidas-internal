@@ -14,7 +14,7 @@ exports.modifiableLogTypes = modifiableLogTypes;
 exports.insertActivityLogQuery = function (params) {
   if (params.detailIdIsLastInsertId) {
     const data = [
-      params.clientId,
+      Number(params.clientId),
       params.title,
       params.description,
       params.logType,
@@ -27,12 +27,10 @@ exports.insertActivityLogQuery = function (params) {
 
     return mysql.format(
       `
-      INSERT INTO clientLogs (clientId, title, description, logType, addedBy, detailId, ${
+      INSERT INTO clientLogs (clientId, title, description, logType, addedBy, detailId${
         params.dateAdded ? ", dateAdded" : ""
       })
-      VALUES (?, ?, ?, ?, ?, LAST_INSERT_ID(), ${
-        params.dateAdded ? ", ?" : ""
-      });
+      VALUES (?, ?, ?, ?, ?, LAST_INSERT_ID()${params.dateAdded ? ", ?" : ""});
 
       SET @logId := LAST_INSERT_ID();
       
@@ -42,7 +40,7 @@ exports.insertActivityLogQuery = function (params) {
     );
   } else {
     const data = [
-      params.clientId,
+      Number(params.clientId),
       params.title,
       params.description,
       params.logType,
@@ -59,11 +57,11 @@ exports.insertActivityLogQuery = function (params) {
 
     return mysql.format(
       `
-      INSERT INTO clientLogs (clientId, title, description, logType, addedBy, detailId${
-        params.dateAdded ? ", dateAdded" : ""
-      })
-      VALUES (?, ?, ?, ?, ?, ${
-        params.detailId ? params.detailId.rawValue || "?" : ""
+      INSERT INTO clientLogs (clientId, title, description, logType, addedBy${
+        params.detailId ? ", detailId" : ""
+      }${params.dateAdded ? ", dateAdded" : ""})
+      VALUES (?, ?, ?, ?, ?${
+        params.detailId ? params.detailId.rawValue || ", ?" : ""
       } ${params.dateAdded ? ", ?" : ""});
 
       SET @logId := LAST_INSERT_ID();
