@@ -55,14 +55,18 @@ exports.insertActivityLogQuery = function (params) {
       data.push(params.dateAdded);
     }
 
+    let detailIdSql = "";
+    if (params.detailId) {
+      detailIdSql = ", ";
+      detailIdSql += params.detailId.rawValue || "?";
+    }
+
     return mysql.format(
       `
       INSERT INTO clientLogs (clientId, title, description, logType, addedBy${
         params.detailId ? ", detailId" : ""
       }${params.dateAdded ? ", dateAdded" : ""})
-      VALUES (?, ?, ?, ?, ?${
-        params.detailId ? params.detailId.rawValue || ", ?" : ""
-      } ${params.dateAdded ? ", ?" : ""});
+      VALUES (?, ?, ?, ?, ?${detailIdSql} ${params.dateAdded ? ", ?" : ""});
 
       SET @logId := LAST_INSERT_ID();
       
