@@ -59,7 +59,7 @@ export default function AgesAndGendersResults(props) {
               </tr>
             }
             collapsibleRows={uniqueGenders.map((gender) => (
-              <tr>
+              <tr key={gender}>
                 <th>{"\u2014"}</th>
                 <th>{capitalize(gender)}</th>
                 <td>{data.clients.allAges[gender].toLocaleString()}</td>
