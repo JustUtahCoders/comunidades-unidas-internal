@@ -1,8 +1,8 @@
+const dateFormat = require("dateformat");
+
 exports.responseDateWithoutTime = (date) => {
   if (date) {
-    const dateFormat = require("dateformat");
-    const formattedDate = dateFormat(date, "yyyy-mm-dd");
-    return formattedDate;
+    return dateFormat(date, "yyyy-mm-dd");
   } else {
     return null;
   }

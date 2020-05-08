@@ -136,7 +136,7 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
                   </td>
                   <td>
                     <Link to={`/leads/${lead.id}`} className="unstyled">
-                      {lead.dateOfSignUp
+                      {isValidDate(lead.dateOfSignUp)
                         ? dateformat(lead.dateOfSignUp, "m/d/yyyy")
                         : "\u2014"}
                     </Link>
@@ -419,3 +419,12 @@ const css = `
     outline: none;
   }
 `;
+
+function isValidDate(date) {
+  if (!date) {
+    return false;
+  } else {
+    // @ts-ignore
+    return !isNaN(new Date(date));
+  }
+}
