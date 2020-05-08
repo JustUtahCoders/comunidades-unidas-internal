@@ -83,12 +83,16 @@ app.get(`/api/reports/ages-and-genders`, (req, res) => {
 
     const leadResults = getEmptyResult();
     leadRows.forEach((row) => {
-      leadResults[row.ageRange][row.gender] += row.total;
-      leadResults.allAges[row.gender] += row.total;
-      leadResults.allGenders[row.ageRange] += row.total;
+      const gender = row.gender === null ? "unknown" : row.gender;
+      if (gender === "unknown") {
+        console.log("row", row);
+      }
+      leadResults[row.ageRange][gender] += row.total;
+      leadResults.allAges[gender] += row.total;
+      leadResults.allGenders[gender] += row.total;
       totals.ages[row.ageRange] += row.total;
-      totals.genders[row.gender] = totals.genders[row.gender] || 0;
-      totals.genders[row.gender] += row.total;
+      totals.genders[gender] = totals.genders[gender] || 0;
+      totals.genders[gender] += row.total;
       totals.numLeads += row.total;
     });
 
@@ -109,6 +113,7 @@ function getEmptyResult() {
       transgender: 0,
       nonbinary: 0,
       other: 0,
+      unknown: 0,
     },
     "18-24": {
       male: 0,
@@ -116,6 +121,7 @@ function getEmptyResult() {
       transgender: 0,
       nonbinary: 0,
       other: 0,
+      unknown: 0,
     },
     "25-34": {
       male: 0,
@@ -123,6 +129,7 @@ function getEmptyResult() {
       transgender: 0,
       nonbinary: 0,
       other: 0,
+      unknown: 0,
     },
     "35-44": {
       male: 0,
@@ -130,6 +137,7 @@ function getEmptyResult() {
       transgender: 0,
       nonbinary: 0,
       other: 0,
+      unknown: 0,
     },
     "45-54": {
       male: 0,
@@ -137,6 +145,7 @@ function getEmptyResult() {
       transgender: 0,
       nonbinary: 0,
       other: 0,
+      unknown: 0,
     },
     "55-64": {
       male: 0,
@@ -144,6 +153,7 @@ function getEmptyResult() {
       transgender: 0,
       nonbinary: 0,
       other: 0,
+      unknown: 0,
     },
     "65+": {
       male: 0,
@@ -151,6 +161,7 @@ function getEmptyResult() {
       transgender: 0,
       nonbinary: 0,
       other: 0,
+      unknown: 0,
     },
     allAges: {
       male: 0,
@@ -158,6 +169,7 @@ function getEmptyResult() {
       transgender: 0,
       nonbinary: 0,
       other: 0,
+      unknown: 0,
     },
     allGenders: {
       "0-17": 0,
