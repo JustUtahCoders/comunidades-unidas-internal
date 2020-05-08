@@ -84,9 +84,6 @@ app.get(`/api/reports/ages-and-genders`, (req, res) => {
     const leadResults = getEmptyResult();
     leadRows.forEach((row) => {
       const gender = row.gender === null ? "unknown" : row.gender;
-      if (gender === "unknown") {
-        console.log("row", row);
-      }
       leadResults[row.ageRange][gender] += row.total;
       leadResults.allAges[gender] += row.total;
       leadResults.allGenders[gender] += row.total;
