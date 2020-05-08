@@ -4,6 +4,7 @@ import { useCss, always } from "kremling";
 import { useDropzone } from "react-dropzone";
 import pictureUrl from "../../icons/148705-essential-collection/svg/picture.svg";
 import easyFetch from "../util/easy-fetch";
+import { entries } from "lodash-es";
 
 export default function ClientFiles(props) {
   const scope = useCss(css);
@@ -13,10 +14,6 @@ export default function ClientFiles(props) {
   React.useEffect(() => {
     if (filesToUpload) {
       const abortController = new AbortController();
-      const formData = new FormData();
-      filesToUpload.forEach((file) => {
-        formData.append(file.name, file);
-      });
 
       easyFetch(
         `/api/file-upload-urls?file=${filesToUpload
@@ -27,14 +24,32 @@ export default function ClientFiles(props) {
         }
       )
         .then((data) => {
-          return easyFetch(data.uploadUrl, {
-            method: "PUT",
-            signal: abortController.signal,
-            body: formData,
-            // headers: {
-            //   'content-type': 'multipart/form-data'
+          const formData = new FormData();
+
+          entries(data.presignedPost.fields).forEach(([key, value]) => {
+            // if (key !== 'bucket' && key !== 'region') {
+            // @ts-ignore
+            formData.append(key, value);
             // }
           });
+
+          filesToUpload.forEach((file) => {
+            formData.append("file", file);
+          });
+
+          // return easyFetch(data.presignedPost.url, {
+          return easyFetch(
+            `https://comunidades-unidas-test-file-uploads.s3.amazonaws.com`,
+            {
+              // return easyFetch(`https://comunidades-unidas-test-file-uploads.s3.amazonaws.com/`, {
+              method: "POST",
+              signal: abortController.signal,
+              body: formData,
+              headers: {
+                // 'Content-Type': 'multipart/form-data'
+              },
+            }
+          );
         })
         .then((response) => {
           console.log("response!", response);

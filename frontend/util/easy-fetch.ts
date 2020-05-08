@@ -9,16 +9,20 @@ export default function easyFetch(url: string, opts?: any) {
     opts.headers = {};
   }
 
+  const hasBody = Boolean(opts.body);
+  const bodyIsFormData = opts.body instanceof FormData;
+
   if (
     opts.method &&
     opts.method.toUpperCase() !== "GET" &&
     !opts.headers["content-type"] &&
-    !opts.headers["Content-Type"]
+    !opts.headers["Content-Type"] &&
+    !bodyIsFormData
   ) {
     opts.headers["Content-Type"] = "application/json";
   }
 
-  if (opts.body && !(opts.body instanceof FormData)) {
+  if (hasBody && !bodyIsFormData) {
     opts.body = JSON.stringify(opts.body);
   }
 
