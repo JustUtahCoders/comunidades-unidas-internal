@@ -77,7 +77,7 @@ export default function ViewEditLeadContactStatus(
             <tbody>
               <tr>
                 <td>Date of Sign Up:</td>
-                <td>{lead.dateOfSignUp}</td>
+                <td>{lead.dateOfSignUp || "\u2014"}</td>
               </tr>
               <tr>
                 <td>Current Status:</td>

@@ -136,7 +136,9 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
                   </td>
                   <td>
                     <Link to={`/leads/${lead.id}`} className="unstyled">
-                      {dateformat(lead.dateOfSignUp, "m/d/yyyy")}
+                      {lead.dateOfSignUp
+                        ? dateformat(lead.dateOfSignUp, "m/d/yyyy")
+                        : "\u2014"}
                     </Link>
                   </td>
                   <td

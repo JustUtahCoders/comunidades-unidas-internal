@@ -5,7 +5,7 @@ const {
   nonEmptyString,
   validArray,
   validBoolean,
-  validDate,
+  nullableValidDate,
   validInteger,
   nullableNonEmptyString,
   nullableValidInteger,
@@ -26,7 +26,7 @@ app.post("/api/leads", (req, res) => {
   for (let i = 0; i < leads.length; i++) {
     const validityErrors = checkValid(
       leads[i],
-      validDate("dateOfSignUp"),
+      nullableValidDate("dateOfSignUp"),
       nonEmptyString("firstName"),
       nonEmptyString("lastName"),
       nonEmptyString("phone"),
