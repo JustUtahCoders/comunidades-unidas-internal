@@ -1,7 +1,11 @@
 exports.responseDateWithoutTime = (date) => {
-  const dateFormat = require("dateformat");
-  const formattedDate = dateFormat(date, "yyyy-mm-dd");
-  return formattedDate;
+  if (date) {
+    const dateFormat = require("dateformat");
+    const formattedDate = dateFormat(date, "yyyy-mm-dd");
+    return formattedDate;
+  } else {
+    return null;
+  }
 };
 
 exports.responseFullName = (firstName, lastName) =>

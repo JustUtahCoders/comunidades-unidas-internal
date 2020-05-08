@@ -25,7 +25,7 @@ export default function AddLeadsStep(props: AddLeadsStepProps) {
       const abortController = new AbortController();
 
       const leads = state.leads.slice(0, state.leads.length - 1).map((l) => ({
-        dateOfSignUp: "2019-09-17",
+        dateOfSignUp: event ? event.eventDate : null,
         firstName: l.firstName,
         lastName: l.lastName,
         phone: l.phone,
