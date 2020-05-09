@@ -112,7 +112,7 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
                         <option value="">No {fieldKey} selected</option>
                         {props.events.map((event) => (
                           <option key={event.id} value={event.id}>
-                            {event.eventName}
+                            {event.eventName} ({event.eventDate})
                           </option>
                         ))}
                       </select>
