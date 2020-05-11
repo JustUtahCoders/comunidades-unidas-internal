@@ -113,7 +113,8 @@ export default function ReportIssue({
 
   function subheaderText() {
     if (missingFeature) {
-      return "This feature is still in development. In the meantime if you would like to make a suggestion or share an insight, please let us know.";
+      const featureName = title || "This feature";
+      return `${featureName} is still in development. In the meantime if you would like to make a suggestion or share an insight, please let us know.`;
     } else {
       return "Have an issue, idea, or question about this website? Submit it here and we'll get back to you.";
     }

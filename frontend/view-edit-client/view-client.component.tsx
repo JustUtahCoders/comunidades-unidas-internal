@@ -21,6 +21,8 @@ import historyImgUrl from "../../icons/148705-essential-collection/svg/notepad.s
 import integrationsImgUrl from "../../icons/148705-essential-collection/svg/cloud-computing-3.svg";
 import addNewImgUrl from "../../icons/148705-essential-collection/svg/add-1.svg";
 import { IntakeService } from "../util/services-inputs.component";
+import filesUrl from "../../icons/148705-essential-collection/svg/folder-19.svg";
+import ClientFiles from "../client-files/client-files.component";
 
 export default function ViewClient(props: ViewClientProps) {
   const [client, setClient] = React.useState<SingleClient>(null);
@@ -100,6 +102,11 @@ export default function ViewClient(props: ViewClientProps) {
               </Link>
             </li>
             <li>
+              <Link to={`/clients/${clientId}/files`} getProps={getLinkProps}>
+                <img src={filesUrl} alt="Files icon" title="Client Files" />
+              </Link>
+            </li>
+            <li>
               <Link
                 to={`/clients/${clientId}/add-info`}
                 getProps={getLinkProps}
@@ -120,6 +127,7 @@ export default function ViewClient(props: ViewClientProps) {
         <AddCaseNote path="add-case-note" {...childProps} />
         <AddClientInteraction path="add-client-interaction" {...childProps} />
         <Integrations path="integrations" {...childProps} />
+        <ClientFiles path="files" {...childProps} />
       </Router>
     </div>
   );
