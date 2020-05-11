@@ -29,38 +29,43 @@ export default function ClientFiles(props: ClientFilesProps) {
         {
           signal: abortController.signal,
         }
-      )
-        .then((data) => {
-          const formData = new FormData();
+      ).then((data) => {
+        const formData = new FormData();
 
-          entries(data.presignedPost.fields).forEach(([key, value]) => {
-            // if (key !== 'bucket' && key !== 'region') {
-            // @ts-ignore
-            formData.append(key, value);
-            // }
-          });
-
-          filesToUpload.forEach((file) => {
-            formData.append("file", file);
-          });
-
-          // return easyFetch(data.presignedPost.url, {
-          return easyFetch(
-            `https://comunidades-unidas-test-file-uploads.s3.amazonaws.com`,
-            {
-              // return easyFetch(`https://comunidades-unidas-test-file-uploads.s3.amazonaws.com/`, {
-              method: "POST",
-              signal: abortController.signal,
-              body: formData,
-              headers: {
-                // 'Content-Type': 'multipart/form-data'
-              },
-            }
-          );
-        })
-        .then((response) => {
-          console.log("response!", response);
+        entries(data.presignedPost.fields).forEach(([key, value]) => {
+          // @ts-ignore
+          formData.append(key, value);
         });
+
+        filesToUpload.forEach((file) => {
+          formData.append("file", file);
+        });
+
+        const fileName = filesToUpload[0].name;
+        const extensionSplit = fileName.split(".");
+        const fileExtension =
+          extensionSplit.length > 1
+            ? extensionSplit[extensionSplit.length - 1]
+            : "";
+        const fileSize = filesToUpload[0].size;
+
+        return easyFetch(data.presignedPost.url, {
+          method: "POST",
+          signal: abortController.signal,
+          body: formData,
+        }).then(() =>
+          easyFetch(`/api/clients/${props.clientId}/files`, {
+            signal: abortController.signal,
+            method: "POST",
+            body: {
+              s3Key: data.presignedPost.fields.key,
+              fileName,
+              fileExtension,
+              fileSize,
+            },
+          })
+        );
+      });
 
       return () => {
         abortController.abort();
