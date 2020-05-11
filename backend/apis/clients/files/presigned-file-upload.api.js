@@ -13,20 +13,14 @@ AWS.config.update({
 });
 
 app.get("/api/file-upload-urls", (req, res, next) => {
-  console.log("here", 0);
   AWS.config.getCredentials((err, data) => {
     if (err) {
-      console.log(err);
       return internalError(req, res, err);
     }
-
-    console.log("here", 1);
 
     if (AWS.config.region !== "us-west-1") {
       throw Error("wrong region " + AWS.config.region);
     }
-
-    console.log("here", 2);
 
     const s3 = new AWS.S3();
 
