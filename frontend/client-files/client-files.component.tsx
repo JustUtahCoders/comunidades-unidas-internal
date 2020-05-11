@@ -5,8 +5,15 @@ import { useDropzone } from "react-dropzone";
 import pictureUrl from "../../icons/148705-essential-collection/svg/picture.svg";
 import easyFetch from "../util/easy-fetch";
 import { entries } from "lodash-es";
+import ReportIssue from "../report-issue/report-issue.component";
 
-export default function ClientFiles(props) {
+export default function ClientFiles(props: ClientFilesProps) {
+  if (!localStorage.getItem("client-files")) {
+    return (
+      <ReportIssue missingFeature hideHeader title="Client file storage" />
+    );
+  }
+
   const scope = useCss(css);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   const [filesToUpload, setFilesToUpload] = React.useState(null);
