@@ -5,7 +5,6 @@ const {
   databaseError,
   pool,
 } = require("../../../server");
-const AWS = require("aws-sdk");
 const { checkValid, validId } = require("../../utils/validation-utils");
 const { responseFullName } = require("../../utils/transform-utils");
 const mysql = require("mysql");

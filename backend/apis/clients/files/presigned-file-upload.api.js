@@ -10,10 +10,6 @@ app.get("/api/file-upload-urls", (req, res, next) => {
       return internalError(req, res, err);
     }
 
-    if (AWS.config.region !== "us-west-1") {
-      throw Error("wrong region " + AWS.config.region);
-    }
-
     const s3 = new AWS.S3();
 
     const [name, extension] = req.query.file.split(".");
