@@ -88,51 +88,6 @@ You will need the corresponding signed URL from above to access, any of the foll
 
 ---
 
-## Get a client file
-
-```http
-GET /api/clients/:clientId/files/:fileId
-```
-
-### Response
-
-#### Success
-
-```json
-{
-  "id": 1,
-  "createdBy": {
-    "firstName": "Sean",
-    "lastName": "White",
-    "fullName": "Sean White",
-    "timestamp": "2019-11-06T06:00:00.000Z"
-  },
-  "fileName": "fileId",
-  "fileSize": "10mb",
-  "fileExtension": "pdf"
-}
-```
-
-#### Error
-
-If there is no client with the provided id, you will get a 404 HTTP response, with the following error
-
-```json
-{
-  "errors": ["Could not find client with id 2"]
-}
-```
-
-If there is no file with the provided id, you will get a 404 HTTP response, with the following error
-
-```json
-{
-  "errors": ["Could not find fileId"]
-}
-```
-
----
-
 ## Get all client files
 
 ```http
