@@ -54,7 +54,7 @@ app.post("/api/clients/:clientId/files", (req, res) => {
         INSERT INTO clientFiles (s3Key, fileName, fileSize, fileExtension, addedBy)
         VALUES (?, ?, ?, ?, ?);
 
-        SELECT LAST_INSERT_ID();
+        SELECT LAST_INSERT_ID() id;
       `,
           [
             req.body.s3Key,
@@ -70,9 +70,12 @@ app.post("/api/clients/:clientId/files", (req, res) => {
             return databaseError(req, res, err);
           }
 
-          const response = Object.assign({}, result, { id: result[1].id });
-
-          res.json(response);
+          res.json({
+            id: result[1][0].id,
+            s3Key: req.body.s3Key,
+            fileSize: req.body.fileSize,
+            fileExtension: req.body.fileExtension,
+          });
         });
       }
     );
