@@ -27,8 +27,8 @@ app.get("/api/clients/:clientId/files/:fileId/signed-downloads", (req, res) => {
 
   const getSql = mysql.format(
     `
-    SELECT isDeleted FROM clients WHERE id = ?;
-    SELECT s3Key, fileName FROM clientFiles WHERE clientId = ? AND id = ?;
+    SELECT isDeleted FROM clients WHERE id = ? AND isDeleted = false;
+    SELECT s3Key, fileName FROM clientFiles WHERE clientId = ? AND id = ? AND isDeleted = false;
     `,
     [clientId, clientId, fileId]
   );
