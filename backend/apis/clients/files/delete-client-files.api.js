@@ -6,12 +6,10 @@ const {
   databaseError,
   pool,
 } = require("../../../server");
-const AWS = require("aws-sdk");
 const mysql = require("mysql");
 const { checkValid, validId } = require("../../utils/validation-utils");
-const { Bucket } = require("./file-helpers");
 
-app.get("/api/clients/:clientId/files/:fileId/signed-downloads", (req, res) => {
+app.delete("/api/clients/:clientId/files/:fileId", (req, res) => {
   const validationErrors = checkValid(
     req.params,
     validId("clientId"),
@@ -50,32 +48,19 @@ app.get("/api/clients/:clientId/files/:fileId/signed-downloads", (req, res) => {
       );
     }
 
-    const { s3Key, fileName } = fileResult[0];
+    const deleteSql = mysql.format(
+      `
+      UPDATE clientFiles SET isDeleted = true WHERE id = ?;
+      `,
+      [fileId]
+    );
 
-    AWS.config.getCredentials((err, data) => {
+    pool.query(deleteSql, (err, result) => {
       if (err) {
-        return internalError(req, res, err);
+        return databaseError(req, res, err);
       }
 
-      const s3 = new AWS.S3();
-      s3.getSignedUrl(
-        "getObject",
-        {
-          Bucket,
-          Key: s3Key,
-          Expires: 120,
-          ResponseContentDisposition: `attachment; filename="${fileName}"`,
-        },
-        (err, url) => {
-          if (err) {
-            return internalError(req, res, err);
-          }
-
-          res.send({
-            downloadUrl: url,
-          });
-        }
-      );
+      res.status(204).end();
     });
   });
 });
