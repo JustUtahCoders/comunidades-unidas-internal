@@ -32,7 +32,9 @@ export default function Modal(props: ModalProps) {
         <div className="modal-footer">
           <div>
             {props.tertiaryText && (
-              <button className="secondary">{props.tertiaryText}</button>
+              <button className="secondary" onClick={props.tertiaryAction}>
+                {props.tertiaryText}
+              </button>
             )}
           </div>
           <div>

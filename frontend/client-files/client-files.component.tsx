@@ -7,6 +7,7 @@ import easyFetch from "../util/easy-fetch";
 import { entries } from "lodash-es";
 import ReportIssue from "../report-issue/report-issue.component";
 import { UserModeContext, UserMode } from "../util/user-mode.context";
+import ClientFileChip from "./client-file-chip.component";
 
 export default function ClientFiles(props: ClientFilesProps) {
   if (!localStorage.getItem("client-files")) {
@@ -100,9 +101,6 @@ export default function ClientFiles(props: ClientFilesProps) {
   return (
     <div className="card" {...scope}>
       <h1>Client files</h1>
-      {clientFiles.map((clientFile) => (
-        <div key={clientFile.id}>{clientFile.fileName}</div>
-      ))}
       <div
         {...getRootProps({
           className: always("dropzone").maybe("active", isDragActive),
@@ -118,11 +116,23 @@ export default function ClientFiles(props: ClientFilesProps) {
           "Drop files or click to add"
         )}
       </div>
+      {clientFiles.map((clientFile) => (
+        <ClientFileChip
+          key={clientFile.id}
+          file={clientFile}
+          clientId={props.clientId}
+          refetchFiles={refetchFiles}
+        />
+      ))}
     </div>
   );
 
   function onDrop(acceptedFiles) {
     setFilesToUpload(acceptedFiles);
+  }
+
+  function refetchFiles() {
+    setNumUploadedFiles(numUploadedFiles + 1);
   }
 }
 
@@ -133,11 +143,12 @@ const css = `
 
 & .dropzone {
   border: .1rem dashed var(--very-dark-gray);
-  background-color: var(--light-gray);
+  background-color: var(--colored-well);
   min-height: 14rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 3.2rem;
 }
 
 & .dropzone img {
@@ -156,7 +167,7 @@ type ClientFilesProps = {
   navigate?: (path) => any;
 };
 
-type ClientFile = {
+export type ClientFile = {
   id: number;
   fileName: string;
   fileSize: number;
