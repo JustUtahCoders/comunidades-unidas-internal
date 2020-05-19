@@ -6,7 +6,7 @@ import pictureUrl from "../../icons/148705-essential-collection/svg/picture.svg"
 import easyFetch from "../util/easy-fetch";
 import { entries } from "lodash-es";
 import ReportIssue from "../report-issue/report-issue.component";
-import { showGrowl } from "../growls/growls.component";
+import { UserModeContext, UserMode } from "../util/user-mode.context";
 
 export default function ClientFiles(props: ClientFilesProps) {
   if (!localStorage.getItem("client-files")) {
@@ -20,11 +20,14 @@ export default function ClientFiles(props: ClientFilesProps) {
   const [filesToUpload, setFilesToUpload] = React.useState(null);
   const [clientFiles, setClientFiles] = React.useState<Array<ClientFile>>([]);
   const [shouldRefetch, setShouldRefetch] = React.useState(true);
+  const { userMode } = React.useContext(UserModeContext);
+  const tagsQuery =
+    userMode === UserMode.immigration ? `?tags=immigration` : "";
 
   React.useEffect(() => {
     if (shouldRefetch) {
       const abortController = new AbortController();
-      easyFetch(`/api/clients/${props.clientId}/files`, {
+      easyFetch(`/api/clients/${props.clientId}/files${tagsQuery}`, {
         signal: abortController.signal,
       })
         .then((data) => {
@@ -43,7 +46,7 @@ export default function ClientFiles(props: ClientFilesProps) {
         abortController.abort();
       };
     }
-  }, [props.clientId, shouldRefetch]);
+  }, [props.clientId, shouldRefetch, tagsQuery]);
 
   React.useEffect(() => {
     if (filesToUpload) {
@@ -77,7 +80,7 @@ export default function ClientFiles(props: ClientFilesProps) {
             body: formData,
           })
             .then(() =>
-              easyFetch(`/api/clients/${props.clientId}/files`, {
+              easyFetch(`/api/clients/${props.clientId}/files${tagsQuery}`, {
                 method: "POST",
                 body: {
                   s3Key: data.presignedPost.fields.key,
@@ -97,7 +100,7 @@ export default function ClientFiles(props: ClientFilesProps) {
           });
         });
     }
-  }, [filesToUpload]);
+  }, [filesToUpload, tagsQuery]);
 
   return (
     <div className="card" {...scope}>

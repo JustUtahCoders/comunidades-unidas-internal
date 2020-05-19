@@ -111,11 +111,14 @@ GET /api/clients/:clientId/files
       },
       "fileName": "fileId",
       "fileSize": "10mb",
-      "fileExtension": "pdf"
+      "fileExtension": "pdf",
+      "redacted": false
     }
   ]
 }
 ```
+
+`redacted` refers to whether the file has immigration information and has been redacted.
 
 #### Error
 
@@ -160,7 +163,8 @@ POST /api/clients/:clientId/file
   },
   "fileName": "fileId",
   "fileSize": "10mb",
-  "fileExtension": "pdf"
+  "fileExtension": "pdf",
+  "redacted": false
 }
 ```
 

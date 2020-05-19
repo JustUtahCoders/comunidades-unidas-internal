@@ -11,12 +11,16 @@ const {
   validId,
   nonEmptyString,
   validInteger,
+  nullableValidTags,
 } = require("../../utils/validation-utils");
 const { responseFullName } = require("../../utils/transform-utils");
 const { Bucket } = require("./file-helpers");
 const mysql = require("mysql");
+const { insertTagsQuery, sanitizeTags } = require("../../tags/tag.utils");
 
 app.post("/api/clients/:clientId/files", (req, res) => {
+  const user = req.session.passport.user;
+
   const validationErrors = [
     ...checkValid(req.params, validId("clientId")),
     ...checkValid(
@@ -26,6 +30,7 @@ app.post("/api/clients/:clientId/files", (req, res) => {
       validInteger("fileSize"),
       nonEmptyString("fileExtension")
     ),
+    ...checkValid(req.query, nullableValidTags("tags", user.permissions)),
   ];
 
   if (validationErrors.length > 0) {
@@ -33,7 +38,7 @@ app.post("/api/clients/:clientId/files", (req, res) => {
   }
 
   const clientId = req.params.clientId;
-  const user = req.session.passport.user;
+  const tags = sanitizeTags(req.query.tags);
 
   const checkClientSql = mysql.format(
     `
@@ -74,7 +79,11 @@ app.post("/api/clients/:clientId/files", (req, res) => {
           INSERT INTO clientFiles (s3Key, fileName, fileSize, fileExtension, addedBy, clientId)
           VALUES (?, ?, ?, ?, ?, ?);
 
-          SELECT LAST_INSERT_ID() id;
+          SET @clientFileId := LAST_INSERT_ID();
+
+          SELECT @clientFileId id;
+
+          ${insertTagsQuery({ rawValue: "@clientFileId" }, "clientFiles", tags)}
         `,
             [
               req.body.s3Key,
@@ -92,7 +101,7 @@ app.post("/api/clients/:clientId/files", (req, res) => {
             }
 
             res.json({
-              id: result[1][0].id,
+              id: result[2][0].id,
               s3Key: req.body.s3Key,
               fileSize: req.body.fileSize,
               fileExtension: req.body.fileExtension,
@@ -102,6 +111,7 @@ app.post("/api/clients/:clientId/files", (req, res) => {
                 fullName: responseFullName(user.firstName, user.lastName),
                 timestamp: new Date(),
               },
+              redacted: false,
             });
           });
         }

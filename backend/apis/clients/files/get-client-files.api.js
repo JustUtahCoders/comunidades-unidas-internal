@@ -5,18 +5,31 @@ const {
   databaseError,
   pool,
 } = require("../../../server");
-const { checkValid, validId } = require("../../utils/validation-utils");
+const {
+  checkValid,
+  validId,
+  nullableValidTags,
+} = require("../../utils/validation-utils");
 const { responseFullName } = require("../../utils/transform-utils");
 const mysql = require("mysql");
+const { validTagsList, sanitizeTags } = require("../../tags/tag.utils");
 
 app.get("/api/clients/:clientId/files", (req, res) => {
-  const validationErrors = [...checkValid(req.params, validId("clientId"))];
+  const validationErrors = [
+    ...checkValid(req.params, validId("clientId")),
+    ...checkValid(
+      req.query,
+      nullableValidTags("tags", req.session.passport.user.permissions)
+    ),
+  ];
 
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
   }
 
   const clientId = Number(req.params.clientId);
+  const tags = sanitizeTags(req.query.tags);
+  const redactedTags = validTagsList.filter((t) => !tags.includes(t));
 
   const checkClientSql = mysql.format(
     `
@@ -39,9 +52,14 @@ app.get("/api/clients/:clientId/files", (req, res) => {
     const getFilesSql = mysql.format(
       `
       SELECT clientFiles.id, clientFiles.fileName, clientFiles.fileSize, clientFiles.fileExtension,
-        clientFiles.dateAdded, users.firstName, users.lastName
-      FROM clientFiles JOIN users ON users.id = clientFiles.addedBy
-      WHERE isDeleted = false AND clientId = ?;
+        clientFiles.dateAdded, users.firstName, users.lastName, JSON_ARRAYAGG(tags.tag) tags
+      FROM
+        clientFiles
+        JOIN users ON users.id = clientFiles.addedBy
+        LEFT JOIN tags on tags.foreignId = clientFiles.id AND (tags.foreignTable = 'clientFiles' OR tags.foreignTable IS NULL)
+      WHERE isDeleted = false AND clientId = ?
+      GROUP BY clientFiles.id
+      ;
     `,
       [clientId]
     );
@@ -52,18 +70,27 @@ app.get("/api/clients/:clientId/files", (req, res) => {
       }
 
       res.send({
-        files: result.map((f) => ({
-          id: f.id,
-          fileName: f.fileName,
-          fileSize: f.fileSize,
-          fileExtension: f.fileExtension,
-          createdBy: {
-            firstName: f.firstName,
-            lastName: f.lastName,
-            fullName: responseFullName(f.firstName, f.lastName),
-            timestamp: f.dateAdded,
-          },
-        })),
+        files: result.map((f) => {
+          if (typeof f.tags === "string") {
+            f.tags = JSON.parse(f.tags);
+          }
+
+          const redact = f.tags.some((t) => redactedTags.includes(t));
+
+          return {
+            id: f.id,
+            fileName: redact ? "" : f.fileName,
+            fileSize: redact ? 0 : f.fileSize,
+            fileExtension: f.fileExtension,
+            createdBy: {
+              firstName: f.firstName,
+              lastName: f.lastName,
+              fullName: responseFullName(f.firstName, f.lastName),
+              timestamp: f.dateAdded,
+            },
+            redacted: Boolean(redact),
+          };
+        }),
       });
     });
   });
