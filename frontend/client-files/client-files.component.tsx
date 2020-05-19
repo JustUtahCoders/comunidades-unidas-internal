@@ -172,4 +172,11 @@ export type ClientFile = {
   fileName: string;
   fileSize: number;
   fileExtension: string;
+  createdBy: {
+    firstName: string;
+    lastName: string;
+    fullName: string;
+    timestamp: string;
+  };
+  redacted: boolean;
 };

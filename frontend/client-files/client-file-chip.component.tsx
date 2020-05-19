@@ -12,6 +12,7 @@ import unknownUrl from "../../icons/1126854-file-types/svg/046-file-45.svg";
 import Modal from "../util/modal.component";
 import easyFetch from "../util/easy-fetch";
 import { UserModeContext, UserMode } from "../util/user-mode.context";
+import FilePreview from "./file-preview.component";
 
 export default function ClientFileChip({
   file,
@@ -21,9 +22,15 @@ export default function ClientFileChip({
   const [isPreviewing, setIsPreviewing] = React.useState(false);
   const [isDownloading, setIsDownloading] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
+  const [downloadUrl, setDownloadUrl] = React.useState(null);
+  const [fetchingDownloadUrl, setFetchingDownloadUrl] = React.useState(null);
   const { userMode } = React.useContext(UserModeContext);
   const tagsQuery =
     userMode === UserMode.immigration ? `?tags=immigration` : "";
+  const needsDownloadUrl = React.useCallback(
+    () => setFetchingDownloadUrl(true),
+    []
+  );
 
   React.useEffect(() => {
     if (isDeleting) {
@@ -47,7 +54,7 @@ export default function ClientFileChip({
   }, [isDeleting, tagsQuery]);
 
   React.useEffect(() => {
-    if (isDownloading) {
+    if (fetchingDownloadUrl) {
       const abortController = new AbortController();
 
       easyFetch(
@@ -57,20 +64,30 @@ export default function ClientFileChip({
         }
       )
         .then((response) => {
-          close();
-          window.location.href = response.downloadUrl;
+          setDownloadUrl(response.downloadUrl);
         })
         .catch((err) => {
           setTimeout(() => {
             throw err;
           });
+        })
+        .finally(() => {
+          setFetchingDownloadUrl(false);
         });
 
       return () => {
         abortController.abort();
       };
     }
-  }, [isDownloading, tagsQuery]);
+  }, [fetchingDownloadUrl, tagsQuery]);
+
+  React.useEffect(() => {
+    if (isDownloading) {
+      if (!fetchingDownloadUrl && downloadUrl) {
+        window.location.href = downloadUrl;
+      }
+    }
+  }, [isDownloading, downloadUrl]);
 
   return (
     <>
@@ -87,27 +104,32 @@ export default function ClientFileChip({
             alt={`${file.fileExtension} icon`}
           />
         </div>
-        <div className="file-description">{file.fileName}</div>
+        <div className="file-description">
+          {file.redacted ? "(immigration)" : file.fileName}
+        </div>
       </div>
       {isPreviewing && (
         <Modal
           close={close}
-          headerText={file.fileName}
+          headerText={file.redacted ? "Immigration file" : file.fileName}
           primaryText="Download"
           primaryAction={download}
-          secondaryText="Delete"
-          secondaryAction={deleteFile}
-          tertiaryText="Close"
-          tertiaryAction={close}
+          secondaryText="Close"
+          secondaryAction={close}
+          tertiaryText="Soft Delete"
+          tertiaryAction={deleteFile}
         >
-          <div>The preview</div>
+          <FilePreview
+            file={file}
+            needsDownloadUrl={needsDownloadUrl}
+            downloadUrl={downloadUrl}
+          />
         </Modal>
       )}
     </>
   );
 
   function close() {
-    console.log("closing");
     setIsPreviewing(false);
   }
 
