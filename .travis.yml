@@ -13,7 +13,7 @@ before_deploy:
 deploy:
   provider: script
   before_script:
-  script: echo "Deploying with ebcli" && python --version && eb deploy comunidades-unidas-internal-prod
+  script: echo "Deploying with ebcli" && python --version && eb deploy --debug comunidades-unidas-internal-prod
   on:
     branch: master
   skip_cleanup: true
