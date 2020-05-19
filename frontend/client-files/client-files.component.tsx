@@ -19,34 +19,29 @@ export default function ClientFiles(props: ClientFilesProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   const [filesToUpload, setFilesToUpload] = React.useState(null);
   const [clientFiles, setClientFiles] = React.useState<Array<ClientFile>>([]);
-  const [shouldRefetch, setShouldRefetch] = React.useState(true);
+  const [numUploadedFiles, setNumUploadedFiles] = React.useState(0);
   const { userMode } = React.useContext(UserModeContext);
   const tagsQuery =
     userMode === UserMode.immigration ? `?tags=immigration` : "";
 
   React.useEffect(() => {
-    if (shouldRefetch) {
-      const abortController = new AbortController();
-      easyFetch(`/api/clients/${props.clientId}/files${tagsQuery}`, {
-        signal: abortController.signal,
+    const abortController = new AbortController();
+    easyFetch(`/api/clients/${props.clientId}/files${tagsQuery}`, {
+      signal: abortController.signal,
+    })
+      .then((data) => {
+        setClientFiles(data.files);
       })
-        .then((data) => {
-          setClientFiles(data.files);
-        })
-        .catch((err) => {
-          setTimeout(() => {
-            throw err;
-          });
-        })
-        .finally(() => {
-          setShouldRefetch(false);
+      .catch((err) => {
+        setTimeout(() => {
+          throw err;
         });
+      });
 
-      return () => {
-        abortController.abort();
-      };
-    }
-  }, [props.clientId, shouldRefetch, tagsQuery]);
+    return () => {
+      abortController.abort();
+    };
+  }, [props.clientId, numUploadedFiles, tagsQuery]);
 
   React.useEffect(() => {
     if (filesToUpload) {
@@ -91,7 +86,7 @@ export default function ClientFiles(props: ClientFilesProps) {
               })
             )
             .then(() => {
-              setShouldRefetch(true);
+              setNumUploadedFiles(numUploadedFiles + 1);
             });
         })
         .catch((err) => {
