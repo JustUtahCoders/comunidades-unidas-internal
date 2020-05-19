@@ -6,6 +6,7 @@ import pictureUrl from "../../icons/148705-essential-collection/svg/picture.svg"
 import easyFetch from "../util/easy-fetch";
 import { entries } from "lodash-es";
 import ReportIssue from "../report-issue/report-issue.component";
+import { showGrowl } from "../growls/growls.component";
 
 export default function ClientFiles(props: ClientFilesProps) {
   if (!localStorage.getItem("client-files")) {
@@ -17,65 +18,93 @@ export default function ClientFiles(props: ClientFilesProps) {
   const scope = useCss(css);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   const [filesToUpload, setFilesToUpload] = React.useState(null);
+  const [clientFiles, setClientFiles] = React.useState<Array<ClientFile>>([]);
+  const [shouldRefetch, setShouldRefetch] = React.useState(true);
 
   React.useEffect(() => {
-    if (filesToUpload) {
+    if (shouldRefetch) {
       const abortController = new AbortController();
-
-      easyFetch(
-        `/api/file-upload-urls?file=${filesToUpload
-          .map((f) => f.name)
-          .join("&file=")}`,
-        {
-          signal: abortController.signal,
-        }
-      ).then((data) => {
-        const formData = new FormData();
-
-        entries(data.presignedPost.fields).forEach(([key, value]) => {
-          // @ts-ignore
-          formData.append(key, value);
+      easyFetch(`/api/clients/${props.clientId}/files`, {
+        signal: abortController.signal,
+      })
+        .then((data) => {
+          setClientFiles(data.files);
+        })
+        .catch((err) => {
+          setTimeout(() => {
+            throw err;
+          });
+        })
+        .finally(() => {
+          setShouldRefetch(false);
         });
-
-        filesToUpload.forEach((file) => {
-          formData.append("file", file);
-        });
-
-        const fileName = filesToUpload[0].name;
-        const extensionSplit = fileName.split(".");
-        const fileExtension =
-          extensionSplit.length > 1
-            ? extensionSplit[extensionSplit.length - 1]
-            : "";
-        const fileSize = filesToUpload[0].size;
-
-        return easyFetch(data.presignedPost.url, {
-          method: "POST",
-          signal: abortController.signal,
-          body: formData,
-        }).then(() =>
-          easyFetch(`/api/clients/${props.clientId}/files`, {
-            signal: abortController.signal,
-            method: "POST",
-            body: {
-              s3Key: data.presignedPost.fields.key,
-              fileName,
-              fileExtension,
-              fileSize,
-            },
-          })
-        );
-      });
 
       return () => {
         abortController.abort();
       };
+    }
+  }, [props.clientId, shouldRefetch]);
+
+  React.useEffect(() => {
+    if (filesToUpload) {
+      easyFetch(
+        `/api/file-upload-urls?file=${filesToUpload
+          .map((f) => f.name)
+          .join("&file=")}`
+      )
+        .then((data) => {
+          const formData = new FormData();
+
+          entries(data.presignedPost.fields).forEach(([key, value]) => {
+            // @ts-ignore
+            formData.append(key, value);
+          });
+
+          filesToUpload.forEach((file) => {
+            formData.append("file", file);
+          });
+
+          const fileName = filesToUpload[0].name;
+          const extensionSplit = fileName.split(".");
+          const fileExtension =
+            extensionSplit.length > 1
+              ? extensionSplit[extensionSplit.length - 1]
+              : "";
+          const fileSize = filesToUpload[0].size;
+
+          return easyFetch(data.presignedPost.url, {
+            method: "POST",
+            body: formData,
+          })
+            .then(() =>
+              easyFetch(`/api/clients/${props.clientId}/files`, {
+                method: "POST",
+                body: {
+                  s3Key: data.presignedPost.fields.key,
+                  fileName,
+                  fileExtension,
+                  fileSize,
+                },
+              })
+            )
+            .then(() => {
+              setShouldRefetch(true);
+            });
+        })
+        .catch((err) => {
+          setTimeout(() => {
+            throw err;
+          });
+        });
     }
   }, [filesToUpload]);
 
   return (
     <div className="card" {...scope}>
       <h1>Client files</h1>
+      {clientFiles.map((clientFile) => (
+        <div key={clientFile.id}>{clientFile.fileName}</div>
+      ))}
       <div
         {...getRootProps({
           className: always("dropzone").maybe("active", isDragActive),
@@ -127,4 +156,11 @@ type ClientFilesProps = {
   clientId: string;
   client: SingleClient;
   navigate?: (path) => any;
+};
+
+type ClientFile = {
+  id: number;
+  fileName: string;
+  fileSize: number;
+  fileExtension: string;
 };
