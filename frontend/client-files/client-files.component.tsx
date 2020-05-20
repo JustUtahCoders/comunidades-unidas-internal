@@ -7,6 +7,7 @@ import easyFetch from "../util/easy-fetch";
 import { entries } from "lodash-es";
 import ReportIssue from "../report-issue/report-issue.component";
 import { UserModeContext, UserMode } from "../util/user-mode.context";
+import ClientFileChip from "./client-file-chip.component";
 
 export default function ClientFiles(props: ClientFilesProps) {
   if (!localStorage.getItem("client-files")) {
@@ -19,7 +20,7 @@ export default function ClientFiles(props: ClientFilesProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   const [filesToUpload, setFilesToUpload] = React.useState(null);
   const [clientFiles, setClientFiles] = React.useState<Array<ClientFile>>([]);
-  const [numUploadedFiles, setNumUploadedFiles] = React.useState(0);
+  const [refetchFiles, setRefetchFiles] = React.useState(false);
   const { userMode } = React.useContext(UserModeContext);
   const tagsQuery =
     userMode === UserMode.immigration ? `?tags=immigration` : "";
@@ -41,7 +42,7 @@ export default function ClientFiles(props: ClientFilesProps) {
     return () => {
       abortController.abort();
     };
-  }, [props.clientId, numUploadedFiles, tagsQuery]);
+  }, [props.clientId, tagsQuery, refetchFiles]);
 
   React.useEffect(() => {
     if (filesToUpload) {
@@ -85,8 +86,9 @@ export default function ClientFiles(props: ClientFilesProps) {
                 },
               })
             )
-            .then(() => {
-              setNumUploadedFiles(numUploadedFiles + 1);
+            .finally(() => {
+              setFilesToUpload(null);
+              setRefetchFiles(!refetchFiles);
             });
         })
         .catch((err) => {
@@ -95,14 +97,11 @@ export default function ClientFiles(props: ClientFilesProps) {
           });
         });
     }
-  }, [filesToUpload, tagsQuery]);
+  }, [filesToUpload, tagsQuery, refetchFiles]);
 
   return (
     <div className="card" {...scope}>
       <h1>Client files</h1>
-      {clientFiles.map((clientFile) => (
-        <div key={clientFile.id}>{clientFile.fileName}</div>
-      ))}
       <div
         {...getRootProps({
           className: always("dropzone").maybe("active", isDragActive),
@@ -117,6 +116,16 @@ export default function ClientFiles(props: ClientFilesProps) {
         ) : (
           "Drop files or click to add"
         )}
+      </div>
+      <div className="chips">
+        {clientFiles.map((clientFile) => (
+          <ClientFileChip
+            key={clientFile.id}
+            file={clientFile}
+            clientId={props.clientId}
+            refetchFiles={() => setRefetchFiles(!refetchFiles)}
+          />
+        ))}
       </div>
     </div>
   );
@@ -133,11 +142,12 @@ const css = `
 
 & .dropzone {
   border: .1rem dashed var(--very-dark-gray);
-  background-color: var(--light-gray);
+  background-color: var(--colored-well);
   min-height: 14rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 3.2rem;
 }
 
 & .dropzone img {
@@ -146,6 +156,12 @@ const css = `
 
 & .active-drop {
   text-align: center;
+}
+
+& .chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 `;
 
@@ -156,9 +172,16 @@ type ClientFilesProps = {
   navigate?: (path) => any;
 };
 
-type ClientFile = {
+export type ClientFile = {
   id: number;
   fileName: string;
   fileSize: number;
   fileExtension: string;
+  createdBy: {
+    firstName: string;
+    lastName: string;
+    fullName: string;
+    timestamp: string;
+  };
+  redacted: boolean;
 };

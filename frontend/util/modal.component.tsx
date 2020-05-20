@@ -1,6 +1,6 @@
 import React, { DOMElement } from "react";
 import ReactDOM from "react-dom";
-import { useCss } from "kremling";
+import { useCss, always } from "kremling";
 import Styleguide, { mediaDesktop, mediaMobile } from "../styleguide.component";
 
 export default function Modal(props: ModalProps) {
@@ -21,7 +21,10 @@ export default function Modal(props: ModalProps) {
   return ReactDOM.createPortal(
     <Styleguide>
       <div className="modal-screen" {...scope} />
-      <div className="modal-dialog" {...scope}>
+      <div
+        className={always("modal-dialog").maybe("wide", props.wide)}
+        {...scope}
+      >
         <div className="modal-header">
           <div>{props.headerText}</div>
           <button className="icon close" onClick={props.close}>
@@ -32,7 +35,9 @@ export default function Modal(props: ModalProps) {
         <div className="modal-footer">
           <div>
             {props.tertiaryText && (
-              <button className="secondary">{props.tertiaryText}</button>
+              <button className="secondary" onClick={props.tertiaryAction}>
+                {props.tertiaryText}
+              </button>
             )}
           </div>
           <div>
@@ -111,6 +116,11 @@ ${mediaDesktop} {
     border-radius: .3rem;
   }
 
+  & .modal-dialog.wide {
+    width: 80vw;
+    left: calc(50% - 40vw);
+  }
+
   & .modal-body {
     max-height: calc(80vh - 14rem);
     overflow-y: auto;
@@ -138,4 +148,5 @@ type ModalProps = {
   tertiaryText?: string;
   tertiaryAction?(): any;
   children: JSX.Element | JSX.Element[];
+  wide?: boolean;
 };
