@@ -12,18 +12,20 @@ export default function FilePreview({ file, clientId }: FilePreviewProps) {
   const tagsQuery = userMode === UserMode.immigration ? `tags=immigration` : "";
 
   React.useEffect(() => {
-    switch (file.fileExtension) {
-      case "pdf":
-      case "png":
-      case "jpg":
-      case "jpeg":
-      case "svg":
-      case "gif":
-        setFetchingPreviewUrl(true);
-      default:
-        break;
+    if (!file.redacted) {
+      switch (file.fileExtension) {
+        case "pdf":
+        case "png":
+        case "jpg":
+        case "jpeg":
+        case "svg":
+        case "gif":
+          setFetchingPreviewUrl(true);
+        default:
+          break;
+      }
     }
-  }, [file.fileExtension]);
+  }, [file.fileExtension, file.redacted]);
 
   React.useEffect(() => {
     if (fetchingPreviewUrl) {
@@ -65,7 +67,11 @@ export default function FilePreview({ file, clientId }: FilePreviewProps) {
 
   function getPreview() {
     if (file.redacted) {
-      return <div className="empty">Redacted</div>;
+      return (
+        <div className="empty">
+          The contents of this file have been redacted.
+        </div>
+      );
     } else if (previewUrl) {
       switch (file.fileExtension) {
         case "pdf":

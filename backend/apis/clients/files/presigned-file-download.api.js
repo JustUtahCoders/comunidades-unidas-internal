@@ -92,15 +92,12 @@ app.get("/api/clients/:clientId/files/:fileId/signed-downloads", (req, res) => {
         Bucket,
         Key: s3Key,
         Expires: 120,
-        ResponseContentType:
-          req.query.contentType && req.query.contentType.trim().length > 0
-            ? req.query.contentType
-            : undefined,
-        ResponseContentDisposition:
-          req.query.contentDisposition &&
-          req.query.contentDisposition.trim().length > 0
-            ? req.query.contentDisposition
-            : undefined,
+        ResponseContentType: req.query.contentType
+          ? req.query.contentType
+          : undefined,
+        ResponseContentDisposition: req.query.contentDisposition
+          ? req.query.contentDisposition
+          : undefined,
         // ResponseContentDisposition: `attachment; filename="${fileName}"`,
       };
 

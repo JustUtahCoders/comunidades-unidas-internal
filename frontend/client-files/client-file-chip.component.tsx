@@ -75,6 +75,20 @@ export default function ClientFileChip({
     },
   });
 
+  const modalActions = file.redacted
+    ? {
+        primaryText: "Close",
+        primaryAction: close,
+      }
+    : {
+        primaryText: "Download",
+        primaryAction: download,
+        secondaryText: "Print",
+        secondaryAction: printFile,
+        tertiaryText: "Delete",
+        tertiaryAction: deleteFile,
+      };
+
   return (
     <>
       <div
@@ -103,13 +117,8 @@ export default function ClientFileChip({
               file.createdBy.timestamp
             ).format("MM/DD/YYYY")}`
           }
-          primaryText="Download"
-          primaryAction={download}
-          secondaryText="Print"
-          secondaryAction={printFile}
-          tertiaryText="Delete"
-          tertiaryAction={deleteFile}
           wide
+          {...modalActions}
         >
           <FilePreview file={file} clientId={clientId} />
         </Modal>

@@ -59,7 +59,7 @@ app.get("/api/clients/:clientId/files", (req, res) => {
         LEFT JOIN tags on tags.foreignId = clientFiles.id AND (tags.foreignTable = 'clientFiles' OR tags.foreignTable IS NULL)
       WHERE isDeleted = false AND clientId = ?
       GROUP BY clientFiles.id
-      ORDER BY clientFiles.dateAdded DESC
+      ORDER BY clientFiles.dateAdded ASC
       ;
     `,
       [clientId]
