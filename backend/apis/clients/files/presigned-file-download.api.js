@@ -98,7 +98,6 @@ app.get("/api/clients/:clientId/files/:fileId/signed-downloads", (req, res) => {
         ResponseContentDisposition: req.query.contentDisposition
           ? req.query.contentDisposition
           : undefined,
-        // ResponseContentDisposition: `attachment; filename="${fileName}"`,
       };
 
       const s3 = new AWS.S3();
