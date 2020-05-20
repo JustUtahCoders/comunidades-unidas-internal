@@ -13,6 +13,7 @@ const {
   checkValid,
   validId,
   nullableValidTags,
+  nullableNonEmptyString,
 } = require("../../utils/validation-utils");
 const { Bucket } = require("./file-helpers");
 const { validTagsList, sanitizeTags } = require("../../tags/tag.utils");
@@ -22,7 +23,9 @@ app.get("/api/clients/:clientId/files/:fileId/signed-downloads", (req, res) => {
     ...checkValid(req.params, validId("clientId"), validId("fileId")),
     ...checkValid(
       req.query,
-      nullableValidTags("tags", req.session.passport.user.permissions)
+      nullableValidTags("tags", req.session.passport.user.permissions),
+      nullableNonEmptyString("contentDisposition"),
+      nullableNonEmptyString("contentType")
     ),
   ];
 
@@ -85,25 +88,32 @@ app.get("/api/clients/:clientId/files/:fileId/signed-downloads", (req, res) => {
         return internalError(req, res, err);
       }
 
-      const s3 = new AWS.S3();
-      s3.getSignedUrl(
-        "getObject",
-        {
-          Bucket,
-          Key: s3Key,
-          Expires: 120,
-          ResponseContentDisposition: `attachment; filename="${fileName}"`,
-        },
-        (err, url) => {
-          if (err) {
-            return internalError(req, res, err);
-          }
+      const params = {
+        Bucket,
+        Key: s3Key,
+        Expires: 120,
+        ResponseContentType:
+          req.query.contentType && req.query.contentType.trim().length > 0
+            ? req.query.contentType
+            : undefined,
+        ResponseContentDisposition:
+          req.query.contentDisposition &&
+          req.query.contentDisposition.trim().length > 0
+            ? req.query.contentDisposition
+            : undefined,
+        // ResponseContentDisposition: `attachment; filename="${fileName}"`,
+      };
 
-          res.send({
-            downloadUrl: url,
-          });
+      const s3 = new AWS.S3();
+      s3.getSignedUrl("getObject", params, (err, url) => {
+        if (err) {
+          return internalError(req, res, err);
         }
-      );
+
+        res.send({
+          downloadUrl: url,
+        });
+      });
     });
   });
 });

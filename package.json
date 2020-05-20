@@ -53,6 +53,7 @@
     "ejs": "^3.0.2",
     "email-validator": "^2.0.4",
     "express": "^4.17.1",
+    "ext-name": "^5.0.0",
     "fuzzy-search": "^3.2.1",
     "js-cookie": "^2.2.1",
     "juntos-por-la-salud-node-client": "^1.1.2",

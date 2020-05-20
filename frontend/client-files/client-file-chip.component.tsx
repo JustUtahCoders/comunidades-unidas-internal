@@ -8,11 +8,14 @@ import wordUrl from "../../icons/1126854-file-types/svg/005-file-4.svg";
 import pdfUrl from "../../icons/1126854-file-types/svg/008-file-7.svg";
 import zipUrl from "../../icons/1126854-file-types/svg/009-file-8.svg";
 import excelUrl from "../../icons/1126854-file-types/svg/047-file-46.svg";
+import gifUrl from "../../icons/1126854-file-types/svg/025-file-24.svg";
 import unknownUrl from "../../icons/1126854-file-types/svg/046-file-45.svg";
 import Modal from "../util/modal.component";
 import easyFetch from "../util/easy-fetch";
 import { UserModeContext, UserMode } from "../util/user-mode.context";
 import FilePreview from "./file-preview.component";
+import dayjs from "dayjs";
+import { getContentTypeQuery } from "./file-preview.component";
 
 export default function ClientFileChip({
   file,
@@ -20,23 +23,17 @@ export default function ClientFileChip({
   clientId,
 }: ClientFileChipProps) {
   const [isPreviewing, setIsPreviewing] = React.useState(false);
+  const [isPrinting, setIsPrinting] = React.useState(false);
   const [isDownloading, setIsDownloading] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
-  const [downloadUrl, setDownloadUrl] = React.useState(null);
-  const [fetchingDownloadUrl, setFetchingDownloadUrl] = React.useState(null);
   const { userMode } = React.useContext(UserModeContext);
-  const tagsQuery =
-    userMode === UserMode.immigration ? `?tags=immigration` : "";
-  const needsDownloadUrl = React.useCallback(
-    () => setFetchingDownloadUrl(true),
-    []
-  );
+  const tagsQuery = userMode === UserMode.immigration ? `tags=immigration` : "";
 
   React.useEffect(() => {
     if (isDeleting) {
       const abortController = new AbortController();
 
-      easyFetch(`/api/clients/${clientId}/files/${file.id}${tagsQuery}`, {
+      easyFetch(`/api/clients/${clientId}/files/${file.id}?${tagsQuery}`, {
         method: "DELETE",
         signal: abortController.signal,
       })
@@ -53,41 +50,30 @@ export default function ClientFileChip({
     }
   }, [isDeleting, tagsQuery]);
 
-  React.useEffect(() => {
-    if (fetchingDownloadUrl) {
-      const abortController = new AbortController();
+  useDownloadUrl({
+    clientId,
+    file,
+    isPerformingAction: isDownloading,
+    setIsPerformingAction: setIsDownloading,
+    tagsQuery,
+    isAttachment: true,
+    action(url) {
+      window.location.href = url;
+    },
+  });
 
-      easyFetch(
-        `/api/clients/${clientId}/files/${file.id}/signed-downloads${tagsQuery}`,
-        {
-          signal: abortController.signal,
-        }
-      )
-        .then((response) => {
-          setDownloadUrl(response.downloadUrl);
-        })
-        .catch((err) => {
-          setTimeout(() => {
-            throw err;
-          });
-        })
-        .finally(() => {
-          setFetchingDownloadUrl(false);
-        });
-
-      return () => {
-        abortController.abort();
-      };
-    }
-  }, [fetchingDownloadUrl, tagsQuery]);
-
-  React.useEffect(() => {
-    if (isDownloading) {
-      if (!fetchingDownloadUrl && downloadUrl) {
-        window.location.href = downloadUrl;
-      }
-    }
-  }, [isDownloading, downloadUrl]);
+  useDownloadUrl({
+    clientId,
+    file,
+    isPerformingAction: isPrinting,
+    setIsPerformingAction: setIsPrinting,
+    tagsQuery,
+    isAttachment: false,
+    action(url) {
+      const win = window.open(url, "_blank");
+      win.focus();
+    },
+  });
 
   return (
     <>
@@ -111,19 +97,21 @@ export default function ClientFileChip({
       {isPreviewing && (
         <Modal
           close={close}
-          headerText={file.redacted ? "Immigration file" : file.fileName}
+          headerText={
+            (file.redacted ? "Immigration file" : file.fileName) +
+            ` - ${file.createdBy.fullName} - ${dayjs(
+              file.createdBy.timestamp
+            ).format("MM/DD/YYYY")}`
+          }
           primaryText="Download"
           primaryAction={download}
-          secondaryText="Close"
-          secondaryAction={close}
-          tertiaryText="Soft Delete"
+          secondaryText="Print"
+          secondaryAction={printFile}
+          tertiaryText="Delete"
           tertiaryAction={deleteFile}
+          wide
         >
-          <FilePreview
-            file={file}
-            needsDownloadUrl={needsDownloadUrl}
-            downloadUrl={downloadUrl}
-          />
+          <FilePreview file={file} clientId={clientId} />
         </Modal>
       )}
     </>
@@ -140,6 +128,11 @@ export default function ClientFileChip({
   function deleteFile() {
     close();
     setIsDeleting(true);
+  }
+
+  function printFile() {
+    close();
+    setIsPrinting(true);
   }
 }
 
@@ -162,6 +155,8 @@ function extensionToImgUrl(extension) {
     case "xls":
     case "xlsx":
       return excelUrl;
+    case "gif":
+      return gifUrl;
     default:
       return unknownUrl;
   }
@@ -169,7 +164,7 @@ function extensionToImgUrl(extension) {
 
 const css = `
 & .client-file-chip {
-  display: inline-block;
+  min-width: 15rem;
   width: 15rem;
   height: 15rem;
   border: .1rem solid var(--medium-gray);
@@ -200,6 +195,7 @@ const css = `
   justify-content: center;
   text-align: center;
   font-size: 1.4rem;
+  word-break: break-all;
 }
 
 & .client-file-chip:hover .file-description {
@@ -212,3 +208,50 @@ type ClientFileChipProps = {
   clientId: string;
   refetchFiles(): void;
 };
+
+function useDownloadUrl({
+  isPerformingAction,
+  clientId,
+  file,
+  tagsQuery,
+  setIsPerformingAction,
+  action,
+  isAttachment,
+}) {
+  React.useEffect(() => {
+    if (isPerformingAction) {
+      const abortController = new AbortController();
+
+      const contentDisposition = isAttachment
+        ? `contentDisposition=${encodeURIComponent(
+            `attachment; filename="${file.fileName}"`
+          )}&`
+        : "";
+      const contentType = isAttachment
+        ? ""
+        : getContentTypeQuery(file.fileName);
+
+      easyFetch(
+        `/api/clients/${clientId}/files/${file.id}/signed-downloads?${contentType}${contentDisposition}${tagsQuery}`,
+        {
+          signal: abortController.signal,
+        }
+      )
+        .then((response) => {
+          action(response.downloadUrl);
+        })
+        .catch((err) => {
+          setTimeout(() => {
+            throw err;
+          });
+        })
+        .finally(() => {
+          setIsPerformingAction(false);
+        });
+
+      return () => {
+        abortController.abort();
+      };
+    }
+  }, [isPerformingAction, tagsQuery, file.fileName, clientId]);
+}

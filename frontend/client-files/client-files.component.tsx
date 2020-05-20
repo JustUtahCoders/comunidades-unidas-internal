@@ -20,7 +20,7 @@ export default function ClientFiles(props: ClientFilesProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   const [filesToUpload, setFilesToUpload] = React.useState(null);
   const [clientFiles, setClientFiles] = React.useState<Array<ClientFile>>([]);
-  const [numUploadedFiles, setNumUploadedFiles] = React.useState(0);
+  const [refetchFiles, setRefetchFiles] = React.useState(false);
   const { userMode } = React.useContext(UserModeContext);
   const tagsQuery =
     userMode === UserMode.immigration ? `?tags=immigration` : "";
@@ -42,7 +42,7 @@ export default function ClientFiles(props: ClientFilesProps) {
     return () => {
       abortController.abort();
     };
-  }, [props.clientId, numUploadedFiles, tagsQuery]);
+  }, [props.clientId, tagsQuery, refetchFiles]);
 
   React.useEffect(() => {
     if (filesToUpload) {
@@ -86,8 +86,9 @@ export default function ClientFiles(props: ClientFilesProps) {
                 },
               })
             )
-            .then(() => {
-              setNumUploadedFiles(numUploadedFiles + 1);
+            .finally(() => {
+              setFilesToUpload(null);
+              setRefetchFiles(!refetchFiles);
             });
         })
         .catch((err) => {
@@ -96,7 +97,7 @@ export default function ClientFiles(props: ClientFilesProps) {
           });
         });
     }
-  }, [filesToUpload, tagsQuery]);
+  }, [filesToUpload, tagsQuery, refetchFiles]);
 
   return (
     <div className="card" {...scope}>
@@ -116,23 +117,21 @@ export default function ClientFiles(props: ClientFilesProps) {
           "Drop files or click to add"
         )}
       </div>
-      {clientFiles.map((clientFile) => (
-        <ClientFileChip
-          key={clientFile.id}
-          file={clientFile}
-          clientId={props.clientId}
-          refetchFiles={refetchFiles}
-        />
-      ))}
+      <div className="chips">
+        {clientFiles.map((clientFile) => (
+          <ClientFileChip
+            key={clientFile.id}
+            file={clientFile}
+            clientId={props.clientId}
+            refetchFiles={() => setRefetchFiles(!refetchFiles)}
+          />
+        ))}
+      </div>
     </div>
   );
 
   function onDrop(acceptedFiles) {
     setFilesToUpload(acceptedFiles);
-  }
-
-  function refetchFiles() {
-    setNumUploadedFiles(numUploadedFiles + 1);
   }
 }
 
@@ -157,6 +156,12 @@ const css = `
 
 & .active-drop {
   text-align: center;
+}
+
+& .chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 `;
 
