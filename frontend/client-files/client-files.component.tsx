@@ -46,55 +46,53 @@ export default function ClientFiles(props: ClientFilesProps) {
 
   React.useEffect(() => {
     if (filesToUpload) {
-      easyFetch(
-        `/api/file-upload-urls?file=${filesToUpload
-          .map((f) => f.name)
-          .join("&file=")}`
-      )
-        .then((data) => {
-          const formData = new FormData();
+      Promise.all(
+        filesToUpload.map((file) => {
+          return easyFetch(`/api/file-upload-urls?file=${file.name}`).then(
+            (data) => {
+              const formData = new FormData();
 
-          entries(data.presignedPost.fields).forEach(([key, value]) => {
-            // @ts-ignore
-            formData.append(key, value);
-          });
+              entries(data.presignedPost.fields).forEach(([key, value]) => {
+                // @ts-ignore
+                formData.append(key, value);
+              });
 
-          filesToUpload.forEach((file) => {
-            formData.append("file", file);
-          });
+              formData.append("file", file);
 
-          const fileName = filesToUpload[0].name;
-          const extensionSplit = fileName.split(".");
-          const fileExtension =
-            extensionSplit.length > 1
-              ? extensionSplit[extensionSplit.length - 1]
-              : "";
-          const fileSize = filesToUpload[0].size;
+              const fileName = filesToUpload[0].name;
+              const extensionSplit = fileName.split(".");
+              const fileExtension =
+                extensionSplit.length > 1
+                  ? extensionSplit[extensionSplit.length - 1]
+                  : "";
+              const fileSize = filesToUpload[0].size;
 
-          return easyFetch(data.presignedPost.url, {
-            method: "POST",
-            body: formData,
-          })
-            .then(() =>
-              easyFetch(`/api/clients/${props.clientId}/files${tagsQuery}`, {
+              return easyFetch(data.presignedPost.url, {
                 method: "POST",
-                body: {
-                  s3Key: data.presignedPost.fields.key,
-                  fileName,
-                  fileExtension,
-                  fileSize,
-                },
-              })
-            )
-            .finally(() => {
-              setFilesToUpload(null);
-              setRefetchFiles(!refetchFiles);
-            });
+                body: formData,
+              }).then(() =>
+                easyFetch(`/api/clients/${props.clientId}/files${tagsQuery}`, {
+                  method: "POST",
+                  body: {
+                    s3Key: data.presignedPost.fields.key,
+                    fileName,
+                    fileExtension,
+                    fileSize,
+                  },
+                })
+              );
+            }
+          );
         })
+      )
         .catch((err) => {
           setTimeout(() => {
             throw err;
           });
+        })
+        .finally(() => {
+          setFilesToUpload(null);
+          setRefetchFiles(!refetchFiles);
         });
     }
   }, [filesToUpload, tagsQuery, refetchFiles]);
