@@ -17,6 +17,10 @@ app.get("/api/file-upload-urls", (req, res, next) => {
       return internalError(req, res, err);
     }
 
+    if (process.env.AWS_DEFAULT_REGION) {
+      AWS.config.update({ region: process.env.AWS_DEFAULT_REGION });
+    }
+
     const s3 = new AWS.S3();
 
     const [name, extension] = req.query.file.split(".");

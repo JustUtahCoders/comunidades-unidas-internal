@@ -10,12 +10,6 @@ import { UserModeContext, UserMode } from "../util/user-mode.context";
 import ClientFileChip from "./client-file-chip.component";
 
 export default function ClientFiles(props: ClientFilesProps) {
-  if (!localStorage.getItem("client-files")) {
-    return (
-      <ReportIssue missingFeature hideHeader title="Client file storage" />
-    );
-  }
-
   const scope = useCss(css);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   const [filesToUpload, setFilesToUpload] = React.useState(null);
