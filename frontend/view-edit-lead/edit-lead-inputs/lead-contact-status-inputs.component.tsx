@@ -124,8 +124,7 @@ export default function LeadContactStatusInputs(
   function handleSubmit(evt) {
     evt.preventDefault();
 
-    const lead = {
-      dateOfSignUp: dateInputRef.current.value,
+    const lead: LeadContactStatusInfo = {
       leadStatus: leadStatus,
       contactStage: {
         first:
@@ -143,6 +142,10 @@ export default function LeadContactStatusInputs(
       },
       inactivityReason: inactivityReason,
     };
+
+    if (dateInputRef.current.value.trim().length > 0) {
+      lead.dateOfSignUp = dateInputRef.current.value;
+    }
 
     if (!lead.inactivityReason) {
       // https://github.com/JustUtahCoders/comunidades-unidas-internal/issues/478
