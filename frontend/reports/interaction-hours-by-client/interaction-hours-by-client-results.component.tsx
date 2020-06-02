@@ -62,6 +62,9 @@ export default function InteractionHoursByClientResults(props) {
               <td>
                 {data.reportParameters.minInteractionSeconds ? (
                   <span>
+                    {data.reportParameters.minInclusive
+                      ? "At least "
+                      : "More than "}
                     {secondsToHours(
                       data.reportParameters.minInteractionSeconds
                     )}{" "}
@@ -79,6 +82,7 @@ export default function InteractionHoursByClientResults(props) {
             <tr>
               <th>Max Interaction Hours</th>
               <td>
+                {data.reportParameters.minInclusive ? "At most " : "Less than "}
                 {data.reportParameters.maxInteractionSeconds ? (
                   <span>
                     {secondsToHours(
