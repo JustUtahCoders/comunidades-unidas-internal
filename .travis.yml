@@ -7,13 +7,23 @@ script:
   - yarn lint
   - yarn build
 before_deploy:
+  - find static -type f -exec gzip -9 {} \; -exec mv {}.gz {} \;
   # See https://travis-ci.org/JustUtahCoders/comunidades-unidas-internal/builds/647606213
   - virtualenv -p /opt/pyenv/shims/python3 p3 && source p3/bin/activate && python --version && pip --version && pip install awsebcli
   - ls -al
 deploy:
-  provider: script
-  before_script:
-  script: echo "Deploying with ebcli" && python --version && eb deploy comunidades-unidas-internal-prod
-  on:
-    branch: master
-  skip_cleanup: true
+  - provider: s3
+    bucket: comunidades-unidas-frontend-assets
+    skip_cleanup: true
+    acl: public_read
+    region: us-west-2
+    local_dir: static
+    cache_control: "max-age=31536000"
+    detect_encoding: true
+    default_text_charset: "utf-8"
+  - provider: script
+    before_script:
+    script: echo "Deploying with ebcli" && python --version && eb deploy comunidades-unidas-internal-prod
+    on:
+      branch: master
+    skip_cleanup: true
