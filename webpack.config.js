@@ -42,6 +42,10 @@ module.exports = (env, argv) => ({
   },
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js"],
+    alias: {
+      "react-dom$": "react-dom/profiling",
+      "scheduler/tracing": "scheduler/tracing-profiling",
+    },
   },
   plugins: [
     new CleanWebpackPlugin(),
