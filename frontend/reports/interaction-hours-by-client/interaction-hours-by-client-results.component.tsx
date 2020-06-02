@@ -7,6 +7,7 @@ import backIcon from "../../../icons/148705-essential-collection/svg/back.svg";
 import nextIcon from "../../../icons/148705-essential-collection/svg/next.svg";
 import { useQueryParamState } from "../../util/use-query-param-state.hook";
 import { useCss } from "kremling";
+import { formatPhone } from "../../util/formatters";
 
 export default function InteractionHoursByClientResults(props) {
   const { isLoading, data, error } = useReportsApi(
@@ -78,6 +79,7 @@ export default function InteractionHoursByClientResults(props) {
             <tr>
               <th>ID</th>
               <th>Name</th>
+              <th>Phone</th>
               <th># of interactions</th>
               <th># of hours</th>
             </tr>
@@ -92,6 +94,7 @@ export default function InteractionHoursByClientResults(props) {
                   <td>
                     {client.firstName} {client.lastName}
                   </td>
+                  <td>{formatPhone(client.primaryPhone)}</td>
                   <td>{client.numInteractions}</td>
                   <td>{displayDuration(client.totalDuration)}</td>
                 </tr>

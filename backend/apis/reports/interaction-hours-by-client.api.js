@@ -37,7 +37,7 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
 
   const sql = mysql.format(
     `
-      SELECT SQL_CALC_FOUND_ROWS clients.id, clients.firstName, clients.lastName, clients.gender, clients.birthday, clientHours.totalInteractionSeconds, clientHours.numInteractions
+      SELECT SQL_CALC_FOUND_ROWS clients.id, clients.firstName, clients.lastName, clients.gender, clients.birthday, clientHours.totalInteractionSeconds, clientHours.numInteractions, contactInfo.primaryPhone
       FROM
         clients
         INNER JOIN 
@@ -53,6 +53,16 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
           GROUP BY clientId
         ) clientHours
         ON clients.id = clientHours.clientId
+        INNER JOIN (
+          SELECT *
+          FROM
+            contactInformation innerContactInformation
+            JOIN (
+              SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
+              FROM contactInformation GROUP BY clientId
+            ) latestContactInformation
+            ON latestContactInformation.latestDateAdded = innerContactInformation.dateAdded
+        ) contactInfo ON contactInfo.clientId = clients.id
       WHERE
         clientHours.totalInteractionSeconds >= ?
         AND clientHours.totalInteractionSeconds <= ?
@@ -93,6 +103,7 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
         totalDuration: toDuration(c.totalInteractionSeconds),
         totalInteractionSeconds: c.totalInteractionSeconds,
         numInteractions: c.numInteractions,
+        primaryPhone: c.primaryPhone,
       })),
       pagination: {
         numClients: totalCount,
