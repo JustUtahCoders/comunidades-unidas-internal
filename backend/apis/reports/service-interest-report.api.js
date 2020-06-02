@@ -1,14 +1,21 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
-const { checkValid } = require("../utils/validation-utils");
+const { checkValid, nullableValidDate } = require("../utils/validation-utils");
 const mysql = require("mysql");
 const _ = require("lodash");
 
 app.get(`/api/reports/service-interests`, (req, res) => {
-  const validationErrors = checkValid(req.query);
+  const validationErrors = checkValid(
+    req.query,
+    nullableValidDate("start"),
+    nullableValidDate("end")
+  );
 
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
   }
+
+  const startDate = req.query.start || "2000-01-01T0";
+  const endDate = req.query.end || "3000-01-01T0";
 
   const sql = mysql.format(
     `
@@ -23,7 +30,7 @@ app.get(`/api/reports/service-interests`, (req, res) => {
       FROM
         intakeServices
         JOIN (
-          SELECT intakeData.id, intakeData.clientId
+          SELECT intakeData.id, intakeData.clientId, intakeData.dateOfIntake
           FROM
           intakeData
           JOIN
@@ -31,13 +38,13 @@ app.get(`/api/reports/service-interests`, (req, res) => {
             SELECT MAX(dateAdded) latestDateAdded, clientId FROM intakeData GROUP BY clientId
           ) latestIntakeData
           ON intakeData.dateAdded = latestIntakeData.latestDateAdded AND latestIntakeData.clientId = intakeData.clientId
-        ) latestIntakeIds
-        ON intakeServices.intakeDataId = latestIntakeIds.id
-        JOIN clients ON clients.id = latestIntakeIds.clientId
+        ) latestIntakes
+        ON intakeServices.intakeDataId = latestIntakes.id
+        JOIN clients ON clients.id = latestIntakes.clientId
         JOIN services ON services.id = intakeServices.serviceId
         JOIN programs ON programs.id = services.programId
       WHERE
-        clients.isDeleted = false
+        clients.isDeleted = false AND latestIntakes.dateOfIntake >= ? AND latestIntakes.dateOfIntake <= ?
       GROUP BY intakeServices.serviceId
       ;
 
@@ -48,7 +55,7 @@ app.get(`/api/reports/service-interests`, (req, res) => {
         FROM
           intakeServices
           JOIN (
-            SELECT intakeData.id, intakeData.clientId
+            SELECT intakeData.id, intakeData.clientId, intakeData.dateOfIntake
             FROM
             intakeData
             JOIN
@@ -56,13 +63,13 @@ app.get(`/api/reports/service-interests`, (req, res) => {
               SELECT MAX(dateAdded) latestDateAdded, clientId FROM intakeData GROUP BY clientId
             ) latestIntakeData
             ON intakeData.dateAdded = latestIntakeData.latestDateAdded AND latestIntakeData.clientId = intakeData.clientId
-          ) latestIntakeIds
-          ON intakeServices.intakeDataId = latestIntakeIds.id
-          JOIN clients ON clients.id = latestIntakeIds.clientId
+          ) latestIntakes
+          ON intakeServices.intakeDataId = latestIntakes.id
+          JOIN clients ON clients.id = latestIntakes.clientId
           JOIN services ON services.id = intakeServices.serviceId
           JOIN programs ON programs.id = services.programId
         WHERE
-          clients.isDeleted = false
+          clients.isDeleted = false AND latestIntakes.dateOfIntake >= ? AND latestIntakes.dateOfIntake <= ?
       ) programInterests
       GROUP BY programId
       ;
@@ -75,7 +82,7 @@ app.get(`/api/reports/service-interests`, (req, res) => {
         JOIN services ON services.id = leadServices.serviceId
         JOIN programs ON programs.id = services.programId
       WHERE
-        leads.isDeleted = false
+        leads.isDeleted = false AND leads.dateOfSignUp >= ? AND leads.dateOfSignUp <= ?
       GROUP BY serviceId
       ;
 
@@ -89,12 +96,21 @@ app.get(`/api/reports/service-interests`, (req, res) => {
           JOIN services ON services.id = leadServices.serviceId
           JOIN programs ON programs.id = services.programId
         WHERE
-          leads.isDeleted = false
+          leads.isDeleted = false AND leads.dateOfSignUp >= ? AND leads.dateOfSignUp <= ?
       ) programInterests
       GROUP BY programId
       ;
     `,
-    []
+    [
+      startDate,
+      endDate,
+      startDate,
+      endDate,
+      startDate,
+      endDate,
+      startDate,
+      endDate,
+    ]
   );
 
   pool.query(sql, (err, result) => {
@@ -158,7 +174,10 @@ app.get(`/api/reports/service-interests`, (req, res) => {
     res.send({
       programs: programTotals,
       services: serviceTotals,
-      reportParameters: {},
+      reportParameters: {
+        start: req.query.start || null,
+        end: req.query.end || null,
+      },
     });
   });
 });
