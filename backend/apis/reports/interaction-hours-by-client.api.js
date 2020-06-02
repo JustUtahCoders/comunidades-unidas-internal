@@ -3,6 +3,7 @@ const {
   checkValid,
   nullableValidInteger,
   nullableValidBoolean,
+  nullableValidDate,
 } = require("../utils/validation-utils");
 const { responseFullName } = require("../utils/transform-utils");
 const mysql = require("mysql");
@@ -18,7 +19,9 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
     nullableValidInteger("minInteractionSeconds"),
     nullableValidInteger("maxInteractionSeconds"),
     nullableValidBoolean("minInclusive"),
-    nullableValidBoolean("maxInclusive")
+    nullableValidBoolean("maxInclusive"),
+    nullableValidDate("start"),
+    nullableValidDate("end")
   );
 
   if (validationErrors.length > 0) {
