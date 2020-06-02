@@ -9,9 +9,9 @@ script:
   - touch static/need-to-gzip.txt
 before_deploy:
   # gzip frontend files
-  - test -f static/need-to-gzip.txt && find static -type f -exec gzip -9 {} \; -exec mv {}.gz {} \;
+  - if test -f static/need-to-gzip.txt; then find static -type f -exec gzip -9 {} \; -exec mv {}.gz {} \; fi
   # See https://travis-ci.org/JustUtahCoders/comunidades-unidas-internal/builds/647606213
-  - test -f static/need-to-gzip.txt && virtualenv -p /opt/pyenv/shims/python3 p3 && source p3/bin/activate && python --version && pip --version && pip install awsebcli
+  - if test -f static/need-to-gzip.txt; then virtualenv -p /opt/pyenv/shims/python3 p3 && source p3/bin/activate && python --version && pip --version && pip install awsebcli fi
   - ls -al
   - rm static/need-to-gzip.txt
 deploy:
