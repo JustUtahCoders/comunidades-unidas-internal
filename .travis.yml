@@ -6,7 +6,7 @@ script:
   - yarn check-format
   - yarn lint
   - yarn build
-  - find static -type f -exec gzip -9 {} \; -exec mv {}.gz {} \;
+  - find static -type f ! -path static/manifest.json -exec gzip -9 {} \; -exec mv {}.gz {} \;
   - ls -al
   - virtualenv -p /opt/pyenv/shims/python3 p3 && source p3/bin/activate && python --version && pip --version && pip install awsebcli
 deploy:
