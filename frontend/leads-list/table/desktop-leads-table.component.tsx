@@ -95,6 +95,13 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
             </tr>
           ) : (
             props.leads.map((lead) => {
+              const mostRecentEventId =
+                lead.eventSources.length > 0
+                  ? lead.eventSources[lead.eventSources.length - 1]
+                  : null;
+              const mostRecentEvent = mostRecentEventId
+                ? props.events.find((evt) => evt.id === mostRecentEventId)
+                : null;
               return (
                 <tr key={lead.id}>
                   <td onClick={() => handleCheckBoxChange(lead)}>
@@ -122,13 +129,19 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
                       {formatPhone(lead.phone)}
                     </Link>
                   </td>
-                  <td className="capitalize">
-                    {lead.eventSources.length > 0 ? (
-                      <Link to={`/leads/${lead.id}`} className="unstyled">
-                        {
-                          lead.eventSources[lead.eventSources.length - 1]
-                            .eventName
-                        }
+                  <td
+                    className="capitalize ellipsis"
+                    style={{ maxWidth: "15vw" }}
+                  >
+                    {mostRecentEvent ? (
+                      <Link
+                        to={`/leads/${lead.id}`}
+                        className="unstyled"
+                        style={{ justifyContent: "flex-start" }}
+                      >
+                        <span className="ellipsis">
+                          {mostRecentEvent.eventName}
+                        </span>
                       </Link>
                     ) : (
                       "\u2014"

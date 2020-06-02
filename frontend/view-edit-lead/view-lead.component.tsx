@@ -123,8 +123,9 @@ type ContactStage = {
   third: string;
 };
 
-type EventSource = {
-  eventId: number;
+export type CUEventSource = {
+  id?: number;
+  eventId?: number;
   eventName: string;
   eventLocation: string;
   eventDate: string;
@@ -159,7 +160,7 @@ export type SingleLead = {
   inactivityReason?: string;
   clientId?: number;
   contactStage?: ContactStage;
-  eventSources?: Array<EventSource>;
+  eventSources?: Array<CUEventSource>;
   leadServices?: Array<LeadService>;
   createdBy?: LeadUserRelationship;
   lastUpdatedBy?: LeadUserRelationship;

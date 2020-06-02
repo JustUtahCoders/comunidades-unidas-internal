@@ -215,6 +215,12 @@ body {
 & .popup ul li:hover {
   background-color: #e9e9e9;
 }
+
+& .ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
 `;
 
 type Color = string;

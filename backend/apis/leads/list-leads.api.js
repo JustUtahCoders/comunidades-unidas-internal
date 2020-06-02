@@ -14,6 +14,7 @@ const {
   responseBoolean,
   responseDateWithoutTime,
 } = require("../utils/transform-utils");
+const { mysqlArrToJs } = require("../utils/mysql-utils");
 
 const pageSize = 100;
 
@@ -57,7 +58,7 @@ app.get("/api/leads", (req, res, next) => {
           third: lead.thirdContactAttempt,
         },
         inactivityReason: lead.inactivityReason,
-        eventSources: [],
+        eventSources: mysqlArrToJs(lead.eventSources),
         firstName: lead.firstName,
         lastName: lead.lastName,
         fullName: responseFullName(lead.firstName, lead.lastName),
@@ -249,6 +250,7 @@ function listLeadsQuery(query, pageNum) {
       leads.addedBy,
       leads.modifiedBy,
       servicesForLeads.services,
+      eventsForLeads.eventSources,
       created.firstName AS createdByFirstName,
       created.lastName AS createdByLastName,
       modified.firstName AS modifiedByFirstName,
@@ -267,6 +269,12 @@ function listLeadsQuery(query, pageNum) {
         GROUP BY leadServices.leadId
       ) servicesForLeads
         ON servicesForLeads.leadId = leads.id
+      LEFT OUTER JOIN (
+        SELECT leadId, JSON_ARRAYAGG(leadEvents.eventId) eventSources
+        FROM leadEvents
+        GROUP BY leadEvents.leadId
+      ) eventsForLeads
+        ON eventsForLeads.leadId = leads.id
     ${whereClause}
     ORDER BY ${columnsToOrder}
     ${paginated ? "LIMIT ?, ?" : ""}
