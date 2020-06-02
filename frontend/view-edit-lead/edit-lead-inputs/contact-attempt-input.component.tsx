@@ -49,6 +49,12 @@ export default function ContactAttemptInput(props: ContactStatusInputProps) {
             onClick={() => setEditAttempt(!editAttempt)}
             src={editIcon}
           />
+          <img
+            alt="delete icon"
+            className="cancel-icon"
+            onClick={() => setContactAttempt(null)}
+            src={cancelIcon}
+          />
         </td>
       )}
     </tr>
