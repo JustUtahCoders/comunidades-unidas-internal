@@ -9,7 +9,12 @@ const {
 } = require("../leads/list-leads.api");
 
 app.post(`/api/check-bulk-texts`, (req, res) => {
+  const clientValidationErrors = validateClientListQuery(req.query);
+  const leadValidationErrors = validateListLeadsQuery(req.query);
+
   const validationErrors = [
+    ...clientValidationErrors,
+    ...leadValidationErrors,
     ...validateClientListQuery(req.query),
     ...validateListLeadsQuery(req.query),
   ];
@@ -21,9 +26,14 @@ app.post(`/api/check-bulk-texts`, (req, res) => {
   // Pagination doesn't apply to sending a bulk text
   delete req.query.page;
 
-  const clientQuery = clientListQuery(req.query);
-  const leadsQuery = listLeadsQuery(req.query);
-
+  const clientQuery =
+    clientValidationErrors.extraKeys.length > 0
+      ? "SELECT * FROM clients WHERE false; SELECT 0;"
+      : clientListQuery(req.query);
+  const leadsQuery =
+    leadValidationErrors.extraKeys.length > 0
+      ? "SELECT * FROM leads WHERE false; SELECT 0;"
+      : listLeadsQuery(req.query);
   const finalQuery = clientQuery + leadsQuery;
 
   pool.query(finalQuery, (err, result) => {

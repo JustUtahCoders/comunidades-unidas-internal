@@ -102,6 +102,18 @@ app.get("/api/leads", (req, res, next) => {
 });
 
 function validateListLeadsQuery(query) {
+  const validKeys = [
+    "page",
+    "id",
+    "phone",
+    "zip",
+    "program",
+    "event",
+    "sortField",
+    "sortOrder",
+    "status",
+  ];
+
   const validationErrors = checkValid(
     query,
     nullableValidInteger("page"),
@@ -126,6 +138,10 @@ function validateListLeadsQuery(query) {
       `You may only provide one of the following query params: 'program' or 'service'`
     );
   }
+
+  validationErrors.extraKeys = Object.keys(query).filter(
+    (k) => !validKeys.includes(k)
+  );
 
   return validationErrors;
 }
