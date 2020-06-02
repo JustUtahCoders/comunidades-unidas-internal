@@ -17,7 +17,7 @@ export default function ViewEditEventInfo(props: ViewEditEventInfoProps) {
     if (!isEditing) {
       setModifiedEventInfo(cloneDeep(props.event));
     }
-  }, [isEditing]);
+  }, [isEditing, props.event]);
 
   React.useEffect(() => {
     if (isSaving) {
@@ -50,7 +50,7 @@ export default function ViewEditEventInfo(props: ViewEditEventInfoProps) {
         abortController.abort();
       };
     }
-  }, [isSaving]);
+  }, [isSaving, modifiedEventInfo, props.eventUpdated]);
 
   return (
     <EventSection title="Event Information">
