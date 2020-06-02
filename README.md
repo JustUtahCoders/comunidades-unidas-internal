@@ -52,6 +52,7 @@ KEYGRIP_SECRET=123
 # TWILIO_ACCOUNT_SID=<twilio account sid>
 # TWILIO_AUTH_TOKEN=<twilio auth token>
 # TWILIO_SMS_SERVICE_SID=<twilio sid for the SMS service account>
+# PUBLIC_PATH=<webpack public path>
 ```
 
 Now run the following command:
