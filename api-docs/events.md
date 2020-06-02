@@ -198,3 +198,29 @@ DELETE /api/events/:id
 An HTTP 204 status is returned if the deletion was successful.
 
 An HTTP 400 status is returned if you cannot delete this event.
+
+## Update an event
+
+### Request
+
+```http
+PATCH /api/events/:id
+```
+
+```json
+{
+  "eventName": "Heath Fair",
+  "eventDate": "2019-09-16",
+  "eventLocation": "Saint Marks",
+  "totalAttendance": 150
+}
+```
+
+_Notes:_
+
+- Only the properties shown in the example request are modifiable.
+- Any property may be omitted if it has not been changed.
+
+### Response
+
+The response is the same object as a subsequent GET.
