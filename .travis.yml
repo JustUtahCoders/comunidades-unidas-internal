@@ -22,3 +22,12 @@ deploy:
     cache_control: "max-age=31536000"
     detect_encoding: true
     default_text_charset: "utf-8"
+    on:
+      branch: master
+  - deploy:
+    provider: script
+    before_script:
+    script: echo "Deploying with ebcli" && python --version && eb deploy comunidades-unidas-internal-prod
+    on:
+      branch: master
+    skip_cleanup: true
