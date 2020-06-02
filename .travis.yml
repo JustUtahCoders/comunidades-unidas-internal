@@ -6,11 +6,12 @@ script:
   - yarn check-format
   - yarn lint
   - yarn build
-  - find static -type f -exec gzip -9 {} \; -exec mv {}.gz {} \;
-before_deploy:
-  # See https://travis-ci.org/JustUtahCoders/comunidades-unidas-internal/builds/647606213
-  - virtualenv -p /opt/pyenv/shims/python3 p3 && source p3/bin/activate && python --version && pip --version && pip install awsebcli
-  - ls -al
+before_deploy: if ! [[ $TRAVIS_TAG ]]; then
+  export TRAVIS_TAG="1.$TRAVIS_BUILD_NUMBER" &&
+  find static -type f -exec gzip -9 {} \; -exec mv {}.gz {} \; &&
+  virtualenv -p /opt/pyenv/shims/python3 p3 && source p3/bin/activate && python --version && pip --version && pip install awsebcli &&
+  ls -al
+  fi
 deploy:
   - provider: s3
     bucket: comunidades-unidas-frontend-assets
