@@ -6,14 +6,9 @@ script:
   - yarn check-format
   - yarn lint
   - yarn build
-  - touch static/need-to-gzip.txt
-before_deploy:
-  # gzip frontend files
-  - if test -f static/need-to-gzip.txt; then find static -type f -exec gzip -9 {} \; -exec mv {}.gz {} \; fi
-  # See https://travis-ci.org/JustUtahCoders/comunidades-unidas-internal/builds/647606213
-  - if test -f static/need-to-gzip.txt; then virtualenv -p /opt/pyenv/shims/python3 p3 && source p3/bin/activate && python --version && pip --version && pip install awsebcli fi
+  - find static -type f -exec gzip -9 {} \; -exec mv {}.gz {} \;
   - ls -al
-  - rm static/need-to-gzip.txt
+  - virtualenv -p /opt/pyenv/shims/python3 p3 && source p3/bin/activate && python --version && pip --version && pip install awsebcli
 deploy:
   - provider: s3
     bucket: comunidades-unidas-frontend-assets
