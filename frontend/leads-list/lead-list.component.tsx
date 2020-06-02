@@ -6,6 +6,7 @@ import { SearchParseValues } from "../util/list-search/search-dsl.helpers";
 import PageHeader from "../page-header.component";
 import LeadsTable from "./table/leads-table.component";
 import LeadsTableToolbar from "./toolbar/leads-table-toolbar.component";
+import { CUEventSource } from "../view-edit-lead/view-lead.component";
 
 export default function LeadList(props: LeadListProps) {
   const [selectedLeads, setSelectedLeads] = React.useState<SelectedLeads>({});
@@ -424,12 +425,6 @@ type ApiErrorAction = {
   err: any;
 };
 
-export type EventSources = {
-  eventId: number;
-  eventName: string;
-  eventLocation: string;
-};
-
 export type LeadListLead = {
   id: number;
   dateOfSignUp: string;
@@ -440,7 +435,7 @@ export type LeadListLead = {
     third: string;
   };
   inactivityReason: string;
-  eventSources: Array<EventSources>;
+  eventSources: Array<number>;
   firstName: string;
   lastName: string;
   fullName: string;

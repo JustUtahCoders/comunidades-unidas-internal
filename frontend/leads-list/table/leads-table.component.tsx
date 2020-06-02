@@ -6,6 +6,7 @@ import {
   SelectedLeads,
 } from "../lead-list.component";
 import DesktopLeadsTable from "./desktop-leads-table.component";
+import { CUEventSource } from "../../view-edit-lead/view-lead.component";
 
 export default function LeadsTable(props: LeadsTableProps) {
   return <DesktopLeadsTable {...props} />;
@@ -21,6 +22,6 @@ export type LeadsTableProps = {
   selectedLeads: SelectedLeads;
   setSelectedLeads: (selectedLeads: SelectedLeads) => any;
   programData: any;
-  events: Array<any>;
+  events: Array<CUEventSource>;
   advancedSearchOpen: boolean;
 };
