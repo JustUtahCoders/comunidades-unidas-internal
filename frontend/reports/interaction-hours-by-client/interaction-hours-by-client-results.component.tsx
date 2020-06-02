@@ -8,6 +8,10 @@ import nextIcon from "../../../icons/148705-essential-collection/svg/next.svg";
 import { useQueryParamState } from "../../util/use-query-param-state.hook";
 import { useCss } from "kremling";
 import { formatPhone } from "../../util/formatters";
+import {
+  secondsToHours,
+  secondsToRemainderMinutes,
+} from "../../util/time-duration-helpers";
 
 export default function InteractionHoursByClientResults(props) {
   const { isLoading, data, error } = useReportsApi(
@@ -40,27 +44,55 @@ export default function InteractionHoursByClientResults(props) {
             <tr>
               <th>Start Date</th>
               <td>
-                {dayjs(data.reportParameters.start).format("MMM D, YYYY")}
+                {data.reportParameters.start
+                  ? dayjs(data.reportParameters.start).format("MMM D, YYYY")
+                  : "\u2014"}
               </td>
             </tr>
             <tr>
               <th>End Date</th>
-              <td>{dayjs(data.reportParameters.end).format("MMM D, YYYY")}</td>
+              <td>
+                {data.reportParameters.end
+                  ? dayjs(data.reportParameters.end).format("MMM D, YYYY")
+                  : "\u2014"}
+              </td>
             </tr>
             <tr>
               <th>Min Interaction Hours</th>
               <td>
-                {Number(
-                  data.reportParameters.minInteractionSeconds / 3600
-                ).toLocaleString()}
+                {data.reportParameters.minInteractionSeconds ? (
+                  <span>
+                    {secondsToHours(
+                      data.reportParameters.minInteractionSeconds
+                    )}{" "}
+                    hrs,{" "}
+                    {secondsToRemainderMinutes(
+                      data.reportParameters.minInteractionSeconds
+                    )}{" "}
+                    mins
+                  </span>
+                ) : (
+                  <span>&mdash;</span>
+                )}
               </td>
             </tr>
             <tr>
               <th>Max Interaction Hours</th>
               <td>
-                {Number(
-                  data.reportParameters.maxInteractionSeconds / 3600
-                ).toLocaleString()}
+                {data.reportParameters.maxInteractionSeconds ? (
+                  <span>
+                    {secondsToHours(
+                      data.reportParameters.maxInteractionSeconds
+                    )}{" "}
+                    hrs,{" "}
+                    {secondsToRemainderMinutes(
+                      data.reportParameters.maxInteractionSeconds
+                    )}{" "}
+                    mins
+                  </span>
+                ) : (
+                  <span>&mdash;</span>
+                )}
               </td>
             </tr>
           </>

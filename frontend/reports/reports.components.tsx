@@ -96,6 +96,14 @@ const css = `
   margin-right: .8rem;
 }
 
+& .report-input.indent {
+  margin-left: 2.4rem;
+}
+
+& .report-input input[type=number] {
+  width: 8rem;
+}
+
 & .actions {
   display: flex;
   justify-content: center;
