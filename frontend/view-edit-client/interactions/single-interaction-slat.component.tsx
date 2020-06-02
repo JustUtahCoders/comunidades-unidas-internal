@@ -7,6 +7,7 @@ import TimeDurationInput, {
   TimeDuration,
 } from "../../util/time-duration-input.component";
 import FullRichTextEditorComponent from "../../rich-text/full-rich-text-editor.component";
+import { UserModeContext, UserMode } from "../../util/user-mode.context";
 
 export default React.forwardRef<any, SingleClientInteractionProps>(
   function SingleClientInteraction(props, ref) {
@@ -51,6 +52,10 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
       : [];
 
     const groupedServices = groupBy(services, "programName");
+    const userMode = React.useContext(UserModeContext);
+    if (userMode.userMode === UserMode.normal) {
+      delete groupedServices.Immigration;
+    }
 
     const interactionDefaults = {
       "Chronic Care Guidance": {
