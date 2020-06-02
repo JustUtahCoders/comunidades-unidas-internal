@@ -2,6 +2,7 @@ const { app, invalidRequest, pool, databaseError } = require("../../server");
 const {
   checkValid,
   nullableValidInteger,
+  nullableValidBoolean,
 } = require("../utils/validation-utils");
 const { responseFullName } = require("../utils/transform-utils");
 const mysql = require("mysql");
@@ -15,7 +16,9 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
   const validationErrors = checkValid(
     req.query,
     nullableValidInteger("minInteractionSeconds"),
-    nullableValidInteger("maxInteractionSeconds")
+    nullableValidInteger("maxInteractionSeconds"),
+    nullableValidBoolean("minInclusive"),
+    nullableValidBoolean("maxInclusive")
   );
 
   if (validationErrors.length > 0) {
@@ -25,6 +28,8 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
   const oneBasedPage = Number(req.query.page) || 1;
   const zeroBasedPage = oneBasedPage - 1;
   const mysqlOffset = zeroBasedPage * pageSize;
+  const minInclusive = req.query.minInclusive === "true";
+  const maxInclusive = req.query.maxInclusive === "true";
 
   const minInteractionSeconds =
     Number(req.query.minInteractionSeconds) || sixHoursInSeconds;
@@ -64,8 +69,8 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
             ON latestContactInformation.latestDateAdded = innerContactInformation.dateAdded
         ) contactInfo ON contactInfo.clientId = clients.id
       WHERE
-        clientHours.totalInteractionSeconds >= ?
-        AND clientHours.totalInteractionSeconds <= ?
+        clientHours.totalInteractionSeconds >${minInclusive ? "=" : ""} ?
+        AND clientHours.totalInteractionSeconds <${maxInclusive ? "=" : ""} ?
         AND clients.isDeleted = false
       ORDER BY clients.lastName ASC, clients.firstName
       LIMIT ?, ?
@@ -112,10 +117,12 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
         numPages: Math.ceil(totalCount / pageSize),
       },
       reportParameters: {
-        start: startDate,
-        end: endDate,
-        minInteractionSeconds,
-        maxInteractionSeconds,
+        start: req.query.start || null,
+        end: req.query.end || null,
+        minInteractionSeconds: req.query.minInteractionSeconds || null,
+        minInclusive,
+        maxInteractionSeconds: req.query.maxInteractionSeconds || null,
+        maxInclusive,
       },
     });
   });
