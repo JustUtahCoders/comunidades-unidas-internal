@@ -264,6 +264,7 @@ ${mediaMobile} {
 & .sidebar {
   box-shadow: .2rem 0 .2rem var(--light-gray);
   z-index: 1000;
+  overflow-y: auto;
 }
 
 & nav {
