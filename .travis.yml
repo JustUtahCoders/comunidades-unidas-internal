@@ -6,12 +6,14 @@ script:
   - yarn check-format
   - yarn lint
   - yarn build
-before_deploy: if ! [[ test -f before-deploy-ran.txt ]]; then
-  touch before-deploy-ran.txt &&
-  find static -type f -exec gzip -9 {} \; -exec mv {}.gz {} \; &&
-  virtualenv -p /opt/pyenv/shims/python3 p3 && source p3/bin/activate && python --version && pip --version && pip install awsebcli &&
-  ls -al
-  fi
+  - touch static/need-to-gzip.txt
+before_deploy:
+  # gzip frontend files
+  - test -f static/need-to-gzip.txt && find static -type f -exec gzip -9 {} \; -exec mv {}.gz {} \;
+  # See https://travis-ci.org/JustUtahCoders/comunidades-unidas-internal/builds/647606213
+  - test -f static/need-to-gzip.txt && virtualenv -p /opt/pyenv/shims/python3 p3 && source p3/bin/activate && python --version && pip --version && pip install awsebcli
+  - ls -al
+  - rm static/need-to-gzip.txt
 deploy:
   - provider: s3
     bucket: comunidades-unidas-frontend-assets
