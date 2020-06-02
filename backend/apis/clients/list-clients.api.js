@@ -180,7 +180,17 @@ function clientListQuery(query, pageNum, pageSize) {
 }
 
 function validateClientListQuery(query) {
-  return [
+  const validKeys = [
+    "page",
+    "id",
+    "phone",
+    "program",
+    "sortField",
+    "sortOrder",
+    "wantsSMS",
+    "zip",
+  ];
+  const result = [
     ...checkValid(
       query,
       nullableValidInteger("page"),
@@ -189,10 +199,17 @@ function validateClientListQuery(query) {
       nullableValidId("program"),
       nullableValidEnum("sortField", "id", "firstName", "lastName", "birthday"),
       nullableValidEnum("sortOrder", "asc", "desc"),
+      nullableNonEmptyString("zip"),
       nullableValidBoolean("wantsSMS")
     ),
     query.program && query.service
       ? `You may only provide one of the following query params: 'program' or 'service'`
       : null,
   ].filter(Boolean);
+
+  result.extraKeys = Object.keys(query).filter(
+    (key) => !validKeys.includes(key)
+  );
+
+  return result;
 }
