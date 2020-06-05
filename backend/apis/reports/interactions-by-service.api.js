@@ -63,6 +63,8 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
           WHERE
             clientInteractions.isDeleted = false
             AND clients.isDeleted = false
+            AND clientInteractions.dateOfInteraction >= ?
+            AND clientInteractions.dateOfInteraction <= ?
           GROUP BY serviceId
         ) clientHours
         ON services.id = clientHours.serviceId
@@ -80,6 +82,8 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
         AND clientInteractions.dateOfInteraction <= ?
     `,
     [
+      startDate,
+      endDate,
       startDate,
       endDate,
       startDate,
@@ -183,8 +187,8 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       programs: programTotals,
       services: serviceTotals,
       reportParameters: {
-        start: startDate,
-        end: endDate,
+        start: req.query.start || null,
+        end: req.query.end || null,
       },
     });
   });
