@@ -34,8 +34,7 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
   const minInclusive = req.query.minInclusive === "true";
   const maxInclusive = req.query.maxInclusive === "true";
 
-  const minInteractionSeconds =
-    Number(req.query.minInteractionSeconds) || sixHoursInSeconds;
+  const minInteractionSeconds = Number(req.query.minInteractionSeconds) || 0;
 
   const maxInteractionSeconds =
     Number(req.query.maxInteractionSeconds) || tenThousandHoursInSeconds;
