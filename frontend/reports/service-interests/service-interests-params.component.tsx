@@ -9,6 +9,10 @@ export default function ServiceInterestsParams(props) {
   return (
     <>
       <div className="report-input">
+        For clients, the intake date is used for this report. For leads, the
+        signup date is used.
+      </div>
+      <div className="report-input">
         <label htmlFor="start-date">Start date:</label>
         <input
           id="start-date"

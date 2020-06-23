@@ -11,8 +11,15 @@ export default function ServiceInterestsResults(props) {
     `/api/reports/service-interests`
   );
 
+  let dateRangeString = "";
   if (isLoading || error) {
     return <div>Loading...</div>;
+  } else {
+    const startDate = new Date(
+      data.reportParameters.start
+    ).toLocaleDateString();
+    const endDate = new Date(data.reportParameters.end).toLocaleDateString();
+    dateRangeString = `, ${startDate}-${endDate}*`;
   }
 
   const groupedServices = data.programs.reduce((acc, program) => {
@@ -27,7 +34,8 @@ export default function ServiceInterestsResults(props) {
   return (
     <BasicTableReport
       tableStyle={{ width: "100%" }}
-      title={`Interest in C.U. Programs and Services`}
+      title={`Interest in C.U. Programs and Services${dateRangeString}`}
+      subtitle={`*For clients, the intake date is used for this report. For leads, the signup date is used.`}
       headerRows={
         <tr>
           <th>Program</th>
