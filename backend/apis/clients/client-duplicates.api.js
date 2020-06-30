@@ -3,7 +3,8 @@ const mysql = require("mysql");
 const {
   checkValid,
   nonEmptyString,
-  validDate,
+  nullableValidDate,
+  nullableNonEmptyString,
 } = require("../utils/validation-utils");
 
 app.get("/api/client-duplicates", (req, res, next) => {
@@ -11,17 +12,29 @@ app.get("/api/client-duplicates", (req, res, next) => {
     req.query,
     nonEmptyString("firstName"),
     nonEmptyString("lastName"),
-    validDate("birthday"),
-    nonEmptyString("gender")
+    nullableValidDate("birthday")
   );
 
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
   }
 
-  const birthDate = new Date(req.query.birthday);
-  const year = birthDate.getUTCFullYear();
-  const month = birthDate.getUTCMonth() + 1;
+  let values = [req.query.firstName, req.query.lastName];
+
+  if (req.query.birthday) {
+    const birthDate = new Date(req.query.birthday);
+    const year = birthDate.getUTCFullYear();
+    const month = birthDate.getUTCMonth() + 1;
+    values.push(
+      year - 3,
+      year + 3,
+      Math.max(1, month - 3),
+      Math.min(12, month + 3)
+    );
+  }
+
+  values.push(req.query.firstName, req.query.lastName);
+
   const query = mysql.format(
     `
     SELECT id, firstName, lastName, date_format(birthday,'%Y/%m/%d') as birthday, gender
@@ -30,8 +43,14 @@ app.get("/api/client-duplicates", (req, res, next) => {
     isDeleted = false
     AND
     (firstName LIKE ? OR lastName LIKE ?)
-    AND
-    (YEAR(birthday) >= ? AND YEAR(birthday) <= ? AND MONTH(birthday) >= ? AND MONTH(birthday) <= ?)
+    ${
+      req.query.birthday
+        ? `
+        AND
+        (YEAR(birthday) >= ? AND YEAR(birthday) <= ? AND MONTH(birthday) >= ? AND MONTH(birthday) <= ?)
+      `
+        : ``
+    }
     ;
 
     SELECT id, firstName, lastName, gender, leadStatus
@@ -42,16 +61,7 @@ app.get("/api/client-duplicates", (req, res, next) => {
       AND leadStatus != 'convertedToClient'
     ;
   `,
-    [
-      req.query.firstName,
-      req.query.lastName,
-      year - 3,
-      year + 3,
-      Math.max(1, month - 3),
-      Math.min(12, month + 3),
-      req.query.firstName,
-      req.query.lastName,
-    ]
+    values
   );
 
   pool.query(query, function (err, result, fields) {
