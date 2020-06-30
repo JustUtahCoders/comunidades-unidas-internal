@@ -72,7 +72,7 @@ app.post("/api/clients/:clientId/files", (req, res) => {
         },
         (err, data) => {
           if (err) {
-            return internalError(req, res, error);
+            return internalError(req, res, err);
           }
 
           const insertSql = mysql.format(

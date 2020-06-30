@@ -142,7 +142,8 @@ POST /api/clients/:clientId/files
 
 ```json
 {
-  "fileName": "fileId",
+  "s3Key": "<some-hash>-file.pdf",
+  "fileName": "file.pdf",
   "fileSize": "10mb",
   "fileExtension": "pdf"
 }
