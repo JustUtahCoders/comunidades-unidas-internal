@@ -5,11 +5,12 @@ already exists in the system.
 
 ## Request
 
-`GET /api/client-duplicates?firstName=Juan&lastName=Rodriguez&birthday=1990-01-30&gender=male`
+`GET /api/client-duplicates?firstName=Juan&lastName=Rodriguez&birthday=1990-01-30`
 
 Notes:
 
 - All query params must be URI encoded
+- `birthday` is optional
 
 ## Response
 
