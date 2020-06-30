@@ -10,6 +10,7 @@ import EditLog from "./edit-log.component";
 import ViewOutdatedLog from "./view-outdated-log.component";
 import { partial, lowerCase } from "lodash-es";
 import { UserModeContext, UserMode } from "../../util/user-mode.context";
+import ClientFilePreviewer from "../../client-files/client-file-previewer.component";
 
 export default function ClientHistory(props: ClientHistoryProps) {
   const [logState, dispatchLogState] = React.useReducer(
@@ -173,6 +174,18 @@ export default function ClientHistory(props: ClientHistoryProps) {
           }}
         />
       )}
+      {logState.fileToView && (
+        <ClientFilePreviewer
+          fileId={logState.fileToView.detailId}
+          clientId={props.clientId}
+          close={(refetch: boolean) => {
+            dispatchLogState({
+              type: LogActionTypes.doneViewingFile,
+              refetch,
+            });
+          }}
+        />
+      )}
     </div>
   );
 
@@ -247,6 +260,11 @@ export default function ClientHistory(props: ClientHistoryProps) {
       }
     } else if (log.logType.startsWith("integration:")) {
       props.navigate(`/clients/${props.clientId}/integrations`);
+    } else if (log.logType === LogType["file:uploaded"]) {
+      dispatchLogState({
+        type: LogActionTypes.viewFile,
+        log,
+      });
     }
   }
 }
@@ -308,6 +326,17 @@ function logReducer(state: LogState, action: LogActions): LogState {
         ...state,
         isFetching: true,
       };
+    case LogActionTypes.viewFile:
+      return {
+        ...state,
+        fileToView: (action as ViewFileAction).log,
+      };
+    case LogActionTypes.doneViewingFile:
+      return {
+        ...state,
+        fileToView: null,
+        isFetching: (action as DoneViewingFileAction).refetch,
+      };
     default:
       throw Error();
   }
@@ -326,7 +355,9 @@ type LogActions =
   | ModifyLogAction
   | DoneModifyingLogAction
   | ViewOutdatedLogAction
-  | DoneViewingOutdatedLogAction;
+  | DoneViewingOutdatedLogAction
+  | ViewFileAction
+  | DoneViewingFileAction;
 
 type ChangeUserMode = {
   type: LogActionTypes.changeUserMode;
@@ -361,6 +392,16 @@ type DoneViewingOutdatedLogAction = {
   type: LogActionTypes;
 };
 
+type ViewFileAction = {
+  type: LogActionTypes.viewFile;
+  log: ClientLog;
+};
+
+type DoneViewingFileAction = {
+  type: LogActionTypes.doneViewingFile;
+  refetch: boolean;
+};
+
 enum LogActionTypes {
   "newLogs" = "newLogs",
   "newFilters" = "newFilters",
@@ -369,6 +410,8 @@ enum LogActionTypes {
   "viewOutdatedLog" = "viewOutdatedLog",
   "doneViewingOutdatedLog" = "doneViewingOutdatedLog",
   "changeUserMode" = "changeUserMode",
+  "viewFile" = "viewFile",
+  "doneViewingFile" = "doneViewingFile",
 }
 
 function getBackgroundColor(logType: LogType) {
@@ -507,6 +550,8 @@ export type ClientHistoryFilterOptions = {
   "clientInteraction:updated": boolean;
   "clientInteraction:deleted": boolean;
   "clientInteraction:serviceProvided": boolean;
+  "file:uploaded": boolean;
+  "file:deleted": boolean;
   showOutdated: boolean;
 };
 
@@ -525,6 +570,8 @@ export enum LogType {
   "integration:disabled" = "integration:disabled",
   "integration:broken" = "integration:broken",
   "integration:sync" = "integration:sync",
+  "file:uploaded" = "file:uploaded",
+  "file:deleted" = "file:deleted",
 }
 
 const allFiltersOn: ClientHistoryFilterOptions = Object.keys(LogType).reduce(
@@ -552,6 +599,7 @@ function getInitialLogState(): LogState {
     isFetching: true,
     logToModify: null,
     logToView: null,
+    fileToView: null,
     allLogs: [],
     filteredLogs: [],
     filters,
@@ -564,6 +612,7 @@ type LogState = {
   filters: ClientHistoryFilterOptions;
   logToModify: ClientLog | null;
   logToView: ClientLog | null;
+  fileToView: ClientLog | null;
   isFetching: boolean;
 };
 

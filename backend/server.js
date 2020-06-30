@@ -157,6 +157,7 @@ require("./apis/reports/service-interest-report.api");
 require("./apis/clients/files/presigned-file-upload.api");
 require("./apis/clients/files/add-client-files.api");
 require("./apis/clients/files/get-client-files.api");
+require("./apis/clients/files/get-client-file.api");
 require("./apis/clients/files/delete-client-files.api");
 require("./apis/clients/files/presigned-file-download.api");
 
