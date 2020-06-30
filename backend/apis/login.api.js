@@ -30,7 +30,7 @@ passport.use(
     ).toString();
 
     const getUser = mysql.format(
-      `SELECT users.id, users.firstName, users.lastName, users.email, users.accessLevel FROM
+      `SELECT users.id, users.firstName, users.lastName, users.email, users.accessLevel, userPermissions.permission FROM
         users JOIN programmaticUsers ON programmaticUsers.userId = users.id
         LEFT JOIN userPermissions ON users.id = userPermissions.userId
         WHERE programmaticUsers.username = ? AND programmaticUsers.password = ? AND programmaticUsers.expirationDate > NOW()
@@ -55,18 +55,18 @@ passport.use(
         if (r.permission) {
           permissions[r.permission] = true;
         }
+      });
 
-        done(null, {
-          id: rows[0].id,
-          googleProfile: null,
-          fullName: responseFullName(rows[0].firstName, rows[0].lastName),
-          firstName: rows[0].firstName,
-          lastName: rows[0].lastName,
-          email: rows[0].email,
-          accessLevel: rows[0].accessLevel,
-          permissions,
-          token: null,
-        });
+      done(null, {
+        id: rows[0].id,
+        googleProfile: null,
+        fullName: responseFullName(rows[0].firstName, rows[0].lastName),
+        firstName: rows[0].firstName,
+        lastName: rows[0].lastName,
+        email: rows[0].email,
+        accessLevel: rows[0].accessLevel,
+        permissions,
+        token: null,
       });
     });
   })
