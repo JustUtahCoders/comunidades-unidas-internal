@@ -30,7 +30,7 @@ passport.use(
     ).toString();
 
     const getUser = mysql.format(
-      `SELECT * FROM
+      `SELECT users.id, users.firstName, users.lastName, users.email, users.accessLevel FROM
         users JOIN programmaticUsers ON programmaticUsers.userId = users.id
         LEFT JOIN userPermissions ON users.id = userPermissions.userId
         WHERE programmaticUsers.username = ? AND programmaticUsers.password = ? AND programmaticUsers.expirationDate > NOW()
