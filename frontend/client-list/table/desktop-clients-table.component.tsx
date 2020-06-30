@@ -117,7 +117,9 @@ export default function DesktopClientsTable(props: ClientsTableProps) {
               </td>
               <td>
                 <Link to={`/clients/${client.id}`} className="unstyled">
-                  {dayjs(client.birthday).format("M/D/YYYY")}
+                  {client.birthday
+                    ? dayjs(client.birthday).format("M/D/YYYY")
+                    : "\u2014"}
                 </Link>
               </td>
               <td>

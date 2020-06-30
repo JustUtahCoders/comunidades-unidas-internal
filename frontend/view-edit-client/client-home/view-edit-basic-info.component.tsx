@@ -74,7 +74,11 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
               </tr>
               <tr>
                 <td>Birthday:</td>
-                <td>{dayjs(client.birthday).format("M/D/YYYY")}</td>
+                <td>
+                  {client.birthday
+                    ? dayjs(client.birthday).format("M/D/YYYY")
+                    : "\u2014"}
+                </td>
               </tr>
               <tr>
                 <td>Gender:</td>

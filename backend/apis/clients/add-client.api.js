@@ -7,9 +7,12 @@ const {
   nonEmptyString,
   validDate,
   validPhone,
+  nullableValidPhone,
   validBoolean,
   validState,
+  nullableValidState,
   validZip,
+  nullableValidZip,
   nullableValidEmail,
   nullableValidEnum,
   validEnum,
@@ -17,6 +20,10 @@ const {
   validArray,
   validInteger,
   nullableValidId,
+  nullableValidBoolean,
+  nullableValidCountry,
+  nullableValidArray,
+  nullableValidInteger,
 } = require("../utils/validation-utils");
 const { getClientById } = require("./get-client.api");
 const {
@@ -33,21 +40,36 @@ app.post("/api/clients", (req, res, next) => {
       return databaseError(req, res, err, connection);
     }
 
+    const strict = req.query.strict !== "false";
+
+    const sometimesNonEmptyString = strict
+      ? nonEmptyString
+      : nullableNonEmptyString;
+    const sometimesValidPhone = strict ? validPhone : nullableValidPhone;
+    const sometimesValidBoolean = strict ? validBoolean : nullableValidBoolean;
+    const sometimesValidState = strict ? validState : nullableValidState;
+    const sometimesValidZip = strict ? validZip : nullableValidZip;
+    const sometimesValidEnum = strict ? validEnum : nullableValidEnum;
+    const sometimesValidCountry = strict ? validCountry : nullableValidCountry;
+    const sometimesValidInteger = strict ? validInteger : nullableValidInteger;
+    const sometimesValidArray = strict ? validArray : nullableValidArray;
+    const sometimesValidDate = strict ? validDate : nullableValidDate;
+
     const validityErrors = checkValid(
       req.body,
       nonEmptyString("firstName"),
       nonEmptyString("lastName"),
-      validDate("birthday"),
+      sometimesValidDate("birthday"),
       nonEmptyString("gender"),
       validDate("dateOfIntake"),
-      validPhone("phone"),
-      validBoolean("smsConsent"),
-      nonEmptyString("homeAddress.street"),
-      nonEmptyString("homeAddress.city"),
-      validState("homeAddress.state"),
-      validZip("homeAddress.zip"),
+      sometimesValidPhone("phone"),
+      sometimesValidBoolean("smsConsent"),
+      sometimesNonEmptyString("homeAddress.street"),
+      sometimesNonEmptyString("homeAddress.city"),
+      sometimesValidState("homeAddress.state"),
+      sometimesValidZip("homeAddress.zip"),
       nullableValidEmail("email"),
-      validEnum(
+      sometimesValidEnum(
         "civilStatus",
         "single",
         "married",
@@ -56,9 +78,9 @@ app.post("/api/clients", (req, res, next) => {
         "widowed",
         "separated"
       ),
-      validCountry("countryOfOrigin"),
+      sometimesValidCountry("countryOfOrigin"),
       nullableValidDate("dateOfUSArrival"),
-      nonEmptyString("homeLanguage"),
+      sometimesNonEmptyString("homeLanguage"),
       validEnum("currentlyEmployed", "yes", "no", "n/a", "unknown"),
       nullableNonEmptyString("employmentSector"),
       nullableValidEnum(
@@ -70,11 +92,11 @@ app.post("/api/clients", (req, res, next) => {
         "every-year"
       ),
       nullableValidEnum("weeklyEmployedHours", "0-20", "21-35", "36-40", "41+"),
-      validInteger("householdIncome"),
-      validInteger("householdSize"),
-      validBoolean("isStudent"),
-      validEnum("housingStatus", "renter", "homeowner", "other"),
-      validEnum(
+      sometimesValidInteger("householdIncome"),
+      sometimesValidInteger("householdSize"),
+      sometimesValidBoolean("isStudent"),
+      sometimesValidEnum("housingStatus", "renter", "homeowner", "other"),
+      sometimesValidEnum(
         "clientSource",
         "facebook",
         "instagram",
@@ -90,14 +112,16 @@ app.post("/api/clients", (req, res, next) => {
         "promotora",
         "other"
       ),
-      validBoolean("couldVolunteer"),
-      validArray("intakeServices", validInteger),
+      sometimesValidBoolean("couldVolunteer"),
+      sometimesValidArray("intakeServices", validInteger),
       nullableValidId("leadId")
     );
 
     if (validityErrors.length > 0) {
       return invalidRequest(res, validityErrors, connection);
     }
+
+    const intakeServices = req.body.intakeServices || [];
 
     connection.beginTransaction((err) => {
       if (err) {
@@ -188,20 +212,20 @@ app.post("/api/clients", (req, res, next) => {
             const intakeDataResult = results[2];
             const intakeDataId = intakeDataResult.insertId;
 
-            if (req.body.intakeServices.length === 0) {
+            if (intakeServices.length === 0) {
               returnTheClient();
 
               return;
             }
 
-            const intakeServicesValues = req.body.intakeServices.reduce(
+            const intakeServicesValues = intakeServices.reduce(
               (acc, intakeService) => {
                 return [...acc, intakeDataId, intakeService];
               },
               []
             );
 
-            const insertIntakeServicesQuery = req.body.intakeServices
+            const insertIntakeServicesQuery = intakeServices
               .map(
                 (intakeService) => `
               INSERT INTO intakeServices (intakeDataId, serviceId) VALUES (?, ?);

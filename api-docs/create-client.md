@@ -3,7 +3,7 @@
 ## Request
 
 ```http
-POST /api/clients
+POST /api/clients?strict=true
 ```
 
 ```json
@@ -53,6 +53,7 @@ POST /api/clients
 - `housingStatus` is an enum with possible values `renter`, `homeowner`, and `other`.
 - `intakeServices` is an array of integer service ids. See (/api-docs/list-services.md).
 - `englishProficiency` is an enum with possible values `beginner`, `intermediate`, and `advanced`.
+- When the `strict` query param is set to `false`, you can create clients without all the normally required information. `strict` defaults to true.
 
 ## Response
 

@@ -95,7 +95,7 @@ exports.insertDemographicsInformationQuery = function insertDemographicsInformat
   `,
     [
       clientId,
-      data.countryOfOrigin.toUpperCase(),
+      data.countryOfOrigin ? data.countryOfOrigin.toUpperCase() : null,
       requestEnum(data.homeLanguage),
       data.englishProficiency,
       data.dateOfUSArrival,
