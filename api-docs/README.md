@@ -16,7 +16,7 @@ You may obtain an API key by contacting Comunidades Unidas directly.
 To use your API key, send an HTTP header with your requests that looks like this:
 
 ```
-Authorization: Basic YOUR_API_KEY
+Authorization: Basic <AUTH_TOKEN>
 ```
 
-This is all you need to authenticate and authorize
+This uses HTTP Basic auth, as described in https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication. Your username and password are combined to form the AUTH_TOKEN.
