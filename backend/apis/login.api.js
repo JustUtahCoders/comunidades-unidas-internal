@@ -5,6 +5,8 @@ const passport = require("passport");
 const cookieSession = require("cookie-session");
 const mysql = require("mysql");
 const { responseFullName } = require("./utils/transform-utils");
+const { BasicStrategy } = require("passport-http");
+const sha256 = require("crypto-js/sha256");
 
 const useGoogleAuth =
   !process.env.RUNNING_LOCALLY || process.env.USE_GOOGLE_AUTH;
@@ -16,6 +18,60 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
   done(null, user);
 });
+
+passport.use(
+  new BasicStrategy((username, password, done) => {
+    if (!process.env.PASSWORD_SALT) {
+      throw Error("PASSWORD_SALT env variable is required");
+    }
+
+    const passwordHash = sha256(
+      process.env.PASSWORD_SALT + password
+    ).toString();
+    console.log(passwordHash);
+
+    const getUser = mysql.format(
+      `SELECT * FROM
+        users JOIN programmaticUsers ON programmaticUsers.userId = users.id
+        LEFT JOIN userPermissions ON users.id = userPermissions.userId
+        WHERE programmaticUsers.username = ? AND programmaticUsers.password = ? AND programmaticUsers.expirationDate > NOW()
+        ;`,
+      [username, passwordHash]
+    );
+
+    pool.query(getUser, (err, rows) => {
+      if (err) {
+        return done(err);
+      }
+
+      if (!rows || rows.length === 0) {
+        return done("Unauthorized");
+      }
+
+      const permissions = {
+        immigration: false,
+      };
+
+      rows.forEach((r) => {
+        if (r.permission) {
+          permissions[r.permission] = true;
+        }
+
+        done(null, {
+          id: rows[0].id,
+          googleProfile: null,
+          fullName: responseFullName(rows[0].firstName, rows[0].lastName),
+          firstName: rows[0].firstName,
+          lastName: rows[0].lastName,
+          email: rows[0].email,
+          accessLevel: rows[0].accessLevel,
+          permissions,
+          token: null,
+        });
+      });
+    });
+  })
+);
 
 if (useGoogleAuth) {
   passport.use(
