@@ -135,7 +135,7 @@ If there is no client with the provided id, you will get a 404 HTTP response, wi
 ## Create a client file
 
 ```http
-POST /api/clients/:clientId/file
+POST /api/clients/:clientId/files
 ```
 
 ### Request
@@ -227,6 +227,60 @@ If there is no file with the provided id, you will get a 404 HTTP response, with
 ```json
 {
   "errors": ["Could not find fileId"]
+}
+```
+
+---
+
+## Get a single client file
+
+```http
+GET /api/clients/:clientId/files/:fileId
+```
+
+### Response
+
+#### Success
+
+```json
+{
+  "id": 1,
+  "createdBy": {
+    "firstName": "Sean",
+    "lastName": "White",
+    "fullName": "Sean White",
+    "timestamp": "2019-11-06T06:00:00.000Z"
+  },
+  "fileName": "fileId",
+  "fileSize": "10mb",
+  "fileExtension": "pdf",
+  "redacted": false
+}
+```
+
+#### Error
+
+If there is no client with the provided id, you will get a 404 HTTP response, with the following error
+
+```json
+{
+  "errors": ["Could not find client with id 2"]
+}
+```
+
+If there is no file with the provided id, you will get a 404 HTTP response, with the following error
+
+```json
+{
+  "errors": ["Could not find file with id 3"]
+}
+```
+
+Validation errors will respond with HTTP status 400.
+
+```json
+{
+  "errors": ["You must provide a file"]
 }
 ```
 

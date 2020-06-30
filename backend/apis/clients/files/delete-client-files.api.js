@@ -14,14 +14,13 @@ const {
   nullableValidTags,
 } = require("../../utils/validation-utils");
 const { validTagsList, sanitizeTags } = require("../../tags/tag.utils");
+const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 
 app.delete("/api/clients/:clientId/files/:fileId", (req, res) => {
+  const user = req.session.passport.user;
   const validationErrors = [
     ...checkValid(req.params, validId("clientId"), validId("fileId")),
-    ...checkValid(
-      req.query,
-      nullableValidTags("tags", req.session.passport.user.permissions)
-    ),
+    ...checkValid(req.query, nullableValidTags("tags", user.permissions)),
   ];
 
   if (validationErrors.length > 0) {
@@ -37,7 +36,7 @@ app.delete("/api/clients/:clientId/files/:fileId", (req, res) => {
     `
     SELECT isDeleted FROM clients WHERE id = ? AND isDeleted = false;
 
-    SELECT JSON_ARRAYAGG(tags.tag) tags
+    SELECT JSON_ARRAYAGG(tags.tag) tags, fileName
     FROM clientFiles LEFT JOIN tags ON tags.foreignId = clientFiles.id AND (tags.foreignTable = 'clientFiles' OR tags.foreignTable IS NULL)
     WHERE clientFiles.clientId = ? AND clientFiles.id = ? AND clientFiles.isDeleted = false
     GROUP BY clientFiles.id
@@ -80,6 +79,16 @@ app.delete("/api/clients/:clientId/files/:fileId", (req, res) => {
     const deleteSql = mysql.format(
       `
       UPDATE clientFiles SET isDeleted = true WHERE id = ?;
+
+      ${insertActivityLogQuery({
+        clientId,
+        title: `The ${fileResult[0].fileName} file was deleted`,
+        description: null,
+        logType: "file:deleted",
+        addedBy: user.id,
+        detailId: fileId,
+        tags,
+      })}
       `,
       [fileId]
     );

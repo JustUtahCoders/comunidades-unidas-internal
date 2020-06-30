@@ -17,6 +17,7 @@ const { responseFullName } = require("../../utils/transform-utils");
 const { Bucket } = require("./file-helpers");
 const mysql = require("mysql");
 const { insertTagsQuery, sanitizeTags } = require("../../tags/tag.utils");
+const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 
 app.post("/api/clients/:clientId/files", (req, res) => {
   const user = req.session.passport.user;
@@ -84,6 +85,18 @@ app.post("/api/clients/:clientId/files", (req, res) => {
           SELECT @clientFileId id;
 
           ${insertTagsQuery({ rawValue: "@clientFileId" }, "clientFiles", tags)}
+
+          ${insertActivityLogQuery({
+            clientId,
+            title: `The file ${req.body.fileName} was uploaded`,
+            description: null,
+            logType: "file:uploaded",
+            addedBy: user.id,
+            detailId: {
+              rawValue: "@clientFileId",
+            },
+            tags,
+          })}
         `,
             [
               req.body.s3Key,
