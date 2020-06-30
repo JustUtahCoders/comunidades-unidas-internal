@@ -28,7 +28,6 @@ passport.use(
     const passwordHash = sha256(
       process.env.PASSWORD_SALT + password
     ).toString();
-    console.log(passwordHash);
 
     const getUser = mysql.format(
       `SELECT * FROM
