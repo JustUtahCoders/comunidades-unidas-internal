@@ -14,9 +14,9 @@ app.get(`/api/reports/countries-of-origin`, (req, res) => {
       SELECT COUNT(*) total, demographics.countryOfOrigin
       FROM
         (
-          SELECT MAX(dateAdded) latestDateAdded, clientId FROM demographics GROUP BY clientId
+          SELECT MAX(dateAdded) latestDateAdded, id FROM demographics GROUP BY clientId
         ) latestDems
-        JOIN demographics ON latestDems.latestDateAdded = demographics.dateAdded
+        JOIN demographics ON latestDems.id = demographics.id
         JOIN clients ON clients.id = demographics.clientId
       WHERE
         clients.isDeleted = false
@@ -36,7 +36,8 @@ app.get(`/api/reports/countries-of-origin`, (req, res) => {
 
     res.send({
       countriesOfOrigin: countriesOfOrigin.reduce((acc, row) => {
-        acc[row.countryOfOrigin] = row.total;
+        const countryName = row.countryOfOrigin || "Unknown";
+        acc[countryName] = row.total;
         return acc;
       }, {}),
       reportParameters: {},
