@@ -11,7 +11,7 @@
     "develop-frontend": "cross-env PUBLIC_PATH='http://localhost:9018/' RUNNING_LOCALLY='true' webpack-dev-server --mode=development",
     "develop-backend": "cross-env RUNNING_LOCALLY='true' nodemon backend/server.js --watch backend",
     "develop-database": "docker-compose up",
-    "build": "webpack --mode=production",
+    "build": "webpack --mode=production --env.prod=true",
     "analyze-frontend-build": "webpack --mode=production --env.analyze=true",
     "nuke-database": "docker-compose down -v",
     "db-migrate-prod": "db-migrate up --env prod",
