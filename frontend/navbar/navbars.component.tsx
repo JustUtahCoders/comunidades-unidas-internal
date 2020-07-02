@@ -5,7 +5,6 @@ import { mediaDesktop, mediaMobile } from "../styleguide.component";
 import Topnav from "./topnav.component";
 
 type NavbarsProps = {
-  path: string;
   children?: JSX.Element | JSX.Element[];
 };
 
