@@ -368,7 +368,9 @@ function getInitialState(): ApiState {
 
   let page = null;
 
-  if (!isNaN(Number(queryParams.page))) {
+  if (isNaN(Number(queryParams.page))) {
+    page = 1;
+  } else {
     page = Number(queryParams.page);
     if (page < 1) {
       page = 1;

@@ -42,10 +42,11 @@ module.exports = (env, argv) => ({
   },
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js"],
-    alias: {
-      "react-dom$": "react-dom/profiling",
-      "scheduler/tracing": "scheduler/tracing-profiling",
-    },
+    // When you need to use the React Profiler, uncomment this
+    // alias: {
+    //   "react-dom$": env && env.prod ? "react-dom/profiling" : 'react-dom',
+    //   "scheduler/tracing": env && env.prod ? "scheduler/tracing-profiling" : 'scheduler/tracing',
+    // },
   },
   plugins: [
     new CleanWebpackPlugin(),
