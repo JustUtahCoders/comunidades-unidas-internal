@@ -149,13 +149,14 @@ you'll need to install [Python3](https://docs.aws.amazon.com/elasticbeanstalk/la
 To provide someone with programmatic access, perform the following steps:
 
 1. Choose a username and password for them.
-2. Choose an expiration date for their access. It's better to give them short-lived access whenever possible, and have them ask for an extension if needed.
-3. On your local machine, run `node script-utils/generate-password-hash.js`.
-4. In the production database, run the following command:
+2. Choose a Google auth user for this programmatic user to "spoof". "Developers CU" is a decent one if no others make sense. Find the user id by searching in the db for it.
+3. Choose an expiration date for their access. It's better to give them short-lived access whenever possible, and have them ask for an extension if needed.
+4. On your local machine, run `node script-utils/generate-password-hash.js`.
+5. In the production database, run the following command. **Be sure to modify the values first!**
 
 ```mysql
 INSERT INTO programmaticUsers (username, password, userId, expirationDate) VALUES ('username', 'password', 1, '2020-10-05 00:00:00');
 ```
 
-5. Give the programmatic user the username and password. Tell them to read [this documentation](https://github.com/JustUtahCoders/comunidades-unidas-internal/tree/master/api-docs#how-to-use-your-api-key) on how to authenticate.
-6. Verify that the account works. Install [httpie](https://httpie.org/) and run the following command: `http https://database.cuutah.org/api/clients -a username:password` and verify you get a client list back.
+6. Give the programmatic user the username and password. Tell them to read [this documentation](https://github.com/JustUtahCoders/comunidades-unidas-internal/tree/master/api-docs#how-to-use-your-api-key) on how to authenticate.
+7. Verify that the account works. Install [httpie](https://httpie.org/) and run the following command: `http https://database.cuutah.org/api/clients -a username:password` and verify you get a client list back.
