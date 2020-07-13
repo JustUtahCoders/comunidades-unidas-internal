@@ -6,7 +6,7 @@ const cookieSession = require("cookie-session");
 const mysql = require("mysql");
 const { responseFullName } = require("./utils/transform-utils");
 const { BasicStrategy } = require("passport-http");
-const bsync = require("bcrypt");
+const bcrypt = require("bcrypt");
 
 const useGoogleAuth =
   !process.env.RUNNING_LOCALLY || process.env.USE_GOOGLE_AUTH;
@@ -45,7 +45,7 @@ passport.use(
       }
 
       const userRows = rows.filter((row) =>
-        bsync.compareSync(password, row.password)
+        bcrypt.compareSync(password, row.password)
       );
 
       if (userRows.length === 0) {
