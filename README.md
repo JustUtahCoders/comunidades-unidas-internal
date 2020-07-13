@@ -150,7 +150,7 @@ To provide someone with programmatic access, perform the following steps:
 
 1. Choose a username and password for them.
 2. Choose an expiration date for their access. It's better to give them short-lived access whenever possible, and have them ask for an extension if needed.
-3. On your local machine, run `node script-utils/generate-password-has.js`.
+3. On your local machine, run `node script-utils/generate-password-hash.js`.
 4. In the production database, run the following command:
 
 ```mysql
