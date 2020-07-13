@@ -143,3 +143,18 @@ inside of the `/var/app/current/` directory.
 If the production environment is having issues, you'll need access to Comunidades Unidas' AWS account to diagnose. Once you have access,
 you'll need to install [Python3](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html) and
 [ebcli](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html). Then run `eb status`, `eb logs`, and other commands to try to diagnose.
+
+## Programmatic users
+
+To provide someone with programmatic access, perform the following steps:
+
+1. Choose a username and password for them.
+2. Choose an expiration date for their access. It's better to give them short-lived access whenever possible, and have them ask for an extension if needed.
+3. On your local machine, run `node script-utils/generate-password-has.js`.
+4. In the production database, run the following command:
+
+```mysql
+INSERT INTO programmaticUsers (username, password, userId, expirationDate) VALUES ('username', 'password', 1, '2020-10-05 00:00:00');
+```
+
+5. Give the programmatic user the username and password. Tell them to read [this documentation](https://github.com/JustUtahCoders/comunidades-unidas-internal/tree/master/api-docs#how-to-use-your-api-key) on how to authenticate.
