@@ -39,7 +39,6 @@ passport.use(
         return done(err);
       }
 
-      console.log("rows", rows);
       if (!rows || rows.length === 0) {
         return done("Unauthorized");
       }
