@@ -6,7 +6,7 @@ const cookieSession = require("cookie-session");
 const mysql = require("mysql");
 const { responseFullName } = require("./utils/transform-utils");
 const { BasicStrategy } = require("passport-http");
-const sha256 = require("crypto-js/sha256");
+const bcrypt = require("bcrypt");
 
 const useGoogleAuth =
   !process.env.RUNNING_LOCALLY || process.env.USE_GOOGLE_AUTH;
@@ -25,17 +25,13 @@ passport.use(
       throw Error("PASSWORD_SALT env variable is required");
     }
 
-    const passwordHash = sha256(
-      process.env.PASSWORD_SALT + password
-    ).toString();
-
     const getUser = mysql.format(
-      `SELECT users.id, users.firstName, users.lastName, users.email, users.accessLevel, userPermissions.permission FROM
+      `SELECT users.id, users.firstName, users.lastName, users.email, users.accessLevel, userPermissions.permission, programmaticUsers.password FROM
         users JOIN programmaticUsers ON programmaticUsers.userId = users.id
         LEFT JOIN userPermissions ON users.id = userPermissions.userId
-        WHERE programmaticUsers.username = ? AND programmaticUsers.password = ? AND programmaticUsers.expirationDate > NOW()
+        WHERE programmaticUsers.username = ? AND programmaticUsers.expirationDate > NOW()
         ;`,
-      [username, passwordHash]
+      [username]
     );
 
     pool.query(getUser, (err, rows) => {
@@ -47,24 +43,32 @@ passport.use(
         return done("Unauthorized");
       }
 
+      const userRows = rows.filter((row) =>
+        bcrypt.compareSync(password, row.password)
+      );
+
+      if (userRows.length === 0) {
+        return done("Unauthorized");
+      }
+
       const permissions = {
         immigration: false,
       };
 
-      rows.forEach((r) => {
+      userRows.forEach((r) => {
         if (r.permission) {
           permissions[r.permission] = true;
         }
       });
 
       done(null, {
-        id: rows[0].id,
+        id: userRows[0].id,
         googleProfile: null,
-        fullName: responseFullName(rows[0].firstName, rows[0].lastName),
-        firstName: rows[0].firstName,
-        lastName: rows[0].lastName,
-        email: rows[0].email,
-        accessLevel: rows[0].accessLevel,
+        fullName: responseFullName(userRows[0].firstName, userRows[0].lastName),
+        firstName: userRows[0].firstName,
+        lastName: userRows[0].lastName,
+        email: userRows[0].email,
+        accessLevel: userRows[0].accessLevel,
         permissions,
         token: null,
       });
