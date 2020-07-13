@@ -149,7 +149,7 @@ you'll need to install [Python3](https://docs.aws.amazon.com/elasticbeanstalk/la
 To provide someone with programmatic access, perform the following steps:
 
 1. Choose a username and password for them.
-2. Choose a Google auth user for this programmatic user to "spoof". "Developers CU" is a decent one if no others make sense. Find the user id by searching in the db for it.
+2. Choose a Google auth user for this programmatic user to "spoof". "Developers CU" is a decent one if no others make sense. This is the user that the programmatic user will inherit their permissions from. Use Developers CU if they need immigration access, but use a different, non-immigration account for those that don't need immigration access.
 3. Choose an expiration date for their access. It's better to give them short-lived access whenever possible, and have them ask for an extension if needed.
 4. On your local machine, run `node script-utils/generate-password-hash.js`.
 5. In the production database, run the following command. **Be sure to modify the values first!**
