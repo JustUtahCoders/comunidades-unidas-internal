@@ -158,3 +158,4 @@ INSERT INTO programmaticUsers (username, password, userId, expirationDate) VALUE
 ```
 
 5. Give the programmatic user the username and password. Tell them to read [this documentation](https://github.com/JustUtahCoders/comunidades-unidas-internal/tree/master/api-docs#how-to-use-your-api-key) on how to authenticate.
+6. Verify that the account works. Install [httpie](https://httpie.org/) and run the following command: `http https://database.cuutah.org/api/clients -a username:password` and verify you get a client list back.
