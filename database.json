@@ -10,16 +10,16 @@
   "prod": {
     "driver": "mysql",
     "host": {
-      "ENV": "RDS_HOSTNAME"
+      "ENV": "MYSQL_HOSTNAME"
     },
     "user": {
-      "ENV": "RDS_USERNAME"
+      "ENV": "MYSQL_USERNAME"
     },
     "password": {
-      "ENV": "RDS_PASSWORD"
+      "ENV": "MYSQL_PASSWORD"
     },
     "database": {
-      "ENV": "RDS_DB_NAME"
+      "ENV": "MYSQL_DB_NAME"
     },
     "multipleStatements": true
   }
