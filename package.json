@@ -43,6 +43,7 @@
     "aws-sdk": "^2.687.0",
     "axios": "^0.19.2",
     "bandicoot": "^4.4.1",
+    "bcrypt": "^5.0.0",
     "btoa": "^1.2.1",
     "cookie-parser": "^1.4.5",
     "cookie-session": "https://github.com/joeldenning/cookie-session.git#secure-fix",
