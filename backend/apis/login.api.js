@@ -6,7 +6,7 @@ const cookieSession = require("cookie-session");
 const mysql = require("mysql");
 const { responseFullName } = require("./utils/transform-utils");
 const { BasicStrategy } = require("passport-http");
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt");
 
 const useGoogleAuth =
   !process.env.RUNNING_LOCALLY || process.env.USE_GOOGLE_AUTH;
