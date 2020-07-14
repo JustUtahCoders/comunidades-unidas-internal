@@ -16,11 +16,11 @@ require("./run-database-migrations");
 exports.app = app;
 exports.pool = mysql.createPool({
   connectionLimit: 40,
-  host: process.env.RDS_HOSTNAME || "localhost",
-  user: process.env.RDS_USERNAME || "root",
-  password: process.env.RDS_PASSWORD || "password",
-  database: process.env.RDS_DB_NAME || "local_db",
-  port: process.env.RDS_PORT || "3306",
+  host: process.env.MYSQL_HOSTNAME || "localhost",
+  user: process.env.MYSQL_USERNAME || "root",
+  password: process.env.MYSQL_PASSWORD || "password",
+  database: process.env.MYSQL_DB_NAME || "local_db",
+  port: process.env.MYSQL_PORT || "3306",
   multipleStatements: true,
 });
 
