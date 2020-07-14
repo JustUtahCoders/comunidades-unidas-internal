@@ -38,7 +38,6 @@ Now create a file inside of the comunidades-unidas-internal directory called `.e
 ```sh
 # Required for local dev - can be any value
 KEYGRIP_SECRET=123
-PASSWORD_SALT=123
 
 # Only needed if you're testing specific features
 # Ask Joel or Leonel for the values to use if you need them

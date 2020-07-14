@@ -21,10 +21,6 @@ passport.deserializeUser((user, done) => {
 
 passport.use(
   new BasicStrategy((username, password, done) => {
-    if (!process.env.PASSWORD_SALT) {
-      throw Error("PASSWORD_SALT env variable is required");
-    }
-
     const getUser = mysql.format(
       `SELECT users.id, users.firstName, users.lastName, users.email, users.accessLevel, userPermissions.permission, programmaticUsers.password FROM
         users JOIN programmaticUsers ON programmaticUsers.userId = users.id
