@@ -73,3 +73,5 @@ static
 
 # lint config for markdown
 .markdownlint.json
+
+.DS_Store
