@@ -24,7 +24,7 @@ deploy:
   - deploy:
     provider: script
     before_script:
-    script: echo "Deploying with ebcli" && python --version && eb deploy comunidades-unidas-internal-prod-live
+    script: echo "Deploying with ebcli" && python --version && eb deploy comunidades-unidas-internal-prod-vpc
     on:
       branch: master
     skip_cleanup: true

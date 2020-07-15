@@ -1,6 +1,6 @@
 branch-defaults:
   master:
-    environment: comunidades-unidas-internal-prod-live
+    environment: comunidades-unidas-internal-prod-vpc
     group_suffix: null
 environment-defaults:
   comunidades-unidas-internal-prod:
