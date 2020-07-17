@@ -74,6 +74,7 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
               clientSource: client.clientSource,
               couldVolunteer: client.couldVolunteer,
             }}
+            isNewClient={false}
           />
           <div>
             <label className="intake-services-label">
@@ -114,7 +115,9 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
               <tr>
                 <td>Client source:</td>
                 <td>
-                  {clientSources[client.clientSource] || client.clientSource}
+                  {clientSources[client.clientSource] ||
+                    client.clientSource ||
+                    "\u2014"}
                 </td>
               </tr>
               <tr>

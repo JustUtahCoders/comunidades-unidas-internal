@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useCss, m } from "kremling";
 import FuzzySearch from "fuzzy-search";
 
-export default function CityInput(props) {
+export default function CityInput(props: CityInputProps) {
   const [focused, setFocused] = useState(false);
   const [justBlurred, setJustBlurred] = useState(false);
   const [statesToCities, setStatesToCities] = useState({});
@@ -49,7 +49,7 @@ export default function CityInput(props) {
         type="text"
         value={props.city}
         onChange={(evt) => props.setCity(evt.target.value)}
-        required
+        required={props.required}
         ref={inputRef}
         autoComplete="new-password"
         onFocus={() => setSelectedIndex(0)}
@@ -119,6 +119,14 @@ export default function CityInput(props) {
     }, 100);
   }
 }
+
+type CityInputProps = {
+  state: string;
+  city: string;
+  setCity(city: string): any;
+  nextInputRef: React.RefObject<any>;
+  required: boolean;
+};
 
 const css = `
 & .city-input-container {

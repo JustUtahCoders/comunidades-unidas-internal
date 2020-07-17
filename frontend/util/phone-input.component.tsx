@@ -10,7 +10,7 @@ export default function PhoneInput(props: PhoneInputProps) {
       value={unmaskedPhone}
       onChange={handleChange}
       pattern="\(?[0-9]{3}\)?[ ]?-?[0-9]{3}-?[0-9]{4}"
-      required
+      required={props.required}
       autoFocus={props.autoFocus}
       autoComplete="new-password"
     />
@@ -28,4 +28,5 @@ type PhoneInputProps = {
   phone: string;
   setPhone(phone: string): void;
   autoFocus?: boolean;
+  required: boolean;
 };

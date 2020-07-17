@@ -60,7 +60,7 @@ app.post("/api/clients", (req, res, next) => {
       nonEmptyString("firstName"),
       nonEmptyString("lastName"),
       sometimesValidDate("birthday"),
-      nonEmptyString("gender"),
+      nullableNonEmptyString("gender"),
       validDate("dateOfIntake"),
       sometimesValidPhone("phone"),
       sometimesValidBoolean("smsConsent"),
@@ -94,6 +94,7 @@ app.post("/api/clients", (req, res, next) => {
       nullableValidEnum("weeklyEmployedHours", "0-20", "21-35", "36-40", "41+"),
       sometimesValidInteger("householdIncome"),
       sometimesValidInteger("householdSize"),
+      nullableValidInteger("juvenileDependents"),
       sometimesValidBoolean("isStudent"),
       sometimesValidEnum("housingStatus", "renter", "homeowner", "other"),
       sometimesValidEnum(

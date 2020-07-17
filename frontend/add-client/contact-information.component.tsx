@@ -29,6 +29,7 @@ export default function ContactInformation(props: StepComponentProps) {
         handleSubmit={handleSubmit}
         ref={contactInfoRef}
         showDateOfIntake={true}
+        isNewClient={true}
       >
         <div className="actions">
           <button type="button" className="secondary" onClick={goBack}>

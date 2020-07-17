@@ -22,7 +22,7 @@ export default function LeadContactInformationInputs(
       <div>
         <label>
           <span>Phone number:</span>
-          <PhoneInput phone={phone} setPhone={setPhone} autoFocus />
+          <PhoneInput phone={phone} setPhone={setPhone} autoFocus required />
         </label>
       </div>
       <div>

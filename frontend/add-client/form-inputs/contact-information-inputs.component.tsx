@@ -3,7 +3,7 @@ import dateFormat from "dateformat";
 import PhoneInput from "../../util/phone-input.component";
 import StateSelect from "../../util/state-select.component";
 import CityInput from "../../util/city-input.component";
-import { capitalize } from "lodash-es";
+import { capitalize, isEmpty } from "lodash-es";
 
 export default React.forwardRef(function ContactInformationInputs(
   props: ContactInformationInputsProps,
@@ -17,11 +17,9 @@ export default React.forwardRef(function ContactInformationInputs(
     props.client.streetAddress || ""
   );
   const [city, setCity] = React.useState(props.client.city || "");
-  const [state, setState] = React.useState(props.client.state || "UT");
+  const [state, setState] = React.useState(props.client.state || "");
   const [zip, setZip] = React.useState(props.client.zip || "");
-  const [housing, setHousing] = React.useState(
-    props.client.housing || "renter"
-  );
+  const [housing, setHousing] = React.useState(props.client.housing || "");
   const [email, setEmail] = React.useState(props.client.email || "");
   const [dateOfIntake, setDateOfIntake] = React.useState(
     props.client.dateOfIntake || getTodayAsString
@@ -55,7 +53,11 @@ export default React.forwardRef(function ContactInformationInputs(
       <div>
         <label>
           <span>Phone number</span>
-          <PhoneInput phone={phone} setPhone={setPhone} />
+          <PhoneInput
+            phone={phone}
+            setPhone={setPhone}
+            required={props.isNewClient}
+          />
         </label>
       </div>
       <div>
@@ -88,7 +90,7 @@ export default React.forwardRef(function ContactInformationInputs(
             type="text"
             value={streetAddress}
             onChange={(evt) => setStreetAddress(evt.target.value)}
-            required
+            required={props.isNewClient}
             placeholder="1211 W. 3200 S."
             autoComplete="new-password"
           />
@@ -102,6 +104,7 @@ export default React.forwardRef(function ContactInformationInputs(
             city={city}
             setCity={setCity}
             nextInputRef={zipRef}
+            required={props.isNewClient}
           />
         </label>
       </div>
@@ -120,7 +123,7 @@ export default React.forwardRef(function ContactInformationInputs(
             value={zip}
             onChange={(evt) => setZip(evt.target.value)}
             autoComplete="new-password"
-            required
+            required={props.isNewClient}
           />
         </label>
       </div>
@@ -128,7 +131,7 @@ export default React.forwardRef(function ContactInformationInputs(
         <label>
           <span>Rent or Own:</span>
           <select
-            value={housing}
+            value={housing || "unknown"}
             name="housing"
             onChange={(evt) => setHousing(evt.target.value)}
             required
@@ -147,13 +150,15 @@ export default React.forwardRef(function ContactInformationInputs(
 
   function getData(): ContactInformationFormClient {
     const data: ContactInformationFormClient = {
-      phone,
+      phone: isEmpty(phone) ? null : phone,
       smsConsent,
-      streetAddress: capitalizeAll(streetAddress.trim()),
-      city: capitalizeAll(city.trim()),
-      state,
-      zip,
-      housing,
+      streetAddress: isEmpty(streetAddress.trim())
+        ? null
+        : capitalizeAll(streetAddress.trim()),
+      city: isEmpty(city.trim()) ? null : capitalizeAll(city.trim()),
+      state: isEmpty(state) ? null : state,
+      zip: isEmpty(zip) ? null : zip,
+      housing: isEmpty(housing) || housing === "unknown" ? null : housing,
       email: email ? email.toLowerCase() : null,
     };
 
@@ -182,6 +187,7 @@ type ContactInformationInputsProps = {
   client: ContactInformationFormClient;
   children: JSX.Element | JSX.Element[];
   showDateOfIntake?: boolean;
+  isNewClient: boolean;
 };
 
 export type ContactInformationFormClient = {
@@ -200,4 +206,5 @@ export enum HousingStatuses {
   renter = "Renter",
   homeowner = "Home Owner",
   other = "With family and friends",
+  unknown = "Unknown",
 }

@@ -92,6 +92,7 @@ app.patch("/api/clients/:id", (req, res, next) => {
       "tv",
       "other"
     ),
+    nullableValidInteger("dependents"),
     nullableValidBoolean("couldVolunteer"),
     nullableValidArray("intakeServices", validInteger),
     nullableValidBoolean("registeredToVote"),
@@ -116,6 +117,11 @@ app.patch("/api/clients/:id", (req, res, next) => {
     }
 
     const fullClient = Object.assign({}, oldClient, req.body);
+    fullClient.homeAddress = Object.assign(
+      {},
+      oldClient.homeAddress,
+      req.body.homeAddress || {}
+    );
 
     const queries = [];
 
@@ -164,14 +170,15 @@ app.patch("/api/clients/:id", (req, res, next) => {
       "phone",
       "smsConsent",
       "email",
-      "address.street",
-      "address.city",
-      "address.state",
-      "address.zip",
+      "homeAddress.street",
+      "homeAddress.city",
+      "homeAddress.state",
+      "homeAddress.zip",
       "housingStatus"
     );
 
     if (contactInfoChanged) {
+      console.log("contact info changed!");
       queries.push(
         insertContactInformationQuery(
           clientId,
@@ -186,6 +193,7 @@ app.patch("/api/clients/:id", (req, res, next) => {
       req.body,
       "civilStatus",
       "householdIncome",
+      "householdSize",
       "dependents",
       "currentlyEmployed",
       "weeklyEmployedHours",

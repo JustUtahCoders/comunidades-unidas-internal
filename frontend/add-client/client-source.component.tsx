@@ -21,7 +21,11 @@ export default function ClientSource(props: StepComponentProps) {
         </div>
       </div>
       <form onSubmit={handleSubmit}>
-        <ClientSourceInputs client={props.clientState} ref={inputsRef} />
+        <ClientSourceInputs
+          client={props.clientState}
+          ref={inputsRef}
+          isNewClient
+        />
         <div className="actions">
           <button
             type="button"

@@ -14,6 +14,8 @@ exports.responseFullName = (firstName, lastName) =>
 exports.responseBoolean = (val) => {
   if (typeof val === "string") {
     return val !== "0" && val !== "false";
+  } else if (val === null || undefined) {
+    return null;
   } else {
     return Boolean(val);
   }
