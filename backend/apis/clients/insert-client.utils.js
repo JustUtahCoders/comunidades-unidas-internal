@@ -107,9 +107,9 @@ exports.insertDemographicsInformationQuery = function insertDemographicsInformat
       data.dependents,
       data.civilStatus,
       data.householdIncome,
-      Boolean(data.eligibleToVote),
-      Boolean(data.registeredToVote),
-      Boolean(data.isStudent),
+      data.eligibleToVote,
+      data.registeredToVote,
+      data.isStudent,
       userId,
     ]
   );

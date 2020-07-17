@@ -76,6 +76,7 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
             dateOfIntake: client.dateOfIntake,
           }}
           handleSubmit={handleSubmit}
+          isNewClient={false}
         >
           <div className="actions">
             <button
@@ -101,12 +102,12 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
             <tbody>
               <tr>
                 <td>Phone:</td>
-                <td>{formatPhone(client.phone)}</td>
+                <td>{client.phone ? formatPhone(client.phone) : "\u2014"}</td>
               </tr>
               <tr>
                 <td>Email:</td>
                 <td>
-                  <div>{client.email ? client.email : "Not Provided"}</div>
+                  <div>{client.email ? client.email : "\u2014"}</div>
                 </td>
               </tr>
               <tr>
@@ -114,8 +115,10 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
                 <td>
                   <div>{client.homeAddress.street}</div>
                   <div>
-                    {client.homeAddress.city}, {client.homeAddress.state}{" "}
-                    {client.homeAddress.zip}
+                    {client.homeAddress.city
+                      ? client.homeAddress.city + ","
+                      : ""}{" "}
+                    {client.homeAddress.state} {client.homeAddress.zip}
                   </div>
                 </td>
               </tr>
@@ -127,7 +130,8 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
                 <td>Housing:</td>
                 <td>
                   {HousingStatuses[client.housingStatus] ||
-                    client.housingStatus}
+                    client.housingStatus ||
+                    "\u2014"}
                 </td>
               </tr>
             </tbody>

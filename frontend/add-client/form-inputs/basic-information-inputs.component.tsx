@@ -8,10 +8,10 @@ export default function BasicInformationInputs(
     props.client.firstName || ""
   );
   const [lastName, setLastName] = React.useState(props.client.lastName || "");
-  const [birthday, setBirthday] = React.useState(
-    props.client.birthday || "1990-01-01"
+  const [birthday, setBirthday] = React.useState(props.client.birthday || "");
+  const [gender, setGender] = React.useState(
+    props.client.gender || (props.isNewClient ? "female" : "unknown")
   );
-  const [gender, setGender] = React.useState(props.client.gender || "female");
 
   return (
     <form onSubmit={handleSubmit} autoComplete="off">
@@ -47,7 +47,7 @@ export default function BasicInformationInputs(
             type="date"
             value={birthday}
             onChange={(evt) => setBirthday(evt.target.value)}
-            required
+            required={props.client.birthday !== null}
           />
         </label>
       </div>
@@ -55,7 +55,7 @@ export default function BasicInformationInputs(
         <label>
           <span>Gender</span>
           <select
-            value={gender}
+            value={gender || "unknown"}
             onChange={(evt) => setGender(evt.target.value)}
             autoComplete="new-password"
             required
@@ -65,6 +65,7 @@ export default function BasicInformationInputs(
             <option value="nonbinary">Non-binary</option>
             <option value="transgender">Transgender</option>
             <option value="other">Other</option>
+            <option value="unknown">Unknown</option>
           </select>
         </label>
       </div>
@@ -76,8 +77,8 @@ export default function BasicInformationInputs(
     return props.handleSubmit(evt, {
       firstName: capitalize(firstName.trim()),
       lastName: capitalize(lastName.trim()),
-      gender,
-      birthday,
+      gender: gender === "unknown" ? null : gender,
+      birthday: birthday === "" ? null : birthday,
     });
   }
 }
@@ -86,6 +87,7 @@ type BasicInformationInputsProps = {
   client: BasicInfoClient;
   children: JSX.Element | JSX.Element[];
   handleSubmit(evt: Event, newState: BasicInfoClient);
+  isNewClient: boolean;
 };
 
 type BasicInfoClient = {

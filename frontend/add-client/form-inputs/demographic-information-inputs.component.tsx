@@ -1,24 +1,26 @@
 import React, { useState } from "react";
 import CountrySelect from "../../util/country-select.component";
 import CurrencyInput from "../../util/currency-input.component";
+import { isEmpty } from "lodash-es";
 
 export default function DemographicInformationInputs(
   props: DemographicInformationInputsProps
 ) {
   const [civilStatus, setCivilStatus] = useState<CivilStatus>(
-    CivilStatus[props.client.civilStatus] || CivilStatus.single
+    CivilStatus[props.client.civilStatus] ||
+      (props.isNewClient ? CivilStatus.single : CivilStatus.unknown)
   );
   const [householdIncome, setHouseholdIncome] = useState(
     props.client.householdIncome
   );
   const [householdSize, setHouseholdSize] = useState(
-    props.client.householdSize || 1
+    props.client.householdSize || (props.isNewClient ? 1 : "")
   );
   const [juvenileDependents, setJuvenileDependents] = useState(
-    props.client.juvenileDependents || 0
+    props.client.juvenileDependents || (props.isNewClient ? 0 : "")
   );
   const [currentlyEmployed, setCurrentlyEmployed] = useState(
-    props.client.currentlyEmployed || "no"
+    props.client.currentlyEmployed || "unknown"
   );
   const [weeklyEmployedHours, setWeeklyEmployedHours] = useState<
     WeeklyEmployedHours
@@ -33,34 +35,46 @@ export default function DemographicInformationInputs(
     PayInterval[props.client.payInterval] || PayInterval["every-two-weeks"]
   );
   const [countryOfOrigin, setCountryOfOrigin] = useState(
-    props.client.countryOfOrigin || "US"
+    props.client.countryOfOrigin || (props.isNewClient ? "US" : "")
   );
   const [dateOfUSArrival, setDateOfUSArrival] = useState(
     props.client.dateOfUSArrival || ""
   );
   const [homeLanguage, setHomeLanguage] = useState(
-    getInitialHomeLanguage(props.client.homeLanguage)
+    getInitialHomeLanguage(props.client.homeLanguage, props.isNewClient)
   );
   const [otherLanguage, setOtherLanguage] = useState(
     getInitialOtherHomeLanguage(props.client.homeLanguage)
   );
-  const [isStudent, setIsStudent] = useState(props.client.isStudent || false);
+  const [isStudent, setIsStudent] = useState(
+    props.isNewClient ? props.client.isStudent || false : props.client.isStudent
+  );
   const [englishLevel, setEnglishLevel] = useState(
-    props.client.englishLevel || "intermediate"
+    props.client.englishLevel || "unknown"
   );
   const [eligibleToVote, setEligibleToVote] = useState(
-    props.client.eligibleToVote || false
+    props.isNewClient
+      ? props.client.eligibleToVote || null
+      : props.client.eligibleToVote
   );
   const [registerToVote, setRegisterToVote] = useState(
     props.client.registerToVote || false
   );
 
   const demographicInfo: DemographicInformationClient = {
-    civilStatus,
-    countryOfOrigin,
+    civilStatus:
+      isEmpty(civilStatus) || civilStatus === "unknown"
+        ? null
+        : (civilStatus as CivilStatus),
+    countryOfOrigin: isEmpty(countryOfOrigin) ? null : countryOfOrigin,
     dateOfUSArrival: fullDateOfUSArrival(dateOfUSArrival),
-    homeLanguage: homeLanguage === "other" ? otherLanguage : homeLanguage,
-    englishLevel,
+    homeLanguage:
+      homeLanguage === "other"
+        ? otherLanguage
+        : isEmpty(homeLanguage) || homeLanguage === "unknown"
+        ? null
+        : homeLanguage,
+    englishLevel: englishLevel === "unknown" ? null : englishLevel,
     currentlyEmployed,
     employmentSector:
       employmentSector === "other"
@@ -69,11 +83,12 @@ export default function DemographicInformationInputs(
     payInterval,
     weeklyEmployedHours,
     householdIncome,
-    householdSize,
+    householdSize: householdSize === "" ? null : Number(householdSize),
     isStudent,
     eligibleToVote,
     registerToVote,
-    juvenileDependents,
+    juvenileDependents:
+      juvenileDependents === "" ? null : Number(juvenileDependents),
   };
 
   return (
@@ -102,7 +117,7 @@ export default function DemographicInformationInputs(
           <CurrencyInput
             setDollars={setHouseholdIncome}
             initialValue={householdIncome}
-            required
+            required={props.isNewClient}
           />
         </label>
       </div>
@@ -113,7 +128,8 @@ export default function DemographicInformationInputs(
             type="number"
             value={householdSize}
             onChange={(evt) => setHouseholdSize(Number(evt.target.value))}
-            required
+            required={props.isNewClient}
+            placeholder="Unknown"
             min={1}
             max={30}
           />
@@ -126,7 +142,8 @@ export default function DemographicInformationInputs(
             type="number"
             value={juvenileDependents}
             onChange={(evt) => setJuvenileDependents(Number(evt.target.value))}
-            required
+            required={props.isNewClient}
+            placeholder="Unknown"
             min={0}
             max={30}
           />
@@ -158,9 +175,24 @@ export default function DemographicInformationInputs(
                     setEligibleToVote(false);
                     setRegisterToVote(false);
                   }}
-                  checked={!eligibleToVote}
+                  checked={!eligibleToVote && eligibleToVote !== null}
                 />
                 Not eligible to vote
+              </label>
+            </div>
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="eligible-to-vote"
+                  value="unknown"
+                  onChange={() => {
+                    setEligibleToVote(null);
+                    setRegisterToVote(null);
+                  }}
+                  checked={eligibleToVote === null}
+                />
+                Unknown
               </label>
             </div>
           </div>
@@ -226,9 +258,21 @@ export default function DemographicInformationInputs(
                   name="student"
                   value="false"
                   onChange={() => setIsStudent(false)}
-                  checked={!isStudent}
+                  checked={!isStudent && isStudent !== null}
                 />
                 Not student
+              </label>
+            </div>
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="student"
+                  value="unknown"
+                  onChange={() => setIsStudent(null)}
+                  checked={isStudent === null}
+                />
+                Unknown
               </label>
             </div>
           </div>
@@ -423,11 +467,13 @@ function getInitialOtherEmploymentSector(val) {
   }
 }
 
-function getInitialHomeLanguage(val) {
+function getInitialHomeLanguage(val, isNewClient) {
   if (val) {
     return Object.keys(languageOptions).includes(val) ? val : "other";
+  } else if (val === null) {
+    return "unknown";
   } else {
-    return languageOptions.spanish;
+    return "spanish";
   }
 }
 
@@ -468,6 +514,7 @@ export enum languageOptions {
   english = "English",
   spanish = "Spanish",
   englishandspanish = "English And Spanish",
+  unknown = "Unknown",
   other = "Other",
 }
 
@@ -493,6 +540,7 @@ type DemographicInformationInputsProps = {
   children(
     demographicInfo: DemographicInformationClient
   ): JSX.Element | JSX.Element[];
+  isNewClient: boolean;
 };
 
 export type DemographicInformationClient = {
@@ -517,6 +565,7 @@ export const EnglishLevel = {
   beginner: "Beginner",
   intermediate: "Intermediate",
   advanced: "Advanced",
+  unknown: "Unknown",
 };
 
 export enum CivilStatus {
@@ -526,6 +575,7 @@ export enum CivilStatus {
   divorced = "divorced",
   widowed = "widowed",
   separated = "separated",
+  unknown = "unknown",
 }
 
 export const civilStatuses = {
@@ -535,6 +585,7 @@ export const civilStatuses = {
   [CivilStatus.divorced]: "Divorced",
   [CivilStatus.widowed]: "Widowed",
   [CivilStatus.separated]: "Separated",
+  [CivilStatus.unknown]: "Unknown",
 };
 
 export enum WeeklyEmployedHours {

@@ -5,7 +5,9 @@ import { ClientSources } from "../add-client.component";
 export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
   function ClientSourceInputs(props: ClientSourceInputsProps, ref) {
     const [clientSource, setClientSource] = useState(
-      ClientSources[props.client.clientSource || "friend"]
+      ClientSources[
+        props.client.clientSource || (props.isNewClient ? "friend" : "unknown")
+      ]
     );
     const [couldVolunteer, setCouldVolunteer] = useState(
       props.client.couldVolunteer || false
@@ -16,7 +18,7 @@ export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
       if (ref) {
         // @ts-ignore
         ref.current = {
-          clientSource,
+          clientSource: clientSource === "unknown" ? null : clientSource,
           couldVolunteer,
         };
       }
@@ -30,7 +32,7 @@ export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
               How did they hear about Comunidades Unidas
             </span>
             <select
-              value={clientSource}
+              value={clientSource || "unknown"}
               onChange={(evt) => setClientSource(evt.target.value)}
               autoFocus
               required
@@ -68,6 +70,7 @@ const css = `
 `;
 
 export const clientSources = {
+  unknown: "Unknown",
   facebook: "Facebook",
   instagram: "Instagram",
   website: "Website",
@@ -85,6 +88,7 @@ export const clientSources = {
 
 type ClientSourceInputsProps = {
   client: ClientSourceInputClient;
+  isNewClient: boolean;
 };
 
 type ClientSourceInputClient = {

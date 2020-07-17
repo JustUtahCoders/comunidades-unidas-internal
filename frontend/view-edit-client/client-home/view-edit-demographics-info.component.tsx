@@ -14,6 +14,8 @@ import DemographicInformationInputs, {
   civilStatuses,
 } from "../../add-client/form-inputs/demographic-information-inputs.component";
 import easyFetch from "../../util/easy-fetch";
+import { isNumber } from "lodash-es";
+import dayjs from "dayjs";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -62,6 +64,7 @@ export default function ViewEditDemographicsInfo(
         <DemographicInformationInputs
           client={getDemographicsClient()}
           onSubmit={handleSubmit}
+          isNewClient={false}
         >
           {(demographicsInfo) => (
             <div className="actions">
@@ -90,39 +93,57 @@ export default function ViewEditDemographicsInfo(
               <tr>
                 <td>Civil status:</td>
                 <td>
-                  {civilStatuses[client.civilStatus] || client.civilStatus}
+                  {civilStatuses[client.civilStatus] ||
+                    client.civilStatus ||
+                    "\u2014"}
                 </td>
               </tr>
               <tr>
                 <td>Annual income:</td>
-                <td>{currencyFormatter.format(client.householdIncome)}</td>
+                <td>
+                  {isNumber(client.householdIncome)
+                    ? currencyFormatter.format(client.householdIncome)
+                    : "\u2014"}
+                </td>
               </tr>
               <tr>
                 <td>Household size:</td>
-                <td>{client.householdSize}</td>
+                <td>
+                  {isNumber(client.householdSize)
+                    ? client.householdSize
+                    : "\u2014"}
+                </td>
               </tr>
               <tr>
                 <td># of dependents under 18:</td>
-                <td>{client.dependents}</td>
+                <td>
+                  {isNumber(client.dependents) ? client.dependents : "\u2014"}
+                </td>
               </tr>
               <tr>
                 <td>Eligible to vote:</td>
                 <td>
-                  {client.eligibleToVote ? "Yes" : "No"}
-                  <img
-                    src={client.eligibleToVote ? checkedUrl : closeUrl}
-                    alt={
-                      client.eligibleToVote
-                        ? "Eligible to vote"
-                        : "Not eligible to vote"
-                    }
-                    title={
-                      client.isStudent
-                        ? "Eligible to vote"
-                        : "Not eligible to vote"
-                    }
-                    className="inline-icon"
-                  />
+                  {client.eligibleToVote === null
+                    ? "\u2014"
+                    : client.eligibleToVote
+                    ? "Yes"
+                    : "No"}
+                  {client.eligibleToVote !== null && (
+                    <img
+                      src={client.eligibleToVote ? checkedUrl : closeUrl}
+                      alt={
+                        client.eligibleToVote
+                          ? "Eligible to vote"
+                          : "Not eligible to vote"
+                      }
+                      title={
+                        client.isStudent
+                          ? "Eligible to vote"
+                          : "Not eligible to vote"
+                      }
+                      className="inline-icon"
+                    />
+                  )}
                 </td>
               </tr>
               {client.eligibleToVote && (
@@ -150,13 +171,19 @@ export default function ViewEditDemographicsInfo(
               <tr>
                 <td>Student:</td>
                 <td>
-                  {client.isStudent ? "Yes" : "No"}
-                  <img
-                    src={client.isStudent ? checkedUrl : closeUrl}
-                    alt={client.isStudent ? "Is student" : "Not student"}
-                    title={client.isStudent ? "Is student" : "Not student"}
-                    className="inline-icon"
-                  />
+                  {client.isStudent === null
+                    ? "\u2014"
+                    : client.isStudent
+                    ? "Yes"
+                    : "No"}
+                  {client.isStudent !== null && (
+                    <img
+                      src={client.isStudent ? checkedUrl : closeUrl}
+                      alt={client.isStudent ? "Is student" : "Not student"}
+                      title={client.isStudent ? "Is student" : "Not student"}
+                      className="inline-icon"
+                    />
+                  )}
                 </td>
               </tr>
               <tr>
@@ -165,22 +192,30 @@ export default function ViewEditDemographicsInfo(
               </tr>
               <tr>
                 <td>Country of origin:</td>
+                <td>{countryCodeToName[client.countryOfOrigin] || "\u2014"}</td>
+              </tr>
+              <tr>
+                <td>Arrival to USA:</td>
                 <td>
-                  {countryCodeToName[client.countryOfOrigin] ||
-                    "Unknown country"}
+                  {client.dateOfUSArrival
+                    ? dayjs(client.dateOfUSArrival).format("YYYY-MM-DD")
+                    : "\u2014"}
                 </td>
               </tr>
               <tr>
                 <td>Language at home:</td>
                 <td>
-                  {languageOptions[client.homeLanguage] || client.homeLanguage}
+                  {languageOptions[client.homeLanguage] ||
+                    client.homeLanguage ||
+                    "\u2014"}
                 </td>
               </tr>
               <tr>
                 <td>English level:</td>
                 <td>
                   {EnglishLevel[client.englishProficiency] ||
-                    client.englishProficiency}
+                    client.englishProficiency ||
+                    "\u2014"}
                 </td>
               </tr>
               {client.currentlyEmployed === "yes" && (
@@ -225,7 +260,7 @@ export default function ViewEditDemographicsInfo(
       case "n/a":
         return `Not applicable`;
       default:
-        return `Unknown`;
+        return `\u2014`;
     }
   }
 

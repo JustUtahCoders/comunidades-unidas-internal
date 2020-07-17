@@ -45,6 +45,7 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
             gender: client.gender,
           }}
           handleSubmit={handleSubmit}
+          isNewClient={false}
         >
           <div className="actions">
             <button
@@ -82,7 +83,7 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
               </tr>
               <tr>
                 <td>Gender:</td>
-                <td>{capitalize(client.gender)}</td>
+                <td>{client.gender ? capitalize(client.gender) : "\u2014"}</td>
               </tr>
             </tbody>
           </table>
