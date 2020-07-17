@@ -178,7 +178,6 @@ app.patch("/api/clients/:id", (req, res, next) => {
     );
 
     if (contactInfoChanged) {
-      console.log("contact info changed!");
       queries.push(
         insertContactInformationQuery(
           clientId,
