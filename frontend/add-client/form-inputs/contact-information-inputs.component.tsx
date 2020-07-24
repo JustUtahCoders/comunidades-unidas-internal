@@ -17,9 +17,13 @@ export default React.forwardRef(function ContactInformationInputs(
     props.client.streetAddress || ""
   );
   const [city, setCity] = React.useState(props.client.city || "");
-  const [state, setState] = React.useState(props.client.state || "");
+  const [state, setState] = React.useState(
+    props.client.state || (props.isNewClient ? "UT" : "")
+  );
   const [zip, setZip] = React.useState(props.client.zip || "");
-  const [housing, setHousing] = React.useState(props.client.housing || "");
+  const [housing, setHousing] = React.useState(
+    props.client.housing || (props.isNewClient ? "renter" : "")
+  );
   const [email, setEmail] = React.useState(props.client.email || "");
   const [dateOfIntake, setDateOfIntake] = React.useState(
     props.client.dateOfIntake || getTodayAsString
