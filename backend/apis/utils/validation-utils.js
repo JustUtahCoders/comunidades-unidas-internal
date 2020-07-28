@@ -63,6 +63,9 @@ exports.validCountry = checkDefined(_validCountry);
 exports.nullableValidInteger = nullable(_validInteger);
 exports.validInteger = checkDefined(_validInteger);
 
+exports.nullableValidCurrency = nullable(_validCurrency);
+exports.validCurrency = checkDefined(_validCurrency);
+
 exports.nullableValidTags = nullable(_validTags);
 exports.validTags = checkDefined(_validTags);
 
@@ -146,11 +149,13 @@ function _validArray(propertyName, itemValidator, nullable) {
     const val = obj[propertyName];
 
     if (Array.isArray(val)) {
-      const validationError = val.find((item, index) => {
+      const validationErrorIndex = val.findIndex((item, index) => {
         return itemValidator(index)(val);
       });
-      if (validationError) {
-        return `Property ${propertyName} is an array with an invalid item: ${validationError}`;
+      if (validationErrorIndex >= 0) {
+        return `Property ${propertyName} is an array with an invalid item: ${JSON.stringify(
+          itemValidator(validationErrorIndex)(val[validationErrorIndex])
+        )} - ${JSON.stringify(val[validationErrorIndex])}`;
       } else {
         return null;
       }
@@ -174,6 +179,13 @@ function _validInteger(propertyName) {
     Number.isInteger(Number(val))
       ? null
       : `Property ${propertyName} must be an integer. Received '${val}'`;
+}
+
+function _validCurrency(propertyName) {
+  return (val) =>
+    typeof val === "number" && Math.floor(val * 100) === val * 100
+      ? null
+      : `Property ${propertyName} must be a valid currency amount. Received '${val}'`;
 }
 
 function _validTags(propertyName, userPermissions) {

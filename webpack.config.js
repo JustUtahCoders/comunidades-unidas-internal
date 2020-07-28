@@ -32,6 +32,16 @@ module.exports = (env, argv) => ({
           },
         ],
       },
+      {
+        test: /\.css$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: "kremling-loader",
+            options: {},
+          },
+        ],
+      },
     ],
   },
   devServer: {

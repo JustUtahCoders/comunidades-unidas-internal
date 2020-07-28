@@ -22,7 +22,9 @@ import integrationsImgUrl from "../../icons/148705-essential-collection/svg/clou
 import addNewImgUrl from "../../icons/148705-essential-collection/svg/add-1.svg";
 import { IntakeService } from "../util/services-inputs.component";
 import filesUrl from "../../icons/148705-essential-collection/svg/folder-19.svg";
+import invoicesUrl from "../../icons/148705-essential-collection/svg/price-tag.svg";
 import ClientFiles from "../client-files/client-files.component";
+import ClientInvoices from "./invoices/client-invoices.component";
 
 export default function ViewClient(props: ViewClientProps) {
   const [client, setClient] = React.useState<SingleClient>(null);
@@ -106,6 +108,20 @@ export default function ViewClient(props: ViewClientProps) {
                 <img src={filesUrl} alt="Files icon" title="Client Files" />
               </Link>
             </li>
+            {localStorage.getItem("invoices") && (
+              <li>
+                <Link
+                  to={`/clients/${clientId}/invoices`}
+                  getProps={getLinkProps}
+                >
+                  <img
+                    src={invoicesUrl}
+                    alt="Price tag"
+                    title="Client Invoices"
+                  />
+                </Link>
+              </li>
+            )}
             <li>
               <Link
                 to={`/clients/${clientId}/add-info`}
@@ -128,6 +144,7 @@ export default function ViewClient(props: ViewClientProps) {
         <AddClientInteraction path="add-client-interaction" {...childProps} />
         <Integrations path="integrations" {...childProps} />
         <ClientFiles path="files" {...childProps} />
+        <ClientInvoices path="invoices" {...childProps} />
       </Router>
     </div>
   );

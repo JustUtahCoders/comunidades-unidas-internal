@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS invoiceLineItems;
+DROP TABLE IF EXISTS invoiceClients;
+DROP TABLE IF EXISTS invoicePayments;
+DROP TABLE IF EXISTS paymentClients;
+DROP TABLE IF EXISTS payments;
+DROP TABLE IF EXISTS donations;
+DROP TABLE IF EXISTS invoices;

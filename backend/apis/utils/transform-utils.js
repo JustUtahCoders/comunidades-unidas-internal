@@ -23,3 +23,13 @@ exports.responseBoolean = (val) => {
 
 exports.requestEnum = (val) => (val ? val.toLowerCase() : null);
 exports.requestPhone = (val) => (val ? val.replace(/[\(\)\-\s]/g, "") : null);
+
+exports.responseUser = (user, timestamp) => {
+  return {
+    userId: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    fullName: exports.responseFullName(user.firstName, user.lastName),
+    timestamp,
+  };
+};
