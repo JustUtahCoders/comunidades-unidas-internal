@@ -185,6 +185,7 @@ function validateClientListQuery(query) {
     "id",
     "phone",
     "program",
+    "service",
     "sortField",
     "sortOrder",
     "wantsSMS",
