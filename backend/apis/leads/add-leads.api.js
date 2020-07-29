@@ -54,7 +54,7 @@ app.post("/api/leads", (req, res) => {
     const setLeadId = "SET @leadId = LAST_INSERT_ID();";
 
     leadDataArray.push(
-      lead.dateOfSignUp,
+      lead.dateOfSignUp || new Date(),
       lead.firstName,
       lead.lastName,
       lead.phone,
