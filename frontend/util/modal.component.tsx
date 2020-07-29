@@ -1,7 +1,8 @@
-import React, { DOMElement } from "react";
+import React, { DOMElement, FormEvent } from "react";
 import ReactDOM from "react-dom";
 import { useCss, always } from "kremling";
 import Styleguide, { mediaDesktop, mediaMobile } from "../styleguide.component";
+import { noop } from "lodash-es";
 
 export default function Modal(props: ModalProps) {
   const scope = useCss(css);
@@ -18,7 +19,7 @@ export default function Modal(props: ModalProps) {
     return null;
   }
 
-  return ReactDOM.createPortal(
+  const content = (
     <Styleguide>
       <div className="modal-screen" {...scope} />
       <div
@@ -27,7 +28,7 @@ export default function Modal(props: ModalProps) {
       >
         <div className="modal-header">
           <div>{props.headerText}</div>
-          <button className="icon close" onClick={props.close}>
+          <button className="icon close" type="button" onClick={props.close}>
             &times;
           </button>
         </div>
@@ -35,26 +36,45 @@ export default function Modal(props: ModalProps) {
         <div className="modal-footer">
           <div>
             {props.tertiaryText && (
-              <button className="secondary" onClick={props.tertiaryAction}>
+              <button
+                className="secondary"
+                type="button"
+                onClick={props.tertiaryAction}
+              >
                 {props.tertiaryText}
               </button>
             )}
           </div>
           <div>
             {props.secondaryText && (
-              <button className="secondary" onClick={props.secondaryAction}>
+              <button
+                className="secondary"
+                type="button"
+                onClick={props.secondaryAction}
+              >
                 {props.secondaryText}
               </button>
             )}
-            <button className="primary" onClick={props.primaryAction}>
+            <button
+              className="primary"
+              type={props.primarySubmit ? "submit" : "button"}
+              onClick={props.primarySubmit ? noop : props.primaryAction}
+            >
               {props.primaryText}
             </button>
           </div>
         </div>
       </div>
-    </Styleguide>,
-    containerEl
+    </Styleguide>
   );
+
+  const el = props.primarySubmit ? (
+    <form onSubmit={props.primaryAction}>{content}</form>
+  ) : (
+    <div>{content}</div>
+  );
+
+  return ReactDOM.createPortal(el, containerEl);
 }
 
 const css = `
@@ -142,7 +162,8 @@ type ModalProps = {
   headerText: string;
   close(): any;
   primaryText: string;
-  primaryAction(): any;
+  primaryAction(arg?: any): any;
+  primarySubmit?: boolean;
   secondaryText?: string;
   secondaryAction?(): any;
   tertiaryText?: string;

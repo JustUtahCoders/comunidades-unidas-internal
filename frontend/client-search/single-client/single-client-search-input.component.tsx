@@ -9,7 +9,7 @@ export default React.forwardRef<
   React.MutableRefObject<SingleClientSearchInputRef>,
   SingleClientSearchInputProps
 >(function SingleClientSearchInput(
-  { autoFocus, nextThingToFocusRef, required = true, clientChanged },
+  { autoFocus, nextThingToFocusRef, required = true, clientChanged, hideLabel },
   singleClientSearchInputRef
 ) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
@@ -65,10 +65,14 @@ export default React.forwardRef<
   }, [state.clientName]);
 
   React.useEffect(() => {
-    if (state.clientId && nextThingToFocusRef.current) {
+    if (state.clientId && nextThingToFocusRef && nextThingToFocusRef.current) {
       nextThingToFocusRef.current.focus();
     }
-  }, [state.clientId, nextThingToFocusRef.current]);
+  }, [
+    state.clientId,
+    nextThingToFocusRef,
+    nextThingToFocusRef && nextThingToFocusRef.current,
+  ]);
 
   React.useEffect(() => {
     if (
@@ -84,9 +88,11 @@ export default React.forwardRef<
 
   return (
     <div {...scope} className="single-client-search">
-      <div>
-        <label id="single-client-search-label">Client name</label>
-      </div>
+      {!hideLabel && (
+        <div>
+          <label id="single-client-search-label">Client name</label>
+        </div>
+      )}
       <span className="single-client-search-input-container">
         <input
           type="text"
@@ -266,6 +272,7 @@ type SingleClientSearchInputProps = {
   nextThingToFocusRef?: React.RefObject<HTMLElement>;
   required?: boolean;
   clientChanged?: () => any;
+  hideLabel?: boolean;
 };
 
 type SingleClientSearchInputRef = {

@@ -44,20 +44,20 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
           return errs.length > 0 ? errs : null;
         };
       }),
-      nullableValidArray("clients", validId),
-      nullableValidArray("lineItems", (index) => {
-        return (lineItems) => {
-          const errs = checkValid(
-            lineItems[index],
-            validId("serviceId"),
-            nonEmptyString("name"),
-            nullableNonEmptyString("description"),
-            validInteger("quantity"),
-            validCurrency("rate")
-          );
-          return errs.length > 0 ? errs : null;
-        };
-      })
+      nullableValidArray("clients", validId)
+      // nullableValidArray("lineItems", (index) => {
+      //   return (lineItems) => {
+      //     const errs = checkValid(
+      //       lineItems[index],
+      //       validId("serviceId"),
+      //       nonEmptyString("name"),
+      //       nullableNonEmptyString("description"),
+      //       validInteger("quantity"),
+      //       validCurrency("rate")
+      //     );
+      //     return errs.length > 0 ? errs : null;
+      //   };
+      // })
     ),
     Object.keys(req.body).length === 0 &&
       `Must provide request body with properties to update`,
@@ -128,13 +128,14 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
         DELETE FROM invoicePayments WHERE invoiceId = ?;
 
         ${req.body.payments
-          .map(
-            (p) =>
-              mysql.format(`
+          .map((p) =>
+            mysql.format(
+              `
           INSERT INTO invoicePayments (paymentId, invoiceId, amount)
           VALUES (?, ?, ?);
-        `),
-            [p.paymentId, invoidId, p.amount]
+        `,
+              [p.paymentId, invoidId, p.amount]
+            )
           )
           .join("\n")}
       `,

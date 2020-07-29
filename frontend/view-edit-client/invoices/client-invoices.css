@@ -8,3 +8,10 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.table-container {
+  margin-top: 1.6rem;
+  margin-bottom: 4.8rem;
+  display: flex;
+  justify-content: center;
+}

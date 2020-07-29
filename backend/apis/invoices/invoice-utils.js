@@ -1,5 +1,8 @@
 const { sum } = require("lodash");
-const { responseUser } = require("../utils/transform-utils");
+const {
+  responseUser,
+  responseDateWithoutTime,
+} = require("../utils/transform-utils");
 
 exports.formatResponseInvoice = function formatResponseInvoice({
   invoice,
@@ -12,7 +15,7 @@ exports.formatResponseInvoice = function formatResponseInvoice({
   const result = {
     id: invoice.id,
     invoiceNumber: invoice.invoiceNumber,
-    invoiceDate: invoice.invoiceDate,
+    invoiceDate: responseDateWithoutTime(invoice.invoiceDate),
     clientNote: invoice.clientNote,
     totalCharged: invoice.totalCharged,
     status: invoice.status,

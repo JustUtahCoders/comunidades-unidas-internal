@@ -1,0 +1,14 @@
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.empty-state > *:first-child {
+  margin-bottom: 2.4rem;
+}
+
+.empty-state img {
+  max-height: 8rem;
+}
