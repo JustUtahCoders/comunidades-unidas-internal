@@ -69,7 +69,7 @@ app.post("/api/clients", (req, res, next) => {
       sometimesValidState("homeAddress.state"),
       sometimesValidZip("homeAddress.zip"),
       nullableValidEmail("email"),
-      sometimesValidEnum(
+      nullableValidEnum(
         "civilStatus",
         "single",
         "married",
