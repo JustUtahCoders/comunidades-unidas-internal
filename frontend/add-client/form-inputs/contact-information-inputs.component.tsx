@@ -4,6 +4,7 @@ import PhoneInput from "../../util/phone-input.component";
 import StateSelect from "../../util/state-select.component";
 import CityInput from "../../util/city-input.component";
 import { capitalize, isEmpty } from "lodash-es";
+import emailValidator from "email-validator";
 
 export default React.forwardRef(function ContactInformationInputs(
   props: ContactInformationInputsProps,
@@ -25,11 +26,26 @@ export default React.forwardRef(function ContactInformationInputs(
     props.client.housing || (props.isNewClient ? "renter" : "")
   );
   const [email, setEmail] = React.useState(props.client.email || "");
+  const emailRef = React.useRef<HTMLInputElement>();
   const [dateOfIntake, setDateOfIntake] = React.useState(
     props.client.dateOfIntake || getTodayAsString
   );
 
   const zipRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (
+      emailRef.current &&
+      email.trim().length > 0 &&
+      !emailValidator.validate(email)
+    ) {
+      emailRef.current.setCustomValidity(
+        "Please provide a valid email address"
+      );
+    } else {
+      emailRef.current.setCustomValidity("");
+    }
+  });
 
   React.useEffect(() => {
     // @ts-ignore
@@ -80,6 +96,7 @@ export default React.forwardRef(function ContactInformationInputs(
         <label>
           <span>Email</span>
           <input
+            ref={emailRef}
             type="email"
             value={email}
             onChange={(evt) => setEmail(evt.target.value)}
