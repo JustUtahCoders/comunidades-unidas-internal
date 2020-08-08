@@ -132,7 +132,7 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
               disabled={props.disabled}
               onClick={() => props.setAdvancedSearchOpen(false)}
             >
-              Done
+              Collapse
             </button>
             <button type="submit" className="primary" disabled={props.disabled}>
               Search

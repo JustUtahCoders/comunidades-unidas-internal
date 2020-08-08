@@ -190,7 +190,7 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
               disabled={props.disabled}
               onClick={() => setShowingAdvancedSearch(false)}
             >
-              Done
+              Collapse
             </button>
             <button type="submit" className="primary" disabled={props.disabled}>
               Search
