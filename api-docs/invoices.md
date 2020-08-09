@@ -70,9 +70,26 @@ GET /api/clients/:clientId/invoices
     "id": 123,
     "invoiceNumber": "1003",
     "invoiceDate": "2020-10-01",
+    "lineItems": [
+      {
+        "serviceId": 1,
+        "name": "DACA",
+        "description": "Prepared the documents",
+        "quantity": 1,
+        "rate": 40
+      }
+    ],
     "clientNote": "Client note",
     "totalCharged": 30,
+    "totalPaid": 12.55,
     "status": "draft|open|completed|closed",
+    "payments": [
+      {
+        "paymentId": 2434,
+        "amount": 10
+      }
+    ],
+    "clients": [45, 23],
     "createdBy": {
       "userId": 123,
       "firstName": "Shigeru",

@@ -1,5 +1,5 @@
 import React from "react";
-import { InvoiceSummary } from "./client-invoices.component";
+import { InvoiceStatus } from "./client-invoices.component";
 import { SingleClient } from "../view-client.component";
 import userIconUrl from "../../../icons/148705-essential-collection/svg/user.svg";
 import { useCss } from "kremling";
@@ -329,8 +329,23 @@ type InvoicePayment = {
   amount: number;
 };
 
-export type FullInvoice = InvoiceSummary & {
-  lineItems: Array<LineItem>;
+type CUObjectAudit = {
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  timestamp: string;
+};
+
+export type FullInvoice = {
+  id: number;
+  invoiceNumber: string;
+  invoiceDate: string;
+  clientNote: string;
+  totalCharged: number;
+  createdBy: CUObjectAudit;
+  status: InvoiceStatus;
+  modifiedBy: CUObjectAudit;
+  lineItems: LineItem[];
   payments: Array<InvoicePayment>;
   clients: Array<number>;
 };

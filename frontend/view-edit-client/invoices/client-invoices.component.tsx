@@ -8,7 +8,7 @@ import easyFetch from "../../util/easy-fetch";
 import CreateInvoice from "./create-invoice.component";
 import { CUService } from "../../add-client/services.component";
 import ClientInvoiceList from "./client-invoice-list.component";
-import { LineItem } from "./edit-invoice.component";
+import { FullInvoice } from "./edit-invoice.component";
 
 export default function ClientInvoices(props: ClientInvoicesProps) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
@@ -239,7 +239,7 @@ enum ActionTypes {
 
 type NewInvoices = {
   type: ActionTypes.newInvoices;
-  invoices: Array<InvoiceSummary>;
+  invoices: Array<FullInvoice>;
 };
 
 type InvoiceError = {
@@ -289,18 +289,6 @@ enum ApiStatus {
   error = "error",
 }
 
-export type InvoiceSummary = {
-  id: number;
-  invoiceNumber: string;
-  invoiceDate: string;
-  clientNote: string;
-  totalCharged: number;
-  createdBy: CUObjectAudit;
-  status: InvoiceStatus;
-  modifiedBy: CUObjectAudit;
-  lineItems: LineItem[];
-};
-
 export enum InvoiceStatus {
   draft = "draft",
   open = "open",
@@ -308,15 +296,8 @@ export enum InvoiceStatus {
   closed = "closed",
 }
 
-type CUObjectAudit = {
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  timestamp: string;
-};
-
 type State = {
-  invoices: Array<InvoiceSummary>;
+  invoices: Array<FullInvoice>;
   payments: Array<PaymentSummary>;
   invoiceStatus: ApiStatus;
   paymentStatus: ApiStatus;

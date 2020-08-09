@@ -1,5 +1,4 @@
 import React from "react";
-import { InvoiceSummary, InvoiceStatus } from "./client-invoices.component";
 import Chip from "../../util/chips/chip.component";
 import { capitalize } from "../../reports/shared/report.helpers";
 import Modal from "../../util/modal.component";
@@ -100,11 +99,11 @@ export default function ClientInvoiceList(props: ClientInvoiceListProps) {
   }
 }
 
-function amount(invoice: InvoiceSummary) {
+function amount(invoice: FullInvoice) {
   return <>${invoice.totalCharged.toFixed(2)}</>;
 }
 
-function status(invoice: InvoiceSummary) {
+function status(invoice: FullInvoice) {
   return (
     <div style={{ textAlign: "center" }}>
       <div style={{ fontWeight: "bold" }}>#{invoice.invoiceNumber}</div>
@@ -116,7 +115,7 @@ function status(invoice: InvoiceSummary) {
 }
 
 type ClientInvoiceListProps = {
-  invoices: InvoiceSummary[];
+  invoices: FullInvoice[];
   client: SingleClient;
   services: CUService[];
   refetchInvoices(): any;
