@@ -28,9 +28,17 @@ export default function Modal(props: ModalProps) {
       >
         <div className="modal-header">
           <div>{props.headerText}</div>
-          <button className="icon close" type="button" onClick={props.close}>
-            &times;
-          </button>
+          <div className="modal-header-right">
+            {props.customHeaderContent}
+            <button
+              className="icon close"
+              style={{ marginLeft: ".8rem" }}
+              type="button"
+              onClick={props.close}
+            >
+              &times;
+            </button>
+          </div>
         </div>
         <div className="modal-body">{props.children}</div>
         <div className="modal-footer">
@@ -102,6 +110,12 @@ const css = `
   padding: 0 1.6rem;
 }
 
+& .modal-header-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 & .modal-body {
   background-color: white;
   padding: 1.6rem;
@@ -170,4 +184,5 @@ type ModalProps = {
   tertiaryAction?(): any;
   children: JSX.Element | JSX.Element[];
   wide?: boolean;
+  customHeaderContent?: JSX.Element | JSX.Element[];
 };

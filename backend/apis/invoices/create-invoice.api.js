@@ -25,7 +25,6 @@ app.post("/api/invoices", (req, res) => {
         ? 0
         : getInvoiceNumberResult[0].lastInvoiceId;
 
-    console.log(getInvoiceNumberResult);
     const invoiceNumber = String(lastInvoiceId + 1).padStart("4", "0");
 
     const insertSql = mysql.format(

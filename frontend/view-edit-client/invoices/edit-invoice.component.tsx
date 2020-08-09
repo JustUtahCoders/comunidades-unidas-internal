@@ -10,10 +10,7 @@ import CloseIconButton from "../../util/close-icon-button.component";
 import dayjs from "dayjs";
 import FullRichTextEditor from "../../rich-text/full-rich-text-editor.component";
 
-export default React.forwardRef(function EditInvoice(
-  props: EditInvoiceProps,
-  ref
-) {
+const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
   const [newLineItems, setNewLineItems] = React.useState<Array<LineItem>>(() =>
     props.invoice.lineItems.length === 0 ? [emptyLineItem()] : []
   );
@@ -28,6 +25,9 @@ export default React.forwardRef(function EditInvoice(
       // @ts-ignore
       ref.current = {
         getInvoiceToSave,
+        getInvoiceId() {
+          return props.invoice.id;
+        },
       };
     }
   });
@@ -91,85 +91,17 @@ export default React.forwardRef(function EditInvoice(
             </tr>
           </thead>
           <tbody>
-            {newLineItems.map((li, i) => {
-              const key = `new-${i}`;
-
-              const updateField = (name) => (evt) => {
-                setNewLineItems(
-                  newLineItems.map((lineItem, index) =>
-                    index === i ? { ...li, [name]: evt.target.value } : lineItem
-                  )
-                );
-              };
-
-              const updateService = (serviceId, name, description) => {
-                setNewLineItems(
-                  newLineItems.map((lineItem, index) =>
-                    index === i
-                      ? { ...li, serviceId, name, description }
-                      : lineItem
-                  )
-                );
-              };
-
-              const removeLineItem = () => {
-                setNewLineItems(
-                  newLineItems
-                    .map((lineItem, index) => (index === i ? null : lineItem))
-                    .filter(Boolean)
-                );
-              };
-
-              return (
-                <tr key={key}>
-                  <td>{serviceSelect(li, key, updateService)}</td>
-                  <td>
-                    <input
-                      required
-                      type="text"
-                      value={li.name || ""}
-                      onChange={updateField("name")}
-                      autoComplete="new-password"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      required
-                      type="text"
-                      value={li.description || ""}
-                      onChange={updateField("description")}
-                      autoComplete="new-password"
-                    />
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    <input
-                      required
-                      type="number"
-                      value={li.quantity || ""}
-                      onChange={updateField("quantity")}
-                      autoComplete="new-password"
-                      style={{ maxWidth: "5rem" }}
-                    />
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    <input
-                      required
-                      type="number"
-                      value={li.rate || ""}
-                      onChange={updateField("rate")}
-                      autoComplete="new-password"
-                      style={{ maxWidth: "10rem" }}
-                    />
-                  </td>
-                  <td className="amount">
-                    ${(li.quantity * li.rate).toFixed(2)}
-                  </td>
-                  <td>
-                    <CloseIconButton close={removeLineItem} />
-                  </td>
-                </tr>
-              );
-            })}
+            {modifiedInvoice.lineItems.map((li, i) =>
+              renderLineItem(
+                modifiedInvoice.lineItems,
+                setModifiedLineItems,
+                li,
+                i
+              )
+            )}
+            {newLineItems.map((li, i) =>
+              renderLineItem(newLineItems, setNewLineItems, li, i)
+            )}
           </tbody>
           <tfoot>
             <tr>
@@ -270,10 +202,12 @@ export default React.forwardRef(function EditInvoice(
   }
 
   function getInvoiceToSave() {
+    const lineItems = modifiedInvoice.lineItems.concat(newLineItems);
     const result = {
       ...modifiedInvoice,
-      lineItems: modifiedInvoice.lineItems.concat(newLineItems),
+      lineItems,
       clients: props.client ? [props.client.id] : [],
+      totalCharged: sumBy(lineItems, (li) => li.quantity * li.rate),
     };
 
     delete result.createdBy;
@@ -282,7 +216,89 @@ export default React.forwardRef(function EditInvoice(
 
     return result;
   }
+
+  function renderLineItem(lineItems, setLineItems, li: LineItem, i: number) {
+    const key = `new-${i}`;
+
+    const updateField = (name) => (evt) => {
+      setLineItems(
+        lineItems.map((lineItem, index) =>
+          index === i ? { ...li, [name]: evt.target.value } : lineItem
+        )
+      );
+    };
+
+    const updateService = (serviceId, name, description) => {
+      setLineItems(
+        lineItems.map((lineItem, index) =>
+          index === i ? { ...li, serviceId, name, description } : lineItem
+        )
+      );
+    };
+
+    const removeLineItem = () => {
+      setLineItems(
+        lineItems
+          .map((lineItem, index) => (index === i ? null : lineItem))
+          .filter(Boolean)
+      );
+    };
+
+    return (
+      <tr key={key}>
+        <td>{serviceSelect(li, key, updateService)}</td>
+        <td>
+          <input
+            required
+            type="text"
+            value={li.name || ""}
+            onChange={updateField("name")}
+            autoComplete="new-password"
+          />
+        </td>
+        <td>
+          <input
+            required
+            type="text"
+            value={li.description || ""}
+            onChange={updateField("description")}
+            autoComplete="new-password"
+          />
+        </td>
+        <td style={{ textAlign: "center" }}>
+          <input
+            required
+            type="number"
+            value={li.quantity || ""}
+            onChange={updateField("quantity")}
+            autoComplete="new-password"
+            style={{ maxWidth: "5rem" }}
+          />
+        </td>
+        <td style={{ textAlign: "center" }}>
+          <input
+            required
+            type="number"
+            value={li.rate || ""}
+            onChange={updateField("rate")}
+            autoComplete="new-password"
+            style={{ maxWidth: "10rem" }}
+          />
+        </td>
+        <td className="amount">${(li.quantity * li.rate).toFixed(2)}</td>
+        <td>
+          <CloseIconButton close={removeLineItem} />
+        </td>
+      </tr>
+    );
+  }
+
+  function setModifiedLineItems(lineItems) {
+    setModifiedInvoice({ ...modifiedInvoice, lineItems });
+  }
 });
+
+export default EditInvoice;
 
 function emptyLineItem(): LineItem {
   return {
@@ -300,7 +316,7 @@ type EditInvoiceProps = {
   services: CUService[];
 };
 
-type LineItem = {
+export type LineItem = {
   serviceId?: number;
   name: string;
   description: string;
@@ -313,7 +329,7 @@ type InvoicePayment = {
   amount: number;
 };
 
-type FullInvoice = InvoiceSummary & {
+export type FullInvoice = InvoiceSummary & {
   lineItems: Array<LineItem>;
   payments: Array<InvoicePayment>;
   clients: Array<number>;

@@ -2,6 +2,12 @@ const { app, databaseError, pool, invalidRequest } = require("../../server");
 const mysql = require("mysql");
 const { formatResponseInvoice } = require("./invoice-utils");
 const { checkValid, validId } = require("../utils/validation-utils");
+const path = require("path");
+const fs = require("fs");
+const rawGetSql = fs.readFileSync(
+  path.join(__dirname, "get-client-invoices.sql"),
+  "utf-8"
+);
 
 app.get("/api/clients/:clientId/invoices", (req, res) => {
   const clientId = req.params.clientId;
@@ -12,31 +18,14 @@ app.get("/api/clients/:clientId/invoices", (req, res) => {
     return invalidRequest(res, validationErrors);
   }
 
-  const getSql = mysql.format(
-    `
-    SELECT
-      invoices.id, invoices.invoiceNumber, invoices.invoiceDate, invoices.clientNote,
-      invoices.totalCharged, invoices.status, invoices.dateAdded, invoices.addedBy,
-      invoices.dateModified, invoices.modifiedBy, addedUser.id addedUserId,
-      addedUser.firstName addedFirstName, addedUser.lastName addedLastName,
-      modifiedUser.id modifiedUserId, modifiedUser.firstName modifiedUserFirstName,
-      modifiedUser.lastName modifiedUserLastName
-
-      FROM invoices
-      JOIN invoiceClients ON invoiceClients.clientId = invoices.id
-      JOIN users addedUser ON invoices.addedBy = addedUser.id
-      JOIN users modifiedUser ON invoices.modifiedBy = modifiedUser.id
-    WHERE
-      invoiceClients.clientId = ?;
-  `,
-    [clientId]
-  );
+  const getSql = mysql.format(rawGetSql, [clientId]);
 
   pool.query(getSql, (err, result) => {
     if (err) {
       return databaseError(req, res, err);
     }
 
+    console.log(result);
     res.send({
       invoices: result.map((invoice) =>
         formatResponseInvoice({
@@ -51,6 +40,8 @@ app.get("/api/clients/:clientId/invoices", (req, res) => {
             firstName: invoice.modifiedUserFirstName,
             lastName: invoice.modifiedUserLastName,
           },
+          invoiceLineItems: JSON.parse(invoice.lineItems),
+          invoicePayments: JSON.parse(invoice.payments),
         })
       ),
     });

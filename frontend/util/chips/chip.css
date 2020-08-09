@@ -1,0 +1,38 @@
+.chip {
+  min-width: 15rem;
+  width: 15rem;
+  height: 15rem;
+  border: 0.1rem solid var(--medium-gray);
+  margin: 0 1.6rem 3.2rem 1.6rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+.top-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 8rem;
+  padding: 0.8rem;
+  background-color: var(--very-light-gray);
+}
+
+.top-content img {
+  height: 6rem;
+}
+
+.bottom-content {
+  border-top: 0.1rem solid var(--medium-gray);
+  height: 6.8rem;
+  padding: 0 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 1.4rem;
+  word-break: break-all;
+}
+
+.chip:hover .bottom-content {
+  background-color: var(--light-gray);
+}

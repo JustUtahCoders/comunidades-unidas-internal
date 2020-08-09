@@ -7,6 +7,8 @@ import EmptyState from "../../util/empty-state/empty-state.component";
 import easyFetch from "../../util/easy-fetch";
 import CreateInvoice from "./create-invoice.component";
 import { CUService } from "../../add-client/services.component";
+import ClientInvoiceList from "./client-invoice-list.component";
+import { LineItem } from "./edit-invoice.component";
 
 export default function ClientInvoices(props: ClientInvoicesProps) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
@@ -81,26 +83,31 @@ export default function ClientInvoices(props: ClientInvoicesProps) {
   }, []);
 
   return (
-    <div className="card" {...useCss(css)}>
-      <div className="section-header">
-        <h1>Invoices</h1>
-        <button className="secondary" onClick={createInvoice}>
-          Create Invoice
-        </button>
+    <div {...useCss(css)}>
+      <div className="card">
+        <div className="section-header">
+          <h1>Invoices</h1>
+          <button className="secondary" onClick={createInvoice}>
+            Create Invoice
+          </button>
+        </div>
+        <section className="table-container">{invoicesTable()}</section>
       </div>
-      <section className="table-container">{invoicesTable()}</section>
-      <div className="section-header">
-        <h1>Payments</h1>
-        <button className="secondary">Create Payment</button>
+      <div className="card">
+        <div className="section-header">
+          <h1>Payments</h1>
+          <button className="secondary">Create Payment</button>
+        </div>
+        <section className="table-container">{paymentsTable()}</section>
+        {state.creatingInvoice && (
+          <CreateInvoice
+            close={() => dispatch({ type: ActionTypes.cancelCreateInvoice })}
+            client={props.client}
+            services={state.services || []}
+            refetchInvoices={refetchInvoices}
+          />
+        )}
       </div>
-      <section className="table-container">{paymentsTable()}</section>
-      {state.creatingInvoice && (
-        <CreateInvoice
-          close={() => dispatch({ type: ActionTypes.cancelCreateInvoice })}
-          client={props.client}
-          services={state.services || []}
-        />
-      )}
     </div>
   );
 
@@ -113,13 +120,26 @@ export default function ClientInvoices(props: ClientInvoicesProps) {
         if (state.invoices.length === 0) {
           return <EmptyState pluralName="invoices" />;
         } else {
-          return null;
+          return (
+            <ClientInvoiceList
+              invoices={state.invoices}
+              client={props.client}
+              services={state.services}
+              refetchInvoices={refetchInvoices}
+            />
+          );
         }
       case ApiStatus.error:
         return "Error loading invoices";
       default:
         throw Error(state.invoiceStatus);
     }
+  }
+
+  function refetchInvoices() {
+    dispatch({
+      type: ActionTypes.fetchInvoices,
+    });
   }
 
   function paymentsTable() {
@@ -187,6 +207,11 @@ function reducer(state: State, action: Action): State {
         ...state,
         services: action.services,
       };
+    case ActionTypes.fetchInvoices:
+      return {
+        ...state,
+        invoiceStatus: ApiStatus.shouldLoad,
+      };
     default:
       throw Error();
   }
@@ -209,6 +234,7 @@ enum ActionTypes {
   createInvoice = "createInvoice",
   cancelCreateInvoice = "cancelCreateInvoice",
   setServices = "setServices",
+  fetchInvoices = "fetchInvoices",
 }
 
 type NewInvoices = {
@@ -242,6 +268,10 @@ type SetServices = {
   services: CUService[];
 };
 
+type FetchInvoices = {
+  type: ActionTypes.fetchInvoices;
+};
+
 type Action =
   | NewInvoices
   | InvoiceError
@@ -249,7 +279,8 @@ type Action =
   | PaymentsError
   | CreateInvoiceAction
   | CancelCreateInvoice
-  | SetServices;
+  | SetServices
+  | FetchInvoices;
 
 enum ApiStatus {
   shouldLoad = "shouldLoad",
@@ -265,8 +296,17 @@ export type InvoiceSummary = {
   clientNote: string;
   totalCharged: number;
   createdBy: CUObjectAudit;
+  status: InvoiceStatus;
   modifiedBy: CUObjectAudit;
+  lineItems: LineItem[];
 };
+
+export enum InvoiceStatus {
+  draft = "draft",
+  open = "open",
+  completed = "completed",
+  closed = "closed",
+}
 
 type CUObjectAudit = {
   firstName: string;

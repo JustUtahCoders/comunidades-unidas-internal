@@ -12,6 +12,10 @@ exports.formatResponseInvoice = function formatResponseInvoice({
   invoiceClients,
   invoiceLineItems,
 }) {
+  invoicePayments = invoicePayments
+    ? invoicePayments.filter((ip) => ip.id)
+    : invoicePayments;
+
   const result = {
     id: invoice.id,
     invoiceNumber: invoice.invoiceNumber,
@@ -37,6 +41,7 @@ exports.formatResponseInvoice = function formatResponseInvoice({
       serviceId: li.serviceId,
       name: li.name,
       description: li.description,
+      quantity: li.quantity,
       rate: li.rate,
     }));
   }

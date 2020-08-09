@@ -6,6 +6,7 @@ import { SingleClient } from "../view-client.component";
 import { CUService } from "../../add-client/services.component";
 import { showGrowl, GrowlType } from "../../growls/growls.component";
 import { noop } from "lodash-es";
+import ChangeInvoiceStatus from "./change-invoice-status.component";
 
 export default function CreateInvoice(props: CreateInvoiceProps) {
   const [invoice, setInvoice] = React.useState(null);
@@ -13,6 +14,7 @@ export default function CreateInvoice(props: CreateInvoiceProps) {
     SaveStatus.saved
   );
   const editInvoiceRef = React.useRef();
+  const invoiceStatusRef = React.useRef();
 
   React.useEffect(() => {
     const ac = new AbortController();
@@ -38,8 +40,12 @@ export default function CreateInvoice(props: CreateInvoiceProps) {
       const ac = new AbortController();
       easyFetch(`/api/invoices/${invoice.id}`, {
         method: "PATCH",
-        // @ts-ignore
-        body: editInvoiceRef.current.getInvoiceToSave(),
+        body: {
+          // @ts-ignore
+          ...editInvoiceRef.current.getInvoiceToSave(),
+          // @ts-ignore
+          id: invoiceStatusRef.current.status,
+        },
       })
         .then(() => {
           showGrowl({ type: GrowlType.success, message: "Invoice created!" });
@@ -59,6 +65,12 @@ export default function CreateInvoice(props: CreateInvoiceProps) {
   return (
     invoice && (
       <Modal
+        customHeaderContent={
+          <ChangeInvoiceStatus
+            ref={invoiceStatusRef}
+            invoiceStatus={invoice.status}
+          />
+        }
         close={cancel}
         primaryText="Save"
         primaryAction={handleSubmit}
@@ -94,6 +106,7 @@ type CreateInvoiceProps = {
   close(): any;
   client: SingleClient;
   services: CUService[];
+  refetchInvoices(): any;
 };
 
 enum SaveStatus {
