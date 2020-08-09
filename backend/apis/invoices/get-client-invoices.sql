@@ -16,23 +16,27 @@ SELECT
   JSON_ARRAYAGG(JSON_OBJECT(
     'id', p.id,
     'paymentDate', p.paymentDate,
-    'paymentAmount', ip.amount,
+    'amountToInvoice', ip.amount,
+    'paymentAmount', p.paymentAmount,
     'paymentType', p.paymentType,
     'donationId', p.donationId,
     'dateAdded', p.dateAdded,
     'addedBy', p.addedBy,
     'dateModified', p.dateModified,
     'modifiedBy', p.modifiedBy
-  )) payments
+  )) payments,
+  JSON_ARRAYAGG(JSON_OBJECT(
+    'clientId', invoiceClients.clientId
+  )) clients
 
   FROM invoices
-  JOIN invoiceClients ON invoiceClients.clientId = invoices.id
+  JOIN invoiceClients ON invoiceClients.invoiceId = invoices.id
   JOIN users addedUser ON invoices.addedBy = addedUser.id
   JOIN users modifiedUser ON invoices.modifiedBy = modifiedUser.id
   LEFT JOIN invoiceLineItems li ON invoices.id = li.invoiceId
   LEFT JOIN invoicePayments ip ON invoices.id = ip.invoiceId
   LEFT JOIN payments p ON p.id = ip.paymentId
 WHERE
-  invoiceClients.clientId = 2
+  invoiceClients.clientId = ?
 GROUP BY invoices.id
 ;

@@ -16,6 +16,10 @@ exports.formatResponseInvoice = function formatResponseInvoice({
     ? invoicePayments.filter((ip) => ip.id)
     : invoicePayments;
 
+  invoiceLineItems = invoiceLineItems
+    ? invoiceLineItems.filter((li) => li.id)
+    : invoiceLineItems;
+
   const result = {
     id: invoice.id,
     invoiceNumber: invoice.invoiceNumber,
@@ -30,7 +34,8 @@ exports.formatResponseInvoice = function formatResponseInvoice({
   if (invoicePayments) {
     result.payments = invoicePayments.map((ip) => ({
       paymentId: ip.id,
-      amount: ip.amount,
+      paymentAmount: ip.paymentAmount,
+      amountTowardsInvoice: ip.amountTowardsInvoice,
     }));
 
     result.totalPaid = sum(invoicePayments.map((ip) => ip.paymentAmount));

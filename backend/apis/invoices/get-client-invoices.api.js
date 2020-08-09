@@ -25,7 +25,6 @@ app.get("/api/clients/:clientId/invoices", (req, res) => {
       return databaseError(req, res, err);
     }
 
-    console.log(result);
     res.send({
       invoices: result.map((invoice) =>
         formatResponseInvoice({
@@ -42,6 +41,7 @@ app.get("/api/clients/:clientId/invoices", (req, res) => {
           },
           invoiceLineItems: JSON.parse(invoice.lineItems),
           invoicePayments: JSON.parse(invoice.payments),
+          invoiceClients: JSON.parse(invoice.clients),
         })
       ),
     });

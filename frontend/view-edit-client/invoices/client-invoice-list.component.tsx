@@ -50,7 +50,7 @@ export default function ClientInvoiceList(props: ClientInvoiceListProps) {
   }, [invoiceToSave, editingId]);
 
   return (
-    <div>
+    <>
       {props.invoices.map((invoice) => (
         <Chip
           key={invoice.id}
@@ -84,7 +84,7 @@ export default function ClientInvoiceList(props: ClientInvoiceListProps) {
           )}
         />
       ))}
-    </div>
+    </>
   );
 
   function handleSubmit(evt) {
