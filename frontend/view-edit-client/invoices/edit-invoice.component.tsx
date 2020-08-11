@@ -329,7 +329,7 @@ type InvoicePayment = {
   amount: number;
 };
 
-type CUObjectAudit = {
+export type CUObjectAudit = {
   firstName: string;
   lastName: string;
   fullName: string;

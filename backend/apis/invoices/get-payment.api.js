@@ -3,16 +3,10 @@ const {
   databaseError,
   pool,
   invalidRequest,
-  internalError,
   notFound,
 } = require("../../server");
 const mysql = require("mysql");
-const {
-  checkValid,
-  validId,
-  validDate,
-  validCurrency,
-} = require("../utils/validation-utils");
+const { checkValid, validId } = require("../utils/validation-utils");
 const { formatResponsePayment } = require("./payment-utils");
 
 app.get("/api/payments/:paymentId", (req, res) => {

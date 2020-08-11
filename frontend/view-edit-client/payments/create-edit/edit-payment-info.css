@@ -1,0 +1,28 @@
+.container {
+  margin-bottom: 10rem;
+}
+
+.question {
+  margin-bottom: 1.6rem;
+}
+
+.container #single-client-search-label {
+  font-size: 1.4rem;
+}
+
+button.unstyled.link.add-payer {
+  margin-top: 2.4rem;
+}
+
+.inputs {
+  margin-top: 2.4rem;
+}
+
+.inputs label {
+  display: inline-block;
+  width: 18rem;
+}
+
+.inputs > * + * {
+  margin-top: 1.6rem;
+}

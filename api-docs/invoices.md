@@ -31,7 +31,8 @@ GET /api/invoices/:invoiceId
   "payments": [
     {
       "paymentId": 2434,
-      "amount": 10
+      "paymentAmount": 10,
+      "amountTowardsInvoice": 8
     }
   ],
   "clients": [45, 23],
@@ -86,7 +87,8 @@ GET /api/clients/:clientId/invoices
     "payments": [
       {
         "paymentId": 2434,
-        "amount": 10
+        "paymentAmount": 10,
+        "amountTowardsInvoice": 8
       }
     ],
     "clients": [45, 23],

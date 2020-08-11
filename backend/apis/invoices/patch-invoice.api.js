@@ -101,8 +101,6 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
 
     const newInvoice = Object.assign({}, oldInvoice, req.body);
 
-    console.log(newInvoice);
-
     let updateSql = mysql.format(
       `
       UPDATE invoices

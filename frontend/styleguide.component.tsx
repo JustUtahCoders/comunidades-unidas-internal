@@ -194,6 +194,13 @@ body {
   background-color: #afafaf;
 }
 
+& button.link {
+  color: blue;
+  text-decoration: underline;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
 & .popup {
   position: absolute;
   box-shadow: ${boxShadow4};

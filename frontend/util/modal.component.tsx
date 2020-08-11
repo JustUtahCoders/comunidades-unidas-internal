@@ -66,6 +66,7 @@ export default function Modal(props: ModalProps) {
             <button
               className="primary"
               type={props.primarySubmit ? "submit" : "button"}
+              disabled={props.primaryDisabled}
               onClick={props.primarySubmit ? noop : props.primaryAction}
             >
               {props.primaryText}
@@ -178,6 +179,7 @@ type ModalProps = {
   primaryText: string;
   primaryAction(arg?: any): any;
   primarySubmit?: boolean;
+  primaryDisabled?: boolean;
   secondaryText?: string;
   secondaryAction?(): any;
   tertiaryText?: string;

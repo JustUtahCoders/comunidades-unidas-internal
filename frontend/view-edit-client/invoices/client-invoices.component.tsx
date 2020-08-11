@@ -9,6 +9,7 @@ import CreateInvoice from "./create-invoice.component";
 import { CUService } from "../../add-client/services.component";
 import ClientInvoiceList from "./client-invoice-list.component";
 import { FullInvoice } from "./edit-invoice.component";
+import CreatePayment from "../payments/create-payment.component";
 
 export default function ClientInvoices(props: ClientInvoicesProps) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
@@ -96,7 +97,12 @@ export default function ClientInvoices(props: ClientInvoicesProps) {
       <div className="card">
         <div className="section-header">
           <h1>Payments</h1>
-          <button className="secondary">Create Payment</button>
+          <button
+            className="secondary"
+            onClick={() => dispatch({ type: ActionTypes.createPayment })}
+          >
+            Create Payment
+          </button>
         </div>
         <section className="table-container">{paymentsTable()}</section>
         {state.creatingInvoice && (
@@ -105,6 +111,13 @@ export default function ClientInvoices(props: ClientInvoicesProps) {
             client={props.client}
             services={state.services || []}
             refetchInvoices={refetchInvoices}
+          />
+        )}
+        {state.creatingPayment && (
+          <CreatePayment
+            client={props.client}
+            clientInvoices={state.invoices}
+            close={() => dispatch({ type: ActionTypes.cancelCreatePayment })}
           />
         )}
       </div>
@@ -196,6 +209,7 @@ function reducer(state: State, action: Action): State {
       return {
         ...state,
         creatingInvoice: true,
+        creatingPayment: false,
       };
     case ActionTypes.cancelCreateInvoice:
       return {
@@ -211,6 +225,17 @@ function reducer(state: State, action: Action): State {
       return {
         ...state,
         invoiceStatus: ApiStatus.shouldLoad,
+      };
+    case ActionTypes.createPayment:
+      return {
+        ...state,
+        creatingPayment: true,
+        creatingInvoice: false,
+      };
+    case ActionTypes.cancelCreatePayment:
+      return {
+        ...state,
+        creatingPayment: false,
       };
     default:
       throw Error();
@@ -235,6 +260,8 @@ enum ActionTypes {
   cancelCreateInvoice = "cancelCreateInvoice",
   setServices = "setServices",
   fetchInvoices = "fetchInvoices",
+  createPayment = "createPayment",
+  cancelCreatePayment = "cancelCreatePayment",
 }
 
 type NewInvoices = {
@@ -272,6 +299,14 @@ type FetchInvoices = {
   type: ActionTypes.fetchInvoices;
 };
 
+type CreatePaymentAction = {
+  type: ActionTypes.createPayment;
+};
+
+type CancelCreatePayment = {
+  type: ActionTypes.cancelCreatePayment;
+};
+
 type Action =
   | NewInvoices
   | InvoiceError
@@ -279,6 +314,8 @@ type Action =
   | PaymentsError
   | CreateInvoiceAction
   | CancelCreateInvoice
+  | CreatePaymentAction
+  | CancelCreatePayment
   | SetServices
   | FetchInvoices;
 
@@ -302,6 +339,7 @@ type State = {
   invoiceStatus: ApiStatus;
   paymentStatus: ApiStatus;
   creatingInvoice: boolean;
+  creatingPayment: boolean;
   services: CUService[];
 };
 
@@ -311,5 +349,6 @@ const initialState: State = {
   invoiceStatus: ApiStatus.shouldLoad,
   paymentStatus: ApiStatus.shouldLoad,
   creatingInvoice: false,
+  creatingPayment: false,
   services: [],
 };
