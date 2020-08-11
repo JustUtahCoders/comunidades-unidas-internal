@@ -193,35 +193,45 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
           ? null
           : Number(evt.target.value);
       let name = lineItem.name,
-        description = lineItem.description;
+        description = lineItem.description,
+        rate = lineItem.rate;
       if (serviceId) {
         const oldService = props.services.find(
           (s) => s.id === lineItem.serviceId
         );
         const newService = props.services.find((s) => s.id === serviceId);
         if (newService) {
+          const defaultName =
+            newService.defaultLineItemName || newService.serviceName;
           if (name) {
             name =
               !oldService || lineItem.name === oldService.serviceName
-                ? newService.serviceName
+                ? defaultName
                 : name;
           } else {
-            name = newService.serviceName;
+            name = defaultName;
           }
 
+          const defaultDescription =
+            newService.defaultLineItemDescription ||
+            newService.serviceDescription;
           if (description) {
             description =
               !oldService ||
               lineItem.description === oldService.serviceDescription
-                ? newService.serviceDescription
+                ? defaultDescription
                 : description;
           } else {
-            description = newService.serviceDescription;
+            description = defaultDescription;
+          }
+
+          if (!lineItem.rate && newService.defaultLineItemRate) {
+            rate = newService.defaultLineItemRate;
           }
         }
       }
 
-      update(serviceId, name, description);
+      update(serviceId, name, description, rate);
     }
   }
 
@@ -267,10 +277,10 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
       );
     };
 
-    const updateService = (serviceId, name, description) => {
+    const updateService = (serviceId, name, description, rate) => {
       setLineItems(
         lineItems.map((lineItem, index) =>
-          index === i ? { ...li, serviceId, name, description } : lineItem
+          index === i ? { ...li, serviceId, name, description, rate } : lineItem
         )
       );
     };

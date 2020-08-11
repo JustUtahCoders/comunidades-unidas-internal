@@ -51,6 +51,7 @@ export default function CreateNewServiceModal(
       primaryAction={() => formRef.current.requestSubmit()}
       secondaryText="Cancel"
       secondaryAction={props.close}
+      wide
     >
       <CUServiceInputs
         formRef={formRef}
@@ -81,4 +82,10 @@ const emptyService: CUService = {
   serviceDescription: "",
   serviceName: "",
   isActive: true,
+  defaultInteractionDuration: null,
+  defaultInteractionLocation: null,
+  defaultInteractionType: null,
+  defaultLineItemDescription: null,
+  defaultLineItemName: null,
+  defaultLineItemRate: null,
 };

@@ -12,6 +12,9 @@ const {
   nullableNonEmptyString,
   nullableValidId,
   nullableValidBoolean,
+  nullableValidCurrency,
+  nullableValidEnum,
+  nullableValidTime,
 } = require("../utils/validation-utils");
 const { checkUserRole } = require("../utils/auth-utils");
 const { atLeastOne } = require("../utils/patch-utils");
@@ -30,7 +33,25 @@ app.patch("/api/services/:serviceId", (req, res, next) => {
       nullableNonEmptyString("serviceName"),
       nullableNonEmptyString("serviceDescription"),
       nullableValidId("programId"),
-      nullableValidBoolean("isActive")
+      nullableValidBoolean("isActive"),
+      nullableNonEmptyString("defaultLineItemName"),
+      nullableNonEmptyString("defaultLineItemDescription"),
+      nullableValidCurrency("defaultLineItemRate"),
+      nullableValidEnum(
+        "defaultInteractionLocation",
+        "CUOffice",
+        "consulateOffice",
+        "communityEvent"
+      ),
+      nullableValidEnum(
+        "defaultInteractionType",
+        "inPerson",
+        "byPhone",
+        "workshopTalk",
+        "oneOnOneLightTouch",
+        "consultation"
+      ),
+      nullableValidTime("defaultInteractionDuration")
     ),
   ];
 
@@ -44,12 +65,18 @@ app.patch("/api/services/:serviceId", (req, res, next) => {
       "serviceName",
       "serviceDescription",
       "programId",
-      "isActive"
+      "isActive",
+      "defaultLineItemName",
+      "defaultLineItemDescription",
+      "defaultLineItemRate",
+      "defaultInteractionLocation",
+      "defaultInteractionType",
+      "defaultInteractionDuration"
     )
   ) {
     return invalidRequest(
       res,
-      `PATCH /api/services/:serviceId must be called with a request body that has a serviceName, serviceDescription, programId, and/or isActive`
+      `PATCH /api/services/:serviceId must be called with a request body that has a serviceName, serviceDescription, programId, isActive, defaultLineItemName, defaultLineItemDescription, defaultLineItemRate, defaultInteractionLocation, defaultInteractionType, defaultInteractionDuration`
     );
   }
 
@@ -96,6 +123,21 @@ app.patch("/api/services/:serviceId", (req, res, next) => {
       serviceName: req.body.serviceName || service.serviceName,
       serviceDescription: req.body.serviceDescription || service.serviceDesc,
       programId: req.body.programId || service.programId,
+      defaultLineItemName:
+        req.body.defaultLineItemName || service.defaultLineItemName,
+      defaultLineItemDescription:
+        req.body.defaultLineItemDescription ||
+        service.defaultLineItemDescription,
+      defaultLineItemRate:
+        req.body.defaultLineItemRate || service.defaultLineItemRate,
+      defaultInteractionType:
+        req.body.defaultInteractionType || service.defaultInteractionType,
+      defaultInteractionLocation:
+        req.body.defaultInteractionLocation ||
+        service.defaultInteractionLocation,
+      defaultInteractionDuration:
+        req.body.defaultInteractionDuration ||
+        service.defaultInteractionDuration,
       isActive: req.body.hasOwnProperty("isActive")
         ? req.body.isActive
         : Boolean(service.isActive),
@@ -104,7 +146,9 @@ app.patch("/api/services/:serviceId", (req, res, next) => {
     const updateService = mysql.format(
       `
       UPDATE services
-      SET serviceName = ?, serviceDesc = ?, programId = ?, isActive = ?
+      SET serviceName = ?, serviceDesc = ?, programId = ?, isActive = ?, defaultLineItemName = ?,
+        defaultLineItemDescription = ?, defaultLineItemRate = ?, defaultInteractionType = ?, defaultInteractionLocation = ?,
+        defaultInteractionDuration = ?
       WHERE id = ?
       ;
       `,
@@ -113,6 +157,12 @@ app.patch("/api/services/:serviceId", (req, res, next) => {
         finalService.serviceDescription,
         finalService.programId,
         finalService.isActive,
+        finalService.defaultLineItemName,
+        finalService.defaultLineItemDescription,
+        finalService.defaultLineItemRate,
+        finalService.defaultInteractionType,
+        finalService.defaultInteractionLocation,
+        finalService.defaultInteractionDuration,
         req.params.serviceId,
       ]
     );

@@ -45,6 +45,12 @@ app.get("/api/services", (req, res, next) => {
           serviceDescription: s.serviceDesc,
           programId: s.programId,
           programName: programMap[s.programId].programName,
+          defaultLineItemName: s.defaultLineItemName,
+          defaultLineItemDescription: s.defaultLineItemDescription,
+          defaultLineItemRate: s.defaultLineItemRate,
+          defaultInteractionType: s.defaultInteractionType,
+          defaultInteractionLocation: s.defaultInteractionLocation,
+          defaultInteractionDuration: s.defaultInteractionDuration,
           isActive: Boolean(s.isActive),
         })),
       programs: programs.map((p) => ({

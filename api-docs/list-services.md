@@ -22,6 +22,12 @@ GET /api/services?includeInactive=false
       "serviceDescription": "Gain United States citizenship",
       "programId": 1,
       "programName": "Immigration",
+      "defaultLineItemName": "Immigration",
+      "defaultLineItemDescription": "Filled out this document",
+      "defaultLineItemRate": 40,
+      "defaultInteractionType": "inPerson",
+      "defaultInteractionLocation": "CUOffice",
+      "defaultInteractionDuration": "03:00:00",
       "isActive": true
     },
     {
@@ -30,6 +36,12 @@ GET /api/services?includeInactive=false
       "serviceDescription": "Petition for certain family members to receive either a Green Card, a fiancé(e) visa or a K-3/K-4 visa",
       "programId": 1,
       "programName": "Immigration",
+      "defaultLineItemName": "Family Petition",
+      "defaultLineItemDescription": "Filled out the paperwork",
+      "defaultLineItemRate": 40,
+      "defaultInteractionType": "inPerson",
+      "defaultInteractionLocation": "CUOffice",
+      "defaultInteractionDuration": "03:00:00",
       "isActive": true
     }
   ],
@@ -70,6 +82,12 @@ POST /api/services
   "serviceName": "Citizenship",
   "serviceDescription": "Gain United States citizenship",
   "programId": 1,
+  "defaultLineItemName": "Citizenship",
+  "defaultLineItemDescription": "Filled out the paperwork",
+  "defaultLineItemRate": 40,
+  "defaultInteractionType": "inPerson",
+  "defaultInteractionLocation": "CUOffice",
+  "defaultInteractionDuration": "03:00:00",
   "isActive": true
 }
 ```
@@ -98,6 +116,12 @@ PATCH /api/services/:serviceId
   "serviceName": "Citizenship",
   "serviceDescription": "Gain United States citizenship",
   "programId": 1,
+  "defaultLineItemName": "Citizenship",
+  "defaultLineItemDescription": "Filled out the paperwork",
+  "defaultLineItemRate": 40,
+  "defaultInteractionType": "inPerson",
+  "defaultInteractionLocation": "CUOffice",
+  "defaultInteractionDuration": "03:00:00",
   "isActive": true
 }
 ```
