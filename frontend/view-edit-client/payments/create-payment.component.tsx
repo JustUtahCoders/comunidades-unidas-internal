@@ -6,11 +6,12 @@ import { FullInvoice } from "../invoices/edit-invoice.component";
 import CreatePaymentCheckInvoices from "./create-edit/create-payment-check-invoices.component";
 import CreatePaymentClients from "./create-edit/edit-payment-info.component";
 import CreatePaymentSelectInvoices from "./create-edit/create-payment-select-invoices.component";
-import ViewPayment from "./view-payment.component";
+import CreatePaymentConfirmation from "./create-edit/create-payment-confirmation.component";
 import { InvoiceStatus } from "../invoices/client-invoices.component";
 import easyFetch from "../../util/easy-fetch";
 import { showGrowl, GrowlType } from "../../growls/growls.component";
 import dayjs from "dayjs";
+import ViewPayment from "./view-payment.component";
 
 export default function CreatePayment(props: CreatePaymentProps) {
   const [payment, setPayment] = React.useState<FullPayment>(
@@ -41,7 +42,7 @@ export default function CreatePayment(props: CreatePaymentProps) {
             message: `Payment created`,
           });
           props.refetchPayments();
-          props.close();
+          setStep(Step.viewPayment);
         })
         .catch((err) => {
           setTimeout(() => {
@@ -56,27 +57,39 @@ export default function CreatePayment(props: CreatePaymentProps) {
     }
   }, [isCreating]);
 
-  return (
-    <Modal
-      primaryText={StepComponent.nextButtonText || "Next Step"}
-      primaryAction={handleSubmit}
-      primarySubmit
-      primaryDisabled={isCreating}
-      secondaryText={StepComponent.backButtonText || "Back"}
-      secondaryAction={back}
-      headerText="Create Payment"
-      customHeaderContent={customHeaderContent()}
-      close={props.close}
-    >
-      <StepComponent
+  if (step === Step.viewPayment) {
+    return (
+      <ViewPayment
         payment={payment}
         setPayment={setPayment}
         proceed={proceed}
         invoices={props.clientInvoices}
         client={props.client}
       />
-    </Modal>
-  );
+    );
+  } else {
+    return (
+      <Modal
+        primaryText={StepComponent.nextButtonText || "Next Step"}
+        primaryAction={handleSubmit}
+        primarySubmit
+        primaryDisabled={isCreating}
+        secondaryText={StepComponent.backButtonText || "Back"}
+        secondaryAction={back}
+        headerText="Create Payment"
+        customHeaderContent={customHeaderContent()}
+        close={props.close}
+      >
+        <StepComponent
+          payment={payment}
+          setPayment={setPayment}
+          proceed={proceed}
+          invoices={props.clientInvoices}
+          client={props.client}
+        />
+      </Modal>
+    );
+  }
 
   function handleSubmit(evt) {
     evt.preventDefault();
@@ -84,7 +97,9 @@ export default function CreatePayment(props: CreatePaymentProps) {
   }
 
   function proceed() {
-    if (step === Step.confirm) {
+    if (step === Step.viewPayment) {
+      props.close();
+    } else if (step === Step.confirm) {
       setIsCreating(true);
     } else {
       setStep(nextStep(step));
@@ -164,13 +179,15 @@ enum Step {
   paymentInfo = "paymentInfo",
   selectInvoices = "selectInvoices",
   confirm = "confirm",
+  viewPayment = "viewPayment",
 }
 
 const StepComponents: StepComps = {
   [Step.checkInvoices]: CreatePaymentCheckInvoices,
   [Step.paymentInfo]: CreatePaymentClients,
   [Step.selectInvoices]: CreatePaymentSelectInvoices,
-  [Step.confirm]: ViewPayment,
+  [Step.confirm]: CreatePaymentConfirmation,
+  [Step.viewPayment]: ViewPayment,
 };
 
 interface StepComponent {

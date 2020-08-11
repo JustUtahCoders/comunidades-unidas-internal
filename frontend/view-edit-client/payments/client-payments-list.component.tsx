@@ -5,6 +5,7 @@ import { SingleClient } from "../view-client.component";
 import Chip from "../../util/chips/chip.component";
 import { padStart } from "lodash-es";
 import Modal from "../../util/modal.component";
+import ViewPayment from "./view-payment.component";
 
 function ClientPaymentsList(props: ClientPaymentsListProps) {
   return (
@@ -19,7 +20,15 @@ function ClientPaymentsList(props: ClientPaymentsListProps) {
             </>
           }
           bottomContent={<>${payment.paymentAmount.toFixed(2)}</>}
-          renderPreview={({ close }) => null}
+          renderPreview={({ close }) => (
+            <ViewPayment
+              client={props.client}
+              invoices={props.invoices}
+              payment={payment}
+              proceed={close}
+              setPayment={null}
+            />
+          )}
         />
       ))}
     </>

@@ -118,7 +118,7 @@ const css = `
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 10000;
+  z-index: 100000;
 }
 
 & .growl {

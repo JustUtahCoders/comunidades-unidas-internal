@@ -1,58 +1,53 @@
 import React from "react";
+import Modal from "../../util/modal.component";
 import { CreatePaymentStepProps } from "./create-payment.component";
-import BasicTableReport from "../../reports/shared/basic-table-report.component";
-import dayjs from "dayjs";
-import { humanReadablePaymentType } from "./edit-payment.component";
+import { padStart } from "lodash-es";
+import { GrowlType, showGrowl } from "../../growls/growls.component";
 
 export default function ViewPayment(props: CreatePaymentStepProps) {
-  return (
-    <div style={{ marginBottom: "2.4rem" }}>
-      <BasicTableReport
-        title="Payment Details"
-        headerRows={<></>}
-        contentRows={
-          <>
-            <tr>
-              <th>Payer</th>
-              <td>{props.client.fullName}</td>
-            </tr>
-            <tr>
-              <th>Date</th>
-              <td>{dayjs(props.payment.paymentDate).format("MMM DD, YYYY")}</td>
-            </tr>
-            <tr>
-              <th>Invoices</th>
-              <td>
-                {props.payment.invoices.length > 0
-                  ? props.payment.invoices
-                      .map(
-                        (i) =>
-                          `#${
-                            props.invoices.find((j) => j.id === i.invoiceId)
-                              .invoiceNumber
-                          }`
-                      )
-                      .join(", ")
-                  : "(None)"}
-              </td>
-            </tr>
-            <tr>
-              <th>Method</th>
-              <td>{humanReadablePaymentType(props.payment.paymentType)}</td>
-            </tr>
-          </>
-        }
-        footerRows={
-          <>
-            <tr>
-              <th>Amount</th>
-              <td>${props.payment.paymentAmount.toFixed(2)}</td>
-            </tr>
-          </>
-        }
-      />
-    </div>
-  );
-}
+  const maxHeight = window.innerHeight - (2 * window.innerHeight) / 10 - 140;
+  const previewUrl = `/api/payments/${props.payment.id}/receipts`;
 
-ViewPayment.nextButtonText = "Create Payment";
+  return (
+    <Modal
+      headerText={`Payment #${padStart(String(props.payment.id), 4, "0")}`}
+      primaryText="Print"
+      primaryAction={printReceipt}
+      secondaryText="Download"
+      secondaryAction={downloadReceipt}
+      tertiaryText="Edit"
+      tertiaryAction={editPayment}
+      close={props.proceed}
+      wide
+    >
+      <object
+        data={previewUrl}
+        type="application/pdf"
+        width="100%"
+        height={maxHeight + "px"}
+      >
+        <embed
+          src={previewUrl}
+          type="application/pdf"
+          width="100%"
+          height={maxHeight + "px"}
+        />
+      </object>
+    </Modal>
+  );
+
+  function printReceipt() {
+    window.open(previewUrl, "_blank");
+  }
+
+  function downloadReceipt() {
+    window.open(`${previewUrl}?download=true`, "_blank");
+  }
+
+  function editPayment() {
+    showGrowl({
+      type: GrowlType.info,
+      message: "Editing payments is not yet possible",
+    });
+  }
+}

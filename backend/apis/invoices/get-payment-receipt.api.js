@@ -35,13 +35,17 @@ app.get("/api/payments/:paymentId/receipts", (req, res) => {
         if (err) {
           return databaseError(err);
         }
+
         const paymentNumber = String(payment.id).padStart(4, "0");
         const doc = new PDFDocument();
         res.status(200);
         res.set("Content-Type", "application/pdf");
+        const isDownload = req.query.download === "true";
         res.set(
           "Content-Disposition",
-          `inline; filename="Payment_${paymentNumber}.pdf"`
+          `${
+            isDownload ? "attachment" : "inline"
+          }; filename="Payment_${paymentNumber}.pdf"`
         );
 
         doc.pipe(res);
@@ -86,7 +90,8 @@ app.get("/api/payments/:paymentId/receipts", (req, res) => {
         const boldLineHeight = doc.heightOfString("foo") + 5;
 
         doc.font(palatino);
-        const lineHeight = doc.heightOfString("foo") + 5;
+        const rawLineHeight = doc.heightOfString("foo");
+        const lineHeight = rawLineHeight + 5;
 
         const topLine = 120;
 
@@ -96,25 +101,41 @@ app.get("/api/payments/:paymentId/receipts", (req, res) => {
         doc.text("Comunidades Unidas", pageMargin, topLine);
         doc.font(palatino);
         doc.text(
-          "Phone:   1 (801) 487-4143",
+          "1750 W Research Way Suite 102",
           pageMargin,
           topLine + boldLineHeight
+        );
+        doc.text(
+          "West Valley City, Utah 84119",
+          pageMargin,
+          topLine + boldLineHeight + rawLineHeight
+        );
+        doc.text(
+          "Hours: Mon-Thurs 8:00AM to 6:00PM.",
+          pageMargin,
+          topLine + boldLineHeight + rawLineHeight * 2
+        );
+        doc.text(
+          "Phone: 1 (801) 487-4143",
+          pageMargin,
+          topLine + boldLineHeight + rawLineHeight * 3
         );
 
         // Payment info
         const payerLeft = 375;
         doc.font(palatino);
         doc.text("Paid By:", payerLeft, topLine);
-        doc.text("Payment Date:", payerLeft, topLine + lineHeight);
-        doc.text("Payment #:", payerLeft, topLine + lineHeight * 2);
-        doc.text("Payment Amount:", payerLeft, topLine + lineHeight * 3);
-        doc.text("Payment Method:", payerLeft, topLine + lineHeight * 4);
+        doc.text("Client ID:", payerLeft, topLine + lineHeight);
+        doc.text("Payment Date:", payerLeft, topLine + lineHeight * 2);
+        doc.text("Payment #:", payerLeft, topLine + lineHeight * 3);
+        doc.text("Payment Amount:", payerLeft, topLine + lineHeight * 4);
+        doc.text("Payment Method:", payerLeft, topLine + lineHeight * 5);
 
         const paymentDate = dayjs(payment.paymentDate).format("MMM DD, YYYY");
         doc.text(
           paymentDate,
           pageWidth - pageMargin - doc.widthOfString(paymentDate),
-          topLine + lineHeight,
+          topLine + lineHeight * 2,
           {
             align: "right",
             lineBreak: false,
@@ -124,7 +145,7 @@ app.get("/api/payments/:paymentId/receipts", (req, res) => {
         doc.text(
           paymentNumber,
           pageWidth - pageMargin - doc.widthOfString(paymentNumber),
-          topLine + lineHeight * 2,
+          topLine + lineHeight * 3,
           {
             align: "right",
             lineBreak: false,
@@ -135,7 +156,7 @@ app.get("/api/payments/:paymentId/receipts", (req, res) => {
         doc.text(
           paymentAmount,
           pageWidth - pageMargin - doc.widthOfString(paymentAmount),
-          topLine + lineHeight * 3,
+          topLine + lineHeight * 4,
           {
             align: "right",
             lineBreak: false,
@@ -146,7 +167,7 @@ app.get("/api/payments/:paymentId/receipts", (req, res) => {
         doc.text(
           paymentMethod,
           pageWidth - pageMargin - doc.widthOfString(paymentMethod),
-          topLine + lineHeight * 4,
+          topLine + lineHeight * 5,
           {
             align: "right",
             lineBreak: false,
@@ -168,6 +189,16 @@ app.get("/api/payments/:paymentId/receipts", (req, res) => {
               lineBreak: false,
             }
           );
+
+          doc.text(
+            String(client.id),
+            pageWidth - pageMargin - doc.widthOfString(String(client.id)),
+            topLine + lineHeight,
+            {
+              align: "right",
+              lineBreak: false,
+            }
+          );
         }
 
         // Table
@@ -184,8 +215,7 @@ app.get("/api/payments/:paymentId/receipts", (req, res) => {
         doc.text("Invoice Status", col3Left, tableHeaderTop);
         doc.text("Amount Paid", col4Left, tableHeaderTop);
 
-        const tableHeaderLineTop =
-          tableHeaderTop + doc.heightOfString("foo") + 6;
+        const tableHeaderLineTop = tableHeaderTop + rawLineHeight + 6;
         doc
           .moveTo(pageMargin, tableHeaderLineTop)
           .lineTo(pageWidth - pageMargin, tableHeaderLineTop)
