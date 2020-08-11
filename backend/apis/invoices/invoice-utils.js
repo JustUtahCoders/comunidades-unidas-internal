@@ -1,4 +1,4 @@
-const { sum } = require("lodash");
+const { sum, uniqBy } = require("lodash");
 const {
   responseUser,
   responseDateWithoutTime,
@@ -32,7 +32,7 @@ exports.formatResponseInvoice = function formatResponseInvoice({
   };
 
   if (invoicePayments) {
-    result.payments = invoicePayments.map((ip) => ({
+    result.payments = uniqBy(invoicePayments, "id").map((ip) => ({
       paymentId: ip.id,
       paymentAmount: ip.paymentAmount,
       amountTowardsInvoice: ip.amountTowardsInvoice,
@@ -42,7 +42,7 @@ exports.formatResponseInvoice = function formatResponseInvoice({
   }
 
   if (invoiceLineItems) {
-    result.lineItems = invoiceLineItems.map((li) => ({
+    result.lineItems = uniqBy(invoiceLineItems, "id").map((li) => ({
       serviceId: li.serviceId,
       name: li.name,
       description: li.description,
@@ -52,7 +52,9 @@ exports.formatResponseInvoice = function formatResponseInvoice({
   }
 
   if (invoiceClients) {
-    result.clients = invoiceClients.map((ic) => ic.clientId);
+    result.clients = uniqBy(invoiceClients, "clientId").map(
+      (ic) => ic.clientId
+    );
   }
 
   return result;

@@ -122,6 +122,8 @@ export function humanReadablePaymentType(paymentType: PaymentType): string {
       return "Debit Card";
     case PaymentType.other:
       return "Other";
+    default:
+      return capitalize(paymentType);
   }
 }
 

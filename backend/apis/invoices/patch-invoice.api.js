@@ -68,7 +68,8 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
     );
   }
 
-  const { invoiceId } = req.params;
+  let { invoiceId } = req.params;
+  invoiceId = Number(invoiceId);
 
   getFullInvoiceById(invoiceId, (err, oldInvoice) => {
     if (err) {

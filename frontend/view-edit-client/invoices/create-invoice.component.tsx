@@ -7,11 +7,12 @@ import { CUService } from "../../add-client/services.component";
 import { showGrowl, GrowlType } from "../../growls/growls.component";
 import { noop } from "lodash-es";
 import ChangeInvoiceStatus from "./change-invoice-status.component";
+import ViewInvoice from "./view-invoice.component";
 
 export default function CreateInvoice(props: CreateInvoiceProps) {
   const [invoice, setInvoice] = React.useState(null);
   const [saveStatus, setSaveStatus] = React.useState<SaveStatus>(
-    SaveStatus.saved
+    SaveStatus.unsaved
   );
   const editInvoiceRef = React.useRef();
   const invoiceStatusRef = React.useRef();
@@ -47,10 +48,11 @@ export default function CreateInvoice(props: CreateInvoiceProps) {
           id: invoiceStatusRef.current.status,
         },
       })
-        .then(() => {
+        .then((invoice) => {
+          setSaveStatus(SaveStatus.saved);
+          setInvoice(invoice);
           showGrowl({ type: GrowlType.success, message: "Invoice created!" });
           props.refetchInvoices();
-          props.close();
         })
         .catch((err) => {
           setSaveStatus(SaveStatus.error);
@@ -63,8 +65,18 @@ export default function CreateInvoice(props: CreateInvoiceProps) {
     }
   }, [saveStatus]);
 
-  return (
-    invoice && (
+  if (saveStatus === SaveStatus.saved) {
+    return (
+      <ViewInvoice
+        close={props.close}
+        refetchInvoices={props.refetchInvoices}
+        invoice={invoice}
+        services={props.services}
+        client={props.client}
+      />
+    );
+  } else if (invoice) {
+    return (
       <Modal
         customHeaderContent={
           <ChangeInvoiceStatus
@@ -86,10 +98,13 @@ export default function CreateInvoice(props: CreateInvoiceProps) {
           client={props.client}
           services={props.services}
           ref={editInvoiceRef}
+          isEditing={false}
         />
       </Modal>
-    )
-  );
+    );
+  } else {
+    return null;
+  }
 
   function handleSubmit(evt) {
     evt.preventDefault();
@@ -111,6 +126,7 @@ type CreateInvoiceProps = {
 };
 
 enum SaveStatus {
+  unsaved = "unsaved",
   shouldSave = "shouldSave",
   saving = "saving",
   saved = "saved",

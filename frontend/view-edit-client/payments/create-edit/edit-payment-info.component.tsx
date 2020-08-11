@@ -60,11 +60,12 @@ export default function EditPaymentInfo(props: CreatePaymentStepProps) {
     </div>
   );
 
-  function updateField(fieldName, transform = noop) {
+  function updateField(fieldName, transform?) {
     return (evt) => {
+      const value = transform ? transform(evt.target.value) : evt.target.value;
       props.setPayment({
         ...props.payment,
-        [fieldName]: transform(evt.target.value),
+        [fieldName]: value,
       });
     };
   }

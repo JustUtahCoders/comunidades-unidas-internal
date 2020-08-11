@@ -36,11 +36,12 @@ export default function CreatePayment(props: CreatePaymentProps) {
           })),
         },
       })
-        .then(() => {
+        .then((payment) => {
           showGrowl({
             type: GrowlType.success,
             message: `Payment created`,
           });
+          setPayment(payment);
           props.refetchPayments();
           setStep(Step.viewPayment);
         })

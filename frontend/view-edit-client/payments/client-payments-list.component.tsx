@@ -19,7 +19,11 @@ function ClientPaymentsList(props: ClientPaymentsListProps) {
               <div>#{padStart(String(payment.id), 4, "0")}</div>
             </>
           }
-          bottomContent={<>${payment.paymentAmount.toFixed(2)}</>}
+          bottomContent={
+            <div style={{ fontSize: "1.8rem" }}>
+              ${payment.paymentAmount.toFixed(2)}
+            </div>
+          }
           renderPreview={({ close }) => (
             <ViewPayment
               client={props.client}

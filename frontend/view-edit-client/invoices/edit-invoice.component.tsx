@@ -5,7 +5,7 @@ import userIconUrl from "../../../icons/148705-essential-collection/svg/user.svg
 import { useCss } from "kremling";
 import css from "./edit-invoice.css";
 import { CUService } from "../../add-client/services.component";
-import { groupBy, cloneDeep, sumBy } from "lodash-es";
+import { groupBy, cloneDeep, sumBy, padStart } from "lodash-es";
 import CloseIconButton from "../../util/close-icon-button.component";
 import dayjs from "dayjs";
 import FullRichTextEditor from "../../rich-text/full-rich-text-editor.component";
@@ -31,6 +31,12 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
       };
     }
   });
+
+  const totalOwed = sumBy(
+    modifiedInvoice.lineItems.concat(newLineItems),
+    (li) => li.rate * li.quantity || 0
+  );
+  const totalPaid = sumBy(modifiedInvoice.payments, "amountTowardsInvoice");
 
   return (
     <div {...useCss(css)}>
@@ -104,25 +110,47 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
             )}
           </tbody>
           <tfoot>
-            <tr>
-              <td colSpan={4} style={{ textAlign: "start" }}>
-                <button
-                  className="secondary"
-                  type="button"
-                  onClick={addLineItem}
-                >
-                  Add Line Item
-                </button>
-              </td>
-              <td style={{ textAlign: "end" }}>Total:</td>
-              <td style={{ textAlign: "center" }}>
-                $
-                {sumBy(
-                  modifiedInvoice.lineItems.concat(newLineItems),
-                  (li) => li.rate * li.quantity || 0
-                ).toFixed(2)}
-              </td>
-            </tr>
+            {props.isEditing ? (
+              <>
+                <tr>{totalOwedRows(5)}</tr>
+                <tr>
+                  <td colSpan={5} style={{ textAlign: "end" }}>
+                    Total Paid:
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    ${totalPaid.toFixed(2)}
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan={4} style={{ textAlign: "start" }}>
+                    <button
+                      className="secondary"
+                      type="button"
+                      onClick={addLineItem}
+                    >
+                      Add Line Item
+                    </button>
+                  </td>
+                  <td style={{ textAlign: "end" }}>Balance:</td>
+                  <td style={{ textAlign: "center" }}>
+                    ${(totalOwed - totalPaid).toFixed(2)}
+                  </td>
+                </tr>
+              </>
+            ) : (
+              <tr>
+                <td colSpan={3} style={{ textAlign: "start" }}>
+                  <button
+                    className="secondary"
+                    type="button"
+                    onClick={addLineItem}
+                  >
+                    Add Line Item
+                  </button>
+                </td>
+                {totalOwedRows(2)}
+              </tr>
+            )}
           </tfoot>
         </table>
       </div>
@@ -133,12 +161,6 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
           ref={richTextRef}
         />
       </div>
-      {modifiedInvoice.payments.length > 0 && <div>Payments</div>}
-      {modifiedInvoice.payments.map((payment) => (
-        <div key={payment.paymentId}>
-          ${payment.amountTowardsInvoice.toFixed()}
-        </div>
-      ))}
     </div>
   );
 
@@ -201,6 +223,17 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
 
       update(serviceId, name, description);
     }
+  }
+
+  function totalOwedRows(colSpan) {
+    return (
+      <>
+        <td colSpan={colSpan} style={{ textAlign: "end" }}>
+          Total Owed:
+        </td>
+        <td style={{ textAlign: "center" }}>${totalOwed.toFixed(2)}</td>
+      </>
+    );
   }
 
   function addLineItem() {
@@ -320,6 +353,7 @@ type EditInvoiceProps = {
   invoice: FullInvoice;
   client?: SingleClient;
   services: CUService[];
+  isEditing: boolean;
 };
 
 export type LineItem = {
