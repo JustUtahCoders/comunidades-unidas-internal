@@ -60,7 +60,7 @@ function getFullInvoiceById(id, errBack) {
     SELECT
       payments.id, payments.paymentDate, payments.paymentAmount, payments.paymentType,
       payments.donationId, payments.dateAdded, payments.addedBy, payments.dateModified,
-      payments.modifiedBy, invoicePayments.amount amountToInvoice
+      payments.modifiedBy, invoicePayments.amount amountTowardsInvoice
     FROM payments
     JOIN invoicePayments ON invoicePayments.paymentId = payments.id
     JOIN invoices ON invoices.id = invoicePayments.invoiceId

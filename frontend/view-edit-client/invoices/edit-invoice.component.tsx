@@ -133,6 +133,12 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
           ref={richTextRef}
         />
       </div>
+      {modifiedInvoice.payments.length > 0 && <div>Payments</div>}
+      {modifiedInvoice.payments.map((payment) => (
+        <div key={payment.paymentId}>
+          ${payment.amountTowardsInvoice.toFixed()}
+        </div>
+      ))}
     </div>
   );
 
@@ -326,7 +332,8 @@ export type LineItem = {
 
 type InvoicePayment = {
   paymentId: number;
-  amount: number;
+  paymentAmount: number;
+  amountTowardsInvoice: number;
 };
 
 export type CUObjectAudit = {

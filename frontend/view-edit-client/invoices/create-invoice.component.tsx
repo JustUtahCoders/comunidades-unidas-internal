@@ -49,6 +49,7 @@ export default function CreateInvoice(props: CreateInvoiceProps) {
       })
         .then(() => {
           showGrowl({ type: GrowlType.success, message: "Invoice created!" });
+          props.refetchInvoices();
           props.close();
         })
         .catch((err) => {

@@ -116,8 +116,18 @@ app.patch("/api/payments/:paymentId", (req, res) => {
           (paymentId, invoiceId, amount)
           VALUES
           (?, ?, ?);
+
+          UPDATE invoices SET status = 'completed'
+          WHERE
+            id = ?
+            AND
+            (status = 'draft' OR status = 'open')
+            AND invoices.totalCharged <= (
+              SELECT SUM (amount) FROM invoicePayments WHERE invoiceId = ?
+            )
+          ;
         `,
-                [paymentId, i.invoiceId, i.amount]
+                [paymentId, i.invoiceId, i.amount, i.invoiceId]
               )
             )
             .join("\n");

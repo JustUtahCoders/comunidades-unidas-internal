@@ -2,6 +2,12 @@ const { app, databaseError, pool, invalidRequest } = require("../../server");
 const mysql = require("mysql");
 const { checkValid, validId } = require("../utils/validation-utils");
 const { formatResponsePayment } = require("./payment-utils");
+const fs = require("fs");
+const path = require("path");
+
+const rawGetSql = fs.readFileSync(
+  path.join(__dirname, "./get-client-payments.sql")
+);
 
 app.get("/api/clients/:clientId/payments", (req, res) => {
   const clientId = req.params.clientId;
@@ -12,23 +18,7 @@ app.get("/api/clients/:clientId/payments", (req, res) => {
     return invalidRequest(res, validationErrors);
   }
 
-  const getSql = mysql.format(
-    `
-    SELECT
-      payments.id, payments.paymentDate, payments.paymentAmount, payments.paymentType,
-      payments.donationId, payments.dateAdded, payments.dateModified,
-      addedUser.firstName addedFirstName, addedUser.lastName addedLastName,
-      modifiedUser.firstName modifiedFirstName, modifiedUser.lastName modifiedLastName
-
-      FROM payments
-      JOIN paymentClients ON paymentClients.paymentId = payments.id
-      JOIN users addedUser ON payments.addedBy = addedUser.id
-      JOIN users modifiedUser ON payments.modifiedBy = modifiedUser.id
-    WHERE
-      paymentClients.clientId = ?;
-  `,
-    [clientId]
-  );
+  const getSql = mysql.format(rawGetSql, [clientId, clientId]);
 
   pool.query(getSql, (err, result) => {
     if (err) {
@@ -39,6 +29,7 @@ app.get("/api/clients/:clientId/payments", (req, res) => {
       payments: result.map((payment) =>
         formatResponsePayment({
           payment,
+          invoices: JSON.parse(payment.invoices),
           createdBy: {
             id: payment.addedUserId,
             firstName: payment.addedFirstName,

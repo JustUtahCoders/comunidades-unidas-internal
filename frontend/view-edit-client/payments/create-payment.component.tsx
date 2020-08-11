@@ -40,6 +40,7 @@ export default function CreatePayment(props: CreatePaymentProps) {
             type: GrowlType.success,
             message: `Payment created`,
           });
+          props.refetchPayments();
           props.close();
         })
         .catch((err) => {
@@ -155,6 +156,7 @@ type CreatePaymentProps = {
   client: SingleClient;
   clientInvoices: FullInvoice[];
   close(): any;
+  refetchPayments(): any;
 };
 
 enum Step {

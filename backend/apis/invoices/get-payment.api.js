@@ -47,7 +47,10 @@ function getFullPaymentById(paymentId, errBack) {
       JOIN users modifiedUser ON payments.modifiedBy = modifiedUser.id
     WHERE payments.id = ? AND payments.isDeleted = false;
 
-    SELECT paymentId, invoiceId, amount FROM invoicePayments WHERE paymentId = ?;
+    SELECT invoicePayments.paymentId, invoicePayments.invoiceId, invoicePayments.amount,
+      invoices.status, invoices.totalCharged, invoices.invoiceNumber
+    FROM invoicePayments JOIN invoices ON invoices.id = invoicePayments.invoiceId
+    WHERE paymentId = ?;
 
     SELECT paymentId, clientId FROM paymentClients WHERE paymentId = ?;
   `,

@@ -71,8 +71,18 @@ app.post("/api/payments", (req, res) => {
         (paymentId, invoiceId, amount)
         VALUES
         (@paymentId, ?, ?);
+
+        UPDATE invoices SET status = 'completed'
+        WHERE
+          id = ?
+          AND
+          (status = 'draft' OR status = 'open')
+          AND totalCharged <= (
+            SELECT SUM (amount) FROM invoicePayments WHERE invoiceId = ?
+          )
+        ;
       `,
-            [i.invoiceId, i.amount]
+            [i.invoiceId, i.amount, i.invoiceId, i.invoiceId]
           )
         )
         .join("\n")}

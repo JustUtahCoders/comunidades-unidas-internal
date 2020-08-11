@@ -10,6 +10,8 @@ import { CUService } from "../../add-client/services.component";
 import ClientInvoiceList from "./client-invoice-list.component";
 import { FullInvoice } from "./edit-invoice.component";
 import CreatePayment from "../payments/create-payment.component";
+import ClientPaymentsList from "../payments/client-payments-list.component";
+import { FullPayment } from "../payments/edit-payment.component";
 
 export default function ClientInvoices(props: ClientInvoicesProps) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
@@ -68,7 +70,7 @@ export default function ClientInvoices(props: ClientInvoicesProps) {
         ac.abort();
       };
     }
-  }, [state.payments]);
+  }, [state.paymentStatus]);
 
   React.useEffect(() => {
     const ac = new AbortController();
@@ -118,6 +120,7 @@ export default function ClientInvoices(props: ClientInvoicesProps) {
             client={props.client}
             clientInvoices={state.invoices}
             close={() => dispatch({ type: ActionTypes.cancelCreatePayment })}
+            refetchPayments={refetchPayments}
           />
         )}
       </div>
@@ -155,6 +158,12 @@ export default function ClientInvoices(props: ClientInvoicesProps) {
     });
   }
 
+  function refetchPayments() {
+    dispatch({
+      type: ActionTypes.fetchPayments,
+    });
+  }
+
   function paymentsTable() {
     switch (state.paymentStatus) {
       case ApiStatus.shouldLoad:
@@ -164,7 +173,14 @@ export default function ClientInvoices(props: ClientInvoicesProps) {
         if (state.invoices.length === 0) {
           return <EmptyState pluralName="payments" />;
         } else {
-          return null;
+          return (
+            <ClientPaymentsList
+              client={props.client}
+              invoices={state.invoices}
+              payments={state.payments}
+              refetchPayments={refetchPayments}
+            />
+          );
         }
       case ApiStatus.error:
         return "Error loading payments";
@@ -237,6 +253,12 @@ function reducer(state: State, action: Action): State {
         ...state,
         creatingPayment: false,
       };
+    case ActionTypes.fetchPayments:
+      return {
+        ...state,
+        paymentStatus: ApiStatus.shouldLoad,
+        invoiceStatus: ApiStatus.shouldLoad,
+      };
     default:
       throw Error();
   }
@@ -249,8 +271,6 @@ type ClientInvoicesProps = {
   navigate?: (path) => any;
 };
 
-type PaymentSummary = {};
-
 enum ActionTypes {
   newInvoices = "newInvoices",
   invoiceError = "invoiceError",
@@ -260,6 +280,7 @@ enum ActionTypes {
   cancelCreateInvoice = "cancelCreateInvoice",
   setServices = "setServices",
   fetchInvoices = "fetchInvoices",
+  fetchPayments = "fetchPayments",
   createPayment = "createPayment",
   cancelCreatePayment = "cancelCreatePayment",
 }
@@ -275,7 +296,7 @@ type InvoiceError = {
 
 type NewPayments = {
   type: ActionTypes.newPayments;
-  payments: Array<PaymentSummary>;
+  payments: Array<FullPayment>;
 };
 
 type PaymentsError = {
@@ -307,6 +328,10 @@ type CancelCreatePayment = {
   type: ActionTypes.cancelCreatePayment;
 };
 
+type FetchPayments = {
+  type: ActionTypes.fetchPayments;
+};
+
 type Action =
   | NewInvoices
   | InvoiceError
@@ -317,7 +342,8 @@ type Action =
   | CreatePaymentAction
   | CancelCreatePayment
   | SetServices
-  | FetchInvoices;
+  | FetchInvoices
+  | FetchPayments;
 
 enum ApiStatus {
   shouldLoad = "shouldLoad",
@@ -335,7 +361,7 @@ export enum InvoiceStatus {
 
 type State = {
   invoices: Array<FullInvoice>;
-  payments: Array<PaymentSummary>;
+  payments: Array<FullPayment>;
   invoiceStatus: ApiStatus;
   paymentStatus: ApiStatus;
   creatingInvoice: boolean;

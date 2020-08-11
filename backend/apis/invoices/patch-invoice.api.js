@@ -34,16 +34,6 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
       nullableNonEmptyString("clientNote"),
       nullableValidCurrency("totalCharged"),
       nullableValidEnum("status", "draft", "open", "completed", "closed"),
-      nullableValidArray("payments", (index) => {
-        return (payments) => {
-          const errs = checkValid(
-            payments[index],
-            validId("id"),
-            validCurrency("amount")
-          );
-          return errs.length > 0 ? errs : null;
-        };
-      }),
       nullableValidArray("clients", validId)
       // nullableValidArray("lineItems", (index) => {
       //   return (lineItems) => {
@@ -78,16 +68,6 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
     );
   }
 
-  if (
-    req.body.payments &&
-    uniqBy(req.body.payments, "paymentId").length !== req.body.payments.length
-  ) {
-    return invalidRequest(
-      res,
-      `Invalid request body - duplicate payment ids in "payments" array`
-    );
-  }
-
   const { invoiceId } = req.params;
 
   getFullInvoiceById(invoiceId, (err, oldInvoice) => {
@@ -100,6 +80,15 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
     }
 
     const newInvoice = Object.assign({}, oldInvoice, req.body);
+
+    if (
+      oldInvoice.status === "draft" &&
+      oldInvoice.lineItems.length === 0 &&
+      req.body.lineItems &&
+      req.body.lineItems.length > 0
+    ) {
+      newInvoice.status = "open";
+    }
 
     let updateSql = mysql.format(
       `
@@ -119,27 +108,6 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
         invoiceId,
       ]
     );
-
-    if (req.body.payments) {
-      updateSql += mysql.format(
-        `
-        DELETE FROM invoicePayments WHERE invoiceId = ?;
-
-        ${req.body.payments
-          .map((p) =>
-            mysql.format(
-              `
-          INSERT INTO invoicePayments (paymentId, invoiceId, amount)
-          VALUES (?, ?, ?);
-        `,
-              [p.paymentId, invoidId, p.amount]
-            )
-          )
-          .join("\n")}
-      `,
-        [invoiceId]
-      );
-    }
 
     if (req.body.clients) {
       updateSql += mysql.format(
@@ -190,8 +158,6 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
         [invoiceId]
       );
     }
-
-    console.log(updateSql);
 
     pool.query(updateSql, (err, updateResult) => {
       if (err) {

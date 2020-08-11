@@ -19,10 +19,26 @@ exports.formatResponsePayment = function formatResponsePayment({
   };
 
   if (invoices) {
-    result.invoices = invoices.map((i) => ({
-      invoiceId: i.invoiceId,
-      amount: i.amount,
-    }));
+    result.invoices = invoices.map((i) => {
+      const result = {
+        invoiceId: i.invoiceId,
+        amount: i.amount,
+      };
+
+      if (i.status) {
+        result.status = i.status;
+      }
+
+      if (i.totalCharged) {
+        result.totalCharged = i.totalCharged;
+      }
+
+      if (i.invoiceNumber) {
+        result.invoiceNumber = i.invoiceNumber;
+      }
+
+      return result;
+    });
   }
 
   if (payerClientIds) {

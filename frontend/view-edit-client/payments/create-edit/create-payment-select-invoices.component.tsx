@@ -5,6 +5,7 @@ import { useCss } from "kremling";
 import { InvoiceSummary } from "../edit-payment.component";
 import { InvoiceStatus } from "../../invoices/client-invoices.component";
 import { sumBy, intersectionBy, isEmpty } from "lodash-es";
+import { FullInvoice } from "../../invoices/edit-invoice.component";
 
 export default function CreatePaymentSelectInvoices(
   props: CreatePaymentStepProps
@@ -35,66 +36,73 @@ export default function CreatePaymentSelectInvoices(
 
   return (
     <div {...useCss(css)} className="container">
-      <p>Which invoices should this payment be applied to?</p>
-      <div className="invoices">
-        <table>
-          <caption>Outstanding Invoices</caption>
-          <thead>
-            <tr>
-              <th style={{ width: "4rem" }}>
-                <input
-                  type="checkbox"
-                  checked={
-                    pendingInvoicePayments.length === unpaidInvoices.length
-                  }
-                  onChange={toggleSelectAll}
-                />
-              </th>
-              <th>Invoice #</th>
-              <th>Total</th>
-              <th>Balance</th>
-              <th style={{ width: "15rem" }}>Amount to be Paid</th>
-            </tr>
-          </thead>
-          <tbody>
-            {unpaidInvoices.map((invoice) => {
-              const invoicePayment = props.payment.invoices.find(
-                (i) => i.invoiceId === invoice.id
-              );
-
-              return (
-                <tr key={invoice.id}>
-                  <td>
+      {unpaidInvoices.length > 0 && (
+        <>
+          <p>Which invoices should this payment be applied to?</p>
+          <div className="invoices">
+            <table>
+              <caption>Outstanding Invoices</caption>
+              <thead>
+                <tr>
+                  <th style={{ width: "4rem" }}>
                     <input
                       type="checkbox"
-                      checked={Boolean(invoicePayment)}
-                      onChange={(evt) => toggleCheckInvoice(evt, invoice)}
+                      checked={
+                        pendingInvoicePayments.length === unpaidInvoices.length
+                      }
+                      onChange={toggleSelectAll}
                     />
-                  </td>
-                  <td>{invoice.invoiceNumber}</td>
-                  <td>${invoice.totalCharged.toFixed(2)}</td>
-                  <td>
-                    $
-                    {sumBy(invoice.payments, "amountTowardsInvoice").toFixed(2)}
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      min="0.01"
-                      step="0.01"
-                      placeholder="$0.00"
-                      value={invoicePayment ? invoicePayment.amount : ""}
-                      onChange={(evt) => updatePaymentAmount(evt, invoice)}
-                      onBlur={() => handleBlur(invoice, invoicePayment)}
-                    />
-                  </td>
+                  </th>
+                  <th>Invoice #</th>
+                  <th>Total</th>
+                  <th>Balance</th>
+                  <th style={{ width: "15rem" }}>Amount to be Paid</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-      <p style={{ marginTop: "3.2rem" }}>Any donations or other payments?</p>
+              </thead>
+              <tbody>
+                {unpaidInvoices.map((invoice) => {
+                  const invoicePayment = props.payment.invoices.find(
+                    (i) => i.invoiceId === invoice.id
+                  );
+
+                  return (
+                    <tr key={invoice.id}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={Boolean(invoicePayment)}
+                          onChange={(evt) => toggleCheckInvoice(evt, invoice)}
+                        />
+                      </td>
+                      <td>{invoice.invoiceNumber}</td>
+                      <td>${invoice.totalCharged.toFixed(2)}</td>
+                      <td>
+                        $
+                        {sumBy(
+                          invoice.payments,
+                          "amountTowardsInvoice"
+                        ).toFixed(2)}
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          min="0.01"
+                          step="0.01"
+                          placeholder="$0.00"
+                          value={invoicePayment ? invoicePayment.amount : ""}
+                          onChange={(evt) => updatePaymentAmount(evt, invoice)}
+                          onBlur={() => handleBlur(invoice, invoicePayment)}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+      <p>Any donations or other payments?</p>
       <div className="other-payments">
         <div>
           <label htmlFor="donation-amount">Donation:</label>
@@ -125,9 +133,10 @@ export default function CreatePaymentSelectInvoices(
   function toggleCheckInvoice(evt, invoice) {
     let newPaymentInvoices;
     if (evt.target.checked) {
+      // @ts-ignore
       newPaymentInvoices = props.payment.invoices.concat({
         invoiceId: invoice.id,
-        amount: invoice.totalCharged.toFixed(2),
+        amount: restOfInvoice(invoice).toFixed(2),
       });
     } else {
       newPaymentInvoices = props.payment.invoices.filter(
@@ -148,7 +157,7 @@ export default function CreatePaymentSelectInvoices(
     if (evt.target.checked) {
       newPaymentInvoices = unpaidInvoices.map((i) => ({
         invoiceId: i.id,
-        amount: i.totalCharged.toFixed(2),
+        amount: restOfInvoice(i).toFixed(2),
       }));
     } else {
       newPaymentInvoices = [];
@@ -194,18 +203,20 @@ export default function CreatePaymentSelectInvoices(
     });
   }
 
-  function handleBlur(invoice, invoicePayment) {
-    if (invoicePayment && invoice.totalCharged < invoicePayment.amount) {
-      const newPaymentInvoices = props.payment.invoices.map((i) => {
-        if (i.invoiceId === invoice.id) {
-          return {
-            invoiceId: invoice.id,
-            amount: invoice.totalCharged.toFixed(2),
-          };
-        } else {
-          return i;
+  function handleBlur(invoice: FullInvoice, invoicePayment) {
+    if (invoicePayment && restOfInvoice(invoice) < invoicePayment.amount) {
+      const newPaymentInvoices: InvoiceSummary[] = props.payment.invoices.map(
+        (i) => {
+          if (i.invoiceId === invoice.id) {
+            return {
+              invoiceId: invoice.id,
+              amount: (restOfInvoice(invoice).toFixed(2) as unknown) as number,
+            };
+          } else {
+            return i;
+          }
         }
-      });
+      );
       props.setPayment({
         ...props.payment,
         invoices: newPaymentInvoices,
@@ -232,4 +243,8 @@ export default function CreatePaymentSelectInvoices(
     const other = isEmpty(otherAmount) ? 0 : Number(otherAmount);
     return invoice + donation + other;
   }
+}
+
+function restOfInvoice(invoice: FullInvoice): number {
+  return invoice.totalCharged - sumBy(invoice.payments, "amountTowardsInvoice");
 }

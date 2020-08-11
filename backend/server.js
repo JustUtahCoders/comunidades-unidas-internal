@@ -171,6 +171,7 @@ require("./apis/invoices/patch-payment.api");
 require("./apis/invoices/delete-payment.api");
 require("./apis/invoices/get-client-payments.api");
 require("./apis/invoices/get-invoice-payments.api");
+require("./apis/invoices/get-payment-receipt.api");
 
 require("./apis/default-404.api.js");
 require("./index-html.js");

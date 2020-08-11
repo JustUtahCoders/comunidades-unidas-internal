@@ -16,7 +16,7 @@ SELECT
   JSON_ARRAYAGG(JSON_OBJECT(
     'id', p.id,
     'paymentDate', p.paymentDate,
-    'amountToInvoice', ip.amount,
+    'amountTowardsInvoice', ip.amount,
     'paymentAmount', p.paymentAmount,
     'paymentType', p.paymentType,
     'donationId', p.donationId,
