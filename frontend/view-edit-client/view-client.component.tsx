@@ -108,20 +108,18 @@ export default function ViewClient(props: ViewClientProps) {
                 <img src={filesUrl} alt="Files icon" title="Client Files" />
               </Link>
             </li>
-            {localStorage.getItem("invoices") && (
-              <li>
-                <Link
-                  to={`/clients/${clientId}/invoices`}
-                  getProps={getLinkProps}
-                >
-                  <img
-                    src={invoicesUrl}
-                    alt="Price tag"
-                    title="Client Invoices"
-                  />
-                </Link>
-              </li>
-            )}
+            <li>
+              <Link
+                to={`/clients/${clientId}/invoices`}
+                getProps={getLinkProps}
+              >
+                <img
+                  src={invoicesUrl}
+                  alt="Price tag"
+                  title="Client Invoices"
+                />
+              </Link>
+            </li>
             <li>
               <Link
                 to={`/clients/${clientId}/add-info`}
