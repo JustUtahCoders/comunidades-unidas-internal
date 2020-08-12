@@ -30,6 +30,8 @@ const css = `
   --brand-color: rgba(184, 17, 17, 1);
   --colored-well: blanchedalmond;
   --immigration-color: #1165b8;
+  --medium-blue: #1165b8;
+  --medium-red: rgba(184, 17, 17, 1);
 }
 
 body {
@@ -190,6 +192,13 @@ body {
 
 & button.secondary:hover, & a.button.secondary:hover {
   background-color: #afafaf;
+}
+
+& button.link {
+  color: blue;
+  text-decoration: underline;
+  font-size: 1.4rem;
+  cursor: pointer;
 }
 
 & .popup {

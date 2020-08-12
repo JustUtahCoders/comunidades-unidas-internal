@@ -5,6 +5,10 @@ import { useCss } from "kremling";
 import easyFetch from "../util/easy-fetch";
 import IntakeServicesInputs from "../util/services-inputs.component";
 import { mediaMobile } from "../styleguide.component";
+import {
+  InteractionType,
+  InteractionLocation,
+} from "../view-edit-client/interactions/single-interaction-slat.component";
 
 export default function Services(props: StepComponentProps) {
   const [services, setServices] = useState<CUService[]>([]);
@@ -107,6 +111,12 @@ export type CUService = {
   programId: number;
   programName: string;
   isActive: boolean;
+  defaultLineItemName: string;
+  defaultLineItemDescription: string;
+  defaultLineItemRate: number;
+  defaultInteractionType: InteractionType;
+  defaultInteractionLocation: InteractionLocation;
+  defaultInteractionDuration: string;
 };
 
 export type CUProgram = {

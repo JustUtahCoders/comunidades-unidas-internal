@@ -161,6 +161,19 @@ require("./apis/clients/files/get-client-file.api");
 require("./apis/clients/files/delete-client-files.api");
 require("./apis/clients/files/presigned-file-download.api");
 
+require("./apis/invoices/create-invoice.api");
+require("./apis/invoices/get-invoice.api");
+require("./apis/invoices/patch-invoice.api");
+require("./apis/invoices/get-client-invoices.api");
+require("./apis/invoices/create-payment.api");
+require("./apis/invoices/get-payment.api");
+require("./apis/invoices/patch-payment.api");
+require("./apis/invoices/delete-payment.api");
+require("./apis/invoices/get-client-payments.api");
+require("./apis/invoices/get-invoice-payments.api");
+require("./apis/invoices/get-payment-receipt.api");
+require("./apis/invoices/get-invoice-pdf.api");
+
 require("./apis/default-404.api.js");
 require("./index-html.js");
 

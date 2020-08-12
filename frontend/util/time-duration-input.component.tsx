@@ -1,5 +1,6 @@
 import React from "react";
 import { useCss } from "kremling";
+import { isEmpty } from "lodash-es";
 
 export default function TimeDurationInput(props: TimeDurationInputProps) {
   const scope = useCss(css);
@@ -79,6 +80,9 @@ function createDuration(hours, minutes): TimeDuration {
 }
 
 function withLeadingZeros(num) {
+  if (!num) {
+    return "00";
+  }
   let result = String(num);
   while (result.length < 2) {
     result = "0" + result;

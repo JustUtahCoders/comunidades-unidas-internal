@@ -1,0 +1,33 @@
+.payment-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0.8rem 2.4rem 0.8rem;
+}
+
+.client-row {
+  display: flex !important;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  white-space: nowrap;
+}
+
+.client-row img {
+  margin-left: 0.8rem;
+  max-height: 1.6rem;
+}
+
+.input-block label {
+  font-size: 1.4rem;
+}
+
+.invoice-row {
+  display: flex;
+  margin-bottom: 0.8rem;
+}
+
+.section-label {
+  display: block;
+  font-size: 2.2rem;
+  margin-bottom: 1.6rem;
+}

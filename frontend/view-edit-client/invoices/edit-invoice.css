@@ -1,0 +1,74 @@
+.client-row {
+  display: flex !important;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  white-space: nowrap;
+}
+
+.client-row img {
+  margin-left: 0.8rem;
+  max-height: 1.6rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0.8rem;
+}
+
+.input-block * {
+  display: block;
+}
+
+.input-block label {
+  font-size: 1.4rem;
+}
+
+.line-items table input {
+  width: 100%;
+}
+
+.line-items {
+  margin: 3.2rem 0 1.6rem 0;
+  padding: 1.2rem;
+  border: 0.1rem solid var(--medium-gray);
+  border-radius: 0.4rem;
+}
+
+.line-items table {
+  border-spacing: 0;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.line-items table td,
+.line-items table th {
+  border-collapse: collapse;
+  padding: 0.4rem;
+  font-size: 1.4rem;
+  font-weight: normal;
+  text-align: start;
+}
+
+.line-items table td.amount {
+  text-align: center;
+}
+
+.service-select {
+  width: 100%;
+}
+
+.line-items table tr:first-child td {
+  padding-top: 4.8rem;
+}
+
+.line-items table td {
+  font-weight: bold;
+  font-size: 1.6rem;
+}
+
+.client-note {
+  margin-top: 4.8rem;
+  max-width: 60rem;
+}

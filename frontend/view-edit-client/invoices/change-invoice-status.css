@@ -1,0 +1,13 @@
+.invoice-status {
+  display: flex;
+  align-items: center;
+}
+
+.status-circle {
+  border: 0.1rem solid black;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 1rem;
+  min-height: 2rem;
+  margin-right: 0.8rem;
+}

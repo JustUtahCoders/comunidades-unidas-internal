@@ -4,15 +4,23 @@ import { ClientListClient } from "../../client-list/client-list.component";
 import { useCss, m } from "kremling";
 import userIconUrl from "../../../icons/148705-essential-collection/svg/user.svg";
 import dayjs from "dayjs";
+import { SingleClient } from "../../view-edit-client/view-client.component";
 
-export default React.forwardRef<
+const SingleClientSearchInput = React.forwardRef<
   React.MutableRefObject<SingleClientSearchInputRef>,
   SingleClientSearchInputProps
 >(function SingleClientSearchInput(
-  { autoFocus, nextThingToFocusRef, required = true, clientChanged },
+  {
+    autoFocus,
+    nextThingToFocusRef,
+    required = true,
+    clientChanged,
+    hideLabel,
+    initialClient,
+  },
   singleClientSearchInputRef
 ) {
-  const [state, dispatch] = React.useReducer(reducer, initialState);
+  const [state, dispatch] = React.useReducer(reducer, null, getInitialState);
   const scope = useCss(css);
   const debouncedClientName = useDebounce(state.clientName, 200);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
@@ -65,10 +73,14 @@ export default React.forwardRef<
   }, [state.clientName]);
 
   React.useEffect(() => {
-    if (state.clientId && nextThingToFocusRef.current) {
+    if (state.clientId && nextThingToFocusRef && nextThingToFocusRef.current) {
       nextThingToFocusRef.current.focus();
     }
-  }, [state.clientId, nextThingToFocusRef.current]);
+  }, [
+    state.clientId,
+    nextThingToFocusRef,
+    nextThingToFocusRef && nextThingToFocusRef.current,
+  ]);
 
   React.useEffect(() => {
     if (
@@ -84,9 +96,11 @@ export default React.forwardRef<
 
   return (
     <div {...scope} className="single-client-search">
-      <div>
-        <label id="single-client-search-label">Client name</label>
-      </div>
+      {!hideLabel && (
+        <div>
+          <label id="single-client-search-label">Client name</label>
+        </div>
+      )}
       <span className="single-client-search-input-container">
         <input
           type="text"
@@ -159,7 +173,17 @@ export default React.forwardRef<
       setSelectedIndex(0);
     }
   }
+
+  function getInitialState(): SingleClientSearchInputState {
+    return {
+      clientName: initialClient ? initialClient.fullName : "",
+      potentialClients: [],
+      clientId: initialClient ? initialClient.id : null,
+    };
+  }
 });
+
+export default SingleClientSearchInput;
 
 const css = `
 & .single-client-search {
@@ -185,12 +209,6 @@ const css = `
   height: 75%;
 }
 `;
-
-const initialState: SingleClientSearchInputState = {
-  clientName: "",
-  potentialClients: [],
-  clientId: null,
-};
 
 function reducer(
   state: SingleClientSearchInputState,
@@ -266,6 +284,8 @@ type SingleClientSearchInputProps = {
   nextThingToFocusRef?: React.RefObject<HTMLElement>;
   required?: boolean;
   clientChanged?: () => any;
+  hideLabel?: boolean;
+  initialClient?: SingleClient;
 };
 
 type SingleClientSearchInputRef = {

@@ -71,6 +71,7 @@ export default function EditableServiceRow(
           secondaryText="Cancel"
           secondaryAction={close}
           headerText={`Modify ${props.service.serviceName}`}
+          wide
         >
           <CUServiceInputs
             formRef={formRef}

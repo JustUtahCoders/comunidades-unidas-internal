@@ -3,6 +3,7 @@ import HomeCard from "../../home/home-card.component";
 import caseNoteUrl from "../../../icons/148705-essential-collection/svg/note.svg";
 import recordVisitUrl from "../../../icons/148705-essential-collection/svg/hourglass-2.svg";
 import filesUrl from "../../../icons/148705-essential-collection/svg/folder-19.svg";
+import invoicesUrl from "../../../icons/148705-essential-collection/svg/price-tag.svg";
 import { useCss } from "kremling";
 import { SingleClient } from "../view-client.component";
 
@@ -25,6 +26,11 @@ export default function ClientAddNewInfo(props: ClientAddNewInfoProps) {
         iconUrl={filesUrl}
         title="Add files"
         link={`/clients/${props.clientId}/files`}
+      />
+      <HomeCard
+        iconUrl={invoicesUrl}
+        title="Add Invoice / Payment"
+        link={`/clients/${props.clientId}/invoices`}
       />
     </div>
   );

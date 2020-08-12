@@ -1,6 +1,7 @@
 import React from "react";
 import { groupBy } from "lodash-es";
 import { useCss } from "kremling";
+import { CUService } from "../add-client/services.component";
 
 export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
   function IntakeServicesInputs(props, ref) {
@@ -9,7 +10,7 @@ export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
     >(props.checkedServices || []);
 
     const scope = useCss(css);
-    const groupedServices = groupBy<Service>(props.services, "programName");
+    const groupedServices = groupBy<CUService>(props.services, "programName");
 
     React.useEffect(() => {
       // @ts-ignore
@@ -93,14 +94,8 @@ export type IntakeService = {
 };
 
 type IntakeServicesInputsProps = {
-  services: Service[];
+  services: CUService[];
   checkedServices: IntakeService[];
-};
-
-type Service = {
-  id: number;
-  serviceName: string;
-  programName: string;
 };
 
 type ServicesRef = {

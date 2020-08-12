@@ -1,5 +1,5 @@
 import React from "react";
-import pinwheelUrl from "../../icons/loaders/pinwheel.gif";
+import PinwheelLoader from "./pinwheel-loader.component";
 
 export default function PageLoader() {
   return (
@@ -12,7 +12,7 @@ export default function PageLoader() {
         alignItems: "center",
       }}
     >
-      <img src={pinwheelUrl} alt="Pinwheel spinning" />
+      <PinwheelLoader />
     </div>
   );
 }

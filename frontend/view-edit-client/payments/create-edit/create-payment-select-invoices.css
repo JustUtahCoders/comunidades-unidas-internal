@@ -1,0 +1,56 @@
+.invoices {
+  margin: 3.2rem 0 3.2rem 0;
+  padding: 1.2rem;
+  border: 0.1rem solid var(--medium-gray);
+  border-radius: 0.4rem;
+}
+
+.invoices table {
+  border-spacing: 0;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.invoices table td,
+.invoices table th {
+  border-collapse: collapse;
+  padding: 0.4rem;
+  font-size: 1.4rem;
+  font-weight: normal;
+  text-align: start;
+}
+
+.invoices table td.amount {
+  text-align: center;
+}
+
+.invoices table tr:first-child td {
+  padding-top: 3.2rem;
+}
+
+.invoices table td .amount-to-pay {
+  font-weight: bold;
+  font-size: 1.6rem;
+}
+
+.container input[type="number"] {
+  width: 11rem;
+}
+
+.invoices table caption {
+  margin-bottom: 1.6rem;
+}
+
+.other-payments label {
+  display: inline-block;
+  width: 11rem;
+  font-size: 1.6rem;
+}
+
+.other-payments > * + * {
+  margin-top: 1.6rem;
+}
+
+p.invoices {
+  margin-top: 0;
+}
