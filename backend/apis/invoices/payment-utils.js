@@ -14,6 +14,8 @@ exports.formatResponsePayment = function formatResponsePayment({
     paymentDate: payment.paymentDate,
     paymentAmount: payment.paymentAmount,
     paymentType: payment.paymentType,
+    donationId: payment.donationId || null,
+    donationAmount: payment.donationAmount || null,
     createdBy: responseUser(createdBy, payment.dateAdded),
     modifiedBy: responseUser(modifiedBy, payment.dateModified),
   };

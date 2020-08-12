@@ -40,12 +40,14 @@ function getFullPaymentById(paymentId, errBack) {
       payments.id, payments.paymentDate, payments.paymentAmount, payments.paymentType,
       payments.donationId, payments.dateAdded, payments.dateModified,
       addedUser.firstName addedFirstName, addedUser.lastName addedLastName,
-      modifiedUser.firstName modifiedFirstName, modifiedUser.lastName modifiedLastName
+      modifiedUser.firstName modifiedFirstName, modifiedUser.lastName modifiedLastName,
+      donations.donationAmount donationAmount
 
       FROM payments
+      LEFT JOIN donations ON donations.id = payments.donationId
       JOIN users addedUser ON payments.addedBy = addedUser.id
       JOIN users modifiedUser ON payments.modifiedBy = modifiedUser.id
-    WHERE payments.id = ? AND payments.isDeleted = false;
+    WHERE payments.id = 13 AND payments.isDeleted = false;
 
     SELECT invoicePayments.paymentId, invoicePayments.invoiceId, invoicePayments.amount,
       invoices.status, invoices.totalCharged, invoices.invoiceNumber
@@ -65,6 +67,7 @@ function getFullPaymentById(paymentId, errBack) {
     } else {
       const [paymentResult, invoices, payerClientIds] = result;
       const [payment] = paymentResult;
+      console.log("payment", payment);
 
       return errBack(
         null,

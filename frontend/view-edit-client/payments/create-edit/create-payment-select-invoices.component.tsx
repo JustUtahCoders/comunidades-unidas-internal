@@ -13,8 +13,7 @@ export default function CreatePaymentSelectInvoices(
   const unpaidInvoices = props.invoices.filter(
     (i) => i.status === InvoiceStatus.open || i.status === InvoiceStatus.draft
   );
-  const [donationAmount, setDonationAmount] = React.useState("");
-  const [otherAmount, setOtherAmount] = React.useState("");
+  const [otherAmount, setOtherAmount] = React.useState(() => calcOtherAmount());
 
   // @ts-ignore
   const pendingInvoicePayments = intersectionBy(
@@ -111,7 +110,7 @@ export default function CreatePaymentSelectInvoices(
             step="0.01"
             placeholder="$0.00"
             id="donation-amount"
-            value={donationAmount}
+            value={props.payment.donationAmount || ""}
             onChange={updateDonationAmount}
           />
         </div>
@@ -226,7 +225,10 @@ export default function CreatePaymentSelectInvoices(
   }
 
   function updateDonationAmount(evt) {
-    setDonationAmount(evt.target.value);
+    props.setPayment({
+      ...props.payment,
+      donationAmount: evt.target.value,
+    });
   }
 
   function updateOtherAmount(evt) {
@@ -236,12 +238,35 @@ export default function CreatePaymentSelectInvoices(
   function totalPaymentAmount(
     invoicePayments: InvoiceSummary[] = props.payment.invoices
   ) {
-    const invoice = sumBy<InvoiceSummary>(invoicePayments, (p) =>
+    const invoice = totalInvoiceAmount(invoicePayments);
+    const donation = props.payment.donationAmount
+      ? Number(props.payment.donationAmount)
+      : 0;
+    const other = otherAmount ? Number(otherAmount) : 0;
+    return invoice + donation + other;
+  }
+
+  function calcOtherAmount() {
+    const donation = props.payment.donationAmount
+      ? props.payment.donationAmount
+      : 0;
+    const other =
+      props.payment.paymentAmount -
+      donation -
+      totalInvoiceAmount(props.payment.invoices);
+    if (other === 0) {
+      return "";
+    } else {
+      return other;
+    }
+  }
+
+  function totalInvoiceAmount(
+    invoicePayments: InvoiceSummary[] = props.payment.invoices
+  ) {
+    return sumBy<InvoiceSummary>(invoicePayments, (p) =>
       Number(p.amount)
     ) as number;
-    const donation = isEmpty(donationAmount) ? 0 : Number(donationAmount);
-    const other = isEmpty(otherAmount) ? 0 : Number(otherAmount);
-    return invoice + donation + other;
   }
 }
 

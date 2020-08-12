@@ -34,6 +34,9 @@ export default function CreatePayment(props: CreatePaymentProps) {
             ...i,
             amount: Number(i.amount),
           })),
+          donationAmount: payment.donationAmount
+            ? Number(payment.donationAmount)
+            : null,
         },
       })
         .then((payment) => {

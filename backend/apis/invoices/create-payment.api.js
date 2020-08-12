@@ -14,6 +14,7 @@ const {
   validEnum,
   validDate,
   validCurrency,
+  nullableValidCurrency,
 } = require("../utils/validation-utils");
 const { checkValidPaymentRequestIds } = require("./payment-utils");
 
@@ -35,7 +36,8 @@ app.post("/api/payments", (req, res) => {
     }),
     validCurrency("paymentAmount"),
     validEnum("paymentType", "cash", "credit", "debit", "check", "other"),
-    validArray("payerClientIds", validId)
+    validArray("payerClientIds", validId),
+    nullableValidCurrency("donationAmount")
   );
 
   if (validationErrors.length > 0) {
@@ -54,12 +56,31 @@ app.post("/api/payments", (req, res) => {
         return invalidRequest(res, invalidMsg);
       }
 
-      const insertSql = mysql.format(
+      let insertSql = "";
+
+      if (req.body.donationAmount) {
+        insertSql += mysql.format(
+          `
+          INSERT INTO donations
+          (donationAmount, donationDate, addedBy, modifiedBy)
+          VALUES (?, ?, ?, ?);
+
+          SET @donationId := LAST_INSERT_ID();
+        `,
+          [req.body.donationAmount, req.body.paymentDate, user.id, user.id]
+        );
+      } else {
+        insertSql += `
+          SET @donationId := NULL;
+        `;
+      }
+
+      insertSql += mysql.format(
         `
       INSERT INTO payments
-      (paymentDate, paymentAmount, paymentType, addedBy, modifiedBy)
+      (paymentDate, paymentAmount, paymentType, addedBy, modifiedBy, donationId)
       VALUES
-      (?, ?, ?, ?, ?);
+      (?, ?, ?, ?, ?, @donationId);
 
       SET @paymentId := LAST_INSERT_ID();
 

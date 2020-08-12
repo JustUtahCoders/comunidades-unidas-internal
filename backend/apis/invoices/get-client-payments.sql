@@ -3,6 +3,7 @@ SELECT
   payments.donationId, payments.dateAdded, payments.dateModified,
   addedUser.firstName addedFirstName, addedUser.lastName addedLastName,
   modifiedUser.firstName modifiedFirstName, modifiedUser.lastName modifiedLastName,
+  donations.id donationId, donations.donationAmount donationAmount,
   JSON_ARRAYAGG(JSON_OBJECT(
     'invoiceId', invoicePayments.invoiceId,
     'amount', invoicePayments.amount
@@ -18,6 +19,7 @@ SELECT
   FROM payments
   JOIN users addedUser ON payments.addedBy = addedUser.id
   JOIN users modifiedUser ON payments.modifiedBy = modifiedUser.id
+  LEFT JOIN donations ON donations.id = payments.donationId
   LEFT JOIN paymentClients ON paymentClients.paymentId = payments.id
   LEFT JOIN invoicePayments ON invoicePayments.paymentId = payments.id
   LEFT JOIN invoiceClients ON invoiceClients.invoiceId = invoicePayments.invoiceId

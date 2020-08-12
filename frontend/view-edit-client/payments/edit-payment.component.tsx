@@ -136,6 +136,8 @@ export type FullPayment = {
   payerClientIds: number[];
   createdBy?: CUObjectAudit;
   modifiedBy?: CUObjectAudit;
+  donationId?: number;
+  donationAmount?: number;
 };
 
 export type EditPaymentRef = {

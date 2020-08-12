@@ -275,6 +275,8 @@ GET /api/invoices/:invoiceId/payments
     "paymentAmount": 20,
     "paymentType": "cash|credit|debit|check|other",
     "payerClientIds": [23, 76],
+    "donationId": 4543,
+    "donationAmount": 21,
     "createdBy": {
       "userId": 123,
       "firstName": "Shigeru",
@@ -312,6 +314,7 @@ POST /api/payments
   ],
   "paymentAmount": 20,
   "paymentType": "cash|credit|debit|check|other",
+  "donationAmount": 10,
   "payerClientIds": [23, 76]
 }
 ```
@@ -339,6 +342,7 @@ PATCH /api/payments/:paymentId
   ],
   "paymentAmount": 20,
   "paymentType": "cash|credit|debit|check|other",
+  "donationAmount": 10,
   "payerClientIds": [23, 76]
 }
 ```

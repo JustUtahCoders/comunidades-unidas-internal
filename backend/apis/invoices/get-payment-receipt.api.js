@@ -122,7 +122,7 @@ app.get("/api/payments/:paymentId/receipts", (req, res) => {
         );
 
         // Payment info
-        const payerLeft = 375;
+        const payerLeft = 340;
         doc.font(palatino);
         doc.text("Paid By:", payerLeft, topLine);
         doc.text("Client ID:", payerLeft, topLine + lineHeight);
@@ -268,9 +268,10 @@ app.get("/api/payments/:paymentId/receipts", (req, res) => {
 
         const invoiceTotal = sumBy(payment.invoices, "amount");
 
-        doc.text(` $0.00`, col4Left, otherTop);
+        const donation = payment.donationAmount || 0;
+        doc.text(` $${donation.toFixed(2)}`, col4Left, otherTop);
         doc.text(
-          ` $${(payment.paymentAmount - invoiceTotal).toFixed(2)}`,
+          ` $${(payment.paymentAmount - invoiceTotal - donation).toFixed(2)}`,
           col4Left,
           otherTop + lineHeight
         );

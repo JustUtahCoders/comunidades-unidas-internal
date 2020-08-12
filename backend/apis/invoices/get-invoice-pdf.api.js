@@ -121,7 +121,7 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
         );
 
         // Payment info
-        const payerLeft = 375;
+        const payerLeft = 345;
         doc.font(palatino);
         doc.text("Bill To:", payerLeft, topLine);
         doc.text("Client ID:", payerLeft, topLine + lineHeight);
@@ -221,7 +221,7 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
         // Invoice rows
         let tableFooterLineTop;
         doc.font(palatino);
-        const invoiceTop = tableHeaderLineTop + 9;
+        const invoiceTop = tableHeaderLineTop + 15;
         if (invoice.lineItems.length === 0) {
           const top = invoiceTop + 4;
           doc.text(" (No Line Items)", col1Left, top);
@@ -257,9 +257,9 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
                 width: descriptionWidth,
               })
             );
-            top += height;
+            top += height + 15;
           });
-          tableFooterLineTop = top + 6;
+          tableFooterLineTop = top;
         }
 
         doc

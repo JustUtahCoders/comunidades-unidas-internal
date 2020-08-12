@@ -1,8 +1,0 @@
-.inputs label {
-  display: inline-block;
-  width: 18rem;
-}
-
-.inputs > * + * {
-  margin-top: 1.6rem;
-}
