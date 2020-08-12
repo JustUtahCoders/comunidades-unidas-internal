@@ -67,7 +67,6 @@ function getFullPaymentById(paymentId, errBack) {
     } else {
       const [paymentResult, invoices, payerClientIds] = result;
       const [payment] = paymentResult;
-      console.log("payment", payment);
 
       return errBack(
         null,

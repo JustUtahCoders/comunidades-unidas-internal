@@ -4,7 +4,6 @@ import { isEmpty } from "lodash-es";
 
 export default function TimeDurationInput(props: TimeDurationInputProps) {
   const scope = useCss(css);
-  console.log(props);
 
   React.useEffect(() => {
     if (
