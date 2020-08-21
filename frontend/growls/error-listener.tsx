@@ -1,5 +1,6 @@
 import { showGrowl, GrowlType } from "./growls.component";
 import { navigate } from "@reach/router";
+import { FetchError } from "../util/easy-fetch";
 
 window.addEventListener("error", function (evt: ErrorEvent) {
   showGrowl({
@@ -10,7 +11,7 @@ window.addEventListener("error", function (evt: ErrorEvent) {
   });
 
   function reportIssue() {
-    prepopulateError({
+    const errorInfo = {
       error:
         evt.error instanceof Error
           ? evt.error.message + "\n" + evt.error.stack
@@ -19,7 +20,17 @@ window.addEventListener("error", function (evt: ErrorEvent) {
       filename: evt.filename,
       lineno: evt.lineno,
       colno: evt.colno,
-    });
+      networkresponse: undefined,
+    };
+    if (evt.error instanceof FetchError && evt.error.body) {
+      // it's unlikely that this will ever throw an error but we want to ensure we don't break error reporting
+      try {
+        errorInfo.networkresponse = JSON.stringify(evt.error.body);
+      } catch (e) {
+        // do nothing
+      }
+    }
+    prepopulateError(errorInfo);
   }
 });
 
