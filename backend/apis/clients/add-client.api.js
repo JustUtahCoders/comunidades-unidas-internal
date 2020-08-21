@@ -95,7 +95,7 @@ app.post("/api/clients", (req, res, next) => {
       sometimesValidInteger("householdIncome"),
       sometimesValidInteger("householdSize"),
       nullableValidInteger("juvenileDependents"),
-      sometimesValidBoolean("isStudent"),
+      nullableValidBoolean("isStudent"),
       sometimesValidEnum("housingStatus", "renter", "homeowner", "other"),
       sometimesValidEnum(
         "clientSource",
