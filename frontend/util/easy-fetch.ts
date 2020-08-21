@@ -45,11 +45,7 @@ export default function easyFetch(url: string, opts?: any) {
           throw err;
         })
         .catch((err) => {
-          const errorObject = new FetchError(
-            `Api request to '${url}' failed with HTTP status ${response.status}`
-          );
-          errorObject.status = response.status;
-          throw errorObject;
+          throw err;
         });
     }
   });
@@ -58,7 +54,7 @@ export default function easyFetch(url: string, opts?: any) {
 // @ts-ignore
 window.debugFetch = easyFetch;
 
-class FetchError extends Error {
+export class FetchError extends Error {
   body?: string;
   status?: number;
 }
