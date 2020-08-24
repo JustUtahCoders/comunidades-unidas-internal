@@ -6,11 +6,16 @@ import { CUService } from "../../add-client/services.component";
 import easyFetch from "../../util/easy-fetch";
 import { showGrowl, GrowlType } from "../../growls/growls.component";
 import ChangeInvoiceStatus from "./change-invoice-status.component";
+import { UserModeContext, UserMode } from "../../util/user-mode.context";
+import dayjs from "dayjs";
 
 export default function ViewInvoice(props: ViewInvoiceProps) {
   const { invoice, services, client } = props;
   const maxHeight = window.innerHeight - (2 * window.innerHeight) / 10 - 140;
-  const previewUrl = `/api/invoices/${props.invoice.id}/pdfs`;
+  const { userMode } = React.useContext(UserModeContext);
+  const tagsQuery =
+    userMode === UserMode.immigration ? `?tags=immigration` : "";
+  const previewUrl = `/api/invoices/${props.invoice.id}/pdfs${tagsQuery}`;
   const [isEditing, setIsEditing] = React.useState(false);
   const [isSaving, setIsSaving] = React.useState(false);
   const editInvoiceRef = React.useRef();
@@ -27,7 +32,7 @@ export default function ViewInvoice(props: ViewInvoiceProps) {
         status: invoiceStatusRef.current.status,
       };
 
-      easyFetch(`/api/invoices/${invoice.id}`, {
+      easyFetch(`/api/invoices/${invoice.id}${tagsQuery}`, {
         method: "PATCH",
         signal: ac.signal,
         body: invoiceToSave,
@@ -49,7 +54,26 @@ export default function ViewInvoice(props: ViewInvoiceProps) {
         ac.abort();
       };
     }
-  }, [isSaving]);
+  }, [isSaving, tagsQuery]);
+
+  if (invoice.redacted) {
+    return (
+      <Modal
+        headerText={`Invoice #${invoice.invoiceNumber}`}
+        primaryText="Back"
+        primaryAction={props.close}
+        close={props.close}
+      >
+        <div>
+          Invoice #{invoice.invoiceNumber} has been redacted. It was created by{" "}
+          {invoice.createdBy.fullName} on{" "}
+          {dayjs(invoice.createdBy.timestamp).format("MMMM DD, YYYY")} and last
+          updated by {invoice.modifiedBy.fullName} on{" "}
+          {dayjs(invoice.modifiedBy.timestamp).format("MMMM DD, YYYY")}.
+        </div>
+      </Modal>
+    );
+  }
 
   return (
     <Modal

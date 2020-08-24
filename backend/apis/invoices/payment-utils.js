@@ -1,6 +1,7 @@
 const { responseUser } = require("../utils/transform-utils");
 const mysql = require("mysql");
 const { pool } = require("../../server");
+const { intersection } = require("lodash");
 
 exports.formatResponsePayment = function formatResponsePayment({
   payment,
@@ -8,14 +9,19 @@ exports.formatResponsePayment = function formatResponsePayment({
   modifiedBy,
   invoices,
   payerClientIds,
+  paymentTags,
+  redactedTags,
 }) {
+  const redact = intersection(paymentTags, redactedTags).length > 0;
+
   const result = {
     id: payment.id,
     paymentDate: payment.paymentDate,
-    paymentAmount: payment.paymentAmount,
+    paymentAmount: redact ? null : payment.paymentAmount,
     paymentType: payment.paymentType,
     donationId: payment.donationId || null,
-    donationAmount: payment.donationAmount || null,
+    donationAmount: redact ? null : payment.donationAmount || null,
+    redacted: redact,
     createdBy: responseUser(createdBy, payment.dateAdded),
     modifiedBy: responseUser(modifiedBy, payment.dateModified),
   };
@@ -24,7 +30,7 @@ exports.formatResponsePayment = function formatResponsePayment({
     result.invoices = invoices.map((i) => {
       const result = {
         invoiceId: i.invoiceId,
-        amount: i.amount,
+        amount: redact ? null : i.amount,
       };
 
       if (i.status) {
@@ -32,7 +38,7 @@ exports.formatResponsePayment = function formatResponsePayment({
       }
 
       if (i.totalCharged) {
-        result.totalCharged = i.totalCharged;
+        result.totalCharged = redact ? null : i.totalCharged;
       }
 
       if (i.invoiceNumber) {

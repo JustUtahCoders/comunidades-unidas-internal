@@ -17,6 +17,11 @@ const {
   nullableValidCurrency,
 } = require("../utils/validation-utils");
 const { checkValidPaymentRequestIds } = require("./payment-utils");
+const {
+  sanitizeTags,
+  validTagsList,
+  insertTagsQuery,
+} = require("../tags/tag.utils");
 
 app.post("/api/payments", (req, res) => {
   const user = req.session.passport.user;
@@ -43,6 +48,9 @@ app.post("/api/payments", (req, res) => {
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
   }
+
+  const tags = sanitizeTags(req.query.tags);
+  const redactedTags = validTagsList.filter((t) => !tags.includes(t));
 
   checkValidPaymentRequestIds(
     {
@@ -120,8 +128,8 @@ app.post("/api/payments", (req, res) => {
         )
         .join("\n")}
 
+      ${insertTagsQuery({ rawValue: "@paymentId" }, "payments", tags)}
       SELECT @paymentId paymentId;
-
     `,
         [
           req.body.paymentDate,
@@ -139,7 +147,7 @@ app.post("/api/payments", (req, res) => {
 
         const paymentId = result[result.length - 1][0].paymentId;
 
-        getFullPaymentById(paymentId, (err, payment) => {
+        getFullPaymentById({ paymentId, redactedTags }, (err, payment) => {
           if (err) {
             return databaseError(req, res, err);
           }
@@ -150,53 +158,3 @@ app.post("/api/payments", (req, res) => {
     }
   );
 });
-
-function checkValidIds({ invoiceIds = [], payerClientIds = [] }, errBack) {
-  if (invoiceIds.length === 0 && payerClientIds.length === 0) {
-    return errBack(null, null);
-  }
-
-  let checkExistenceSql = invoiceIds
-    .map((invoiceId) =>
-      mysql.format(
-        `
-    SELECT COUNT(*) cnt FROM invoices WHERE id = ?;
-  `,
-        [invoiceId]
-      )
-    )
-    .join("\n");
-
-  checkExistenceSql += payerClientIds
-    .map((clientId) =>
-      mysql.format(
-        `
-    SELECT COUNT(*) cnt FROM clients WHERE id = ? AND isDeleted = false;
-  `,
-        [clientId]
-      )
-    )
-    .join("\n");
-
-  pool.query(checkExistenceSql, (err, result) => {
-    if (err) {
-      return errBack(err, null);
-    } else {
-      result =
-        invoiceIds.length + payerClientIds.length > 1 ? result : [result];
-      const invalidIndex = result.findIndex((r) => r[0].cnt !== 1);
-      if (invalidIndex >= 0) {
-        const isInvoiceId = invalidIndex < invoiceIds.length;
-        const id = isInvoiceId
-          ? invoiceIds[invalidIndex]
-          : payerClientIds[invalidIndex - invoiceIds.length];
-        return errBack(
-          null,
-          `Invalid ${isInvoiceId ? "invoice" : "client"} id ${id}`
-        );
-      } else {
-        return errBack(null, null);
-      }
-    }
-  });
-}

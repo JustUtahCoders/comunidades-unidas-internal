@@ -1,22 +1,34 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
 const mysql = require("mysql");
 const { formatResponseInvoice } = require("./invoice-utils");
-const { checkValid, validId } = require("../utils/validation-utils");
+const {
+  checkValid,
+  validId,
+  nullableValidTags,
+} = require("../utils/validation-utils");
 const path = require("path");
 const fs = require("fs");
 const rawGetSql = fs.readFileSync(
   path.join(__dirname, "get-client-invoices.sql"),
   "utf-8"
 );
+const { sanitizeTags, validTagsList } = require("../tags/tag.utils");
 
 app.get("/api/clients/:clientId/invoices", (req, res) => {
   const clientId = req.params.clientId;
+  const user = req.session.passport.user;
 
-  const validationErrors = checkValid(req.params, validId("clientId"));
+  const validationErrors = [
+    ...checkValid(req.params, validId("clientId")),
+    ...checkValid(req.query, nullableValidTags("tags", user.permissions)),
+  ];
 
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
   }
+
+  const tags = sanitizeTags(req.query.tags);
+  const redactedTags = validTagsList.filter((t) => !tags.includes(t));
 
   const getSql = mysql.format(rawGetSql, [clientId]);
 
@@ -42,6 +54,10 @@ app.get("/api/clients/:clientId/invoices", (req, res) => {
           invoiceLineItems: JSON.parse(invoice.lineItems),
           invoicePayments: JSON.parse(invoice.payments),
           invoiceClients: JSON.parse(invoice.clients),
+          invoiceTags: JSON.parse(invoice.tags)
+            .map((t) => t.tag)
+            .filter(Boolean),
+          redactedTags,
         })
       ),
     });

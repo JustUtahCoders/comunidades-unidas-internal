@@ -134,6 +134,7 @@ export type FullPayment = {
   paymentAmount: number;
   paymentType: PaymentType;
   payerClientIds: number[];
+  redacted: boolean;
   createdBy?: CUObjectAudit;
   modifiedBy?: CUObjectAudit;
   donationId?: number;

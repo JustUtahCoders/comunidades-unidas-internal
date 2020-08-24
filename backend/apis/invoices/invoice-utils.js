@@ -1,4 +1,4 @@
-const { sum, uniqBy } = require("lodash");
+const { sum, uniqBy, intersection } = require("lodash");
 const {
   responseUser,
   responseDateWithoutTime,
@@ -11,7 +11,11 @@ exports.formatResponseInvoice = function formatResponseInvoice({
   invoicePayments,
   invoiceClients,
   invoiceLineItems,
+  invoiceTags,
+  redactedTags,
 }) {
+  const redact = intersection(invoiceTags, redactedTags).length > 0;
+
   invoicePayments = invoicePayments
     ? invoicePayments.filter((ip) => ip.id)
     : invoicePayments;
@@ -24,9 +28,10 @@ exports.formatResponseInvoice = function formatResponseInvoice({
     id: invoice.id,
     invoiceNumber: invoice.invoiceNumber,
     invoiceDate: responseDateWithoutTime(invoice.invoiceDate),
-    clientNote: invoice.clientNote,
-    totalCharged: invoice.totalCharged,
+    clientNote: redact ? null : invoice.clientNote,
+    totalCharged: redact ? null : invoice.totalCharged,
     status: invoice.status,
+    redacted: redact,
     createdBy: responseUser(createdByUser, invoice.dateAdded),
     modifiedBy: responseUser(modifiedByUser, invoice.dateModified),
   };
@@ -34,21 +39,25 @@ exports.formatResponseInvoice = function formatResponseInvoice({
   if (invoicePayments) {
     result.payments = uniqBy(invoicePayments, "id").map((ip) => ({
       paymentId: ip.id,
-      paymentAmount: ip.paymentAmount,
-      amountTowardsInvoice: ip.amountTowardsInvoice,
+      paymentAmount: redact ? null : ip.paymentAmount,
+      amountTowardsInvoice: redact ? null : ip.amountTowardsInvoice,
     }));
 
-    result.totalPaid = sum(invoicePayments.map((ip) => ip.paymentAmount));
+    result.totalPaid = redact
+      ? null
+      : sum(invoicePayments.map((ip) => ip.paymentAmount));
   }
 
   if (invoiceLineItems) {
-    result.lineItems = uniqBy(invoiceLineItems, "id").map((li) => ({
-      serviceId: li.serviceId,
-      name: li.name,
-      description: li.description,
-      quantity: li.quantity,
-      rate: li.rate,
-    }));
+    result.lineItems = redact
+      ? []
+      : uniqBy(invoiceLineItems, "id").map((li) => ({
+          serviceId: li.serviceId,
+          name: li.name,
+          description: li.description,
+          quantity: li.quantity,
+          rate: li.rate,
+        }));
   }
 
   if (invoiceClients) {

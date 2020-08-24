@@ -5,8 +5,8 @@ import easyFetch from "../../util/easy-fetch";
 import { SingleClient } from "../view-client.component";
 import { CUService } from "../../add-client/services.component";
 import { showGrowl, GrowlType } from "../../growls/growls.component";
-import { noop } from "lodash-es";
 import ChangeInvoiceStatus from "./change-invoice-status.component";
+import { UserModeContext, UserMode } from "../../util/user-mode.context";
 import ViewInvoice from "./view-invoice.component";
 
 export default function CreateInvoice(props: CreateInvoiceProps) {
@@ -16,30 +16,33 @@ export default function CreateInvoice(props: CreateInvoiceProps) {
   );
   const editInvoiceRef = React.useRef();
   const invoiceStatusRef = React.useRef();
+  const { userMode } = React.useContext(UserModeContext);
+  const tagsQuery =
+    userMode === UserMode.immigration ? `?tags=immigration` : "";
 
   React.useEffect(() => {
     const ac = new AbortController();
 
-    easyFetch(`/api/invoices`, { method: "POST", signal: ac.signal }).then(
-      setInvoice,
-      (err) => {
-        setTimeout(() => {
-          throw err;
-        });
-      }
-    );
+    easyFetch(`/api/invoices${tagsQuery}`, {
+      method: "POST",
+      signal: ac.signal,
+    }).then(setInvoice, (err) => {
+      setTimeout(() => {
+        throw err;
+      });
+    });
 
     return () => {
       ac.abort();
     };
-  }, []);
+  }, [tagsQuery]);
 
   React.useEffect(() => {
     if (saveStatus === SaveStatus.shouldSave) {
       setSaveStatus(SaveStatus.saving);
 
       const ac = new AbortController();
-      easyFetch(`/api/invoices/${invoice.id}`, {
+      easyFetch(`/api/invoices/${invoice.id}${tagsQuery}`, {
         method: "PATCH",
         body: {
           // @ts-ignore
@@ -63,7 +66,7 @@ export default function CreateInvoice(props: CreateInvoiceProps) {
 
       return () => ac.abort();
     }
-  }, [saveStatus]);
+  }, [saveStatus, tagsQuery]);
 
   if (saveStatus === SaveStatus.saved) {
     return (

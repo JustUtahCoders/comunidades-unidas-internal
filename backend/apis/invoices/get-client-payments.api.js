@@ -1,22 +1,38 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
 const mysql = require("mysql");
-const { checkValid, validId } = require("../utils/validation-utils");
+const {
+  checkValid,
+  validId,
+  nullableValidTags,
+} = require("../utils/validation-utils");
 const { formatResponsePayment } = require("./payment-utils");
 const fs = require("fs");
 const path = require("path");
+const {
+  sanitizeTags,
+  validTagsList,
+  insertTagsQuery,
+} = require("../tags/tag.utils");
 
 const rawGetSql = fs.readFileSync(
   path.join(__dirname, "./get-client-payments.sql")
 );
 
 app.get("/api/clients/:clientId/payments", (req, res) => {
+  const user = req.session.passport.user;
   const clientId = req.params.clientId;
 
-  const validationErrors = checkValid(req.params, validId("clientId"));
+  const validationErrors = [
+    ...checkValid(req.params, validId("clientId")),
+    ...checkValid(req.query, nullableValidTags("tags", user.permissions)),
+  ];
 
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
   }
+
+  const tags = sanitizeTags(req.query.tags);
+  const redactedTags = validTagsList.filter((t) => !tags.includes(t));
 
   const getSql = mysql.format(rawGetSql, [clientId, clientId]);
 
@@ -40,6 +56,10 @@ app.get("/api/clients/:clientId/payments", (req, res) => {
             firstName: payment.modifiedFirstName,
             lastName: payment.modifiedLastName,
           },
+          paymentTags: JSON.parse(payment.paymentTags)
+            .map((t) => t.tag)
+            .filter(Boolean),
+          redactedTags,
         })
       ),
     });

@@ -12,6 +12,7 @@ import easyFetch from "../../util/easy-fetch";
 import { showGrowl, GrowlType } from "../../growls/growls.component";
 import dayjs from "dayjs";
 import ViewPayment from "./view-payment.component";
+import { UserModeContext, UserMode } from "../../util/user-mode.context";
 
 export default function CreatePayment(props: CreatePaymentProps) {
   const [payment, setPayment] = React.useState<FullPayment>(
@@ -20,11 +21,14 @@ export default function CreatePayment(props: CreatePaymentProps) {
   const [step, setStep] = React.useState<Step>(Step.checkInvoices);
   const StepComponent = StepComponents[step];
   const [isCreating, setIsCreating] = React.useState(false);
+  const { userMode } = React.useContext(UserModeContext);
+  const tagsQuery =
+    userMode === UserMode.immigration ? `?tags=immigration` : "";
 
   React.useEffect(() => {
     if (isCreating) {
       const ac = new AbortController();
-      easyFetch(`/api/payments`, {
+      easyFetch(`/api/payments${tagsQuery}`, {
         method: "POST",
         signal: ac.signal,
         body: {
@@ -59,7 +63,7 @@ export default function CreatePayment(props: CreatePaymentProps) {
         ac.abort();
       };
     }
-  }, [isCreating]);
+  }, [isCreating, tagsQuery]);
 
   if (step === Step.viewPayment) {
     return (
@@ -168,6 +172,7 @@ function emptyPayment(initialClientId: number): FullPayment {
     paymentAmount: 0,
     paymentType: PaymentType.credit,
     payerClientIds: [initialClientId],
+    redacted: false,
   };
 }
 

@@ -27,7 +27,11 @@ SELECT
   )) payments,
   JSON_ARRAYAGG(JSON_OBJECT(
     'clientId', invoiceClients.clientId
-  )) clients
+  )) clients,
+  JSON_ARRAYAGG(JSON_OBJECT(
+    'id', t.id,
+    'tag', t.tag
+  )) tags
 
   FROM invoices
   JOIN invoiceClients ON invoiceClients.invoiceId = invoices.id
@@ -36,7 +40,8 @@ SELECT
   LEFT JOIN invoiceLineItems li ON invoices.id = li.invoiceId
   LEFT JOIN invoicePayments ip ON invoices.id = ip.invoiceId
   LEFT JOIN payments p ON p.id = ip.paymentId
+  LEFT JOIN tags t ON t.foreignId = invoices.id
 WHERE
-  invoiceClients.clientId = ?
+  invoiceClients.clientId = ? AND (t.foreignTable = "invoices" OR t.foreignId IS NULL)
 GROUP BY invoices.id
 ;

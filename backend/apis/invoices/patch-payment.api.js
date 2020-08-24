@@ -5,6 +5,7 @@ const {
   invalidRequest,
   internalError,
   notFound,
+  insufficientPrivileges,
 } = require("../../server");
 const mysql = require("mysql");
 const { getFullPaymentById } = require("./get-payment.api");
@@ -16,9 +17,15 @@ const {
   nullableValidDate,
   validCurrency,
   nullableValidCurrency,
+  nullableValidTags,
 } = require("../utils/validation-utils");
 const { checkValidPaymentRequestIds } = require("./payment-utils");
 const { sumBy } = require("lodash");
+const {
+  sanitizeTags,
+  validTagsList,
+  insertTagsQuery,
+} = require("../tags/tag.utils");
 
 app.patch("/api/payments/:paymentId", (req, res) => {
   const user = req.session.passport.user;
@@ -49,6 +56,7 @@ app.patch("/api/payments/:paymentId", (req, res) => {
       ),
       nullableValidArray("payerClientIds", validId)
     ),
+    ...checkValid(req.query, nullableValidTags("tags", user.permissions)),
   ];
 
   const paymentId = req.params.paymentId;
@@ -56,6 +64,9 @@ app.patch("/api/payments/:paymentId", (req, res) => {
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
   }
+
+  const tags = sanitizeTags(req.query.tags);
+  const redactedTags = validTagsList.filter((t) => !tags.includes(t));
 
   checkValidPaymentRequestIds(
     {
@@ -69,21 +80,29 @@ app.patch("/api/payments/:paymentId", (req, res) => {
         return invalidRequest(res, invalidMsg);
       }
 
-      getFullPaymentById(paymentId, (err, oldPayment) => {
+      getFullPaymentById({ paymentId, redactedTags }, (err, oldPayment) => {
         if (err) {
           return databaseError(req, res, err);
         } else if (oldPayment === 404) {
           return notFound(res, `No such payment with id ${paymentId}`);
+        } else if (oldPayment.redacted) {
+          return insufficientPrivileges(
+            res,
+            `Payment ${paymentId} is redacted`
+          );
         }
 
         const newPayment = Object.assign({}, oldPayment, req.body);
 
         const invoiceAmount = sumBy(newPayment.invoices, "amount");
 
-        if (invoiceAmount !== newPayment.paymentAmount) {
+        if (
+          invoiceAmount + newPayment.donationAmount >
+          newPayment.paymentAmount
+        ) {
           return invalidRequest(
             res,
-            `Invoice payment amounts must total to payment amount. Invoice amount: ${invoiceAmount}, Total amount: ${newPayment.paymentAmount}`
+            `Invoice and donation amount exceed the total payment amount`
           );
         }
 
@@ -154,12 +173,14 @@ app.patch("/api/payments/:paymentId", (req, res) => {
             .join("\n");
         }
 
+        insertSql += insertTagsQuery(paymentId, "payments", tags);
+
         pool.query(insertSql, (err, result) => {
           if (err) {
             return databaseError(req, res, err);
           }
 
-          getFullPaymentById(paymentId, (err, payment) => {
+          getFullPaymentById({ paymentId, redactedTags }, (err, payment) => {
             if (err) {
               return databaseError(req, res, err);
             }

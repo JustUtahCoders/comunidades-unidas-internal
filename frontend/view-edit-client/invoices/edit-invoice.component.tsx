@@ -399,4 +399,5 @@ export type FullInvoice = {
   lineItems: LineItem[];
   payments: Array<InvoicePayment>;
   clients: Array<number>;
+  redacted: boolean;
 };

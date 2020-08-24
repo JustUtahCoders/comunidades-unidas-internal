@@ -11,7 +11,9 @@ export default function CreatePaymentSelectInvoices(
   props: CreatePaymentStepProps
 ) {
   const unpaidInvoices = props.invoices.filter(
-    (i) => i.status === InvoiceStatus.open || i.status === InvoiceStatus.draft
+    (i) =>
+      (i.status === InvoiceStatus.open || i.status === InvoiceStatus.draft) &&
+      !i.redacted
   );
   const [otherAmount, setOtherAmount] = React.useState(() => calcOtherAmount());
 
@@ -77,9 +79,9 @@ export default function CreatePaymentSelectInvoices(
                       <td>${invoice.totalCharged.toFixed(2)}</td>
                       <td>
                         $
-                        {sumBy(
-                          invoice.payments,
-                          "amountTowardsInvoice"
+                        {(
+                          invoice.totalCharged -
+                          sumBy(invoice.payments, "amountTowardsInvoice")
                         ).toFixed(2)}
                       </td>
                       <td>
