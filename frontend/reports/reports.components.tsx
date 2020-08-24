@@ -20,6 +20,8 @@ import AgesAndGendersParams from "./ages-and-genders/ages-and-genders-params.com
 import AgesAndGendersResults from "./ages-and-genders/ages-and-genders-results.components";
 import ServiceInterestsParams from "./service-interests/service-interests-params.component";
 import ServiceInterestsResults from "./service-interests/service-interests-results.component";
+import OutstandingInvoicesParams from "./outstanding-invoices/outstanding-invoices-params.component";
+import OutstandingInvoicesResults from "./outstanding-invoices/outstanding-invoices-results.component";
 
 export default function Reports(props: ReportsProps) {
   useFullWidth();
@@ -74,6 +76,11 @@ export default function Reports(props: ReportsProps) {
               title="Ages and Genders"
             />
             <AgesAndGendersResults path="ages-and-genders/results" />
+            <OutstandingInvoicesParams
+              path="outstanding-invoices"
+              title="Outstanding Invoices"
+            />
+            <OutstandingInvoicesResults path="outstanding-invoices/results" />
           </Router>
         </SelectReport>
       </div>
