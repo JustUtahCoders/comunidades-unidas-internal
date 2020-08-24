@@ -144,7 +144,9 @@ export default function InteractionHoursByClientResults(props) {
                 return (
                   <tr key={invoice.id}>
                     <td>
-                      <Link to={`/clients/${firstClient.clientId}/invoices`}>
+                      <Link
+                        to={`/clients/${firstClient.clientId}/invoices?invoice=${invoice.id}`}
+                      >
                         {invoice.invoiceNumber}
                       </Link>
                     </td>
