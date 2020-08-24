@@ -7,67 +7,61 @@ const {
 } = require("../../server");
 const mysql = require("mysql");
 const { formatResponseInvoice } = require("./invoice-utils");
-const { checkValid, validId } = require("../utils/validation-utils");
+const {
+  checkValid,
+  validId,
+  nullableValidTags,
+} = require("../utils/validation-utils");
+const fs = require("fs");
+const path = require("path");
+const { validTagsList, sanitizeTags } = require("../tags/tag.utils");
+
+const getInvoiceSqlStr = fs.readFileSync(
+  path.resolve(__dirname, "./get-invoice.sql")
+);
 
 app.get("/api/invoices/:invoiceId", (req, res) => {
   const user = req.session.passport.user;
 
-  const validationErrors = checkValid(req.params, validId("invoiceId"));
+  const validationErrors = [
+    ...checkValid(req.params, validId("invoiceId")),
+    ...checkValid(req.query, nullableValidTags("tags", user.permissions)),
+  ];
 
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
   }
 
-  getFullInvoiceById(req.params.invoiceId, (err, invoice) => {
-    if (err) {
-      return databaseError(req, res, err);
-    }
+  const tags = sanitizeTags(req.query.tags);
+  const redactedTags = validTagsList.filter((t) => !tags.includes(t));
 
-    if (invoice === 404) {
-      return notFound(res, `No such invoice with id '${req.params.invoiceId}'`);
-    }
+  getFullInvoiceById(
+    { id: req.params.invoiceId, user, redactedTags },
+    (err, invoice) => {
+      if (err) {
+        return databaseError(req, res, err);
+      }
 
-    res.send(invoice);
-  });
+      if (invoice === 404) {
+        return notFound(
+          res,
+          `No such invoice with id '${req.params.invoiceId}'`
+        );
+      }
+
+      res.send(invoice);
+    }
+  );
 });
 
 exports.getFullInvoiceById = getFullInvoiceById;
 
-function getFullInvoiceById(id, errBack) {
+function getFullInvoiceById({ id, redactedTags }, errBack) {
   if (!id) {
     errBack(`invoice id must be provided`, id);
   }
 
-  const getInvoiceSql = mysql.format(
-    `
-    SELECT
-      invoices.id, invoices.invoiceNumber, invoices.invoiceDate, invoices.clientNote,
-      invoices.totalCharged, invoices.status, invoices.dateAdded, invoices.addedBy,
-      invoices.dateModified, invoices.modifiedBy, addedUser.id addedUserId,
-      addedUser.firstName addedFirstName, addedUser.lastName addedLastName,
-      modifiedUser.id modifiedUserId, modifiedUser.firstName modifiedUserFirstName,
-      modifiedUser.lastName modifiedUserLastName
-
-      FROM invoices
-      JOIN users addedUser ON invoices.addedBy = addedUser.id
-      JOIN users modifiedUser ON invoices.modifiedBy = modifiedUser.id
-    WHERE invoices.id = ?;
-
-    SELECT * FROM invoiceLineItems WHERE invoiceId = ?;
-
-    SELECT * FROM invoiceClients WHERE invoiceId = ?;
-
-    SELECT
-      payments.id, payments.paymentDate, payments.paymentAmount, payments.paymentType,
-      payments.donationId, payments.dateAdded, payments.addedBy, payments.dateModified,
-      payments.modifiedBy, invoicePayments.amount amountTowardsInvoice
-    FROM payments
-    JOIN invoicePayments ON invoicePayments.paymentId = payments.id
-    JOIN invoices ON invoices.id = invoicePayments.invoiceId
-    WHERE invoices.id = ?
-  `,
-    [id, id, id, id]
-  );
+  const getInvoiceSql = mysql.format(getInvoiceSqlStr, [id, id, id, id, id]);
 
   pool.query(getInvoiceSql, (err, result) => {
     if (err) {
@@ -79,6 +73,7 @@ function getFullInvoiceById(id, errBack) {
       invoiceLineItems,
       invoiceClients,
       invoicePayments,
+      invoiceTags,
     ] = result;
     const invoice = invoiceResult[0];
 
@@ -103,6 +98,8 @@ function getFullInvoiceById(id, errBack) {
         invoicePayments,
         invoiceClients,
         invoiceLineItems,
+        invoiceTags: invoiceTags.map((t) => t.tag).filter(Boolean),
+        redactedTags,
       })
     );
   });

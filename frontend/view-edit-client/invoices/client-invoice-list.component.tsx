@@ -6,6 +6,7 @@ import { FullInvoice } from "./edit-invoice.component";
 import { CUService } from "../../add-client/services.component";
 import { statusColor } from "./change-invoice-status.component";
 import ViewInvoice from "./view-invoice.component";
+import { InvoiceStatus } from "./client-invoices.component";
 
 export default function ClientInvoiceList(props: ClientInvoiceListProps) {
   return (
@@ -32,7 +33,13 @@ export default function ClientInvoiceList(props: ClientInvoiceListProps) {
 }
 
 function amount(invoice: FullInvoice) {
-  return <>${invoice.totalCharged.toFixed(2)}</>;
+  if (invoice.status === InvoiceStatus.draft) {
+    return <>$0.00</>;
+  } else if (invoice.redacted) {
+    return <>(Redacted)</>;
+  } else {
+    return <>${invoice.totalCharged.toFixed(2)}</>;
+  }
 }
 
 function status(invoice: FullInvoice) {

@@ -12,14 +12,18 @@ import { FullInvoice } from "./edit-invoice.component";
 import CreatePayment from "../payments/create-payment.component";
 import ClientPaymentsList from "../payments/client-payments-list.component";
 import { FullPayment } from "../payments/edit-payment.component";
+import { UserModeContext, UserMode } from "../../util/user-mode.context";
 
 export default function ClientInvoices(props: ClientInvoicesProps) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
+  const { userMode } = React.useContext(UserModeContext);
+  const tagsQuery =
+    userMode === UserMode.immigration ? `?tags=immigration` : "";
 
   React.useEffect(() => {
     if (state.invoiceStatus === ApiStatus.shouldLoad) {
       const ac = new AbortController();
-      easyFetch(`/api/clients/${props.clientId}/invoices`, {
+      easyFetch(`/api/clients/${props.clientId}/invoices${tagsQuery}`, {
         signal: ac.signal,
       }).then(
         (data) => {
@@ -42,12 +46,12 @@ export default function ClientInvoices(props: ClientInvoicesProps) {
         ac.abort();
       };
     }
-  }, [state.invoiceStatus]);
+  }, [state.invoiceStatus, tagsQuery]);
 
   React.useEffect(() => {
     if (state.paymentStatus === ApiStatus.shouldLoad) {
       const ac = new AbortController();
-      easyFetch(`/api/clients/${props.clientId}/payments`, {
+      easyFetch(`/api/clients/${props.clientId}/payments${tagsQuery}`, {
         signal: ac.signal,
       }).then(
         (data) => {
@@ -70,7 +74,7 @@ export default function ClientInvoices(props: ClientInvoicesProps) {
         ac.abort();
       };
     }
-  }, [state.paymentStatus]);
+  }, [state.paymentStatus, tagsQuery]);
 
   React.useEffect(() => {
     const ac = new AbortController();
@@ -84,6 +88,12 @@ export default function ClientInvoices(props: ClientInvoicesProps) {
       }
     );
   }, []);
+
+  React.useEffect(() => {
+    dispatch({
+      type: ActionTypes.userModeChanged,
+    });
+  }, [userMode]);
 
   return (
     <div {...useCss(css)}>
@@ -259,6 +269,12 @@ function reducer(state: State, action: Action): State {
         paymentStatus: ApiStatus.shouldLoad,
         invoiceStatus: ApiStatus.shouldLoad,
       };
+    case ActionTypes.userModeChanged:
+      return {
+        ...state,
+        paymentStatus: ApiStatus.shouldLoad,
+        invoiceStatus: ApiStatus.shouldLoad,
+      };
     default:
       throw Error();
   }
@@ -283,6 +299,7 @@ enum ActionTypes {
   fetchPayments = "fetchPayments",
   createPayment = "createPayment",
   cancelCreatePayment = "cancelCreatePayment",
+  userModeChanged = "userModeChanged",
 }
 
 type NewInvoices = {
@@ -332,6 +349,10 @@ type FetchPayments = {
   type: ActionTypes.fetchPayments;
 };
 
+type UserModeChanged = {
+  type: ActionTypes.userModeChanged;
+};
+
 type Action =
   | NewInvoices
   | InvoiceError
@@ -343,7 +364,8 @@ type Action =
   | CancelCreatePayment
   | SetServices
   | FetchInvoices
-  | FetchPayments;
+  | FetchPayments
+  | UserModeChanged;
 
 enum ApiStatus {
   shouldLoad = "shouldLoad",

@@ -5,7 +5,11 @@ const {
   invalidRequest,
   notFound,
 } = require("../../server");
-const { checkValid, validId } = require("../utils/validation-utils");
+const {
+  checkValid,
+  validId,
+  nullableValidTags,
+} = require("../utils/validation-utils");
 const PDFDocument = require("pdfkit");
 const { getFullPaymentById } = require("./get-payment.api");
 const path = require("path");
@@ -17,19 +21,34 @@ const { capitalize, sumBy } = require("lodash");
 const pageWidth = 595;
 const palatino = path.resolve(__dirname, "./fonts/Palatino.ttf");
 const palatinoBold = path.resolve(__dirname, "./fonts/Palatino-Bold.otf");
+const {
+  sanitizeTags,
+  validTagsList,
+  insertTagsQuery,
+} = require("../tags/tag.utils");
 
 app.get("/api/payments/:paymentId/receipts", (req, res) => {
-  const validationErrors = checkValid(req.params, validId("paymentId"));
+  const user = req.session.passport.user;
+  const validationErrors = [
+    ...checkValid(req.params, validId("paymentId")),
+    ...checkValid(req.query, nullableValidTags("tags", user.permissions)),
+  ];
 
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
   }
 
-  getFullPaymentById(req.params.paymentId, (err, payment) => {
+  const paymentId = req.params.paymentId;
+  const tags = sanitizeTags(req.query.tags);
+  const redactedTags = validTagsList.filter((t) => !tags.includes(t));
+
+  getFullPaymentById({ paymentId, redactedTags }, (err, payment) => {
     if (err) {
       return databaseError(req, res, err);
     } else if (payment === 404) {
       return notFound(res, `No payment found with id ${req.params.paymentId}`);
+    } else if (payment.redacted) {
+      return invalidRequest(res, `Payment is redacted`);
     } else {
       const clientErrBack = (err, client) => {
         if (err) {

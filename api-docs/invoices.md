@@ -5,7 +5,7 @@
 ### Request
 
 ```
-GET /api/invoices/:invoiceId
+GET /api/invoices/:invoiceId?tags=immigration
 ```
 
 ### Response
@@ -36,6 +36,7 @@ GET /api/invoices/:invoiceId
     }
   ],
   "clients": [45, 23],
+  "redacted": false,
   "createdBy": {
     "userId": 123,
     "firstName": "Shigeru",
@@ -60,7 +61,7 @@ Returns a list of abbreviated invoices
 ### Request
 
 ```
-GET /api/clients/:clientId/invoices
+GET /api/clients/:clientId/invoices?tags=immigration
 ```
 
 ### Response
@@ -92,6 +93,7 @@ GET /api/clients/:clientId/invoices
       }
     ],
     "clients": [45, 23],
+    "redacted": false,
     "createdBy": {
       "userId": 123,
       "firstName": "Shigeru",
@@ -115,7 +117,7 @@ GET /api/clients/:clientId/invoices
 ### Request
 
 ```
-POST /api/invoices
+POST /api/invoices?tags=immigration
 ```
 
 (no request body)
@@ -134,6 +136,7 @@ POST /api/invoices
   "status": "draft",
   "payments": [],
   "clients": [],
+  "redacted": false,
   "createdBy": {
     "userId": 123,
     "firstName": "Shigeru",
@@ -158,7 +161,7 @@ POST /api/invoices
 Any of the following properties may be updated. When updating a property that is an array, the full array must be provided (no partial updates to the array).
 
 ```
-PATCH /api/invoices/:invoiceId
+PATCH /api/invoices/:invoiceId?tags=immigration
 ```
 
 ```json
@@ -196,7 +199,7 @@ The response is the same as a subsequent GET to the invoice
 ### Request
 
 ```
-GET /api/invoices/:invoiceId/pdfs
+GET /api/invoices/:invoiceId/pdfs?tags=immigration
 ```
 
 ### Response
@@ -210,7 +213,7 @@ HTTP 200 with pdf as response body. The content-type and content-disposition hea
 ### Request
 
 ```
-GET /api/clients/:clientId/payments
+GET /api/clients/:clientId/payments?tags=immigration
 ```
 
 ### Response
@@ -233,6 +236,7 @@ GET /api/clients/:clientId/payments
     "paymentAmount": 20,
     "paymentType": "cash|credit|debit|check|other",
     "payerClientIds": [23, 76],
+    "redacted": false,
     "createdBy": {
       "userId": 123,
       "firstName": "Shigeru",
@@ -256,7 +260,7 @@ GET /api/clients/:clientId/payments
 ### Request
 
 ```
-GET /api/invoices/:invoiceId/payments
+GET /api/invoices/:invoiceId/payments?tags=immigration
 ```
 
 ### Response
@@ -277,6 +281,7 @@ GET /api/invoices/:invoiceId/payments
     "payerClientIds": [23, 76],
     "donationId": 4543,
     "donationAmount": 21,
+    "redacted": false,
     "createdBy": {
       "userId": 123,
       "firstName": "Shigeru",
@@ -300,7 +305,7 @@ GET /api/invoices/:invoiceId/payments
 ### Request
 
 ```
-POST /api/payments
+POST /api/payments?tags=immigration
 ```
 
 ```json
@@ -328,7 +333,7 @@ The response is the same as a subsequent GET
 ### Request
 
 ```
-PATCH /api/payments/:paymentId
+PATCH /api/payments/:paymentId?tags=immigration
 ```
 
 ```json
@@ -366,7 +371,7 @@ HTTP 204 No Content
 ### Request
 
 ```
-GET /api/payments/:paymentId/receipts
+GET /api/payments/:paymentId/receipts?tags=immigration
 ```
 
 ### Response

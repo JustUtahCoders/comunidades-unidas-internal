@@ -20,9 +20,7 @@ function ClientPaymentsList(props: ClientPaymentsListProps) {
             </>
           }
           bottomContent={
-            <div style={{ fontSize: "1.8rem" }}>
-              ${payment.paymentAmount.toFixed(2)}
-            </div>
+            <div style={{ fontSize: "1.8rem" }}>{paymentAmount(payment)}</div>
           }
           renderPreview={({ close }) => (
             <ViewPayment
@@ -37,6 +35,14 @@ function ClientPaymentsList(props: ClientPaymentsListProps) {
       ))}
     </>
   );
+
+  function paymentAmount(payment: FullPayment) {
+    if (payment.redacted) {
+      return "(Redacted)";
+    } else {
+      return `$${payment.paymentAmount.toFixed(2)}`;
+    }
+  }
 }
 
 type ClientPaymentsListProps = {

@@ -5,6 +5,7 @@ const {
   invalidRequest,
   notFound,
   internalError,
+  insufficientPrivileges,
 } = require("../../server");
 const mysql = require("mysql");
 const { getFullInvoiceById } = require("./get-invoice.api");
@@ -19,8 +20,14 @@ const {
   nullableValidArray,
   validInteger,
   nullableValidDate,
+  nullableValidTags,
 } = require("../utils/validation-utils");
 const { uniq, uniqBy } = require("lodash");
+const {
+  sanitizeTags,
+  validTagsList,
+  insertTagsQuery,
+} = require("../tags/tag.utils");
 
 app.patch("/api/invoices/:invoiceId", (req, res) => {
   const user = req.session.passport.user;
@@ -49,6 +56,7 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
       //   };
       // })
     ),
+    ...checkValid(req.query, nullableValidTags("tags", user.permissions)),
     Object.keys(req.body).length === 0 &&
       `Must provide request body with properties to update`,
     req.body.status === null && `Status must not be null`,
@@ -57,6 +65,9 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
   }
+
+  const tags = sanitizeTags(req.query.tags);
+  const redactedTags = validTagsList.filter((t) => !tags.includes(t));
 
   if (
     req.body.clients &&
@@ -71,13 +82,17 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
   let { invoiceId } = req.params;
   invoiceId = Number(invoiceId);
 
-  getFullInvoiceById(invoiceId, (err, oldInvoice) => {
+  getFullInvoiceById({ id: invoiceId }, (err, oldInvoice) => {
     if (err) {
       return databaseError(req, res, err);
     }
 
     if (oldInvoice === 404) {
       return notFound(res, `No such invoice with id ${invoiceId}`);
+    }
+
+    if (oldInvoice.redacted) {
+      return insufficientPrivileges(res, `Invoice ${invoiceId} is redacted`);
     }
 
     const newInvoice = Object.assign({}, oldInvoice, req.body);
@@ -160,6 +175,10 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
       );
     }
 
+    if (tags.length > 0) {
+      updateSql += insertTagsQuery(invoiceId, "invoices", tags);
+    }
+
     pool.query(updateSql, (err, updateResult) => {
       if (err) {
         if (err.code === "ER_DUP_ENTRY") {
@@ -179,21 +198,24 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
         }
       }
 
-      return getFullInvoiceById(invoiceId, (err, responseInvoice) => {
-        if (err) {
-          return databaseError(req, res, err);
-        }
+      return getFullInvoiceById(
+        { id: invoiceId, redactedTags },
+        (err, responseInvoice) => {
+          if (err) {
+            return databaseError(req, res, err);
+          }
 
-        if (responseInvoice === 404) {
-          return internalError(
-            req,
-            res,
-            `Could not retrieve invoice after updating it`
-          );
-        }
+          if (responseInvoice === 404) {
+            return internalError(
+              req,
+              res,
+              `Could not retrieve invoice after updating it`
+            );
+          }
 
-        res.send(responseInvoice);
-      });
+          res.send(responseInvoice);
+        }
+      );
     });
   });
 });
