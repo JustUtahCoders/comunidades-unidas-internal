@@ -3,7 +3,9 @@ import css from "./chip.css";
 import { useCss } from "kremling";
 
 export default function Chip(props: ChipProps) {
-  const [isPreviewing, setIsPreviewing] = React.useState(false);
+  const [isPreviewing, setIsPreviewing] = React.useState<boolean>(
+    props.startPreviewing
+  );
 
   React.useEffect(() => {
     window.addEventListener("cu-chip:close-preview", () => {
@@ -27,7 +29,9 @@ export default function Chip(props: ChipProps) {
       </div>
       {isPreviewing &&
         props.renderPreview({
-          close: () => setIsPreviewing(false),
+          close: () => {
+            setIsPreviewing(false);
+          },
         })}
     </>
   );
@@ -38,6 +42,7 @@ type ChipProps = {
   bottomContent: React.ReactElement | React.ReactElement[];
   renderPreview(RenderPreviewProps): React.ReactElement | React.ReactElement[];
   bottomStyles?: object;
+  startPreviewing?: boolean;
 };
 
 type RenderPreviewProps = {

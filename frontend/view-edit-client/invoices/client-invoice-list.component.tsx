@@ -7,27 +7,40 @@ import { CUService } from "../../add-client/services.component";
 import { statusColor } from "./change-invoice-status.component";
 import ViewInvoice from "./view-invoice.component";
 import { InvoiceStatus } from "./client-invoices.component";
+import queryString, { stringify, stringifyUrl } from "query-string";
 
 export default function ClientInvoiceList(props: ClientInvoiceListProps) {
+  const query = queryString.parse(window.location.search);
+  const [initialInvoicePreview, setInitialInvoicePreview] = React.useState<
+    String
+  >(query.invoice as string);
+
   return (
     <>
-      {props.invoices.map((invoice) => (
-        <Chip
-          key={invoice.id}
-          topContent={status(invoice)}
-          bottomContent={amount(invoice)}
-          bottomStyles={{ fontSize: "1.8rem" }}
-          renderPreview={({ close }) => (
-            <ViewInvoice
-              invoice={invoice}
-              services={props.services}
-              client={props.client}
-              close={close}
-              refetchInvoices={props.refetchInvoices}
-            />
-          )}
-        />
-      ))}
+      {props.invoices.map((invoice) => {
+        const startPreviewing = String(invoice.id) === initialInvoicePreview;
+        return (
+          <Chip
+            key={invoice.id}
+            topContent={status(invoice)}
+            bottomContent={amount(invoice)}
+            bottomStyles={{ fontSize: "1.8rem" }}
+            startPreviewing={startPreviewing}
+            renderPreview={({ close }) => (
+              <ViewInvoice
+                invoice={invoice}
+                services={props.services}
+                client={props.client}
+                close={() => {
+                  setInitialInvoicePreview(null);
+                  close();
+                }}
+                refetchInvoices={props.refetchInvoices}
+              />
+            )}
+          />
+        );
+      })}
     </>
   );
 }
