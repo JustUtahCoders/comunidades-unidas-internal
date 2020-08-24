@@ -3,7 +3,9 @@ import css from "./chip.css";
 import { useCss } from "kremling";
 
 export default function Chip(props: ChipProps) {
-  const [isPreviewing, setIsPreviewing] = React.useState<boolean>(false);
+  const [isPreviewing, setIsPreviewing] = React.useState<boolean>(
+    props.startPreviewing
+  );
 
   React.useEffect(() => {
     window.addEventListener("cu-chip:close-preview", () => {
