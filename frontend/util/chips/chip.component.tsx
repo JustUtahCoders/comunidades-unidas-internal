@@ -6,12 +6,6 @@ export default function Chip(props: ChipProps) {
   const [isPreviewing, setIsPreviewing] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    if (props.startPreviewing) {
-      setIsPreviewing(true);
-    }
-  }, []);
-
-  React.useEffect(() => {
     window.addEventListener("cu-chip:close-preview", () => {
       setIsPreviewing(false);
     });
