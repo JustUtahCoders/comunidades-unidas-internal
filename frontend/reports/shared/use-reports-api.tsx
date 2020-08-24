@@ -1,10 +1,11 @@
 import React from "react";
 import easyFetch from "../../util/easy-fetch";
 
-export function useReportsApi(url: string) {
+export function useReportsApi(url: string, extraQuery: string = "") {
   const [afterFirstMount, setAfterFirstMount] = React.useState(false);
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  const fullUrl = url + window.location.search;
+  const extraQueryPrefix = window.location.search.length > 1 ? "&" : "?";
+  const fullUrl = url + window.location.search + extraQueryPrefix + extraQuery;
 
   React.useEffect(() => {
     setAfterFirstMount(true);
