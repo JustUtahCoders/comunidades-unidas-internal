@@ -154,7 +154,7 @@ function _validArray(propertyName, itemValidator, nullable) {
       });
       if (validationErrorIndex >= 0) {
         return `Property ${propertyName} is an array with an invalid item: ${JSON.stringify(
-          itemValidator(validationErrorIndex)(val[validationErrorIndex])
+          itemValidator(validationErrorIndex)(val)
         )} - ${JSON.stringify(val[validationErrorIndex])}`;
       } else {
         return null;

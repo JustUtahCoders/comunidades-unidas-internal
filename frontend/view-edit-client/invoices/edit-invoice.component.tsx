@@ -251,7 +251,9 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
   }
 
   function getInvoiceToSave() {
-    const lineItems = modifiedInvoice.lineItems.concat(newLineItems);
+    const lineItems = modifiedInvoice.lineItems
+      .concat(newLineItems)
+      .map((li) => ({ ...li, rate: Number(li.rate) }));
     const result = {
       ...modifiedInvoice,
       lineItems,
