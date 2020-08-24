@@ -41,8 +41,6 @@ app.get("/api/clients/:clientId/payments", (req, res) => {
       return databaseError(req, res, err);
     }
 
-    console.log(result, redactedTags);
-
     res.send({
       payments: result.map((payment) =>
         formatResponsePayment({
