@@ -41,20 +41,21 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
       nullableNonEmptyString("clientNote"),
       nullableValidCurrency("totalCharged"),
       nullableValidEnum("status", "draft", "open", "completed", "closed"),
-      nullableValidArray("clients", validId)
-      // nullableValidArray("lineItems", (index) => {
-      //   return (lineItems) => {
-      //     const errs = checkValid(
-      //       lineItems[index],
-      //       validId("serviceId"),
-      //       nonEmptyString("name"),
-      //       nullableNonEmptyString("description"),
-      //       validInteger("quantity"),
-      //       validCurrency("rate")
-      //     );
-      //     return errs.length > 0 ? errs : null;
-      //   };
-      // })
+      nullableValidArray("clients", validId),
+      nullableValidArray("lineItems", (index) => {
+        return (lineItems) => {
+          const lineItem = lineItems[index];
+          const errs = checkValid(
+            lineItem,
+            validId("serviceId"),
+            nonEmptyString("name"),
+            nullableNonEmptyString("description"),
+            validInteger("quantity"),
+            validCurrency("rate")
+          );
+          return errs.length > 0 ? errs : null;
+        };
+      })
     ),
     ...checkValid(req.query, nullableValidTags("tags", user.permissions)),
     Object.keys(req.body).length === 0 &&
