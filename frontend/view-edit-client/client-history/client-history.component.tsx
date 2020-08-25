@@ -559,6 +559,7 @@ export type ClientHistoryFilterOptions = {
   showOutdated: boolean;
   "invoice:updated": boolean;
   "payment:created": boolean;
+  "payment:updated": boolean;
 };
 
 export enum LogType {
@@ -580,6 +581,7 @@ export enum LogType {
   "file:deleted" = "file:deleted",
   "invoice:updated" = "invoice:updated",
   "payment:created" = "payment:created",
+  "payment:updated" = "payment:updated",
 }
 
 const allFiltersOn: ClientHistoryFilterOptions = Object.keys(LogType).reduce(

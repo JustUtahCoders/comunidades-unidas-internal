@@ -48,8 +48,6 @@ app.get("/api/clients/:clientId/logs", (req, res, next) => {
       return databaseError(req, res, err);
     }
 
-    console.log("logs", logs);
-
     logs.forEach((log) => {
       log.tags = JSON.parse(log.tags).filter(
         (t) => t.foreignTable === "clientLogs"
