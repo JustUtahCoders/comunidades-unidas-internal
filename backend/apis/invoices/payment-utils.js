@@ -1,7 +1,7 @@
 const { responseUser } = require("../utils/transform-utils");
 const mysql = require("mysql");
 const { pool } = require("../../server");
-const { intersection } = require("lodash");
+const { intersection, uniqBy } = require("lodash");
 
 exports.formatResponsePayment = function formatResponsePayment({
   payment,
@@ -27,26 +27,28 @@ exports.formatResponsePayment = function formatResponsePayment({
   };
 
   if (invoices) {
-    result.invoices = invoices.map((i) => {
-      const result = {
-        invoiceId: i.invoiceId,
-        amount: redact ? null : i.amount,
-      };
+    result.invoices = uniqBy(invoices, "paymentId")
+      .filter((i) => i.invoiceId !== null && i.amount !== null)
+      .map((i) => {
+        const result = {
+          invoiceId: i.invoiceId,
+          amount: redact ? null : i.amount,
+        };
 
-      if (i.status) {
-        result.status = i.status;
-      }
+        if (i.status) {
+          result.status = i.status;
+        }
 
-      if (i.totalCharged) {
-        result.totalCharged = redact ? null : i.totalCharged;
-      }
+        if (i.totalCharged) {
+          result.totalCharged = redact ? null : i.totalCharged;
+        }
 
-      if (i.invoiceNumber) {
-        result.invoiceNumber = i.invoiceNumber;
-      }
+        if (i.invoiceNumber) {
+          result.invoiceNumber = i.invoiceNumber;
+        }
 
-      return result;
-    });
+        return result;
+      });
   }
 
   if (payerClientIds) {

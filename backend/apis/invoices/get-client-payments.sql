@@ -6,7 +6,8 @@ SELECT
   donations.id donationId, donations.donationAmount donationAmount,
   JSON_ARRAYAGG(JSON_OBJECT(
     'invoiceId', invoicePayments.invoiceId,
-    'amount', invoicePayments.amount
+    'amount', invoicePayments.amount,
+    'paymentId', invoicePayments.paymentId
   )) invoices,
   JSON_ARRAYAGG(JSON_OBJECT(
     'clientId', invoiceClients.clientId
@@ -30,8 +31,6 @@ SELECT
   LEFT JOIN tags ON tags.foreignId = payments.id
 WHERE
   (paymentClients.clientId = ? OR invoiceClients.clientId = ?)
-  AND
-  (tags.foreignTable = "payments" OR tags.id IS NULL)
   AND
   payments.isDeleted = false
 GROUP BY payments.id

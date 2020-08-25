@@ -1,7 +1,7 @@
 import React from "react";
 import css from "./create-payment-select-invoices.css";
 import { CreatePaymentStepProps } from "../create-payment.component";
-import { useCss } from "kremling";
+import { useCss, always } from "kremling";
 import { InvoiceSummary } from "../edit-payment.component";
 import { InvoiceStatus } from "../../invoices/client-invoices.component";
 import { sumBy, intersectionBy, isEmpty } from "lodash-es";
@@ -10,11 +10,21 @@ import { FullInvoice } from "../../invoices/edit-invoice.component";
 export default function CreatePaymentSelectInvoices(
   props: CreatePaymentStepProps
 ) {
+  const [existingInvoiceRows] = React.useState(() =>
+    props.payment.invoices
+      .map((i) => props.invoices.find((j) => j.id === i.invoiceId))
+      .map((i) => ({
+        ...i,
+        payments: i.payments.filter((p) => p.paymentId !== props.payment.id),
+      }))
+  );
   const unpaidInvoices = props.invoices.filter(
     (i) =>
       (i.status === InvoiceStatus.open || i.status === InvoiceStatus.draft) &&
-      !i.redacted
+      !i.redacted &&
+      !existingInvoiceRows.some((j) => j.id === i.id)
   );
+  const invoiceRows = existingInvoiceRows.concat(unpaidInvoices);
   const [otherAmount, setOtherAmount] = React.useState(() => calcOtherAmount());
 
   // @ts-ignore
@@ -37,9 +47,11 @@ export default function CreatePaymentSelectInvoices(
 
   return (
     <div {...useCss(css)} className="container">
-      {unpaidInvoices.length > 0 && (
+      {invoiceRows.length > 0 && (
         <>
-          <p>Which invoices should this payment be applied to?</p>
+          <p className={always("invoice-header").maybe("edit", props.edit)}>
+            Which invoices should this payment be applied to?
+          </p>
           <div className="invoices">
             <table>
               <caption>Outstanding Invoices</caption>
@@ -49,7 +61,7 @@ export default function CreatePaymentSelectInvoices(
                     <input
                       type="checkbox"
                       checked={
-                        pendingInvoicePayments.length === unpaidInvoices.length
+                        pendingInvoicePayments.length === invoiceRows.length
                       }
                       onChange={toggleSelectAll}
                     />
@@ -61,7 +73,7 @@ export default function CreatePaymentSelectInvoices(
                 </tr>
               </thead>
               <tbody>
-                {unpaidInvoices.map((invoice) => {
+                {invoiceRows.map((invoice) => {
                   const invoicePayment = props.payment.invoices.find(
                     (i) => i.invoiceId === invoice.id
                   );
@@ -103,7 +115,7 @@ export default function CreatePaymentSelectInvoices(
           </div>
         </>
       )}
-      <p>Any donations or other payments?</p>
+      {!props.edit && <p>Any donations or other payments?</p>}
       <div className="other-payments">
         <div>
           <label htmlFor="donation-amount">Donation:</label>
@@ -156,7 +168,7 @@ export default function CreatePaymentSelectInvoices(
     let newPaymentInvoices;
 
     if (evt.target.checked) {
-      newPaymentInvoices = unpaidInvoices.map((i) => ({
+      newPaymentInvoices = invoiceRows.map((i) => ({
         invoiceId: i.id,
         amount: restOfInvoice(i).toFixed(2),
       }));

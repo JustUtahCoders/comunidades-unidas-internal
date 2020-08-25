@@ -41,6 +41,7 @@ export default function ViewInvoice(props: ViewInvoiceProps) {
           window.dispatchEvent(new CustomEvent("cu-chip:close-preview"));
           showGrowl({ type: GrowlType.success, message: "Invoice Saved!" });
           props.refetchInvoices();
+          props.close();
         },
         (err) => {
           setIsSaving(false);

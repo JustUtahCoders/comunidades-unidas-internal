@@ -180,7 +180,7 @@ export default function ClientInvoices(props: ClientInvoicesProps) {
       case ApiStatus.loading:
         return <PinwheelLoader />;
       case ApiStatus.loaded:
-        if (state.invoices.length === 0) {
+        if (state.payments.length === 0) {
           return <EmptyState pluralName="payments" />;
         } else {
           return (

@@ -4,7 +4,7 @@ import Modal from "../../util/modal.component";
 import { PaymentType, FullPayment } from "./edit-payment.component";
 import { FullInvoice } from "../invoices/edit-invoice.component";
 import CreatePaymentCheckInvoices from "./create-edit/create-payment-check-invoices.component";
-import CreatePaymentClients from "./create-edit/edit-payment-info.component";
+import EditPaymentInfo from "./create-edit/edit-payment-info.component";
 import CreatePaymentSelectInvoices from "./create-edit/create-payment-select-invoices.component";
 import CreatePaymentConfirmation from "./create-edit/create-payment-confirmation.component";
 import { InvoiceStatus } from "../invoices/client-invoices.component";
@@ -193,7 +193,7 @@ enum Step {
 
 const StepComponents: StepComps = {
   [Step.checkInvoices]: CreatePaymentCheckInvoices,
-  [Step.paymentInfo]: CreatePaymentClients,
+  [Step.paymentInfo]: EditPaymentInfo,
   [Step.selectInvoices]: CreatePaymentSelectInvoices,
   [Step.confirm]: CreatePaymentConfirmation,
   [Step.viewPayment]: ViewPayment,
@@ -213,6 +213,8 @@ export type CreatePaymentStepProps = {
   payment: FullPayment;
   invoices: FullInvoice[];
   setPayment(payment: FullPayment): any;
-  proceed(): any;
+  proceed?(): any;
+  edit?: boolean;
+  refetchPayments?(): any;
   client: SingleClient;
 };

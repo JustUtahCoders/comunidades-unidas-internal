@@ -2,6 +2,10 @@
   margin-bottom: 10rem;
 }
 
+.container.edit {
+  margin-bottom: 1.6rem;
+}
+
 .question {
   margin-bottom: 1.6rem;
 }
@@ -16,6 +20,7 @@ button.unstyled.link.add-payer {
 
 .inputs {
   margin-top: 2.4rem;
+  font-size: 1.6rem;
 }
 
 .inputs label {

@@ -8,11 +8,7 @@ const {
 const { formatResponsePayment } = require("./payment-utils");
 const fs = require("fs");
 const path = require("path");
-const {
-  sanitizeTags,
-  validTagsList,
-  insertTagsQuery,
-} = require("../tags/tag.utils");
+const { sanitizeTags, validTagsList } = require("../tags/tag.utils");
 
 const rawGetSql = fs.readFileSync(
   path.join(__dirname, "./get-client-payments.sql")
@@ -57,6 +53,7 @@ app.get("/api/clients/:clientId/payments", (req, res) => {
             lastName: payment.modifiedLastName,
           },
           paymentTags: JSON.parse(payment.paymentTags)
+            .filter((t) => t.foreignTable === "payments")
             .map((t) => t.tag)
             .filter(Boolean),
           redactedTags,

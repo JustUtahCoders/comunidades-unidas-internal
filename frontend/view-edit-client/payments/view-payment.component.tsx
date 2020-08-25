@@ -2,9 +2,9 @@ import React from "react";
 import Modal from "../../util/modal.component";
 import { CreatePaymentStepProps } from "./create-payment.component";
 import { padStart } from "lodash-es";
-import { GrowlType, showGrowl } from "../../growls/growls.component";
 import { UserModeContext, UserMode } from "../../util/user-mode.context";
 import dayjs from "dayjs";
+import EditFullPayment from "./create-edit/edit-full-payment.component";
 
 export default function ViewPayment(props: CreatePaymentStepProps) {
   const maxHeight = window.innerHeight - (2 * window.innerHeight) / 10 - 140;
@@ -14,6 +14,7 @@ export default function ViewPayment(props: CreatePaymentStepProps) {
   const previewUrl = `/api/payments/${props.payment.id}/receipts${tagsQuery}`;
   const paymentNumber = padStart(String(props.payment.id), 4, "0");
   const title = `Payment #${paymentNumber}`;
+  const [isEditing, setIsEditing] = React.useState(false);
 
   if (props.payment.redacted) {
     return (
@@ -31,6 +32,19 @@ export default function ViewPayment(props: CreatePaymentStepProps) {
           {dayjs(props.payment.modifiedBy.timestamp).format("MMMM DD, YYYY")}.
         </div>
       </Modal>
+    );
+  }
+
+  if (isEditing) {
+    return (
+      <EditFullPayment
+        close={props.proceed}
+        paymentEdited={paymentEdited}
+        payment={props.payment}
+        invoices={props.invoices}
+        goBack={cancelEdit}
+        client={props.client}
+      />
     );
   }
 
@@ -71,9 +85,17 @@ export default function ViewPayment(props: CreatePaymentStepProps) {
   }
 
   function editPayment() {
-    showGrowl({
-      type: GrowlType.info,
-      message: "Editing payments is not yet possible",
-    });
+    setIsEditing(true);
+  }
+
+  function cancelEdit() {
+    setIsEditing(false);
+  }
+
+  function paymentEdited() {
+    if (props.refetchPayments) {
+      props.refetchPayments();
+    }
+    props.proceed();
   }
 }

@@ -14,10 +14,11 @@ const {
   nullableValidArray,
   validId,
   nullableValidEnum,
-  nullableValidDate,
+  nullableValidDateTime,
   validCurrency,
   nullableValidCurrency,
   nullableValidTags,
+  nullableValidInteger,
 } = require("../utils/validation-utils");
 const { checkValidPaymentRequestIds } = require("./payment-utils");
 const { sumBy } = require("lodash");
@@ -37,7 +38,8 @@ app.patch("/api/payments/:paymentId", (req, res) => {
     ...checkValid(req.params, validId("paymentId")),
     ...checkValid(
       req.body,
-      nullableValidDate("paymentDate"),
+      nullableValidDateTime("paymentDate"),
+      nullableValidInteger("donationAmount"),
       nullableValidArray("invoices", (index) => {
         return (invoices) => {
           const errs = checkValid(
@@ -105,7 +107,7 @@ app.patch("/api/payments/:paymentId", (req, res) => {
         ) {
           return invalidRequest(
             res,
-            `Invoice and donation amount exceed the total payment amount`
+            `Invoice and donation amount exceed the total payment amount. Total amount: ${newPayment.paymentAmount}. Invoice Amount: ${invoiceAmount}. Donation Amount: ${newPayment.donationAmount}`
           );
         }
 
@@ -127,32 +129,77 @@ app.patch("/api/payments/:paymentId", (req, res) => {
           ]
         );
 
+        if (newPayment.donationAmount !== oldPayment.donationAmount) {
+          if (oldPayment.donationId) {
+            if (newPayment.donationAmount === 0) {
+              insertSql += mysql.format(
+                `
+                UPDATE payments SET donationId = NULL WHERE id = ?;
+
+                DELETE FROM donations WHERE id = ?;
+              `,
+                [newPayment.id, oldPayment.donationId]
+              );
+            } else {
+              insertSql += mysql.format(
+                `
+                UPDATE donations SET donationAmount = ?
+                WHERE id = ?;
+              `,
+                [newPayment.donationAmount, newPayment.donationId]
+              );
+            }
+          } else {
+            insertSql += mysql.format(
+              `
+              INSERT INTO donations (donationAmount, donationDate, addedBy, modifiedBy)
+              VALUES (?, ?, ?, ?);
+
+              UPDATE payments SET donationId = LAST_INSERT_ID() WHERE id = ?;
+            `,
+              [
+                newPayment.donationAmount,
+                newPayment.paymentDate,
+                user.id,
+                user.id,
+                newPayment.id,
+              ]
+            );
+          }
+        }
+
         if (req.body.invoices) {
           insertSql += mysql.format(
-            `DELETE FROM invoicePayments WHERE paymentId = ?;`,
-            [paymentId]
+            `
+              UPDATE invoices SET status = 'open' WHERE id IN (
+                SELECT invoiceId FROM invoicePayments WHERE paymentId = ?
+              );
+
+              DELETE FROM invoicePayments WHERE paymentId = ?;
+            `,
+            [paymentId, paymentId]
           );
 
           insertSql += req.body.invoices
             .map((i) =>
               mysql.format(
                 `
-          INSERT INTO invoicePayments
-          (paymentId, invoiceId, amount)
-          VALUES
-          (?, ?, ?);
+                INSERT INTO invoicePayments
+                (paymentId, invoiceId, amount)
+                VALUES
+                (?, ?, ?);
 
-          UPDATE invoices SET status = 'completed'
-          WHERE
-            id = ?
-            AND
-            (status = 'draft' OR status = 'open')
-            AND invoices.totalCharged <= (
-              SELECT SUM (amount) FROM invoicePayments WHERE invoiceId = ?
-            )
-          ;
-        `,
-                [paymentId, i.invoiceId, i.amount, i.invoiceId]
+                UPDATE invoices SET status = 'completed'
+                WHERE
+                  id = ?
+                  AND
+                  (status = 'draft' OR status = 'open')
+                  AND invoices.totalCharged <= (
+                    SELECT SUM (amount) FROM invoicePayments WHERE invoiceId = ?
+                  )
+                ;
+              `,
+                [paymentId, i.invoiceId, i.amount, i.invoiceId, i.invoiceId]
               )
             )
             .join("\n");
