@@ -22,6 +22,9 @@ const {
   validTagsList,
   insertTagsQuery,
 } = require("../tags/tag.utils");
+const {
+  insertActivityLogQuery,
+} = require("../clients/client-logs/activity-log.utils");
 
 app.post("/api/payments", (req, res) => {
   const user = req.session.passport.user;
@@ -129,7 +132,6 @@ app.post("/api/payments", (req, res) => {
         .join("\n")}
 
       ${insertTagsQuery({ rawValue: "@paymentId" }, "payments", tags)}
-      SELECT @paymentId paymentId;
     `,
         [
           req.body.paymentDate,
@@ -139,6 +141,21 @@ app.post("/api/payments", (req, res) => {
           user.id,
         ]
       );
+
+      req.body.payerClientIds.forEach((clientId) => {
+        insertSql += insertActivityLogQuery({
+          clientId,
+          title: {
+            rawValue: `CONCAT('Client payment #', (SELECT LPAD(@paymentId, 4, '0')), ' was created')`,
+          },
+          description: null,
+          logType: "payment:created",
+          addedBy: user.id,
+          detailId: { rawValue: "@paymentId" },
+        });
+      });
+
+      insertSql += `SELECT @paymentId paymentId;`;
 
       pool.query(insertSql, (err, result) => {
         if (err) {

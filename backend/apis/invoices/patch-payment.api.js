@@ -26,6 +26,9 @@ const {
   validTagsList,
   insertTagsQuery,
 } = require("../tags/tag.utils");
+const {
+  insertActivityLogQuery,
+} = require("../clients/client-logs/activity-log.utils");
 
 app.patch("/api/payments/:paymentId", (req, res) => {
   const user = req.session.passport.user;
@@ -172,6 +175,20 @@ app.patch("/api/payments/:paymentId", (req, res) => {
             )
             .join("\n");
         }
+
+        newPayment.payerClientIds.forEach((clientId) => {
+          insertSql += insertActivityLogQuery({
+            clientId,
+            title: `Payment #${String(newPayment.id).padStart(
+              4,
+              "0"
+            )} was updated`,
+            description: null,
+            logType: "payment:updated",
+            addedBy: user.id,
+            detailId: newPayment.id,
+          });
+        });
 
         insertSql += insertTagsQuery(paymentId, "payments", tags);
 

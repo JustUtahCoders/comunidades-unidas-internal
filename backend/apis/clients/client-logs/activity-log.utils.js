@@ -11,15 +11,17 @@ const modifiableLogTypes = [
 
 exports.modifiableLogTypes = modifiableLogTypes;
 
+const skip = Symbol();
+
 exports.insertActivityLogQuery = function (params) {
   if (params.detailIdIsLastInsertId) {
     const data = [
       Number(params.clientId),
-      params.title,
+      params.title.rawValue ? skip : params.title,
       params.description,
       params.logType,
       params.addedBy,
-    ];
+    ].filter((d) => d !== skip);
 
     if (params.dateAdded) {
       data.push(params.dateAdded);
@@ -30,7 +32,9 @@ exports.insertActivityLogQuery = function (params) {
       INSERT INTO clientLogs (clientId, title, description, logType, addedBy, detailId${
         params.dateAdded ? ", dateAdded" : ""
       })
-      VALUES (?, ?, ?, ?, ?, LAST_INSERT_ID()${params.dateAdded ? ", ?" : ""});
+      VALUES (?, ${params.title.rawValue || "?"}, ?, ?, ?, LAST_INSERT_ID()${
+        params.dateAdded ? ", ?" : ""
+      });
 
       SET @logId := LAST_INSERT_ID();
       
@@ -41,11 +45,11 @@ exports.insertActivityLogQuery = function (params) {
   } else {
     const data = [
       Number(params.clientId),
-      params.title,
+      params.title.rawValue ? skip : params.title,
       params.description,
       params.logType,
       params.addedBy,
-    ];
+    ].filter((d) => d !== skip);
 
     if (params.detailId && !params.detailId.rawValue) {
       data.push(params.detailId);
@@ -66,7 +70,9 @@ exports.insertActivityLogQuery = function (params) {
       INSERT INTO clientLogs (clientId, title, description, logType, addedBy${
         params.detailId ? ", detailId" : ""
       }${params.dateAdded ? ", dateAdded" : ""})
-      VALUES (?, ?, ?, ?, ?${detailIdSql} ${params.dateAdded ? ", ?" : ""});
+      VALUES (?, ${params.title.rawValue || "?"}, ?, ?, ?${detailIdSql} ${
+        params.dateAdded ? ", ?" : ""
+      });
 
       SET @logId := LAST_INSERT_ID();
       

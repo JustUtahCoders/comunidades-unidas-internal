@@ -31,10 +31,11 @@ app.get("/api/clients/:clientId/logs", (req, res, next) => {
     `
     SELECT
       clientLogs.id, clientLogs.title, clientLogs.description, clientLogs.logType, clientLogs.dateAdded, clientLogs.detailId, clientLogs.idOfUpdatedLog,
-      users.id createdById, users.firstName createdByFirstName, users.lastName createdByLastName, JSON_ARRAYAGG(tags.tag) tags
+      users.id createdById, users.firstName createdByFirstName, users.lastName createdByLastName,
+      JSON_ARRAYAGG(JSON_OBJECT('tag', tags.tag, 'foreignTable', tags.foreignTable)) tags
     FROM
       clientLogs LEFT JOIN tags ON tags.foreignId = clientLogs.id JOIN users ON clientLogs.addedBy = users.id 
-    WHERE clientLogs.clientId = ? AND isDeleted = false AND (tags.foreignTable = 'clientLogs' OR tags.foreignTable IS NULL)
+    WHERE clientLogs.clientId = ? AND clientLogs.isDeleted = false
     GROUP BY clientLogs.id
     ORDER BY clientLogs.dateAdded DESC, clientLogs.logType DESC
     LIMIT 200
@@ -47,15 +48,17 @@ app.get("/api/clients/:clientId/logs", (req, res, next) => {
       return databaseError(req, res, err);
     }
 
+    logs.forEach((log) => {
+      log.tags = JSON.parse(log.tags).filter(
+        (t) => t.foreignTable === "clientLogs"
+      );
+    });
+
     const tags = sanitizeTags(req.query.tags);
     const redactedTags = validTagsList.filter((t) => !tags.includes(t));
 
-    if (logs.length === 0) {
-      notFound(res, `Client ${req.params.clientId}`);
-    } else {
-      res.send({
-        logs: logs.map((l) => createResponseLogObject(l, redactedTags)),
-      });
-    }
+    res.send({
+      logs: logs.map((l) => createResponseLogObject(l, redactedTags)),
+    });
   });
 });

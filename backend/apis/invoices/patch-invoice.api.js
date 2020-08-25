@@ -22,12 +22,15 @@ const {
   nullableValidDate,
   nullableValidTags,
 } = require("../utils/validation-utils");
-const { uniq, uniqBy } = require("lodash");
+const { uniq } = require("lodash");
 const {
   sanitizeTags,
   validTagsList,
   insertTagsQuery,
 } = require("../tags/tag.utils");
+const {
+  insertActivityLogQuery,
+} = require("../clients/client-logs/activity-log.utils");
 
 app.patch("/api/invoices/:invoiceId", (req, res) => {
   const user = req.session.passport.user;
@@ -97,6 +100,7 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
     }
 
     const newInvoice = Object.assign({}, oldInvoice, req.body);
+    let statusChange = false;
 
     if (
       oldInvoice.status === "draft" &&
@@ -104,6 +108,7 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
       req.body.lineItems &&
       req.body.lineItems.length > 0
     ) {
+      statusChange = true;
       newInvoice.status = "open";
     }
 
@@ -179,6 +184,19 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
     if (tags.length > 0) {
       updateSql += insertTagsQuery(invoiceId, "invoices", tags);
     }
+
+    req.body.clients.forEach((clientId) => {
+      updateSql += insertActivityLogQuery({
+        clientId,
+        title: `Invoice #${newInvoice.invoiceNumber} was ${
+          statusChange && newInvoice.status === "open" ? "created" : "updated"
+        }`,
+        description: null,
+        logType: "invoice:updated",
+        addedBy: user.id,
+        detailId: invoiceId,
+      });
+    });
 
     pool.query(updateSql, (err, updateResult) => {
       if (err) {

@@ -1,0 +1,3 @@
+ALTER TABLE clientLogs
+  MODIFY COLUMN logType VARCHAR(64) NOT NULL
+;
