@@ -56,6 +56,9 @@ app.get(`/api/reports/outstanding-invoices`, (req, res) => {
       },
       outstandingInvoices = [],
       clientsWhoOwe = {};
+
+    console.log(result);
+
     result.forEach((invoice) => {
       const redact =
         intersection(

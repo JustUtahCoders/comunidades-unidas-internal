@@ -51,5 +51,7 @@ WHERE
 SELECT
   SUM(donationAmount) donationsTotal
 FROM donations
-WHERE donations.donationDate >= ? AND donations.donationDate <= ?
+WHERE
+  (donations.donationDate >= ? AND donations.donationDate <= ?)
+  AND donations.isDeleted = false
 ;
