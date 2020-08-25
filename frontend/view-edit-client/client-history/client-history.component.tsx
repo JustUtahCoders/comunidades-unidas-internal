@@ -265,6 +265,10 @@ export default function ClientHistory(props: ClientHistoryProps) {
         type: LogActionTypes.viewFile,
         log,
       });
+    } else if (log.logType === LogType["invoice:updated"]) {
+      props.navigate(
+        `/clients/${props.clientId}/invoices?invoice=${log.detailId}`
+      );
     }
   }
 }
@@ -553,6 +557,8 @@ export type ClientHistoryFilterOptions = {
   "file:uploaded": boolean;
   "file:deleted": boolean;
   showOutdated: boolean;
+  "invoice:updated": boolean;
+  "payment:created": boolean;
 };
 
 export enum LogType {
@@ -572,6 +578,8 @@ export enum LogType {
   "integration:sync" = "integration:sync",
   "file:uploaded" = "file:uploaded",
   "file:deleted" = "file:deleted",
+  "invoice:updated" = "invoice:updated",
+  "payment:created" = "payment:created",
 }
 
 const allFiltersOn: ClientHistoryFilterOptions = Object.keys(LogType).reduce(
