@@ -31,8 +31,8 @@ WHERE
   (invoices.status = 'open' OR invoices.status = 'completed')
   AND
   (tags.foreignTable IS NULL OR tags.foreignTable = "invoices")
-  -- AND
-  -- (invoices.invoiceDate >= ? AND invoices.invoiceDate <= ?)
+  AND
+  (invoices.invoiceDate >= ? AND invoices.invoiceDate <= ?)
   AND
   (payments.isDeleted IS NULL OR payments.isDeleted = false)
 GROUP BY invoices.id
