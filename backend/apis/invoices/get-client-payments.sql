@@ -31,8 +31,6 @@ SELECT
 WHERE
   (paymentClients.clientId = ? OR invoiceClients.clientId = ?)
   AND
-  (tags.foreignTable = "payments" OR tags.id IS NULL)
-  AND
   payments.isDeleted = false
 GROUP BY payments.id
 ;

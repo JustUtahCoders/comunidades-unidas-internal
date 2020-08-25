@@ -57,6 +57,7 @@ app.get("/api/clients/:clientId/payments", (req, res) => {
             lastName: payment.modifiedLastName,
           },
           paymentTags: JSON.parse(payment.paymentTags)
+            .filter((t) => t.foreignTable === "payments")
             .map((t) => t.tag)
             .filter(Boolean),
           redactedTags,
