@@ -6,7 +6,8 @@ SELECT
   donations.id donationId, donations.donationAmount donationAmount,
   JSON_ARRAYAGG(JSON_OBJECT(
     'invoiceId', invoicePayments.invoiceId,
-    'amount', invoicePayments.amount
+    'amount', invoicePayments.amount,
+    'paymentId', invoicePayments.paymentId
   )) invoices,
   JSON_ARRAYAGG(JSON_OBJECT(
     'clientId', invoiceClients.clientId

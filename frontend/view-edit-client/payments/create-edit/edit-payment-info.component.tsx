@@ -2,7 +2,7 @@ import React from "react";
 import css from "./edit-payment-info.css";
 import { CreatePaymentStepProps } from "../create-payment.component";
 import SingleClientSearchInput from "../../../client-search/single-client/single-client-search-input.component";
-import { useCss } from "kremling";
+import { useCss, always } from "kremling";
 import { isEqual, noop } from "lodash-es";
 import {
   humanReadablePaymentType,
@@ -21,7 +21,10 @@ export default function EditPaymentInfo(props: CreatePaymentStepProps) {
   }, [clientId, props.payment.payerClientIds]);
 
   return (
-    <div {...useCss(css)} className="container">
+    <div
+      {...useCss(css)}
+      className={always("container").maybe("edit", props.edit)}
+    >
       <div className="question">Who made the payment?</div>
       <SingleClientSearchInput
         autoFocus

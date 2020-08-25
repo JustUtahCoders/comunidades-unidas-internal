@@ -8,11 +8,7 @@ const {
 const { formatResponsePayment } = require("./payment-utils");
 const fs = require("fs");
 const path = require("path");
-const {
-  sanitizeTags,
-  validTagsList,
-  insertTagsQuery,
-} = require("../tags/tag.utils");
+const { sanitizeTags, validTagsList } = require("../tags/tag.utils");
 
 const rawGetSql = fs.readFileSync(
   path.join(__dirname, "./get-client-payments.sql")
@@ -40,6 +36,8 @@ app.get("/api/clients/:clientId/payments", (req, res) => {
     if (err) {
       return databaseError(req, res, err);
     }
+
+    console.log("result", result);
 
     res.send({
       payments: result.map((payment) =>

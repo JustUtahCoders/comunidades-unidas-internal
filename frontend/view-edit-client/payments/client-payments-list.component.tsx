@@ -29,6 +29,7 @@ function ClientPaymentsList(props: ClientPaymentsListProps) {
               payment={payment}
               proceed={close}
               setPayment={null}
+              refetchPayments={props.refetchPayments}
             />
           )}
         />

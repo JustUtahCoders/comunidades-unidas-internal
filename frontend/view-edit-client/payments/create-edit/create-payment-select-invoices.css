@@ -5,6 +5,10 @@
   border-radius: 0.4rem;
 }
 
+.invoice-header.edit {
+  margin-top: 4rem;
+}
+
 .invoices table {
   border-spacing: 0;
   table-layout: fixed;

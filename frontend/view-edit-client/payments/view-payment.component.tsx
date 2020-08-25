@@ -2,7 +2,6 @@ import React from "react";
 import Modal from "../../util/modal.component";
 import { CreatePaymentStepProps } from "./create-payment.component";
 import { padStart } from "lodash-es";
-import { GrowlType, showGrowl } from "../../growls/growls.component";
 import { UserModeContext, UserMode } from "../../util/user-mode.context";
 import dayjs from "dayjs";
 import EditFullPayment from "./create-edit/edit-full-payment.component";
@@ -40,8 +39,11 @@ export default function ViewPayment(props: CreatePaymentStepProps) {
     return (
       <EditFullPayment
         close={props.proceed}
-        goBack={cancelEdit}
+        paymentEdited={paymentEdited}
         payment={props.payment}
+        invoices={props.invoices}
+        goBack={cancelEdit}
+        client={props.client}
       />
     );
   }
@@ -88,5 +90,12 @@ export default function ViewPayment(props: CreatePaymentStepProps) {
 
   function cancelEdit() {
     setIsEditing(false);
+  }
+
+  function paymentEdited() {
+    if (props.refetchPayments) {
+      props.refetchPayments();
+    }
+    props.proceed();
   }
 }

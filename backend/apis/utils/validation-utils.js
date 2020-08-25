@@ -1,4 +1,4 @@
-const { get, isDefined } = require("lodash");
+const { get } = require("lodash");
 const emailValidator = require("email-validator");
 const { validTagsList } = require("../tags/tag.utils");
 
@@ -28,6 +28,9 @@ exports.nonEmptyString = checkDefined(_nonEmptyString);
 
 exports.nullableValidDate = nullable(_validDate);
 exports.validDate = checkDefined(_validDate);
+
+exports.nullableValidDateTime = nullable(_validDateTime);
+exports.validDateTime = checkDefined(_validDateTime);
 
 exports.nullableValidTime = nullable(_validTime);
 exports.validTime = checkDefined(_validTime);
@@ -76,6 +79,15 @@ function _validDate(propertyName) {
     /^[0-9]{4}-[01][0-9]-[0123][0-9]$/.test(val) && !isNaN(new Date(val))
       ? null
       : `Property ${propertyName} must be a string date of format YYYY-MM-DD. Received '${val}'`;
+}
+
+function _validDateTime(propertyName) {
+  return (val) => {
+    const d = new Date(val);
+    return !isNaN(d)
+      ? null
+      : `Property ${propertyName} must be a date time string of format YYYY-MM-DD HH:MM:SST`;
+  };
 }
 
 function _validTime(propertyName) {
