@@ -13,7 +13,7 @@ const {
 } = require("./activity-log.utils");
 const { sanitizeTags } = require("../../tags/tag.utils");
 
-app.post("/clients/:clientId/logs", (req, res) => {
+app.post("/api/clients/:clientId/logs", (req, res) => {
   const user = req.session.passport.user;
 
   const validationErrors = [

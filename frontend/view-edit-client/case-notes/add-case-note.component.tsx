@@ -36,7 +36,7 @@ export default function AddCaseNote({
 
       const query =
         userMode === UserMode.immigration ? `?tags=immigration` : "";
-      easyFetch(`/clients/${clientIdForNote}/logs${query}`, {
+      easyFetch(`/api/clients/${clientIdForNote}/logs${query}`, {
         method: "POST",
         signal: abortController.signal,
         body: {

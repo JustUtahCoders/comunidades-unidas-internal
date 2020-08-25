@@ -27,7 +27,7 @@ process.stdin.on("readable", () => {
   }
 
   if (typeof readStdinResolve === "function") {
-    readStdinResolve(str);
+    readStdinResolve(str.trim());
   }
 });
 
