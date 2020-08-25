@@ -68,7 +68,7 @@ export default function InteractionHoursByClientResults(props) {
               <th></th>
               <th>Total Charged</th>
               <th>Total Paid</th>
-              <th>Balance</th>
+              <th>Outstanding Balance</th>
             </tr>
           }
           contentRows={
@@ -92,7 +92,7 @@ export default function InteractionHoursByClientResults(props) {
                 <td>
                   $
                   {(
-                    completedSummary.totalCharged - outstandingSummary.totalPaid
+                    completedSummary.totalCharged - completedSummary.totalPaid
                   ).toFixed(2)}
                 </td>
               </tr>
@@ -117,9 +117,9 @@ export default function InteractionHoursByClientResults(props) {
               <td>
                 $
                 {(
-                  completedSummary.totalCharged -
-                  outstandingSummary.totalPaid +
+                  completedSummary.totalCharged +
                   outstandingSummary.totalCharged -
+                  completedSummary.totalPaid -
                   outstandingSummary.totalPaid
                 ).toFixed(2)}
               </td>
