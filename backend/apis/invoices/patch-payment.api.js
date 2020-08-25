@@ -112,7 +112,9 @@ app.patch("/api/payments/:paymentId", (req, res) => {
         let insertSql = mysql.format(
           `
         UPDATE payments SET
-          paymentDate = ?, paymentAmount = ?, paymentType = ?, modifiedBy = ?;
+          paymentDate = ?, paymentAmount = ?, paymentType = ?, modifiedBy = ?
+          WHERE id = ?
+        ;
 
 
       `,
@@ -121,6 +123,7 @@ app.patch("/api/payments/:paymentId", (req, res) => {
             newPayment.paymentAmount,
             newPayment.paymentType,
             user.id,
+            newPayment.id,
           ]
         );
 

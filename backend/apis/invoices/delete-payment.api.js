@@ -4,6 +4,7 @@ const {
   pool,
   invalidRequest,
   internalError,
+  notFound,
 } = require("../../server");
 const mysql = require("mysql");
 const { checkValid, validId } = require("../utils/validation-utils");
@@ -27,8 +28,16 @@ app.delete("/api/payments/:paymentId", (req, res) => {
       const deleteSql = mysql.format(
         `
         UPDATE payments SET isDeleted = true WHERE id = ?;
+
+        UPDATE donations SET isDeleted = true
+        WHERE
+          id IS NOT NULL
+          AND id = (
+            SELECT donationId FROM payments WHERE payments.id = ?
+          )
+        ;
       `,
-        [paymentId]
+        [paymentId, paymentId]
       );
 
       pool.query(deleteSql, (err, result) => {
