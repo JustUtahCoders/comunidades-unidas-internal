@@ -18,7 +18,7 @@ app.delete("/api/payments/:paymentId", (req, res) => {
 
   const paymentId = req.params.paymentId;
 
-  getFullPaymentById(req.params.paymentId, (err, payment) => {
+  getFullPaymentById({ paymentId: req.params.paymentId }, (err, payment) => {
     if (err) {
       databaseError(req, res, err);
     } else if (payment === 404) {
