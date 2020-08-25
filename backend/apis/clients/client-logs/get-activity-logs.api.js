@@ -49,9 +49,9 @@ app.get("/api/clients/:clientId/logs", (req, res, next) => {
     }
 
     logs.forEach((log) => {
-      log.tags = JSON.parse(log.tags).filter(
-        (t) => t.foreignTable === "clientLogs"
-      );
+      log.tags = JSON.parse(log.tags)
+        .filter((t) => t.foreignTable === "clientLogs")
+        .map((t) => t.tag);
     });
 
     const tags = sanitizeTags(req.query.tags);
