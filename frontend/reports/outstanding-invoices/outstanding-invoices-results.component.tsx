@@ -117,7 +117,10 @@ export default function InteractionHoursByClientResults(props) {
               <td>
                 $
                 {(
-                  outstandingSummary.totalCharged - outstandingSummary.totalPaid
+                  completedSummary.totalCharged +
+                  outstandingSummary.totalCharged -
+                  completedSummary.totalPaid -
+                  outstandingSummary.totalPaid
                 ).toFixed(2)}
               </td>
             </tr>

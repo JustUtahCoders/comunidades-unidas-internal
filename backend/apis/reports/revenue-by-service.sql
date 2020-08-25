@@ -17,7 +17,7 @@ SELECT
 FROM
   invoicePayments
   JOIN invoices ON invoices.id = invoicePayments.invoiceId
-  JOIN payments on payments.id = invoicePayments.paymentId
+  JOIN payments ON payments.id = invoicePayments.paymentId
   LEFT JOIN invoiceLineItems ON invoiceLineItems.invoiceId = invoices.id
 WHERE
   invoiceLineItems.serviceId IS NOT NULL
