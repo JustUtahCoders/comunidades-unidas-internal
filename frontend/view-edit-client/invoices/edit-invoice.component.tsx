@@ -309,7 +309,6 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
         </td>
         <td>
           <input
-            required
             type="text"
             value={li.description || ""}
             onChange={updateField("description")}

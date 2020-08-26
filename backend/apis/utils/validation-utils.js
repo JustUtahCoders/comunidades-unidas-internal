@@ -23,6 +23,9 @@ const nullable = (cbk) => (propertyName, ...args) => (obj) =>
     ? null
     : cbk(propertyName, ...args)(get(obj, propertyName));
 
+exports.nullableValidString = nullable(_string);
+exports.validString = checkDefined(_string);
+
 exports.nullableNonEmptyString = nullable(_nonEmptyString);
 exports.nonEmptyString = checkDefined(_nonEmptyString);
 
@@ -100,6 +103,13 @@ function _validTime(propertyName) {
 function _nonEmptyString(propertyName) {
   return (val) =>
     typeof val === "string" && val.trim().length > 0
+      ? null
+      : `Property ${propertyName} must be a non-whitespace, non-empty string. Received '${val}'`;
+}
+
+function _string(propertyName) {
+  return (val) =>
+    typeof val === "string"
       ? null
       : `Property ${propertyName} must be a non-whitespace, non-empty string. Received '${val}'`;
 }
