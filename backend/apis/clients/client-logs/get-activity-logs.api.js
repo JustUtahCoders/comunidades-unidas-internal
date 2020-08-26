@@ -34,7 +34,7 @@ app.get("/api/clients/:clientId/logs", (req, res, next) => {
       users.id createdById, users.firstName createdByFirstName, users.lastName createdByLastName,
       JSON_ARRAYAGG(JSON_OBJECT('tag', tags.tag, 'foreignTable', tags.foreignTable)) tags
     FROM
-      clientLogs LEFT JOIN tags ON tags.foreignId = clientLogs.id JOIN users ON clientLogs.addedBy = users.id 
+      clientLogs LEFT JOIN tags ON (tags.foreignId = clientLogs.id AND tags.foreignTable = 'clientLogs') JOIN users ON clientLogs.addedBy = users.id 
     WHERE clientLogs.clientId = ? AND clientLogs.isDeleted = false
     GROUP BY clientLogs.id
     ORDER BY clientLogs.dateAdded DESC, clientLogs.logType DESC

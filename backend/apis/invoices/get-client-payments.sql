@@ -28,7 +28,7 @@ SELECT
   LEFT JOIN paymentClients ON paymentClients.paymentId = payments.id
   LEFT JOIN invoicePayments ON invoicePayments.paymentId = payments.id
   LEFT JOIN invoiceClients ON invoiceClients.invoiceId = invoicePayments.invoiceId
-  LEFT JOIN tags ON tags.foreignId = payments.id
+  LEFT JOIN tags ON (tags.foreignId = payments.id AND tags.foreignTable = 'payments')
 WHERE
   (paymentClients.clientId = ? OR invoiceClients.clientId = ?)
   AND

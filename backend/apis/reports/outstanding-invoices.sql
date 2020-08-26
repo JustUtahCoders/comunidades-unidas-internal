@@ -12,7 +12,7 @@ SELECT
   )) tags
 FROM
   invoices
-  LEFT JOIN tags ON tags.foreignId = invoices.id
+  LEFT JOIN tags ON (tags.foreignId = invoices.id AND tags.foreignTable = 'invoices')
   LEFT JOIN invoicePayments ON invoicePayments.invoiceId = invoices.id
   LEFT JOIN payments ON invoicePayments.paymentId = payments.id
   LEFT JOIN invoiceClients ON invoiceClients.invoiceId = invoices.id
@@ -29,8 +29,6 @@ FROM
   ) contactInfo ON contactInfo.clientId = clients.id
 WHERE
   (invoices.status = 'open' OR invoices.status = 'completed')
-  AND
-  (tags.foreignTable IS NULL OR tags.foreignTable = "invoices")
   AND
   (invoices.invoiceDate >= ? AND invoices.invoiceDate <= ?)
   AND
