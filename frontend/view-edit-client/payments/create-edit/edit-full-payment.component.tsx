@@ -17,6 +17,7 @@ export default function EditFullPayment(props: EditFullPaymentProps) {
   const paymentNumber = padStart(String(props.payment.id), 4, "0");
   const title = `Payment #${paymentNumber}`;
   const [isSaving, setIsSaving] = React.useState(false);
+  const [isDeleting, setIsDeleting] = React.useState(false);
   const { userMode } = React.useContext(UserModeContext);
   const tagsQuery =
     userMode === UserMode.immigration ? `?tags=immigration` : "";
@@ -38,7 +39,10 @@ export default function EditFullPayment(props: EditFullPaymentProps) {
         },
       })
         .then(() => {
-          showGrowl({ type: GrowlType.success, message: "Payment was saved." });
+          showGrowl({
+            type: GrowlType.success,
+            message: `Payment ${paymentNumber} was saved.`,
+          });
           props.paymentEdited();
         })
         .catch((err) => {
@@ -52,7 +56,34 @@ export default function EditFullPayment(props: EditFullPaymentProps) {
         ac.abort();
       };
     }
-  }, [isSaving, tagsQuery]);
+  }, [isSaving, tagsQuery, paymentNumber]);
+
+  React.useEffect(() => {
+    if (isDeleting) {
+      const ac = new AbortController();
+      easyFetch(`/api/payments/${props.payment.id}`, {
+        method: "DELETE",
+        signal: ac.signal,
+      })
+        .then(() => {
+          showGrowl({
+            type: GrowlType.success,
+            message: `Payment ${paymentNumber} was deleted.`,
+          });
+          props.paymentEdited();
+        })
+        .catch((err) => {
+          setIsDeleting(false);
+          setTimeout(() => {
+            throw err;
+          });
+        });
+
+      return () => {
+        ac.abort();
+      };
+    }
+  }, [isDeleting, tagsQuery, paymentNumber]);
 
   return (
     <Modal
@@ -61,6 +92,8 @@ export default function EditFullPayment(props: EditFullPaymentProps) {
       primaryAction={save}
       secondaryText="Back"
       secondaryAction={props.goBack}
+      tertiaryText="Delete"
+      tertiaryAction={deletePayment}
       close={props.close}
     >
       <>
@@ -84,6 +117,12 @@ export default function EditFullPayment(props: EditFullPaymentProps) {
 
   function save() {
     setIsSaving(true);
+  }
+
+  function deletePayment() {
+    if (window.confirm("Are you sure you want to delete this payment?")) {
+      setIsDeleting(true);
+    }
   }
 }
 
