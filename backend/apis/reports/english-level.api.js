@@ -18,7 +18,8 @@ app.get(`/api/reports/english-levels`, (req, res) => {
 
   const sql = mysql.format(
     `
-      SELECT COUNT(*) total, demographics.englishProficiency        FROM
+      SELECT COUNT(*) total, demographics.englishProficiency
+      FROM
         (
           SELECT MAX(dateAdded) latestDateAdded, clientId FROM demographics GROUP BY clientId
         ) latestDems
@@ -29,8 +30,8 @@ app.get(`/api/reports/english-levels`, (req, res) => {
           SELECT dateOfIntake, clientId FROM intakeData
         ) intake ON intake.clientId = clients.id
       WHERE
-       clients.isDeleted = false
-       AND (dateOfIntake BETWEEN ? AND ?)
+        clients.isDeleted = false
+        AND (dateOfIntake BETWEEN ? AND ?)
       GROUP BY demographics.englishProficiency
       ;
     `,
