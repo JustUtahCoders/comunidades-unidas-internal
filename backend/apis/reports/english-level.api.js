@@ -27,8 +27,8 @@ app.get(`/api/reports/english-levels`, (req, res) => {
         JOIN clients ON clients.id = demographics.clientId
         JOIN
         (
-          SELECT dateOfIntake, clientId FROM intakeData
-        ) intake ON intake.clientId = clients.id
+          SELECT MAX(dateAdded) latestDateAdded, dateOfIntake, clientId FROM intakeData GROUP BY clientId
+        ) latestIntake ON latestIntake.clientId = clients.id
       WHERE
         clients.isDeleted = false
         AND (dateOfIntake BETWEEN ? AND ?)
