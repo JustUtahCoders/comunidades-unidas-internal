@@ -5,7 +5,6 @@ import dayjs from "dayjs";
 import { formatPercentage, capitalize } from "../shared/report.helpers";
 import { sum, values, entries } from "lodash-es";
 import { countryCodeToName } from "../../util/country-select.component";
-//
 export default function CountriesOfOriginResults(props) {
   const { isLoading, data, error } = useReportsApi(
     `/api/reports/countries-of-origin`
