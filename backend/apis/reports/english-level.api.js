@@ -1,13 +1,20 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
-const { checkValid } = require("../utils/validation-utils");
+const { checkValid, nullableValidDate } = require("../utils/validation-utils");
 const mysql = require("mysql");
 
 app.get(`/api/reports/english-levels`, (req, res) => {
-  const validationErrors = checkValid(req.query);
+  const validationErrors = checkValid(
+    req.query,
+    nullableValidDate("start"),
+    nullableValidDate("end")
+  );
 
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
   }
+
+  const startDate = req.query.start || "2000-01-01T0";
+  const endDate = req.query.end || "3000-01-01T0";
 
   const sql = mysql.format(
     `
@@ -18,12 +25,17 @@ app.get(`/api/reports/english-levels`, (req, res) => {
         ) latestDems
         JOIN demographics ON latestDems.latestDateAdded = demographics.dateAdded
         JOIN clients ON clients.id = demographics.clientId
+        JOIN
+        (
+          SELECT MAX(dateAdded) latestDateAdded, dateOfIntake, clientId FROM intakeData GROUP BY clientId
+        ) latestIntake ON latestIntake.clientId = clients.id
       WHERE
         clients.isDeleted = false
+        AND (dateOfIntake BETWEEN ? AND ?)
       GROUP BY demographics.englishProficiency
       ;
     `,
-    []
+    [startDate, endDate]
   );
 
   pool.query(sql, (err, result) => {
@@ -38,7 +50,10 @@ app.get(`/api/reports/english-levels`, (req, res) => {
         acc[level.englishProficiency] = level.total;
         return acc;
       }, {}),
-      reportParameters: {},
+      reportParameters: {
+        start: req.query.start || null,
+        end: req.query.end || null,
+      },
     });
   });
 });
