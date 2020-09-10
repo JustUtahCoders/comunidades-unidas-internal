@@ -1,10 +1,10 @@
 import React from "react";
 import { useReportsApi } from "../shared/use-reports-api";
 import BasicTableReport from "../shared/basic-table-report.component";
+import dayjs from "dayjs";
 import { formatPercentage, capitalize } from "../shared/report.helpers";
 import { sum, values, entries } from "lodash-es";
 import { countryCodeToName } from "../../util/country-select.component";
-
 export default function CountriesOfOriginResults(props) {
   const { isLoading, data, error } = useReportsApi(
     `/api/reports/countries-of-origin`
@@ -27,10 +27,26 @@ export default function CountriesOfOriginResults(props) {
   return (
     <>
       <BasicTableReport
-        title="Client Countries of Origin"
+        title="Client Countries of Origin from Date of Intake Range"
         headerRows={null}
         contentRows={
           <>
+            <tr>
+              <th>Start Date</th>
+              <td>
+                {data.reportParameters.start
+                  ? dayjs(data.reportParameters.start).format("MMM D, YYYY")
+                  : "\u2014"}
+              </td>
+            </tr>
+            <tr>
+              <th>End Date</th>
+              <td>
+                {data.reportParameters.end
+                  ? dayjs(data.reportParameters.end).format("MMM D, YYYY")
+                  : "\u2014"}
+              </td>
+            </tr>
             <tr>
               <td>Known</td>
               <td>{totalKnownOriginClients}</td>
