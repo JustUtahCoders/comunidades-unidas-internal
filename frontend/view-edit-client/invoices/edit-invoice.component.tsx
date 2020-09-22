@@ -9,6 +9,7 @@ import { groupBy, cloneDeep, sumBy, padStart } from "lodash-es";
 import CloseIconButton from "../../util/close-icon-button.component";
 import dayjs from "dayjs";
 import FullRichTextEditor from "../../rich-text/full-rich-text-editor.component";
+import MultiClientSelect from "../../util/multi-client-select.component";
 
 const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
   const [newLineItems, setNewLineItems] = React.useState<Array<LineItem>>(() =>
@@ -42,13 +43,9 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
     <div {...useCss(css)}>
       <div className="header">
         <div className="clients input-block">
-          <label htmlFor="client-name">Client(s)</label>
-          {props.client && (
-            <div className="client-row" id="client-name">
-              {props.client.fullName}
-              <img src={userIconUrl} alt="human profile shadow" />
-            </div>
-          )}
+          <MultiClientSelect
+            initialClients={props.client ? [props.client] : []}
+          />
         </div>
         <div className="input-block">
           <label htmlFor="invoice-number">Invoice #</label>
