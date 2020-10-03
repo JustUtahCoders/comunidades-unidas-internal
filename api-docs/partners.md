@@ -7,7 +7,7 @@ Partners are other nonprofits and organizations that Comunidades Unidas sends re
 ### Request
 
 ```
-GET /api/partners
+GET /api/partners?includeInactive=false
 ```
 
 ### Response
