@@ -18,6 +18,12 @@ GET /api/partners?includeInactive=false
     "id": 1,
     "name": "Partner name",
     "isActive": true,
+    "services": [
+      {
+        "name": "Service name",
+        "isActive": true
+      }
+    ],
     "dateAdded": "2020-01-01T00:00:00.000Z",
     "addedBy": 1,
     "dateModified": "2020-01-01T00:00:00.000Z",
@@ -27,6 +33,12 @@ GET /api/partners?includeInactive=false
     "id": 2,
     "name": "Partner name",
     "isActive": false,
+    "services": [
+      {
+        "name": "Service name",
+        "isActive": true
+      }
+    ],
     "dateAdded": "2020-01-01T00:00:00.000Z",
     "addedBy": 1,
     "dateModified": "2020-01-01T00:00:00.000Z",
