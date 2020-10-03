@@ -44,13 +44,16 @@ app.post("/api/partners", (req, res, next) => {
       return databaseError(req, res, err);
     }
 
-    getPartner({ id: result.insertId }, (err, partner) => {
-      if (err) {
-        return databaseError(req, res, err);
-      }
+    getPartner(
+      { id: result.insertId, includeInactive: true },
+      (err, partner) => {
+        if (err) {
+          return databaseError(req, res, err);
+        }
 
-      res.send(partner);
-    });
+        res.send(partner);
+      }
+    );
   });
 });
 
