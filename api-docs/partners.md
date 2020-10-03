@@ -20,8 +20,13 @@ GET /api/partners?includeInactive=false
     "isActive": true,
     "services": [
       {
+        "id": 1,
         "name": "Service name",
-        "isActive": true
+        "isActive": true,
+        "dateAdded": "2020-01-01T00:00:00.000Z",
+        "addedBy": 1,
+        "dateModified": "2020-01-01T00:00:00.000Z",
+        "modifiedBy": 1
       }
     ],
     "dateAdded": "2020-01-01T00:00:00.000Z",
@@ -35,8 +40,13 @@ GET /api/partners?includeInactive=false
     "isActive": false,
     "services": [
       {
+        "id": 1,
         "name": "Service name",
-        "isActive": true
+        "isActive": true,
+        "dateAdded": "2020-01-01T00:00:00.000Z",
+        "addedBy": 1,
+        "dateModified": "2020-01-01T00:00:00.000Z",
+        "modifiedBy": 1
       }
     ],
     "dateAdded": "2020-01-01T00:00:00.000Z",
