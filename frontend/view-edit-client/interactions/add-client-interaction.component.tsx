@@ -20,6 +20,9 @@ import { CUServicesList } from "../../add-client/services.component";
 export default function AddClientInteraction(props: AddClientInteractionProps) {
   const firstInputRef = React.useRef(null);
   const [servicesResponse, setServicesResponse] = React.useState(null);
+  const [partnersResponse, setPartnersResponse] = React.useState<
+    PartnerWithService[]
+  >([]);
   const [tempInteractionIds, setTempInteractionIds] = React.useState([0]);
   const [interactionGetters, setInteractionGetters] = React.useState<
     Array<InteractionGetter>
@@ -47,6 +50,18 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
       });
 
     return () => abortController.abort();
+  }, []);
+
+  React.useEffect(() => {
+    const ac = new AbortController();
+
+    easyFetch("/api/partners", { signal: ac.signal })
+      .then(setPartnersResponse)
+      .catch((err) => {
+        setTimeout(() => {
+          throw err;
+        });
+      });
   }, []);
 
   React.useEffect(() => {
@@ -148,6 +163,7 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
               setInteractionGetters(newGetters);
             }}
             servicesResponse={servicesResponse}
+            partnersResponse={partnersResponse}
             interactionIndex={index}
             removeInteraction={() => removeInteraction(item)}
             key={item}
@@ -242,4 +258,28 @@ type AddClientInteractionProps = {
   clientId?: string;
   client?: SingleClient;
   refetchClient?: () => any;
+};
+
+export type PartnerWithService = Partner & {
+  services: PartnerService[];
+};
+
+export type Partner = {
+  id: number;
+  name: string;
+  isActive: boolean;
+  dateAdded: string;
+  addedBy: number;
+  dateModified: string;
+  modifiedBy: number;
+};
+
+export type PartnerService = {
+  id: number;
+  name: string;
+  isActive: boolean;
+  dateAdded: string;
+  addedBy: number;
+  dateModified: string;
+  modifiedBy: number;
 };

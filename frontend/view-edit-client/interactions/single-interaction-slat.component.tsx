@@ -8,11 +8,12 @@ import TimeDurationInput, {
 } from "../../util/time-duration-input.component";
 import FullRichTextEditorComponent from "../../rich-text/full-rich-text-editor.component";
 import { UserModeContext, UserMode } from "../../util/user-mode.context";
+import { PartnerWithService } from "./add-client-interaction.component";
 
 export default React.forwardRef<any, SingleClientInteractionProps>(
   function SingleClientInteraction(props, ref) {
     const scope = useCss(css);
-    const [selectedService, setSelectedService] = React.useState<CUService>(
+    const [selectedService, setSelectedService] = React.useState<AnyService>(
       null
     );
     const [
@@ -169,6 +170,15 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
               <option value="" disabled hidden>
                 Choose here
               </option>
+              {props.partnersResponse.map((partner) => (
+                <optgroup label={partner.name + " (External)"} key={partner.id}>
+                  {partner.services.map((partnerService) => (
+                    <option key={partnerService.id} value={partnerService.id}>
+                      {partnerService.name}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
               {Object.keys(groupedServices).map((programName) => (
                 <optgroup label={programName} key={programName}>
                   {groupedServices[programName].map((service) => (
@@ -329,6 +339,7 @@ export enum InteractionLocation {
 
 type SingleClientInteractionProps = {
   servicesResponse: CUServicesList;
+  partnersResponse: PartnerWithService[];
   interactionIndex: number;
   removeInteraction(): any;
   addInteractionGetter(index: number, getter: InteractionGetter): any;
@@ -346,4 +357,14 @@ export type InteractionSlatData = {
   duration: string;
   location: string;
   description: string;
+};
+
+enum ServiceType {
+  CU = "CU",
+  Partner = "Partner",
+}
+
+type AnyService = {
+  type: ServiceType;
+  serviceId: number;
 };
