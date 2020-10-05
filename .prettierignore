@@ -9,3 +9,9 @@ LICENSE
 .DS_Store
 .env
 .ebignore
+.npmrc
+*.otf
+*.ttf
+*.png
+*.webp
+*.yml.save
