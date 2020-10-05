@@ -58,7 +58,7 @@ exports.getFullInvoiceById = getFullInvoiceById;
 
 function getFullInvoiceById({ id, redactedTags }, errBack) {
   if (!id) {
-    errBack(`invoice id must be provided`, id);
+    return errBack(Error(`invoice id must be provided`), null);
   }
 
   const getInvoiceSql = mysql.format(getInvoiceSqlStr, [id, id, id, id, id]);
@@ -78,7 +78,7 @@ function getFullInvoiceById({ id, redactedTags }, errBack) {
     const invoice = invoiceResult[0];
 
     if (!invoice) {
-      errBack(null, 404);
+      return errBack(null, 404);
     }
 
     errBack(
