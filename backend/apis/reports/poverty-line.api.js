@@ -7,11 +7,11 @@ const mysql = require("mysql");
 
 // https://aspe.hhs.gov/prior-hhs-poverty-guidelines-and-federal-register-references
 const povertyLines = {
-  "2019": {
+  2019: {
     firstPerson: 12490,
     additionalPerson: 4420,
   },
-  "2020": {
+  2020: {
     firstPerson: 12760,
     additionalPerson: 4480,
   },
