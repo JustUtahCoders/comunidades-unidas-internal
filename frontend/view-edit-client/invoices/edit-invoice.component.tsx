@@ -18,25 +18,25 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
   const [modifiedInvoice, setModifiedInvoice] = React.useState(() =>
     cloneDeep(props.invoice)
   );
-  const groupedServices = groupBy(props.services, "programName");
-  const richTextRef = React.useRef(null);
-
-  React.useEffect(() => {
-    if (ref) {
-      // @ts-ignore
-      ref.current = {
-        getInvoiceToSave,
-        getInvoiceId() {
-          return props.invoice.id;
-        },
-      };
-    }
-  });
-
-  const totalOwed = sumBy(
+  const subtotal = sumBy(
     modifiedInvoice.lineItems.concat(newLineItems),
     (li) => li.rate * li.quantity || 0
   );
+  const [totalOwed, setTotalOwed] = React.useState(subtotal);
+  const groupedServices = groupBy(props.services, "programName");
+  const richTextRef = React.useRef(null);
+
+  React.useImperativeHandle(ref, () => ({
+    getInvoiceToSave,
+    getInvoiceId() {
+      return props.invoice.id;
+    },
+  }));
+
+  React.useEffect(() => {
+    setTotalOwed(subtotal);
+  }, [subtotal]);
+
   const totalPaid = sumBy(modifiedInvoice.payments, "amountTowardsInvoice");
 
   return (
@@ -87,9 +87,9 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
               <th style={{ width: "15%" }}>Service</th>
               <th style={{ width: "25%" }}>Name</th>
               <th style={{ width: "30%" }}>Description</th>
-              <th style={{ width: "10%", textAlign: "center" }}>Quantity</th>
+              <th style={{ width: "7%", textAlign: "center" }}>Qty</th>
               <th style={{ width: "10%", textAlign: "center" }}>Rate</th>
-              <th style={{ width: "10%", textAlign: "center" }}>Amount</th>
+              <th style={{ width: "13%", textAlign: "center" }}>Amount</th>
               <th style={{ width: "5%" }}></th>
             </tr>
           </thead>
@@ -109,7 +109,7 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
           <tfoot>
             {props.isEditing ? (
               <>
-                <tr>{totalOwedRows(5)}</tr>
+                {subtotalRows()}
                 <tr>
                   <td colSpan={5} style={{ textAlign: "end" }}>
                     Total Paid:
@@ -118,6 +118,7 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
                     ${totalPaid.toFixed(2)}
                   </td>
                 </tr>
+                <tr>{totalOwedRows(5)}</tr>
                 <tr>
                   <td colSpan={4} style={{ textAlign: "start" }}>
                     <button
@@ -130,23 +131,28 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
                   </td>
                   <td style={{ textAlign: "end" }}>Balance:</td>
                   <td style={{ textAlign: "center" }}>
-                    ${(totalOwed - totalPaid).toFixed(2)}
+                    {totalOwed - totalPaid < 0 && "("}$
+                    {Math.abs(totalOwed - totalPaid).toFixed(2)}
+                    {totalOwed - totalPaid < 0 && ")"}
                   </td>
                 </tr>
               </>
             ) : (
-              <tr>
-                <td colSpan={3} style={{ textAlign: "start" }}>
-                  <button
-                    className="secondary"
-                    type="button"
-                    onClick={addLineItem}
-                  >
-                    Add Line Item
-                  </button>
-                </td>
-                {totalOwedRows(2)}
-              </tr>
+              <>
+                {subtotalRows()}
+                <tr>
+                  <td colSpan={3} style={{ textAlign: "start" }}>
+                    <button
+                      className="secondary"
+                      type="button"
+                      onClick={addLineItem}
+                    >
+                      Add Line Item
+                    </button>
+                  </td>
+                  {totalOwedRows(2)}
+                </tr>
+              </>
             )}
           </tfoot>
         </table>
@@ -232,13 +238,47 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
     }
   }
 
+  function subtotalRows(colSpan = 5) {
+    const discount = subtotal - totalOwed;
+
+    return (
+      <>
+        <tr>
+          <td colSpan={colSpan} style={{ textAlign: "end" }}>
+            Subtotal:
+          </td>
+          <td style={{ textAlign: "center" }}>
+            ${Number(subtotal).toFixed(2)}
+          </td>
+        </tr>
+        <tr>
+          <td colSpan={colSpan} style={{ textAlign: "end" }}>
+            Discount:
+          </td>
+          <td style={{ textAlign: "center" }}>
+            {discount < 0 && "("}${Math.abs(discount).toFixed(2)}
+            {discount < 0 && ")"}
+          </td>
+        </tr>
+      </>
+    );
+  }
+
   function totalOwedRows(colSpan) {
     return (
       <>
         <td colSpan={colSpan} style={{ textAlign: "end" }}>
           Total Owed:
         </td>
-        <td style={{ textAlign: "center" }}>${totalOwed.toFixed(2)}</td>
+        <td style={{ textAlign: "center" }}>
+          <input
+            type="number"
+            value={totalOwed}
+            onChange={({ target: { value } }) =>
+              setTotalOwed((value as unknown) as number)
+            }
+          />
+        </td>
       </>
     );
   }
@@ -255,7 +295,7 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
       ...modifiedInvoice,
       lineItems,
       clients: props.client ? [props.client.id] : [],
-      totalCharged: sumBy(lineItems, (li) => li.quantity * li.rate),
+      totalCharged: Number(totalOwed),
     };
 
     delete result.createdBy;

@@ -176,6 +176,12 @@ require("./apis/invoices/get-invoice-payments.api");
 require("./apis/invoices/get-payment-receipt.api");
 require("./apis/invoices/get-invoice-pdf.api");
 
+require("./apis/partners/create-partner.api");
+require("./apis/partners/get-partner-list.api");
+require("./apis/partners/update-partner.api");
+require("./apis/partners/create-partner-service.api");
+require("./apis/partners/update-partner-service.api");
+
 require("./apis/default-404.api.js");
 require("./index-html.js");
 

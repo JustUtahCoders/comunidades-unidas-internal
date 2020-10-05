@@ -347,7 +347,9 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
             otherTop + lineHeight * 3
           );
           doc.text(
-            ` $${balance.toFixed(2).toLocaleString()}`,
+            ` ${balance < 0 ? "(" : ""}$${Math.abs(balance)
+              .toFixed(2)
+              .toLocaleString()}${balance < 0 ? ")" : ""}`,
             col5Left,
             otherTop + lineHeight * 4
           );
