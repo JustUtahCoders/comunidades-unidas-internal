@@ -230,6 +230,14 @@ body {
   white-space: nowrap;
   overflow: hidden;
 }
+
+& .clickable {
+  cursor: pointer;
+}
+
+& .clickable:hover {
+  background-color: var(--medium-gray) !important;
+}
 `;
 
 type Color = string;

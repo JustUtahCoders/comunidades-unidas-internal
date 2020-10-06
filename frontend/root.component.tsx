@@ -8,6 +8,8 @@ import UserContext from "./util/user.context";
 import "form-request-submit-polyfill";
 import UserModeContext from "./util/user-mode.context";
 import Growls from "./growls/growls.component";
+import AdminSettings from "./admin/admin-settings.component";
+import Partners from "./admin/partners/partners.component";
 
 const Home = React.lazy(() => import("./home/home.component"));
 const ReportIssue = React.lazy(
@@ -74,7 +76,9 @@ export default function Root() {
                 <Reports path="reports/*" />
                 <ViewEvent path="events/:eventId" />
                 <EventList path="event-list" />
+                <AdminSettings path="admin-settings" />
                 <ProgramsAndServices path="programs-and-services" />
+                <Partners path="partners" />
               </Router>
             </React.Suspense>
           </Navbars>
