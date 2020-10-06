@@ -48,8 +48,8 @@ export default function Home(props: HomeProps) {
         />
         <HomeCard
           iconUrl={programsAndServicesUrl}
-          title="C.U. Programs and Services"
-          link="programs-and-services"
+          title="Admin Settings"
+          link="admin-settings"
         />
         <HomeCard iconUrl={addLeadsUrl} title="Add Leads" link="add-leads" />
         <HomeCard iconUrl={reportsUrl} title="Reports" link="reports" />

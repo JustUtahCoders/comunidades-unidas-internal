@@ -13,7 +13,6 @@ export default function EditableProgramRow(props: EditableProgramRowProps) {
   const [isSaving, setIsSaving] = React.useState(false);
   const formRef = React.useRef(null);
   const [showingModal, setShowingModal] = React.useState(false);
-  const scope = useCss(css);
 
   React.useEffect(() => {
     if (isSaving) {
@@ -46,7 +45,6 @@ export default function EditableProgramRow(props: EditableProgramRowProps) {
   return (
     <>
       <tr
-        {...scope}
         {...trProps}
         onClick={() => setShowingModal(props.canEdit)}
         className={maybe("clickable", props.canEdit)}
@@ -85,13 +83,3 @@ type EditableProgramRowProps = {
   canEdit: boolean;
   children: React.ReactElement | React.ReactElement[];
 };
-
-const css = `
-& .clickable {
-  cursor: pointer;
-}
-
-& .clickable:hover {
-  background-color: var(--medium-gray) !important;
-}
-`;

@@ -16,7 +16,7 @@ import leadListUrl from "../../icons/148705-essential-collection/svg/list-1.svg"
 import reportsUrl from "../../icons/148705-essential-collection/svg/volume-control-1.svg";
 import addLeadsUrl from "../../icons/148705-essential-collection/svg/windows-3.svg";
 import eventListUrl from "../../icons/148705-essential-collection/svg/calendar-1.svg";
-import programsAndServicesUrl from "../../icons/148705-essential-collection/svg/settings-1.svg";
+import adminSettingsUrl from "../../icons/148705-essential-collection/svg/settings-1.svg";
 import expandUrl from "../../icons/148705-essential-collection/svg/fast-forward.svg";
 import collapseUrl from "../../icons/148705-essential-collection/svg/rewind.svg";
 import loginUrl from "../../icons/148705-essential-collection/svg/login.svg";
@@ -162,17 +162,17 @@ export default function Sidebar(props: SidebarProps) {
           </li>
           <li title="Programs and Services">
             <Link
-              to="programs-and-services"
+              to="admin-settings"
               className="nav-link"
               onClick={maybeHideSidebar}
               getProps={maybeActiveLink}
             >
               <img
                 className="collapsed"
-                src={programsAndServicesUrl}
-                alt="Programs and Services"
+                src={adminSettingsUrl}
+                alt="Admin Settings"
               />
-              <div className="expanded">Programs & Services</div>
+              <div className="expanded">Admin Settings</div>
             </Link>
           </li>
           <li title="Reports URL">
