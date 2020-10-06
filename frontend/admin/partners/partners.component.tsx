@@ -50,7 +50,7 @@ export default function Partners(props) {
 
   return (
     <>
-      <PageHeader title="Programs" />
+      <PageHeader title="Partners" />
       <div className="card" {...useCss(css)}>
         <p>
           This is a list of all Comunidades Unidas partners and the services
