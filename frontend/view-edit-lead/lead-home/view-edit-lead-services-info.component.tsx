@@ -93,7 +93,7 @@ export default function ViewEditLeadServicesInfo(
               </tbody>
             </table>
           ) : (
-            <p>No have been services selected</p>
+            <p>No services have been selected</p>
           )}
           {props.editable && (
             <button

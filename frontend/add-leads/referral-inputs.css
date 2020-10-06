@@ -1,0 +1,21 @@
+.form-group {
+  display: flex;
+  align-items: center;
+}
+
+.form-group:not(:last-child) {
+  margin-bottom: 1.6rem;
+}
+
+.form-group label {
+  width: 22rem;
+}
+
+.close {
+  margin-left: 0.8rem;
+  font-size: 1.4rem;
+}
+
+h4 {
+  margin: 2rem 0 1.6rem 0;
+}

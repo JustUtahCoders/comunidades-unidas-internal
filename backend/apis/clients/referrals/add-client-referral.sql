@@ -1,5 +1,5 @@
 INSERT INTO clientReferrals
-(clientId, partnerServiceId, addedBy)
+(clientId, partnerServiceId, referralDate, addedBy)
 VALUES
-(?, ?, ?)
+(?, ?, ?, ?)
 ;
