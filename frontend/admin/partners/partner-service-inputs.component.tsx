@@ -13,6 +13,9 @@ export default function PartnerServiceInputs(props: PartnerServiceInputs) {
             value={props.partnerId || ""}
             onChange={(evt) => props.setPartnerId(Number(evt.target.value))}
           >
+            <option disabled value="">
+              Please select a partner
+            </option>
             {props.partners.map((partner) => (
               <option key={partner.id} value={partner.id}>
                 {partner.name}

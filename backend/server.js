@@ -182,6 +182,8 @@ require("./apis/partners/update-partner.api");
 require("./apis/partners/create-partner-service.api");
 require("./apis/partners/update-partner-service.api");
 require("./apis/clients/referrals/add-client-referral.api");
+require("./apis/leads/referrals/get-lead-referrals.api");
+require("./apis/leads/referrals/add-lead-referral.api");
 
 require("./apis/default-404.api.js");
 require("./index-html.js");

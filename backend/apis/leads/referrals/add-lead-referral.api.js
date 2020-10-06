@@ -17,21 +17,20 @@ const path = require("path");
 const {
   getPartnerService,
 } = require("../../partners/create-partner-service.api");
-const { getClientById } = require("../get-client.api");
-const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 const { getPartner } = require("../../partners/create-partner.api");
+const { getLeadById } = require("../get-lead.api");
 
 const insertReferralSql = fs.readFileSync(
-  path.resolve(__dirname, "./add-client-referral.sql"),
+  path.resolve(__dirname, "./add-lead-referral.sql"),
   "utf-8"
 );
 
-app.post("/api/clients/:clientId/referrals", (req, res) => {
+app.post("/api/leads/:leadId/referrals", (req, res) => {
   const user = req.session.passport.user;
-  const clientId = Number(req.params.clientId);
+  const leadId = Number(req.params.leadId);
 
   const validationErrors = [
-    ...checkValid(req.params, validId("clientId")),
+    ...checkValid(req.params, validId("leadId")),
     ...checkValid(
       req.body,
       validInteger("partnerServiceId"),
@@ -45,13 +44,13 @@ app.post("/api/clients/:clientId/referrals", (req, res) => {
 
   const partnerServiceId = req.body.partnerServiceId;
 
-  getClientById(clientId, (err, client) => {
+  getLeadById(leadId, (err, lead) => {
     if (err) {
       return databaseError(req, res, err);
     }
 
-    if (client === null) {
-      return notFound(`No client exists with id ${clientId}`);
+    if (lead === null) {
+      return notFound(`No lead exists with id ${leadId}`);
     }
 
     getPartnerService(
@@ -82,21 +81,12 @@ app.post("/api/clients/:clientId/referrals", (req, res) => {
               );
             }
 
-            let query = mysql.format(insertReferralSql, [
-              clientId,
+            const query = mysql.format(insertReferralSql, [
+              leadId,
               partnerServiceId,
               req.body.referralDate,
               user.id,
             ]);
-            query += insertActivityLogQuery({
-              detailIdIsLastInsertId: true,
-              clientId,
-              title: `Client was referred to ${partner.name} for ${partnerService.name}`,
-              description: null,
-              logType: "referral",
-              addedBy: user.id,
-              dateAdded: req.body.referralDate,
-            });
 
             pool.query(query, (err, result) => {
               if (err) {

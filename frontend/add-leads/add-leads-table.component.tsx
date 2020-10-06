@@ -2,6 +2,8 @@ import React from "react";
 import AddLeadRow from "./add-lead-row.component";
 import { useCss } from "kremling";
 import easyFetch from "../util/easy-fetch";
+import { FullPartner } from "../admin/partners/partners.component";
+import { handlePromiseError } from "../util/error-helpers";
 
 export default function AddLeadsTable({
   leads,
@@ -10,6 +12,7 @@ export default function AddLeadsTable({
 }: AddLeadsTableProps) {
   const scope = useCss(css);
   const [services, setServices] = React.useState([]);
+  const [partners, setPartners] = React.useState<FullPartner[]>([]);
 
   React.useEffect(() => {
     const abortController = new AbortController();
@@ -26,19 +29,31 @@ export default function AddLeadsTable({
       });
   }, []);
 
+  React.useEffect(() => {
+    const ac = new AbortController();
+    easyFetch(`/api/partners`, { signal: ac.signal })
+      .then(setPartners)
+      .catch(handlePromiseError);
+
+    return () => {
+      ac.abort();
+    };
+  }, []);
+
   return (
     <table style={{ width: "100%" }} {...scope}>
       <thead>
         <tr>
           <th style={{ width: "15%" }}>First</th>
           <th style={{ width: "15%" }}>Last</th>
-          <th style={{ width: "18%" }}>Phone</th>
+          <th style={{ width: "13%" }}>Phone</th>
           <th style={{ width: "10%" }}>Zip</th>
-          <th style={{ width: "10%" }}>Age</th>
-          <th style={{ width: "15%" }}>Gender</th>
-          <th style={{ width: "8%" }}>Interests</th>
+          <th style={{ width: "6%" }}>Age</th>
+          <th style={{ width: "13%" }}>Gender</th>
+          <th style={{ width: "10%" }}>Interests</th>
+          <th style={{ width: "10%" }}>Referrals</th>
           <th style={{ width: "5%" }}>SMS</th>
-          <th style={{ width: "4%" }}></th>
+          <th style={{ width: "3%" }}></th>
         </tr>
       </thead>
       <tbody>
@@ -52,6 +67,7 @@ export default function AddLeadsTable({
             isFirstLead={i === 0}
             isLastLead={i === leads.length - 1}
             services={services}
+            partners={partners}
           />
         ))}
       </tbody>
