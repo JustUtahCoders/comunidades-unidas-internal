@@ -440,6 +440,8 @@ function getBackgroundColor(logType: LogType) {
     case LogType["integration:sync"]:
     case LogType["integration:broken"]:
       return "purple";
+    case LogType["referral"]:
+      return "red";
     default:
       return "black";
   }
@@ -560,6 +562,7 @@ export type ClientHistoryFilterOptions = {
   "invoice:updated": boolean;
   "payment:created": boolean;
   "payment:updated": boolean;
+  referral: boolean;
 };
 
 export enum LogType {
@@ -582,6 +585,7 @@ export enum LogType {
   "invoice:updated" = "invoice:updated",
   "payment:created" = "payment:created",
   "payment:updated" = "payment:updated",
+  "referral" = "referral",
 }
 
 const allFiltersOn: ClientHistoryFilterOptions = Object.keys(LogType).reduce(
