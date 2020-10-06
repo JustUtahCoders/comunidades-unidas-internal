@@ -5,6 +5,7 @@ import easyFetch from "../../util/easy-fetch";
 import SingleInteractionSlat, {
   InteractionGetter,
   InteractionSlatData,
+  Referral,
 } from "./single-interaction-slat.component";
 import { useCss } from "kremling";
 import { showGrowl, GrowlType } from "../../growls/growls.component";
@@ -16,13 +17,14 @@ import { differenceBy } from "lodash-es";
 import { UserModeContext, UserMode } from "../../util/user-mode.context";
 import { isServiceWithinImmigrationProgram } from "../../immigration/immigration.utils";
 import { CUServicesList } from "../../add-client/services.component";
+import { FullPartner } from "../../admin/partners/partners.component";
 
 export default function AddClientInteraction(props: AddClientInteractionProps) {
   const firstInputRef = React.useRef(null);
   const [servicesResponse, setServicesResponse] = React.useState(null);
-  const [partnersResponse, setPartnersResponse] = React.useState<
-    PartnerWithService[]
-  >([]);
+  const [partnersResponse, setPartnersResponse] = React.useState<FullPartner[]>(
+    []
+  );
   const [tempInteractionIds, setTempInteractionIds] = React.useState([0]);
   const [interactionGetters, setInteractionGetters] = React.useState<
     Array<InteractionGetter>
@@ -95,19 +97,26 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
 
       Promise.all(
         interactions
-          .map((interaction) =>
-            easyFetch(
-              `/api/clients/${clientId}/interactions${getTagsQuery(
-                userMode.userMode,
-                interaction,
-                servicesResponse
-              )}`,
-              {
+          .map((interaction) => {
+            if ((interaction as Referral).partnerServiceId) {
+              return easyFetch(`/api/clients/${clientId}/referrals`, {
                 method: "POST",
                 body: interaction,
-              }
-            )
-          )
+              });
+            } else {
+              return easyFetch(
+                `/api/clients/${clientId}/interactions${getTagsQuery(
+                  userMode.userMode,
+                  interaction as InteractionSlatData,
+                  servicesResponse
+                )}`,
+                {
+                  method: "POST",
+                  body: interaction,
+                }
+              );
+            }
+          })
           .concat(intakeServicesPromise)
       )
         .then(() => {
@@ -258,28 +267,4 @@ type AddClientInteractionProps = {
   clientId?: string;
   client?: SingleClient;
   refetchClient?: () => any;
-};
-
-export type PartnerWithService = Partner & {
-  services: PartnerService[];
-};
-
-export type Partner = {
-  id: number;
-  name: string;
-  isActive: boolean;
-  dateAdded: string;
-  addedBy: number;
-  dateModified: string;
-  modifiedBy: number;
-};
-
-export type PartnerService = {
-  id: number;
-  name: string;
-  isActive: boolean;
-  dateAdded: string;
-  addedBy: number;
-  dateModified: string;
-  modifiedBy: number;
 };

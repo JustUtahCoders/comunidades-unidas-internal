@@ -8,7 +8,10 @@ import TimeDurationInput, {
 } from "../../util/time-duration-input.component";
 import FullRichTextEditorComponent from "../../rich-text/full-rich-text-editor.component";
 import { UserModeContext, UserMode } from "../../util/user-mode.context";
-import { PartnerWithService } from "./add-client-interaction.component";
+import {
+  FullPartner,
+  PartnerService,
+} from "../../admin/partners/partners.component";
 
 export default React.forwardRef<any, SingleClientInteractionProps>(
   function SingleClientInteraction(props, ref) {
@@ -58,9 +61,32 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
       delete groupedServices.Immigration;
     }
 
+    const partnerServices = props.partnersResponse.reduce((result, partner) => {
+      return result.concat(...partner.services);
+    }, []);
+
+    const partnerServiceSelected =
+      selectedService && selectedService.type === "Partner";
+
     React.useEffect(() => {
-      props.addInteractionGetter(props.interactionIndex, interactionGetter);
+      const getter = partnerServiceSelected
+        ? referralGetter
+        : interactionGetter;
+      props.addInteractionGetter(props.interactionIndex, getter);
       return () => props.removeInteractionGetter(props.interactionIndex);
+
+      function referralGetter() {
+        const now = dayjs();
+        const isToday =
+          dayjs(dateOfInteraction).format("YYYY-MM-DD") ===
+          dayjs().format("YYYY-MM-DD");
+        return {
+          partnerServiceId: (selectedService.service as PartnerService).id,
+          referralDate: isToday
+            ? dayjs().toISOString()
+            : dayjs(dateOfInteraction + now.format(" hh:mm")).toISOString(),
+        };
+      }
 
       function interactionGetter() {
         let description = descrRef.current.getHTML();
@@ -69,7 +95,7 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         }
 
         return {
-          serviceId: selectedService ? selectedService.id : null,
+          serviceId: selectedService ? selectedService.service.id : null,
           interactionType: selectedInteractionType,
           dateOfInteraction,
           duration: duration.stringValue,
@@ -99,7 +125,12 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
           : null;
         setSelectedService(
           serviceId
-            ? props.servicesResponse.services.find((s) => s.id === serviceId)
+            ? {
+                type: ServiceType.CU,
+                service: props.servicesResponse.services.find(
+                  (s) => s.id === serviceId
+                ),
+              }
             : null
         );
       }
@@ -108,18 +139,22 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
     React.useEffect(() => {
       if (!selectedService) {
         return;
-      } else {
-        if (selectedService.defaultInteractionLocation) {
-          setSelectedLocation(selectedService.defaultInteractionLocation);
+      } else if (selectedService.type === ServiceType.CU) {
+        if (selectedService.service.defaultInteractionLocation) {
+          setSelectedLocation(
+            selectedService.service.defaultInteractionLocation
+          );
         }
 
-        if (selectedService.defaultInteractionType) {
-          setSelectedInteractionType(selectedService.defaultInteractionType);
+        if (selectedService.service.defaultInteractionType) {
+          setSelectedInteractionType(
+            selectedService.service.defaultInteractionType
+          );
         }
 
-        if (selectedService.defaultInteractionDuration) {
+        if (selectedService.service.defaultInteractionDuration) {
           setDuration({
-            stringValue: selectedService.defaultInteractionDuration,
+            stringValue: selectedService.service.defaultInteractionDuration,
             hours: null,
             minutes: null,
           });
@@ -136,7 +171,7 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
           {props.inWell && (
             <h3 className="interaction-number">
               #{props.interactionIndex + 1}
-              {selectedService ? ` ${selectedService.serviceName}` : ""}
+              {selectedService ? ` ${getName(selectedService)}` : ""}
             </h3>
           )}
           {props.interactionIndex > 0 && (
@@ -156,12 +191,28 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
           <div>
             <select
               ref={ref}
-              value={selectedService ? selectedService.id : ""}
-              onChange={(evt) =>
-                setSelectedService(
-                  services.find((s) => s.id === Number(evt.target.value))
-                )
+              value={
+                selectedService
+                  ? selectedService.type + selectedService.service.id
+                  : ""
               }
+              onChange={(evt) => {
+                if (evt.target.value.startsWith("Partner")) {
+                  const serviceId = Number(
+                    evt.target.value.slice("Partner".length)
+                  );
+                  setSelectedService({
+                    type: "Partner",
+                    service: partnerServices.find((ps) => ps.id === serviceId),
+                  });
+                } else {
+                  const serviceId = Number(evt.target.value.slice("CU".length));
+                  setSelectedService({
+                    type: "CU",
+                    service: services.find((s) => s.id === serviceId),
+                  });
+                }
+              }}
               aria-labelledby={`provided-service-${props.interactionIndex}`}
               className="services-select"
               name={`provided-service-${props.interactionIndex}`}
@@ -171,9 +222,12 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
                 Choose here
               </option>
               {props.partnersResponse.map((partner) => (
-                <optgroup label={partner.name + " (External)"} key={partner.id}>
+                <optgroup label={partner.name + " (Referral)"} key={partner.id}>
                   {partner.services.map((partnerService) => (
-                    <option key={partnerService.id} value={partnerService.id}>
+                    <option
+                      key={partnerService.id}
+                      value={"Partner" + partnerService.id}
+                    >
                       {partnerService.name}
                     </option>
                   ))}
@@ -182,7 +236,7 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
               {Object.keys(groupedServices).map((programName) => (
                 <optgroup label={programName} key={programName}>
                   {groupedServices[programName].map((service) => (
-                    <option key={service.id} value={service.id}>
+                    <option key={service.id} value={"CU" + service.id}>
                       {service.serviceName}
                     </option>
                   ))}
@@ -191,28 +245,35 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
             </select>
             {selectedService &&
               services.length > 0 &&
-              selectedService.serviceName === "Financial Coach" && (
+              selectedService.type === "CU" &&
+              selectedService.service.serviceName === "Financial Coach" && (
                 <div className="caption">
                   Please add the established goals into the description field.
                 </div>
               )}
           </div>
-          <label id={`interaction-type-${props.interactionIndex}`}>Type:</label>
-          <select
-            value={selectedInteractionType || ""}
-            onChange={(evt) => setSelectedInteractionType(evt.target.value)}
-            aria-labelledby={`interaction-type-${props.interactionIndex}`}
-            required
-          >
-            <option value="" disabled hidden>
-              Choose here
-            </option>
-            {Object.keys(InteractionType).map((interactionType) => (
-              <option key={interactionType} value={interactionType}>
-                {InteractionType[interactionType]}
-              </option>
-            ))}
-          </select>
+          {!partnerServiceSelected && (
+            <>
+              <label id={`interaction-type-${props.interactionIndex}`}>
+                Type:
+              </label>
+              <select
+                value={selectedInteractionType || ""}
+                onChange={(evt) => setSelectedInteractionType(evt.target.value)}
+                aria-labelledby={`interaction-type-${props.interactionIndex}`}
+                required
+              >
+                <option value="" disabled hidden>
+                  Choose here
+                </option>
+                {Object.keys(InteractionType).map((interactionType) => (
+                  <option key={interactionType} value={interactionType}>
+                    {InteractionType[interactionType]}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
           <label id={`interaction-date-${props.interactionIndex}`}>Date:</label>
           <input
             type="date"
@@ -221,15 +282,19 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
             aria-labelledby={`interaction-date-${props.interactionIndex}`}
             required
           />
-          <label id={`interaction-duration-${props.interactionIndex}`}>
-            Duration:
-          </label>
-          <TimeDurationInput
-            labelId={`interaction-duration-${props.interactionIndex}`}
-            duration={duration}
-            setDuration={setDuration}
-          />
-          {selectedInteractionType !== "byPhone" && (
+          {!partnerServiceSelected && (
+            <>
+              <label id={`interaction-duration-${props.interactionIndex}`}>
+                Duration:
+              </label>
+              <TimeDurationInput
+                labelId={`interaction-duration-${props.interactionIndex}`}
+                duration={duration}
+                setDuration={setDuration}
+              />
+            </>
+          )}
+          {!partnerServiceSelected && selectedInteractionType !== "byPhone" && (
             <>
               <label id={`interaction-location-${props.interactionIndex}`}>
                 Location:
@@ -251,27 +316,35 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
               </select>
             </>
           )}
-          <label id={`interaction-description-${props.interactionIndex}`}>
-            Description:
-          </label>
-          <FullRichTextEditorComponent
-            ref={descrRef}
-            placeholder="Describe this interaction with the client"
-            initialHTML={
-              props.initialInteraction
-                ? props.initialInteraction.description
-                : null
-            }
-          />
+          {!partnerServiceSelected && (
+            <>
+              <label id={`interaction-description-${props.interactionIndex}`}>
+                Description:
+              </label>
+              <FullRichTextEditorComponent
+                ref={descrRef}
+                placeholder="Describe this interaction with the client"
+                initialHTML={
+                  props.initialInteraction
+                    ? props.initialInteraction.description
+                    : null
+                }
+              />
+            </>
+          )}
         </div>
       </div>
     );
-
-    function handleTimeChange(newDuration) {
-      setDuration(newDuration);
-    }
   }
 );
+
+function getName(service: AnyService) {
+  if (service.type === "CU") {
+    return service.service.serviceName;
+  } else {
+    return service.service.name + " (Referral)";
+  }
+}
 
 const css = `
 & .single-client-interaction {
@@ -339,7 +412,7 @@ export enum InteractionLocation {
 
 type SingleClientInteractionProps = {
   servicesResponse: CUServicesList;
-  partnersResponse: PartnerWithService[];
+  partnersResponse: FullPartner[];
   interactionIndex: number;
   removeInteraction(): any;
   addInteractionGetter(index: number, getter: InteractionGetter): any;
@@ -348,7 +421,12 @@ type SingleClientInteractionProps = {
   initialInteraction?: InteractionSlatData;
 };
 
-export type InteractionGetter = () => InteractionSlatData;
+export type InteractionGetter = () => InteractionSlatData | Referral;
+
+export type Referral = {
+  partnerServiceId: number;
+  referralDate: string;
+};
 
 export type InteractionSlatData = {
   serviceId: number;
@@ -364,7 +442,14 @@ enum ServiceType {
   Partner = "Partner",
 }
 
-type AnyService = {
-  type: ServiceType;
-  serviceId: number;
+type CUServiceType = {
+  type: "CU";
+  service: CUService;
 };
+
+type PartnerServiceType = {
+  type: "Partner";
+  service: PartnerService;
+};
+
+type AnyService = CUServiceType | PartnerServiceType;

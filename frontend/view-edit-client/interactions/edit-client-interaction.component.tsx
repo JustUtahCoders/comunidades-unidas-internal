@@ -2,6 +2,7 @@ import React from "react";
 import { LogTypeEditProps } from "../client-history/edit-log.component";
 import SingleInteractionSlatComponent, {
   InteractionGetter,
+  InteractionSlatData,
 } from "./single-interaction-slat.component";
 import { CUServicesList } from "../../add-client/services.component";
 import easyFetch from "../../util/easy-fetch";
@@ -71,7 +72,11 @@ export default function EditClientInteraction({
       return easyFetch(
         `/api/clients/${clientId}/interactions/${
           originalInteraction.id
-        }${getTagsQuery(userMode, interaction, servicesResponse)}`,
+        }${getTagsQuery(
+          userMode,
+          interaction as InteractionSlatData,
+          servicesResponse
+        )}`,
         {
           signal: abortController.signal,
           method: "PATCH",
@@ -120,6 +125,7 @@ export default function EditClientInteraction({
           removeInteraction={null}
           servicesResponse={servicesResponse}
           initialInteraction={originalInteraction}
+          partnersResponse={[]}
         />
       );
     }
