@@ -155,6 +155,7 @@ require("./apis/reports/ages-and-genders-report.api");
 require("./apis/reports/service-interest-report.api");
 require("./apis/reports/outstanding-invoices.api");
 require("./apis/reports/revenue-by-service.api");
+require("./apis/reports/referrals-by-service-report.api");
 
 require("./apis/clients/files/presigned-file-upload.api");
 require("./apis/clients/files/add-client-files.api");

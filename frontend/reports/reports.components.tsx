@@ -24,6 +24,8 @@ import OutstandingInvoicesParams from "./outstanding-invoices/outstanding-invoic
 import OutstandingInvoicesResults from "./outstanding-invoices/outstanding-invoices-results.component";
 import RevenueByServiceParams from "./revenue-by-service/revenue-by-service-params.component";
 import RevenueByServiceResults from "./revenue-by-service/revenue-by-service-results.component";
+import ReferralsByServiceParams from "./referrals-by-service/referrals-by-service-params.component";
+import ReferralsByServiceResults from "./referrals-by-service/referrals-by-service-results.component";
 
 export default function Reports(props: ReportsProps) {
   useFullWidth();
@@ -88,6 +90,11 @@ export default function Reports(props: ReportsProps) {
               title="Revenue By Programs / Services"
             />
             <RevenueByServiceResults path="revenue-by-service/results" />
+            <ReferralsByServiceParams
+              path="referrals-by-service"
+              title="Referrals By Service"
+            />
+            <ReferralsByServiceResults path="referrals-by-service/results" />
           </Router>
         </SelectReport>
       </div>
