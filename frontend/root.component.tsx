@@ -8,42 +8,45 @@ import UserContext from "./util/user.context";
 import "form-request-submit-polyfill";
 import UserModeContext from "./util/user-mode.context";
 import Growls from "./growls/growls.component";
+import AdminSettings from "./admin/admin-settings.component";
+import Partners from "./admin/partners/partners.component";
 
 const Home = React.lazy(() => import("./home/home.component"));
-const ReportIssue = React.lazy(() =>
-  import("./report-issue/report-issue.component")
+const ReportIssue = React.lazy(
+  () => import("./report-issue/report-issue.component")
 );
-const ReportIssueSuccess = React.lazy(() =>
-  import("./report-issue/report-issue-success.component")
+const ReportIssueSuccess = React.lazy(
+  () => import("./report-issue/report-issue-success.component")
 );
-const ViewClient = React.lazy(() =>
-  import("./view-edit-client/view-client.component")
+const ViewClient = React.lazy(
+  () => import("./view-edit-client/view-client.component")
 );
-const ClientList = React.lazy(() =>
-  import("./client-list/client-list.component")
+const ClientList = React.lazy(
+  () => import("./client-list/client-list.component")
 );
-const AddCaseNote = React.lazy(() =>
-  import("./view-edit-client/case-notes/add-case-note.component")
+const AddCaseNote = React.lazy(
+  () => import("./view-edit-client/case-notes/add-case-note.component")
 );
-const AddClientInteraction = React.lazy(() =>
-  import("./view-edit-client/interactions/add-client-interaction.component")
+const AddClientInteraction = React.lazy(
+  () =>
+    import("./view-edit-client/interactions/add-client-interaction.component")
 );
 const AddLeads = React.lazy(() => import("./add-leads/add-leads.component"));
 const LeadList = React.lazy(() => import("./leads-list/lead-list.component"));
-const ViewLead = React.lazy(() =>
-  import("./view-edit-lead/view-lead.component")
+const ViewLead = React.lazy(
+  () => import("./view-edit-lead/view-lead.component")
 );
 const Reports = React.lazy(() => import("./reports/reports.components"));
 const NotFound = React.lazy(() => import("./not-found/not-found.component"));
-const ViewEvent = React.lazy(() =>
-  import("./view-edit-events/view-event.component")
+const ViewEvent = React.lazy(
+  () => import("./view-edit-events/view-event.component")
 );
 const EventList = React.lazy(() => import("./event-list/event-list.component"));
-const ConvertLead = React.lazy(() =>
-  import("./view-edit-lead/convert-lead-to-client.component")
+const ConvertLead = React.lazy(
+  () => import("./view-edit-lead/convert-lead-to-client.component")
 );
-const ProgramsAndServices = React.lazy(() =>
-  import("./programs-and-services/programs-and-services.component")
+const ProgramsAndServices = React.lazy(
+  () => import("./programs-and-services/programs-and-services.component")
 );
 
 export default function Root() {
@@ -73,7 +76,9 @@ export default function Root() {
                 <Reports path="reports/*" />
                 <ViewEvent path="events/:eventId" />
                 <EventList path="event-list" />
+                <AdminSettings path="admin-settings" />
                 <ProgramsAndServices path="programs-and-services" />
+                <Partners path="partners" />
               </Router>
             </React.Suspense>
           </Navbars>

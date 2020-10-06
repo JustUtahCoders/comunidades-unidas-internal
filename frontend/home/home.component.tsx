@@ -10,7 +10,7 @@ import leadListUrl from "../../icons/148705-essential-collection/svg/list-1.svg"
 import reportsUrl from "../../icons/148705-essential-collection/svg/volume-control-1.svg";
 import addLeadsUrl from "../../icons/148705-essential-collection/svg/windows-3.svg";
 import eventListUrl from "../../icons/148705-essential-collection/svg/calendar-1.svg";
-import programsAndServicesUrl from "../../icons/148705-essential-collection/svg/settings-1.svg";
+import adminUrl from "../../icons/148705-essential-collection/svg/settings-1.svg";
 import { useCss } from "kremling";
 
 export default function Home(props: HomeProps) {
@@ -47,9 +47,9 @@ export default function Home(props: HomeProps) {
           link="event-list"
         />
         <HomeCard
-          iconUrl={programsAndServicesUrl}
-          title="C.U. Programs and Services"
-          link="programs-and-services"
+          iconUrl={adminUrl}
+          title="Admin Settings"
+          link="admin-settings"
         />
         <HomeCard iconUrl={addLeadsUrl} title="Add Leads" link="add-leads" />
         <HomeCard iconUrl={reportsUrl} title="Reports" link="reports" />
