@@ -23,8 +23,6 @@ const ReferralInputs = React.forwardRef<ReferralInputRef, ReferralInputProps>(
       },
     }));
 
-    console.log(partnerServiceIds);
-
     return (
       <div {...useCss(css)}>
         <div className="form-group">
