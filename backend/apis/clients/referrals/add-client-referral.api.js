@@ -85,6 +85,7 @@ app.post("/api/clients/:clientId/referrals", (req, res) => {
             let query = mysql.format(insertReferralSql, [
               clientId,
               partnerServiceId,
+              req.body.referralDate,
               user.id,
             ]);
             query += insertActivityLogQuery({
