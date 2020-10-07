@@ -17,6 +17,10 @@ export default function InteractionsByService(props) {
     return <div>"Loading..."</div>;
   }
 
+  const clientsTotal = calcClientsTotal(data.partners);
+  const leadsTotal = calcLeadsTotal(data.partners);
+  const grandTotal = clientsTotal + leadsTotal;
+
   return (
     <>
       <BasicTableReport
@@ -56,6 +60,7 @@ export default function InteractionsByService(props) {
             <th style={{ width: "20%" }}>Service</th>
             <th>Client Referrals</th>
             <th>Lead Referrals</th>
+            <th>Total Referrals</th>
           </tr>
         }
         contentRows={data.partners.map((partner) => (
@@ -69,6 +74,11 @@ export default function InteractionsByService(props) {
                 </td>
                 <td>{partner.clientReferralCount.toLocaleString()}</td>
                 <td>{partner.leadReferralCount.toLocaleString()}</td>
+                <td>
+                  {(
+                    partner.leadReferralCount + partner.clientReferralCount
+                  ).toLocaleString()}
+                </td>
               </tr>
             }
             collapsibleRows={partner.services.map((service) => (
@@ -77,11 +87,37 @@ export default function InteractionsByService(props) {
                 <th>{service.partnerServiceName}</th>
                 <td>{service.clientReferralCount.toLocaleString()}</td>
                 <td>{service.leadReferralCount.toLocaleString()}</td>
+                <td>
+                  {(
+                    service.leadReferralCount + service.clientReferralCount
+                  ).toLocaleString()}
+                </td>
               </tr>
             ))}
           />
         ))}
+        footerRows={
+          <tr>
+            <td>All Partners</td>
+            <td>{"\u2014"}</td>
+            <td>{clientsTotal.toLocaleString()}</td>
+            <td>{leadsTotal.toLocaleString()}</td>
+            <td>{grandTotal.toLocaleString()}</td>
+          </tr>
+        }
       />
     </>
   );
+}
+
+function calcClientsTotal(partners) {
+  return partners.reduce((total, partner) => {
+    return total + partner.clientReferralCount;
+  }, 0);
+}
+
+function calcLeadsTotal(partners) {
+  return partners.reduce((total, partner) => {
+    return total + partner.leadReferralCount;
+  }, 0);
 }
