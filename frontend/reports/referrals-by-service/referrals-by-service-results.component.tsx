@@ -74,7 +74,7 @@ export default function InteractionsByService(props) {
             collapsibleRows={partner.services.map((service) => (
               <tr key={service.partnerServiceId}>
                 <td>{"\u2014"}</td>
-                <th>{service.serviceName}</th>
+                <th>{service.partnerServiceName}</th>
                 <td>{service.clientReferralCount.toLocaleString()}</td>
                 <td>{service.leadReferralCount.toLocaleString()}</td>
               </tr>

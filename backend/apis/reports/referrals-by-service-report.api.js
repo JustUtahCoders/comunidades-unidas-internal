@@ -53,12 +53,12 @@ app.get(`/api/reports/referrals-by-service`, (req, res) => {
 
       for (let serviceRow of groupedRows[partnerName]) {
         const clientRow = clientCounts.find(
-          (row) => (row.partnerServiceId = serviceRow.partnerServiceId)
+          (row) => row.partnerServiceId === serviceRow.partnerServiceId
         );
         const clientReferralCount = clientRow ? clientRow.referralCount : 0;
 
         const leadRow = leadCounts.find(
-          (row) => (row.partnerServiceId = serviceRow.partnerServiceId)
+          (row) => row.partnerServiceId === serviceRow.partnerServiceId
         );
         const leadReferralCount = leadRow ? leadRow.referralCount : 0;
 
