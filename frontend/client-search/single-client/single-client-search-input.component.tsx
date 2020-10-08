@@ -25,7 +25,6 @@ const SingleClientSearchInput = React.forwardRef<
   const debouncedClientName = useDebounce(state.clientName, 200);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const inputRef = React.useRef<HTMLInputElement>(null);
-  // pass ref of clientId to parent component ?
 
   React.useEffect(() => {
     if (singleClientSearchInputRef) {
@@ -34,13 +33,13 @@ const SingleClientSearchInput = React.forwardRef<
         clientId: state.clientId,
       };
     }
-  });
+  }, [state.clientId]);
 
   React.useEffect(() => {
     if (clientChanged) {
-      clientChanged();
+      clientChanged(state);
     }
-  }, [state.clientId, clientChanged]);
+  }, [state.clientId]);
 
   React.useEffect(() => {
     if (debouncedClientName.trim().length > 0) {
@@ -284,7 +283,7 @@ type SingleClientSearchInputProps = {
   autoFocus?: boolean;
   nextThingToFocusRef?: React.RefObject<HTMLElement>;
   required?: boolean;
-  clientChanged?: () => any;
+  clientChanged?: (state: object) => any;
   hideLabel?: boolean;
   initialClient?: SingleClient;
 };

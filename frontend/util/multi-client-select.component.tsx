@@ -9,6 +9,9 @@ export default function MultiClientSelect(props: MultiClientSelectProps) {
   const [showEmptyRow, setShowEmptyRow] = React.useState(
     props.initialClients.length === 0
   );
+  // const clientRef = React.useRef();
+  // // @ts-ignore
+  // const clientId = clientRef.current ? clientRef.current.clientId : null;
 
   return (
     <div
@@ -24,16 +27,18 @@ export default function MultiClientSelect(props: MultiClientSelectProps) {
         >
           <SingleClientSearchInput
             clientChanged={(...args) => {
-              console.log("client changed", ...args);
+              let newArr = [...clients];
+              newArr[idx] = args[0];
+              setClients(newArr);
             }}
             initialClient={client}
             required
-            ref={SingleClientSearchInput[0]}
           />
         </div>
       ))}
       <button
         onClick={(e) => {
+          e.preventDefault();
           setClients([...clients, props.initialClients[0]]);
         }}
       >
