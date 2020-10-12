@@ -1,0 +1,12 @@
+.referrals-table thead tr th {
+  padding-bottom: 0.8rem;
+}
+
+.referrals-table td {
+  padding: 0.8rem 1.6rem;
+}
+
+.view-actions {
+  display: flex;
+  justify-content: center;
+}

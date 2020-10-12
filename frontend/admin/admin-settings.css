@@ -1,0 +1,7 @@
+.home-cards {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 2.4rem;
+  margin-left: 2.4rem;
+}

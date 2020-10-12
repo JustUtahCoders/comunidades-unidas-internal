@@ -6,11 +6,20 @@ const {
   validArray,
   validBoolean,
   nullableValidDate,
+  validId,
+  validDateTime,
   validInteger,
   nullableNonEmptyString,
   nullableValidInteger,
   nullableValidArray,
 } = require("../utils/validation-utils");
+const fs = require("fs");
+const path = require("path");
+
+const insertReferralSql = fs.readFileSync(
+  path.resolve(__dirname, "./referrals/add-lead-referral.sql"),
+  "utf-8"
+);
 
 app.post("/api/leads", (req, res) => {
   const leads = req.body;
@@ -35,7 +44,17 @@ app.post("/api/leads", (req, res) => {
       nullableValidInteger("age"),
       nullableNonEmptyString("gender"),
       nullableValidArray("eventSources", validInteger),
-      validArray("leadServices", validInteger)
+      validArray("leadServices", validInteger),
+      nullableValidArray("referrals", (index) => {
+        return (invoices) => {
+          const errs = checkValid(
+            invoices[index],
+            validId("partnerServiceId"),
+            validDateTime("referralDate")
+          );
+          return errs.length > 0 ? errs : null;
+        };
+      })
     );
 
     if (validityErrors.length > 0) {
@@ -68,6 +87,7 @@ app.post("/api/leads", (req, res) => {
 
     const leadServices = lead.leadServices;
     let leadServicesQuery = "";
+    let leadReferralsQuery = "";
 
     if (leadServices.length > 0) {
       leadServicesQuery =
@@ -84,6 +104,25 @@ app.post("/api/leads", (req, res) => {
       }
 
       leadServicesQuery += ";";
+    }
+
+    const referrals = lead.referrals || [];
+    if (referrals.length > 0) {
+      const leadId = {
+        toSqlString() {
+          return "@leadId";
+        },
+      };
+      leadReferralsQuery += referrals
+        .map((referral) =>
+          mysql.format(insertReferralSql, [
+            leadId,
+            referral.partnerServiceId,
+            referral.referralDate,
+            user.id,
+          ])
+        )
+        .join("\n");
     }
 
     const leadEvents = lead.eventSources || [];
@@ -107,7 +146,12 @@ app.post("/api/leads", (req, res) => {
     }
 
     const newLeadQuery =
-      addToLeadQuery + setLeadId + leadServicesQuery + leadEventsQuery;
+      addToLeadQuery +
+      setLeadId +
+      leadServicesQuery +
+      leadEventsQuery +
+      leadReferralsQuery;
+
     leadQuery = `${leadQuery} ${newLeadQuery}`;
   }
 

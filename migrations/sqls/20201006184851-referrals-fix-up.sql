@@ -1,0 +1,5 @@
+ALTER TABLE clientReferrals
+ADD COLUMN referralDate DATETIME NOT NULL;
+
+ALTER TABLE leadReferrals
+ADD COLUMN referralDate DATETIME NOT NULL;

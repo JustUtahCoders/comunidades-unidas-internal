@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "../util/modal.component";
 import IntakeServicesInputs from "../util/services-inputs.component";
-import { ProgressPlugin } from "webpack";
+import ReferralInputs, { ReferralInputRef } from "./referral-inputs.component";
 
 export default function LeadRow({
   lead,
@@ -11,10 +11,13 @@ export default function LeadRow({
   isLastLead,
   isFirstLead,
   services,
+  partners,
 }) {
   const required = isFirstLead || !isLastLead;
   const [showInterests, setShowInterests] = React.useState(false);
   const intakeServicesInputsRef = React.useRef(null);
+  const [showReferrals, setShowReferrals] = React.useState(false);
+  const referralInputs = React.useRef<ReferralInputRef>();
 
   const input = (field, label, fieldRequired: boolean = required) => (
     <input
@@ -45,7 +48,6 @@ export default function LeadRow({
             <option value="female">Female</option>
             <option value="male">Male</option>
             <option value="nonbinary">Nonbinary</option>
-            <option value="transgender">Transgender</option>
             <option value="other">Other</option>
           </select>
         </td>
@@ -54,6 +56,17 @@ export default function LeadRow({
             className="secondary"
             type="button"
             onClick={() => setShowInterests(true)}
+            style={{ display: "block", margin: "0 auto" }}
+          >
+            Edit
+          </button>
+        </td>
+        <td>
+          <button
+            className="secondary"
+            type="button"
+            onClick={() => setShowReferrals(true)}
+            style={{ display: "block", margin: "0 auto" }}
           >
             Edit
           </button>
@@ -65,15 +78,21 @@ export default function LeadRow({
             onChange={(evt) => updateLead("smsConsent", evt.target.checked)}
           />
         </td>
-        <td>{canDelete && <button onClick={deleteLead}>x</button>}</td>
+        <td>
+          {canDelete && (
+            <div role="button" tabIndex={0} onClick={deleteLead}>
+              {"\u24E7"}
+            </div>
+          )}
+        </td>
       </tr>
       {showInterests && (
         <Modal
           headerText="What services are they interested in?"
-          close={closeModal}
+          close={closeInterests}
           primaryAction={updateInterests}
           primaryText="Update interests"
-          secondaryAction={closeModal}
+          secondaryAction={closeInterests}
           secondaryText="Cancel"
         >
           <IntakeServicesInputs
@@ -83,15 +102,43 @@ export default function LeadRow({
           />
         </Modal>
       )}
+      {showReferrals && (
+        <Modal
+          headerText="Lead Referrals"
+          close={closeReferrals}
+          primaryAction={updateReferrals}
+          primaryText="Update referrals"
+          secondaryAction={closeReferrals}
+          secondaryText="Cancel"
+          primarySubmit
+        >
+          <ReferralInputs
+            referrals={lead.referrals || []}
+            partners={partners}
+            ref={referralInputs}
+          />
+        </Modal>
+      )}
     </>
   );
 
-  function closeModal() {
+  function closeInterests() {
     setShowInterests(false);
+  }
+
+  function closeReferrals() {
+    setShowReferrals(false);
+  }
+
+  function updateReferrals(evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    updateLead("referrals", referralInputs.current.getReferrals());
+    closeReferrals();
   }
 
   function updateInterests() {
     updateLead("leadServices", intakeServicesInputsRef.current.checkedServices);
-    closeModal();
+    closeInterests();
   }
 }

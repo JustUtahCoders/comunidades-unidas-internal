@@ -17,12 +17,14 @@ GET /api/leads/:id/referrals
   {
     "id": 1,
     "partnerServiceId": 1,
+    "referralDate": "2020-01-01T00:00:00.000Z",
     "dateAdded": "2020-01-01T00:00:00.000Z",
     "addedBy": 1
   },
   {
     "id": 2,
     "partnerServiceId": 1,
+    "referralDate": "2020-01-01T00:00:00.000Z",
     "dateAdded": "2020-01-01T00:00:00.000Z",
     "addedBy": 1
   }
@@ -39,7 +41,8 @@ POST /api/leads/:id/referrals
 
 ```json
 {
-  "partnerServiceId": 1
+  "partnerServiceId": 1,
+  "referralDate": "2020-01-01T00:00:00.000Z"
 }
 ```
 
@@ -49,6 +52,7 @@ POST /api/leads/:id/referrals
 {
   "id": 1,
   "partnerServiceId": 1,
+  "referralDate": "2020-01-01T00:00:00.000Z",
   "dateAdded": "2020-01-01T00:00:00.000Z",
   "addedBy": 1
 }
@@ -74,6 +78,7 @@ PATCH /api/leads/:id/referrals/:id
 {
   "id": 1,
   "partnerServiceId": 1,
+  "referralDate": "2020-01-01T00:00:00.000Z",
   "dateAdded": "2020-01-01T00:00:00.000Z",
   "addedBy": 1
 }
@@ -106,12 +111,14 @@ GET /api/clients/:id/referrals
   {
     "id": 1,
     "partnerServiceId": 1,
+    "referralDate": "2020-01-01T00:00:00.000Z",
     "dateAdded": "2020-01-01T00:00:00.000Z",
     "addedBy": 1
   },
   {
     "id": 2,
     "partnerServiceId": 1,
+    "referralDate": "2020-01-01T00:00:00.000Z",
     "dateAdded": "2020-01-01T00:00:00.000Z",
     "addedBy": 1
   }
@@ -128,7 +135,8 @@ POST /api/clients/:id/referrals
 
 ```json
 {
-  "partnerServiceId": 1
+  "partnerServiceId": 1,
+  "referralDate": "2020-01-01T00:00:00.000Z"
 }
 ```
 
@@ -138,6 +146,7 @@ POST /api/clients/:id/referrals
 {
   "id": 1,
   "partnerServiceId": 1,
+  "referralDate": "2020-01-01T00:00:00.000Z",
   "dateAdded": "2020-01-01T00:00:00.000Z",
   "addedBy": 1
 }
@@ -153,7 +162,8 @@ PATCH /api/clients/:id/referrals/:id
 
 ```json
 {
-  "partnerServiceId": 1
+  "partnerServiceId": 1,
+  "referralDate": "2020-01-01T00:00:00.000Z"
 }
 ```
 
@@ -163,6 +173,7 @@ PATCH /api/clients/:id/referrals/:id
 {
   "id": 1,
   "partnerServiceId": 1,
+  "referralDate": "2020-01-01T00:00:00.000Z",
   "dateAdded": "2020-01-01T00:00:00.000Z",
   "addedBy": 1
 }

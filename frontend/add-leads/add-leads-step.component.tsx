@@ -31,10 +31,11 @@ export default function AddLeadsStep(props: AddLeadsStepProps) {
         phone: l.phone,
         smsConsent: Boolean(l.smsConsent),
         zip: l.zip,
-        age: l.age,
+        age: Number(l.age),
         gender: !l.gender || l.gender === "unknown" ? null : l.gender,
         eventSources: props.eventId ? [props.eventId] : null,
         leadServices: (l.leadServices || []).map((s) => s.id),
+        referrals: l.referrals || [],
       }));
 
       easyFetch(`/api/leads`, {
