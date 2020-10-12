@@ -44,7 +44,7 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
       <div className="header">
         <div className="clients input-block">
           <MultiClientSelect
-            initialClients={props.client ? [props.client] : []}
+            initialClients={props.client ? props.client : []}
           />
         </div>
         <div className="input-block">
@@ -294,7 +294,7 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
     const result = {
       ...modifiedInvoice,
       lineItems,
-      clients: props.client ? [props.client.id] : [],
+      clients: props.client ? [props.client[0].id] : [],
       totalCharged: Number(totalOwed),
     };
 
@@ -399,7 +399,7 @@ function emptyLineItem(): LineItem {
 
 type EditInvoiceProps = {
   invoice: FullInvoice;
-  client?: SingleClient;
+  client?: SingleClient[];
   services: CUService[];
   isEditing: boolean;
 };

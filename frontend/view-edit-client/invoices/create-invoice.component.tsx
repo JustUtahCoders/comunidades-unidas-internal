@@ -98,7 +98,7 @@ export default function CreateInvoice(props: CreateInvoiceProps) {
       >
         <EditInvoice
           invoice={invoice}
-          client={props.client}
+          client={[props.client]}
           services={props.services}
           ref={editInvoiceRef}
           isEditing={false}
