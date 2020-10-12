@@ -4,14 +4,19 @@ import SingleClientSearchInput from "../client-search/single-client/single-clien
 import CUProgramInputs from "../programs-and-services/cu-program-inputs.component";
 import { SingleClient } from "../view-edit-client/view-client.component";
 
-export default function MultiClientSelect(props: MultiClientSelectProps) {
+const MultiClientSelect = React.forwardRef<
+  MultiClientSelectRef,
+  MultiClientSelectProps
+>((props, ref) => {
   const [clients, setClients] = React.useState(props.initialClients);
   const [showEmptyRow, setShowEmptyRow] = React.useState(
     props.initialClients.length === 0
   );
-  // const clientRef = React.useRef();
-  // // @ts-ignore
-  // const clientId = clientRef.current ? clientRef.current.clientId : null;
+  React.useImperativeHandle(ref, () => ({
+    getClients() {
+      return clients;
+    },
+  }));
 
   return (
     <div
@@ -46,10 +51,16 @@ export default function MultiClientSelect(props: MultiClientSelectProps) {
       </button>
     </div>
   );
-}
+});
+
+export default MultiClientSelect;
 
 type MultiClientSelectProps = {
   initialClients: SingleClient[];
   containerClass?: string;
   clientClass?: string;
+};
+
+export type MultiClientSelectRef = {
+  getClients(): SingleClient[];
 };

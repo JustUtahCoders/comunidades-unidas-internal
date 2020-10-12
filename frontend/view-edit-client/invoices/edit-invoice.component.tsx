@@ -9,7 +9,9 @@ import { groupBy, cloneDeep, sumBy, padStart } from "lodash-es";
 import CloseIconButton from "../../util/close-icon-button.component";
 import dayjs from "dayjs";
 import FullRichTextEditor from "../../rich-text/full-rich-text-editor.component";
-import MultiClientSelect from "../../util/multi-client-select.component";
+import MultiClientSelect, {
+  MultiClientSelectRef,
+} from "../../util/multi-client-select.component";
 
 const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
   const [newLineItems, setNewLineItems] = React.useState<Array<LineItem>>(() =>
@@ -25,6 +27,7 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
   const [totalOwed, setTotalOwed] = React.useState(subtotal);
   const groupedServices = groupBy(props.services, "programName");
   const richTextRef = React.useRef(null);
+  const clientRef = React.useRef<MultiClientSelectRef>();
 
   React.useImperativeHandle(ref, () => ({
     getInvoiceToSave,
@@ -38,6 +41,9 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
   }, [subtotal]);
 
   const totalPaid = sumBy(modifiedInvoice.payments, "amountTowardsInvoice");
+  if (clientRef.current) {
+    console.log(clientRef.current.getClients());
+  }
 
   return (
     <div {...useCss(css)}>
@@ -45,6 +51,7 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
         <div className="clients input-block">
           <MultiClientSelect
             initialClients={props.client ? props.client : []}
+            ref={clientRef}
           />
         </div>
         <div className="input-block">
