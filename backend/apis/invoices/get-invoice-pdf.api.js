@@ -196,67 +196,60 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
           }
 
           if (client) {
+            // const ids = client.reduce((acc, item) => acc += item.id + '', "");
+            const ids = client.map((item) => item.id).join(", ");
             doc.text(
-              String(client[0].id),
-              pageWidth - pageMargin - doc.widthOfString(String(client[0].id)),
-              topLine + lineHeight,
+              ids,
+              pageWidth - pageMargin - doc.widthOfString(ids),
+              topLine + lineHeight * client.length,
               {
                 lineBreak: false,
               }
             );
-            // client.forEach((item, index) => {
-            //   const id = String(item.id);
-            //   doc.text(
-            //     id,
-            //     pageWidth - pageMargin - doc.widthOfString(String(id)),
-            //     topLine + lineHeight,
-            //     {
-            //       lineBreak: false,
-            //     }
-            //   )
-            // })
+
+            doc.text(
+              invoice.invoiceNumber,
+              pageWidth - pageMargin - doc.widthOfString(invoice.invoiceNumber),
+              topLine + lineHeight * (client.length + 1),
+              {
+                lineBreak: false,
+              }
+            );
+
+            const invoiceDate = dayjs(invoice.invoiceDate).format(
+              "MMM DD, YYYY"
+            );
+            doc.text(
+              invoiceDate,
+              pageWidth - pageMargin - doc.widthOfString(invoiceDate),
+              topLine + lineHeight * (client.length + 2),
+              {
+                lineBreak: false,
+              }
+            );
+
+            const amount = `$${
+              invoice.totalCharged ? invoice.totalCharged.toFixed(2) : "0.00"
+            }`;
+            doc.text(
+              amount,
+              pageWidth - pageMargin - doc.widthOfString(amount),
+              topLine + lineHeight * (client.length + 3),
+              {
+                lineBreak: false,
+              }
+            );
+
+            const status = capitalize(invoice.status);
+            doc.text(
+              status,
+              pageWidth - pageMargin - doc.widthOfString(status),
+              topLine + lineHeight * (client.length + 4),
+              {
+                lineBreak: false,
+              }
+            );
           }
-
-          doc.text(
-            invoice.invoiceNumber,
-            pageWidth - pageMargin - doc.widthOfString(invoice.invoiceNumber),
-            topLine + lineHeight * 2,
-            {
-              lineBreak: false,
-            }
-          );
-
-          const invoiceDate = dayjs(invoice.invoiceDate).format("MMM DD, YYYY");
-          doc.text(
-            invoiceDate,
-            pageWidth - pageMargin - doc.widthOfString(invoiceDate),
-            topLine + lineHeight * 3,
-            {
-              lineBreak: false,
-            }
-          );
-
-          const amount = `$${
-            invoice.totalCharged ? invoice.totalCharged.toFixed(2) : "0.00"
-          }`;
-          doc.text(
-            amount,
-            pageWidth - pageMargin - doc.widthOfString(amount),
-            topLine + lineHeight * 4,
-            {
-              lineBreak: false,
-            }
-          );
-
-          const status = capitalize(invoice.status);
-          doc.text(
-            status,
-            pageWidth - pageMargin - doc.widthOfString(status),
-            topLine + lineHeight * 5,
-            {
-              lineBreak: false,
-            }
-          );
 
           // Table
 
