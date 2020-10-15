@@ -3,6 +3,7 @@ import React from "react";
 import SingleClientSearchInput from "../client-search/single-client/single-client-search-input.component";
 import CUProgramInputs from "../programs-and-services/cu-program-inputs.component";
 import { SingleClient } from "../view-edit-client/view-client.component";
+import CloseIconButton from "./close-icon-button.component";
 
 const MultiClientSelect = React.forwardRef<
   MultiClientSelectRef,
@@ -18,6 +19,12 @@ const MultiClientSelect = React.forwardRef<
     },
   }));
 
+  const removeClientSelect = () => {
+    let newArr = [...clients];
+    newArr.pop();
+    setClients(newArr);
+  };
+
   return (
     <div
       className={maybe(
@@ -29,6 +36,7 @@ const MultiClientSelect = React.forwardRef<
         <div
           className={maybe(props.clientClass || "", Boolean(props.clientClass))}
           key={idx}
+          style={{ display: "flex" }}
         >
           <SingleClientSearchInput
             clientChanged={(...args) => {
@@ -39,6 +47,9 @@ const MultiClientSelect = React.forwardRef<
             initialClient={client}
             required
           />
+          <div style={{ alignSelf: "center", marginTop: "8%" }}>
+            <CloseIconButton close={removeClientSelect} />
+          </div>
         </div>
       ))}
       <button

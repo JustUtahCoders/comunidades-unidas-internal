@@ -41,11 +41,6 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
   }, [subtotal]);
 
   const totalPaid = sumBy(modifiedInvoice.payments, "amountTowardsInvoice");
-  if (clientRef.current) {
-    // const clients = clientRef.current.getClients().map(item => console.log(item.id, item.clientId));
-    const clients = clientRef.current.getClients();
-    console.log(clients);
-  }
 
   return (
     <div {...useCss(css)}>
