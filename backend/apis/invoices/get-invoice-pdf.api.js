@@ -14,7 +14,10 @@ const {
 const PDFDocument = require("pdfkit");
 const { getFullInvoiceById } = require("./get-invoice.api");
 const path = require("path");
-const { getClientById } = require("../clients/get-client.api");
+const {
+  getClientById,
+  getAllClientsById,
+} = require("../clients/get-client.api");
 const { responseFullName } = require("../utils/transform-utils");
 const dayjs = require("dayjs");
 const { capitalize, sumBy } = require("lodash");
@@ -149,33 +152,69 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
           const payerLeft = 345;
           doc.font(palatino);
           doc.text("Bill To:", payerLeft, topLine);
-          doc.text("Client ID:", payerLeft, topLine + lineHeight);
-          doc.text("Invoice Number:", payerLeft, topLine + lineHeight * 2);
-          doc.text("Invoice Date:", payerLeft, topLine + lineHeight * 3);
-          doc.text("Invoice Amount:", payerLeft, topLine + lineHeight * 4);
-          doc.text("Invoice Status:", payerLeft, topLine + lineHeight * 5);
 
           if (client) {
-            const billTo = responseFullName(client.firstName, client.lastName);
+            // const billing = client.reduce((acc, item) => {return acc += `${responseFullName(item.firstName, item.lastName)}\n`}, "");
+            // const billTo = billing;
+            // const billTo = responseFullName(client[0].firstName, client[0].lastName);
+            client.forEach((item, index) => {
+              const billTo = responseFullName(item.firstName, item.lastName);
+              doc.text(
+                billTo,
+                pageWidth - pageMargin - doc.widthOfString(billTo),
+                topLine + lineHeight * index,
+                {
+                  lineBreak: false,
+                }
+              );
+            });
             doc.text(
-              billTo,
-              pageWidth - pageMargin - doc.widthOfString(billTo),
-              topLine,
-              {
-                lineBreak: false,
-              }
+              "Client ID:",
+              payerLeft,
+              topLine + lineHeight * client.length
+            );
+            doc.text(
+              "Invoice Number:",
+              payerLeft,
+              topLine + lineHeight * (client.length + 1)
+            );
+            doc.text(
+              "Invoice Date:",
+              payerLeft,
+              topLine + lineHeight * (client.length + 2)
+            );
+            doc.text(
+              "Invoice Amount:",
+              payerLeft,
+              topLine + lineHeight * (client.length + 3)
+            );
+            doc.text(
+              "Invoice Status:",
+              payerLeft,
+              topLine + lineHeight * (client.length + 4)
             );
           }
 
           if (client) {
             doc.text(
-              String(client.id),
-              pageWidth - pageMargin - doc.widthOfString(String(client.id)),
+              String(client[0].id),
+              pageWidth - pageMargin - doc.widthOfString(String(client[0].id)),
               topLine + lineHeight,
               {
                 lineBreak: false,
               }
             );
+            // client.forEach((item, index) => {
+            //   const id = String(item.id);
+            //   doc.text(
+            //     id,
+            //     pageWidth - pageMargin - doc.widthOfString(String(id)),
+            //     topLine + lineHeight,
+            //     {
+            //       lineBreak: false,
+            //     }
+            //   )
+            // })
           }
 
           doc.text(
@@ -368,7 +407,8 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
         };
 
         if (invoice.clients.length > 0) {
-          getClientById(invoice.clients[0], clientErrBack);
+          // getClientById(invoice.clients[0], clientErrBack);
+          getAllClientsById(invoice.clients, clientErrBack);
         } else {
           clientErrBack(null, null);
         }
