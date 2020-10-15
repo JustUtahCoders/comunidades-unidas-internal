@@ -42,7 +42,9 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
 
   const totalPaid = sumBy(modifiedInvoice.payments, "amountTowardsInvoice");
   if (clientRef.current) {
-    console.log(clientRef.current.getClients());
+    // const clients = clientRef.current.getClients().map(item => console.log(item.id, item.clientId));
+    const clients = clientRef.current.getClients();
+    console.log(clients);
   }
 
   return (
@@ -298,10 +300,14 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
     const lineItems = modifiedInvoice.lineItems
       .concat(newLineItems)
       .map((li) => ({ ...li, rate: Number(li.rate) }));
+    const clientIds = clientRef.current
+      .getClients()
+      // @ts-ignore
+      .map((item) => item.clientId);
     const result = {
       ...modifiedInvoice,
       lineItems,
-      clients: props.client ? [props.client[0].id] : [],
+      clients: props.client ? clientIds : [],
       totalCharged: Number(totalOwed),
     };
 
