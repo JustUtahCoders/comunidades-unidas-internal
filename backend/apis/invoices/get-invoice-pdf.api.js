@@ -14,10 +14,7 @@ const {
 const PDFDocument = require("pdfkit");
 const { getFullInvoiceById } = require("./get-invoice.api");
 const path = require("path");
-const {
-  getClientById,
-  getAllClientsById,
-} = require("../clients/get-client.api");
+const { getAllClientsById } = require("../clients/get-clients-by-id.api");
 const { responseFullName } = require("../utils/transform-utils");
 const dayjs = require("dayjs");
 const { capitalize, sumBy } = require("lodash");
@@ -154,9 +151,6 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
           doc.text("Bill To:", payerLeft, topLine);
 
           if (client) {
-            // const billing = client.reduce((acc, item) => {return acc += `${responseFullName(item.firstName, item.lastName)}\n`}, "");
-            // const billTo = billing;
-            // const billTo = responseFullName(client[0].firstName, client[0].lastName);
             client.forEach((item, index) => {
               const billTo = responseFullName(item.firstName, item.lastName);
               doc.text(
@@ -196,7 +190,6 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
           }
 
           if (client) {
-            // const ids = client.reduce((acc, item) => acc += item.id + '', "");
             const ids = client.map((item) => item.id).join(", ");
             doc.text(
               ids,

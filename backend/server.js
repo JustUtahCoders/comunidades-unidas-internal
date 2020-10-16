@@ -113,6 +113,7 @@ require("./apis/github-issues.api");
 require("./apis/clients/add-client.api");
 require("./apis/clients/client-duplicates.api");
 require("./apis/clients/get-client.api");
+require("./apis/clients/get-clients-by-id.api");
 require("./apis/clients/update-client.api");
 require("./apis/clients/delete-client.api");
 require("./apis/services/list-services.api");
