@@ -101,7 +101,7 @@ export default function ViewInvoice(props: ViewInvoiceProps) {
           ref={editInvoiceRef}
           invoice={invoice}
           services={services}
-          client={[client]}
+          clients={[client]}
           isEditing
         />
       ) : (
