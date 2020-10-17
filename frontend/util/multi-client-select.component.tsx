@@ -10,34 +10,22 @@ const MultiClientSelect = React.forwardRef<
   MultiClientSelectProps
 >((props, ref) => {
   const [clients, setClients] = React.useState(props.initialClients);
-  const [showEmptyRow, setShowEmptyRow] = React.useState(
-    props.initialClients.length === 0
-  );
   React.useImperativeHandle(ref, () => ({
     getClients() {
       return clients;
     },
   }));
 
-  const removeClientSelect = () => {
+  const removeClientSelect = (clientId) => {
     let newArr = [...clients];
     newArr.pop();
     setClients(newArr);
   };
 
   return (
-    <div
-      className={maybe(
-        props.containerClass || "",
-        Boolean(props.containerClass)
-      )}
-    >
+    <div>
       {clients.map((client, idx) => (
-        <div
-          className={maybe(props.clientClass || "", Boolean(props.clientClass))}
-          key={idx}
-          style={{ display: "flex" }}
-        >
+        <div key={idx} style={{ display: "flex" }}>
           <SingleClientSearchInput
             clientChanged={(...args) => {
               let newArr = [...clients];
@@ -48,11 +36,12 @@ const MultiClientSelect = React.forwardRef<
             required
           />
           <div style={{ alignSelf: "center", marginTop: "8%" }}>
-            <CloseIconButton close={removeClientSelect} />
+            <CloseIconButton close={() => removeClientSelect(client.id)} />
           </div>
         </div>
       ))}
       <button
+        className="secondary"
         onClick={(e) => {
           e.preventDefault();
           setClients([...clients, props.initialClients[0]]);

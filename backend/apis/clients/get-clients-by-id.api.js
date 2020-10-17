@@ -19,8 +19,7 @@ const rawGetSql = fs.readFileSync(
 );
 
 app.get("/api/clients/:clientIds/multi", (req, res) => {
-  // const validationErrors = checkValid(req.params, validId("id"));
-  // const clients = JSON.parse(req.params.clientIds);
+  // const validationErrors = checkValid(req.params, validId("id")); --> check out what validation function does, use for array of client ids
   // validations here
   const clientIds = JSON.parse(req.params.clientIds);
 
@@ -34,7 +33,7 @@ app.get("/api/clients/:clientIds/multi", (req, res) => {
         clients,
       });
     } else {
-      notFound(res, `Could not find client with id ${req.params.clientIds}`);
+      notFound(res, `Could not find clients with ids ${req.params.clientIds}`);
     }
   });
 });
