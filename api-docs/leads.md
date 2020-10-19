@@ -90,7 +90,7 @@ If there is no lead with the provided id, you will get a 404 HTTP response, with
 ### Request
 
 ```http
-GET /api/leads?name=John&page=1
+GET /api/leads?name=John&page=1&programInterest=1&serviceInterest=1
 ```
 
 **NOTES:**
@@ -98,6 +98,8 @@ GET /api/leads?name=John&page=1
 - Values for the query should be URL encoded
 - "page" query parameter defaults to 1
 - "name" can be partial
+- "programInterest" is a numeric program id that leads have shown interest in
+- "serviceInterest" is a numeric service id that leads have shown interest in
 - If no search terms are provided, the top 100 rows will be returned
 
 ### Response

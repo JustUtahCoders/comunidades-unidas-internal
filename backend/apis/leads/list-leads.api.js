@@ -107,7 +107,8 @@ function validateListLeadsQuery(query) {
     "id",
     "phone",
     "zip",
-    "program",
+    "programInterest",
+    "serviceInterest",
     "event",
     "sortField",
     "sortOrder",
@@ -120,7 +121,8 @@ function validateListLeadsQuery(query) {
     nullableValidId("id"),
     nullableNonEmptyString("phone"),
     nullableValidZip("zip"),
-    nullableValidId("program"),
+    nullableValidId("programInterest"),
+    nullableValidId("serviceInterest"),
     nullableValidId("event"),
     nullableValidEnum(
       "sortField",
@@ -133,9 +135,9 @@ function validateListLeadsQuery(query) {
     nullableValidEnum("status", "active", "inactive", "convertedToClient")
   );
 
-  if (query.program && query.service) {
+  if (query.programInterest && query.serviceInterest) {
     validationErrors.push(
-      `You may only provide one of the following query params: 'program' or 'service'`
+      `You may only provide one of the following query params: 'programInterest' or 'serviceInterest'`
     );
   }
 
@@ -170,7 +172,7 @@ function listLeadsQuery(query, pageNum) {
     whereClauseValues.push("%" + requestPhone(query.phone) + "%");
   }
 
-  if (query.program) {
+  if (query.programInterest) {
     whereClause += `
       AND (
         SELECT COUNT(*)
@@ -183,10 +185,10 @@ function listLeadsQuery(query, pageNum) {
           )
       ) > 0
     `;
-    whereClauseValues.push(query.program);
+    whereClauseValues.push(query.programInterest);
   }
 
-  if (query.service) {
+  if (query.serviceInterest) {
     whereClause += `
       AND (
         SELECT COUNT(*)
@@ -195,7 +197,7 @@ function listLeadsQuery(query, pageNum) {
           AND leadServices.serviceId = ?
       ) > 0
     `;
-    whereClauseValues.push(query.service);
+    whereClauseValues.push(query.serviceInterest);
   }
 
   if (query.event) {
