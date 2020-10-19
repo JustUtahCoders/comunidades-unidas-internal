@@ -15,21 +15,25 @@ export default function ClientAddNewInfo(props: ClientAddNewInfoProps) {
       <HomeCard
         iconUrl={caseNoteUrl}
         title="Add case note"
+        alt="Notebook"
         link={`/clients/${props.clientId}/add-case-note`}
       />
       <HomeCard
         iconUrl={recordVisitUrl}
         title="Add client interaction"
+        alt="Hour Glass"
         link={`/clients/${props.clientId}/add-client-interaction`}
       />
       <HomeCard
         iconUrl={filesUrl}
         title="Add files"
+        alt="Filing cabinet folder"
         link={`/clients/${props.clientId}/files`}
       />
       <HomeCard
         iconUrl={invoicesUrl}
         title="Add Invoice / Payment"
+        alt="Price tag"
         link={`/clients/${props.clientId}/invoices`}
       />
     </div>
