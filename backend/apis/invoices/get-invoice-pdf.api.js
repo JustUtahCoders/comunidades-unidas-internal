@@ -393,7 +393,6 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
         };
 
         if (invoice.clients.length > 0) {
-          // getClientById(invoice.clients[0], clientErrBack);
           getAllClientsById(invoice.clients, clientErrBack);
         } else {
           clientErrBack(null, null);
