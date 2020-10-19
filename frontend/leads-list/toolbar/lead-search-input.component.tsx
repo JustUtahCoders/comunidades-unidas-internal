@@ -133,6 +133,8 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
                   )
                 )}
               <ProgramOrService
+                label="Interest"
+                parseSuffix="Interest"
                 search={search}
                 serviceData={props.programData}
                 updateAdvancedSearch={updateAdvancedSearch}

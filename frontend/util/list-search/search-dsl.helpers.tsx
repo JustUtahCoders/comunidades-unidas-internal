@@ -98,7 +98,9 @@ export type SearchParseValues = {
   phone?: string;
   id?: string;
   event?: string;
-  program?: string;
-  service?: string;
+  programInterest?: string;
+  serviceInterest?: string;
+  programInteraction?: string;
+  serviceInteraction?: string;
   leadStatus?: LeadStatus;
 };

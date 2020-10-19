@@ -15,8 +15,10 @@ const searchFields = {
   id: "Client ID",
   zip: "ZIP Code",
   phone: "Phone",
-  program: "Interest",
-  service: "Interest",
+  programInterest: "Interest",
+  serviceInterest: "Interest",
+  programInteraction: "Program Received",
+  serviceInteraction: "Service Received",
 };
 
 export default function ClientSearchInput(props: ClientSearchInputProps) {
@@ -105,7 +107,8 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
                 }
               />
               {Object.entries(searchFields).map(([fieldKey, fieldName]) =>
-                fieldKey !== "program" && fieldKey !== "service" ? (
+                !fieldKey.startsWith("program") &&
+                !fieldKey.startsWith("service") ? (
                   <React.Fragment key={fieldKey}>
                     <div id={"advanced-search-" + fieldKey}>{fieldName}:</div>
                     <input
@@ -121,6 +124,15 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
                 ) : null
               )}
               <ProgramOrService
+                label="Interest"
+                parseSuffix="Interest"
+                search={search}
+                serviceData={serviceData}
+                updateAdvancedSearch={updateAdvancedSearch}
+              />
+              <ProgramOrService
+                label="Interaction"
+                parseSuffix="Interaction"
                 search={search}
                 serviceData={serviceData}
                 updateAdvancedSearch={updateAdvancedSearch}
@@ -200,10 +212,15 @@ function searchReducer(state: Search, action: SearchAction): Search {
       const newVals = {
         [action.fieldKey]: action.value,
       };
-      if (action.fieldKey === "program") {
-        newVals.service = "";
-      } else if (action.fieldKey === "service") {
-        newVals.program = "";
+      if (action.fieldKey === "programInterest") {
+        newVals.serviceInterest = "";
+      } else if (action.fieldKey === "serviceInterest") {
+        newVals.programInterest = "";
+      }
+      if (action.fieldKey === "programInteraction") {
+        newVals.serviceInteraction = "";
+      } else if (action.fieldKey === "serviceInteraction") {
+        newVals.programInteraction = "";
       }
       parseResult = parseSearch(searchFields, action.currentSearch, newVals);
       const newSearchValue = serializeSearch(searchFields, parseResult.parse);
