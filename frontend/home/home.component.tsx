@@ -24,39 +24,61 @@ export default function Home(props: HomeProps) {
           iconUrl={clientListUrl}
           title="Client list"
           link="client-list"
+          alt="Folder with documents"
         />
         <HomeCard
           iconUrl={addClientIconUrl}
           title="Add a new client"
           link="add-client"
+          alt="Large plus sign"
         />
         <HomeCard
           iconUrl={recordVisitUrl}
           title="Add a client interaction"
           link="add-client-interaction"
+          alt="Hour Glass"
         />
         <HomeCard
           iconUrl={caseNoteUrl}
           title="Add a case note"
           link="add-case-note"
+          alt="Paper notebook"
         />
-        <HomeCard iconUrl={leadListUrl} title="Lead list" link="lead-list" />
+        <HomeCard
+          iconUrl={leadListUrl}
+          title="Lead list"
+          link="lead-list"
+          alt="Document with bulleted list"
+        />
         <HomeCard
           iconUrl={eventListUrl}
           title="Events List"
           link="event-list"
+          alt="Calendar"
         />
         <HomeCard
           iconUrl={adminUrl}
           title="Admin Settings"
           link="admin-settings"
+          alt="Gears"
         />
-        <HomeCard iconUrl={addLeadsUrl} title="Add Leads" link="add-leads" />
-        <HomeCard iconUrl={reportsUrl} title="Reports" link="reports" />
+        <HomeCard
+          iconUrl={addLeadsUrl}
+          title="Add Leads"
+          link="add-leads"
+          alt="Multiple layered surfaces"
+        />
+        <HomeCard
+          iconUrl={reportsUrl}
+          title="Reports"
+          link="reports"
+          alt="Dial showing Low to High"
+        />
         <HomeCard
           iconUrl={reportIssueUrl}
           title="Question, issue, or idea"
           link="report-issue"
+          alt="Question mark"
         />
       </div>
     </div>
