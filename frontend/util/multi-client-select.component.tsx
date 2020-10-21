@@ -1,4 +1,5 @@
 import { maybe } from "kremling";
+import { cloneDeep } from "lodash-es";
 import React from "react";
 import SingleClientSearchInput from "../client-search/single-client/single-client-search-input.component";
 import CUProgramInputs from "../programs-and-services/cu-program-inputs.component";
@@ -15,28 +16,31 @@ const MultiClientSelect = React.forwardRef<
       return clients;
     },
   }));
+  const clientRef = React.useRef();
 
-  const removeClientSelect = (clientId) => {
+  const removeClientSelect = (index) => {
     let newArr = [...clients];
-    newArr.pop();
+    newArr.splice(index, 1);
     setClients(newArr);
   };
 
   return (
     <div>
       {clients.map((client, idx) => (
-        <div key={idx} style={{ display: "flex" }}>
+        <div style={{ display: "flex" }}>
           <SingleClientSearchInput
-            clientChanged={(...args) => {
+            ref={clientRef}
+            clientChanged={() => {
               let newArr = [...clients];
-              newArr[idx] = args[0];
+              // @ts-ignore
+              newArr[idx] = clientRef.current.clientId;
               setClients(newArr);
             }}
             initialClient={client}
             required
           />
           <div style={{ alignSelf: "center", marginTop: "8%" }}>
-            <CloseIconButton close={() => removeClientSelect(client.id)} />
+            <CloseIconButton close={() => removeClientSelect(idx)} />
           </div>
         </div>
       ))}

@@ -29,15 +29,13 @@ const SingleClientSearchInput = React.forwardRef<
   React.useEffect(() => {
     if (singleClientSearchInputRef) {
       // @ts-ignore
-      singleClientSearchInputRef.current = {
-        clientId: state.clientId,
-      };
+      singleClientSearchInputRef.current = state;
     }
   }, [state.clientId]);
 
   React.useEffect(() => {
     if (clientChanged) {
-      clientChanged(state);
+      clientChanged();
     }
   }, [state.clientId]);
 
@@ -73,11 +71,11 @@ const SingleClientSearchInput = React.forwardRef<
   }, [state.clientName]);
 
   React.useEffect(() => {
-    if (state.clientId && nextThingToFocusRef && nextThingToFocusRef.current) {
+    if (state.client.id && nextThingToFocusRef && nextThingToFocusRef.current) {
       nextThingToFocusRef.current.focus();
     }
   }, [
-    state.clientId,
+    state.client.id,
     nextThingToFocusRef,
     nextThingToFocusRef && nextThingToFocusRef.current,
   ]);
@@ -85,14 +83,14 @@ const SingleClientSearchInput = React.forwardRef<
   React.useEffect(() => {
     if (
       state.potentialClients.length <= 0 &&
-      !state.clientId &&
+      !state.client.id &&
       state.clientName.trim().length !== 0
     ) {
       inputRef.current.setCustomValidity("Please choose a client");
     } else {
       inputRef.current.setCustomValidity("");
     }
-  }, [state.clientId, state.potentialClients, state.clientName]);
+  }, [state.client.id, state.potentialClients, state.clientName]);
 
   return (
     <div {...scope} className="single-client-search">
@@ -114,7 +112,7 @@ const SingleClientSearchInput = React.forwardRef<
           required={required}
           ref={inputRef}
         />
-        {state.clientId && <img src={userIconUrl} className="client-icon" />}
+        {state.client.id && <img src={userIconUrl} className="client-icon" />}
       </span>
       {state.potentialClients.length > 0 && !state.clientId && (
         <div className="popup">
@@ -178,7 +176,7 @@ const SingleClientSearchInput = React.forwardRef<
     return {
       clientName: initialClient ? initialClient.fullName : "",
       potentialClients: [],
-      clientId: initialClient ? initialClient.id : null,
+      client: initialClient ? initialClient : null,
     };
   }
 });
@@ -250,6 +248,7 @@ function useDebounce(value: string, delay: number) {
 type SingleClientSearchInputState = {
   clientName: string;
   potentialClients: ClientListClient[];
+  client?: SingleClient;
   clientId?: number;
 };
 
@@ -283,11 +282,12 @@ type SingleClientSearchInputProps = {
   autoFocus?: boolean;
   nextThingToFocusRef?: React.RefObject<HTMLElement>;
   required?: boolean;
-  clientChanged?: (state: object) => any;
+  clientChanged?: () => any;
   hideLabel?: boolean;
   initialClient?: SingleClient;
 };
 
 type SingleClientSearchInputRef = {
   clientId: number;
+  client: SingleClient;
 };
