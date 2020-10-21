@@ -133,7 +133,7 @@ export type FullPayment = {
   invoices: InvoiceSummary[];
   paymentAmount: number;
   paymentType: PaymentType;
-  payerClientIds: number[];
+  payerClientIds: SingleClient[];
   redacted: boolean;
   createdBy?: CUObjectAudit;
   modifiedBy?: CUObjectAudit;

@@ -1,6 +1,9 @@
 import React from "react";
 import css from "./edit-payment-info.css";
 import { CreatePaymentStepProps } from "../create-payment.component";
+import MultiClientSelect, {
+  MultiClientSelectRef,
+} from "../../../util/multi-client-select.component";
 import SingleClientSearchInput from "../../../client-search/single-client/single-client-search-input.component";
 import { useCss, always } from "kremling";
 import { isEqual, noop } from "lodash-es";
@@ -11,29 +14,26 @@ import {
 import dayjs from "dayjs";
 
 export default function EditPaymentInfo(props: CreatePaymentStepProps) {
-  const clientRef = React.useRef();
+  // const EditPaymentInfo = React.forwardRef(function (props: CreatePaymentStepProps, ref) {
+  // const clientRef = React.useRef();
+  const clientRef = React.useRef<MultiClientSelectRef>();
   // @ts-ignore
-  const clientId = clientRef.current ? clientRef.current.id : null;
+  let clientIds = clientRef.current ? clientRef.current.getClients() : null;
 
   React.useEffect(() => {
-    if (clientId && !isEqual(props.payment.payerClientIds, [clientId]))
-      props.setPayment({ ...props.payment, payerClientIds: [clientId] });
-  }, [clientId, props.payment.payerClientIds]);
+    if (clientIds)
+      props.setPayment({ ...props.payment, payerClientIds: clientIds });
+  }, [clientRef.current, clientIds, props.payment.payerClientIds]);
 
   return (
     <div
       {...useCss(css)}
       className={always("container").maybe("edit", props.edit)}
     >
-      <div className="question">Who made the payment?</div>
-      <SingleClientSearchInput
-        autoFocus
-        initialClient={props.client}
-        ref={clientRef}
-      />
-      <button type="button" className="unstyled link add-payer">
-        Add another payer
-      </button>
+      <div className="question" onClick={() => console.log(clientIds)}>
+        Who made the payment?
+      </div>
+      <MultiClientSelect initialClients={[props.client]} ref={clientRef} />
       <div {...useCss(css)} className="inputs">
         <div>
           <label htmlFor="payment-date">Payment Date:</label>
@@ -73,3 +73,4 @@ export default function EditPaymentInfo(props: CreatePaymentStepProps) {
     };
   }
 }
+// )
