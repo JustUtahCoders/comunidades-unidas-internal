@@ -18,10 +18,12 @@ const rawGetSql = fs.readFileSync(
   path.join(__dirname, "./get-clients-by-id.sql")
 );
 
-app.get("/api/clients/:clientIds/multi", (req, res) => {
+app.get("/api/clients-by-id", (req, res) => {
   // const validationErrors = checkValid(req.params, validId("id")); --> check out what validation function does, use for array of client ids
   // validations here
-  const clientIds = JSON.parse(req.params.clientIds);
+  let clientIds = Array.isArray(req.query.clientId)
+    ? req.query.clientId
+    : [req.query.clientId];
 
   getAllClientsById(clientIds, (err, clients) => {
     if (err) {
@@ -41,7 +43,7 @@ app.get("/api/clients/:clientIds/multi", (req, res) => {
 exports.getAllClientsById = getAllClientsById;
 
 function getAllClientsById(clients, cbk, connection) {
-  clients = clients.map((item) => Number(item));
+  clients = clients.map(Number);
   const getClient = mysql.format(rawGetSql, [clients, clients]);
 
   pool.query(getClient, (err, data, fields) => {
