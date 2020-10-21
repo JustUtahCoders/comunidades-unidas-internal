@@ -295,10 +295,8 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
     const lineItems = modifiedInvoice.lineItems
       .concat(newLineItems)
       .map((li) => ({ ...li, rate: Number(li.rate) }));
-    const clientIds = clientRef.current
-      .getClients()
-      // @ts-ignore
-      .map((item) => item.clientId);
+    // @ts-ignore
+    const clientIds = clientRef.current.getClients();
     const result = {
       ...modifiedInvoice,
       lineItems,

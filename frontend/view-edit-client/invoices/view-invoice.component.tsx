@@ -8,6 +8,7 @@ import { showGrowl, GrowlType } from "../../growls/growls.component";
 import ChangeInvoiceStatus from "./change-invoice-status.component";
 import { UserModeContext, UserMode } from "../../util/user-mode.context";
 import dayjs from "dayjs";
+import { handlePromiseError } from "../../util/error-helpers";
 
 export default function ViewInvoice(props: ViewInvoiceProps) {
   const { invoice, services, client } = props;
@@ -20,6 +21,7 @@ export default function ViewInvoice(props: ViewInvoiceProps) {
   const [isSaving, setIsSaving] = React.useState(false);
   const editInvoiceRef = React.useRef();
   const invoiceStatusRef = React.useRef();
+  const [extraClients, setExtraClients] = React.useState([]);
 
   React.useEffect(() => {
     if (isSaving) {
@@ -56,6 +58,21 @@ export default function ViewInvoice(props: ViewInvoiceProps) {
       };
     }
   }, [isSaving, tagsQuery]);
+
+  React.useEffect(() => {
+    const ac = new AbortController();
+    const clientIds = invoice.clients.filter(
+      (item) => item !== props.client.id
+    );
+    easyFetch(`/api/clients-by-id?clientId=${clientIds.join("&clientId=")}`, {
+      signal: ac.signal,
+    })
+      .then((data) => setExtraClients(data.clients))
+      .catch(handlePromiseError);
+    return () => {
+      ac.abort();
+    };
+  }, [props.client]);
 
   if (invoice.redacted) {
     return (
@@ -101,7 +118,7 @@ export default function ViewInvoice(props: ViewInvoiceProps) {
           ref={editInvoiceRef}
           invoice={invoice}
           services={services}
-          clients={[client]}
+          clients={[client, ...extraClients]}
           isEditing
         />
       ) : (
