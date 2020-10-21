@@ -15,24 +15,26 @@ import dayjs from "dayjs";
 
 export default function EditPaymentInfo(props: CreatePaymentStepProps) {
   // const EditPaymentInfo = React.forwardRef(function (props: CreatePaymentStepProps, ref) {
-  // const clientRef = React.useRef();
   const clientRef = React.useRef<MultiClientSelectRef>();
-  // @ts-ignore
-  let clientIds = clientRef.current ? clientRef.current.getClients() : null;
+  // const clientIds = clientRef.current ? clientRef.current.getClients() : null;
 
   React.useEffect(() => {
-    if (clientIds)
-      props.setPayment({ ...props.payment, payerClientIds: clientIds });
-  }, [clientRef.current, clientIds, props.payment.payerClientIds]);
+    return () => {
+      console.log(clientRef.current.getClients());
+      // @ts-ignore
+      props.setPayment({
+        ...props.payment,
+        payerClientIds: clientRef.current.getClients(),
+      });
+    };
+  }, []);
 
   return (
     <div
       {...useCss(css)}
       className={always("container").maybe("edit", props.edit)}
     >
-      <div className="question" onClick={() => console.log(clientIds)}>
-        Who made the payment?
-      </div>
+      <div className="question">Who made the payment?</div>
       <MultiClientSelect initialClients={[props.client]} ref={clientRef} />
       <div {...useCss(css)} className="inputs">
         <div>
@@ -72,5 +74,7 @@ export default function EditPaymentInfo(props: CreatePaymentStepProps) {
       });
     };
   }
+
+  // make a function that can set payment client ids in the parent? Similar to create-invoice.component and edit-invoice.component
 }
 // )
