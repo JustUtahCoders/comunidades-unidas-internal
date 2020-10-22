@@ -171,7 +171,7 @@ function emptyPayment(initialClientId: number): FullPayment {
     invoices: [],
     paymentAmount: 0,
     paymentType: PaymentType.credit,
-    payerClientIds: [],
+    payerClientIds: [initialClientId],
     redacted: false,
   };
 }
