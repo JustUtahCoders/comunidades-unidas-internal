@@ -19,8 +19,14 @@ const rawGetSql = fs.readFileSync(
 );
 
 app.get("/api/clients-by-id", (req, res) => {
-  // const validationErrors = checkValid(req.params, validId("id")); --> check out what validation function does, use for array of client ids
-  // validations here
+  const validationErrors = Array.isArray(req.query.clientId)
+    ? checkValid(req.query, validArray(validId("clientId")))
+    : checkValid(req.query, validId("clientId"));
+
+  if (validationErrors.length > 0) {
+    return invalidRequest(res, validationErrors);
+  }
+
   let clientIds = Array.isArray(req.query.clientId)
     ? req.query.clientId
     : [req.query.clientId];
