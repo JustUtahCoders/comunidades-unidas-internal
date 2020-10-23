@@ -9,6 +9,9 @@ import { groupBy, cloneDeep, sumBy, padStart } from "lodash-es";
 import CloseIconButton from "../../util/close-icon-button.component";
 import dayjs from "dayjs";
 import FullRichTextEditor from "../../rich-text/full-rich-text-editor.component";
+import MultiClientSelect, {
+  MultiClientSelectRef,
+} from "../../util/multi-client-select.component";
 
 const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
   const [newLineItems, setNewLineItems] = React.useState<Array<LineItem>>(() =>
@@ -24,6 +27,7 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
   const [totalOwed, setTotalOwed] = React.useState(subtotal);
   const groupedServices = groupBy(props.services, "programName");
   const richTextRef = React.useRef(null);
+  const clientRef = React.useRef<MultiClientSelectRef>();
 
   React.useImperativeHandle(ref, () => ({
     getInvoiceToSave,
@@ -42,13 +46,10 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
     <div {...useCss(css)}>
       <div className="header">
         <div className="clients input-block">
-          <label htmlFor="client-name">Client(s)</label>
-          {props.client && (
-            <div className="client-row" id="client-name">
-              {props.client.fullName}
-              <img src={userIconUrl} alt="human profile shadow" />
-            </div>
-          )}
+          <MultiClientSelect
+            initialClients={props.clients || []}
+            ref={clientRef}
+          />
         </div>
         <div className="input-block">
           <label htmlFor="invoice-number">Invoice #</label>
@@ -294,10 +295,12 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
     const lineItems = modifiedInvoice.lineItems
       .concat(newLineItems)
       .map((li) => ({ ...li, rate: Number(li.rate) }));
+    // @ts-ignore
+    const clientIds = clientRef.current.getClients();
     const result = {
       ...modifiedInvoice,
       lineItems,
-      clients: props.client ? [props.client.id] : [],
+      clients: clientIds,
       totalCharged: Number(totalOwed),
     };
 
@@ -402,7 +405,7 @@ function emptyLineItem(): LineItem {
 
 type EditInvoiceProps = {
   invoice: FullInvoice;
-  client?: SingleClient;
+  clients?: SingleClient[];
   services: CUService[];
   isEditing: boolean;
 };
