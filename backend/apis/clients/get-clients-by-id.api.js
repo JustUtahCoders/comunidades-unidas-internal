@@ -45,7 +45,7 @@ app.get("/api/clients-by-id", (req, res) => {
         clients,
       });
     } else {
-      notFound(res, `Could not find clients with ids ${req.params.clientIds}`);
+      notFound(res, `Could not find clients with ids ${req.query.clientId}`);
     }
   });
 });

@@ -88,7 +88,7 @@ If there is no client with the provided id, you will get a 404 HTTP response, wi
 ## Request
 
 ```http
-GET /api/clients/:clientIds/multi
+GET /api/clients-by-id?clientId=
 ```
 
 ## Response
@@ -223,6 +223,6 @@ If there is no client with the provided ids, you will get a 404 HTTP response wi
 
 ```json
 {
-  "errors": ["Could not find clients with ids [1,2,3]"]
+  "errors": ["Could not find clients with ids"]
 }
 ```
