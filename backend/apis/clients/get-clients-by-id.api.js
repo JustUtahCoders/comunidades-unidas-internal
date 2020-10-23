@@ -6,7 +6,11 @@ const {
   notFound,
 } = require("../../server");
 const mysql = require("mysql");
-const { checkValid, validId } = require("../utils/validation-utils");
+const {
+  checkValid,
+  validId,
+  validArray,
+} = require("../utils/validation-utils");
 const {
   responseFullName,
   responseBoolean,
@@ -20,7 +24,7 @@ const rawGetSql = fs.readFileSync(
 
 app.get("/api/clients-by-id", (req, res) => {
   const validationErrors = Array.isArray(req.query.clientId)
-    ? checkValid(req.query, validArray(validId("clientId")))
+    ? checkValid(req.query, validArray("clientId", validId))
     : checkValid(req.query, validId("clientId"));
 
   if (validationErrors.length > 0) {

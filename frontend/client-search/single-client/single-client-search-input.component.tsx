@@ -26,12 +26,8 @@ const SingleClientSearchInput = React.forwardRef<
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  React.useEffect(() => {
-    if (singleClientSearchInputRef) {
-      // @ts-ignore
-      singleClientSearchInputRef.current = state;
-    }
-  }, [state.clientId]);
+  // @ts-ignore
+  React.useImperativeHandle(singleClientSearchInputRef, () => state);
 
   React.useEffect(() => {
     if (clientChanged) {
