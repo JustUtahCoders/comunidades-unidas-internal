@@ -10,6 +10,7 @@ import UserModeContext from "./util/user-mode.context";
 import Growls from "./growls/growls.component";
 import AdminSettings from "./admin/admin-settings.component";
 import Partners from "./admin/partners/partners.component";
+import UserPermissions from "./admin/user-permissions/user-permissions.component";
 
 const Home = React.lazy(() => import("./home/home.component"));
 const ReportIssue = React.lazy(
@@ -79,6 +80,7 @@ export default function Root() {
                 <AdminSettings path="admin-settings" />
                 <ProgramsAndServices path="programs-and-services" />
                 <Partners path="partners" />
+                <UserPermissions path="user-permissions" />
               </Router>
             </React.Suspense>
           </Navbars>

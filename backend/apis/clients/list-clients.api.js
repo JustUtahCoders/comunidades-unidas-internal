@@ -101,7 +101,7 @@ function clientListQuery(query, pageNum, pageSize) {
   }
 
   let joinIntakeServices = "";
-  if (query.program || query.service) {
+  if (query.programInterest || query.serviceInterest) {
     joinIntakeServices = `
       JOIN 
       (
@@ -116,13 +116,40 @@ function clientListQuery(query, pageNum, pageSize) {
           ON latestIntakeD.latestDateAdded = innerIntakeD.dateAdded AND latestIntakeD.latestClientId = innerIntakeD.clientId
       ) intakeD ON cl.id = intakeD.clientId
     `;
-    const serviceId = query.program
+    const serviceId = query.programInterest
       ? `IN (SELECT id FROM services WHERE programId = ?)`
       : "= ?";
     whereClause += `
       AND (SELECT COUNT(*) FROM intakeServices WHERE intakeDataId = intakeDId AND intakeServices.serviceId ${serviceId}) > 0
     `;
-    whereClauseValues.push(query.program || query.service);
+    whereClauseValues.push(query.programInterest || query.serviceInterest);
+  }
+
+  let joinInteractions = "";
+  if (query.programInteraction || query.serviceInteraction) {
+    const serviceId = query.programInteraction
+      ? `IN (SELECT id FROM services WHERE programId = ?)`
+      : `= ?`;
+
+    joinInteractions = mysql.format(
+      `
+      JOIN (
+        SELECT clientId, COUNT(*) numInteractions
+        FROM clientInteractions
+        WHERE
+          clientInteractions.isDeleted = false
+          AND
+          serviceId ${serviceId}
+        GROUP BY clientId
+      ) interactionCounts
+      ON interactionCounts.clientId = cl.id
+    `,
+      [query.programInteraction || query.serviceInteraction]
+    );
+
+    whereClause += `
+      AND interactionCounts.numInteractions > 0
+    `;
   }
 
   if (query.wantsSMS) {
@@ -160,6 +187,7 @@ function clientListQuery(query, pageNum, pageSize) {
     JOIN 
       users us ON cl.addedBy = us.id 
     ${joinIntakeServices}
+    ${joinInteractions}
     ${whereClause}
     ORDER BY ${columnsToOrder}
     ${limitBy}
@@ -184,8 +212,10 @@ function validateClientListQuery(query) {
     "page",
     "id",
     "phone",
-    "program",
-    "service",
+    "programInterest",
+    "serviceInterest",
+    "programInteraction",
+    "serviceInteraction",
     "sortField",
     "sortOrder",
     "wantsSMS",
@@ -197,14 +227,20 @@ function validateClientListQuery(query) {
       nullableValidInteger("page"),
       nullableValidId("id"),
       nullableNonEmptyString("phone"),
-      nullableValidId("program"),
+      nullableValidId("programInterest"),
+      nullableValidId("serviceInterest"),
+      nullableValidId("programInteraction"),
+      nullableValidId("serviceInteraction"),
       nullableValidEnum("sortField", "id", "firstName", "lastName", "birthday"),
       nullableValidEnum("sortOrder", "asc", "desc"),
       nullableNonEmptyString("zip"),
       nullableValidBoolean("wantsSMS")
     ),
-    query.program && query.service
-      ? `You may only provide one of the following query params: 'program' or 'service'`
+    query.programInterest && query.serviceInterest
+      ? `You may only provide one of the following query params: 'programInterest' or 'serviceInterest'`
+      : null,
+    query.programInteraction && query.serviceInteraction
+      ? `You may only provide one of the following query params: 'programInteraction' or 'serviceInteraction'`
       : null,
   ].filter(Boolean);
 
