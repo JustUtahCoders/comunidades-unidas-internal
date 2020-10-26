@@ -67,11 +67,11 @@ const SingleClientSearchInput = React.forwardRef<
   }, [state.clientName]);
 
   React.useEffect(() => {
-    if (state.client.id && nextThingToFocusRef && nextThingToFocusRef.current) {
+    if (state.clientId && nextThingToFocusRef && nextThingToFocusRef.current) {
       nextThingToFocusRef.current.focus();
     }
   }, [
-    state.client.id,
+    state.clientId,
     nextThingToFocusRef,
     nextThingToFocusRef && nextThingToFocusRef.current,
   ]);
@@ -79,14 +79,14 @@ const SingleClientSearchInput = React.forwardRef<
   React.useEffect(() => {
     if (
       state.potentialClients.length <= 0 &&
-      !state.client.id &&
+      !state.clientId &&
       state.clientName.trim().length !== 0
     ) {
       inputRef.current.setCustomValidity("Please choose a client");
     } else {
       inputRef.current.setCustomValidity("");
     }
-  }, [state.client.id, state.potentialClients, state.clientName]);
+  }, [state.clientId, state.potentialClients, state.clientName]);
 
   return (
     <div {...scope} className="single-client-search">
@@ -108,7 +108,7 @@ const SingleClientSearchInput = React.forwardRef<
           required={required}
           ref={inputRef}
         />
-        {state.client.id && <img src={userIconUrl} className="client-icon" />}
+        {state.clientId && <img src={userIconUrl} className="client-icon" />}
       </span>
       {state.potentialClients.length > 0 && !state.clientId && (
         <div className="popup">
