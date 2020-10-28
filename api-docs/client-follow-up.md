@@ -1,13 +1,17 @@
-# Client follow up note
+# Client follow ups
 
 The client follow up documents and updates any calls with the client and documents the interaction as well as set up a date to follow up with the client.
 
 ## Creating a follow up note on a client
 
+**_Notes_**
+
+Fields required
+
 ### Request
 
 ```http
-POST /api/clients/:clientId/follow-up
+POST /api/clients/:clientId/follow-ups
 ```
 
 ```json
@@ -15,8 +19,8 @@ POST /api/clients/:clientId/follow-up
   "serviceId": 13,
   "title": "COVID test follow up",
   "description": "Client got tested and we will follow up with them for results",
-  "dateOfCall": "2020-07-28",
-  "followUpDate": "2020-08-12"
+  "dateOfContact": "2020-07-28",
+  "appointmentDate": "2020-08-12"
 }
 ```
 
@@ -24,11 +28,12 @@ POST /api/clients/:clientId/follow-up
 
 ```json
 {
+  "id": 1,
   "serviceId": 13,
   "title": "Test follow up",
   "description": "Client got tested for COVID and we will follow up with them for results",
-  "dateOfCall": "2020-07-28",
-  "followUpDate": "2020-08-12",
+  "dateOfContact": "2020-07-28",
+  "appointmentDate": "2020-08-12",
   "createdBy": {
     "userId": 1,
     "firstName": "Joel",
@@ -51,7 +56,7 @@ POST /api/clients/:clientId/follow-up
 ### Request
 
 ```http
-PATCH /api/clients/:clientId/follow-up/:followUpId
+PATCH /api/clients/:clientId/follow-ups/:followUpId
 ```
 
 ```json
@@ -59,8 +64,8 @@ PATCH /api/clients/:clientId/follow-up/:followUpId
   "serviceId": 12,
   "title": "COVID test follow up",
   "description": "Client got tested for COVID and we will follow up with them for results",
-  "dateOfCall": "2020-07-28",
-  "followUpDate": "2020-08-15"
+  "dateOfContact": "2020-07-28",
+  "appointmentDate": "2020-08-15"
 }
 ```
 
@@ -68,11 +73,12 @@ PATCH /api/clients/:clientId/follow-up/:followUpId
 
 ```json
 {
+  "id": 1,
   "serviceId": 12,
   "title": "COVID test follow up",
   "description": "Client got tested for COVID and we will follow up with them for results",
-  "dateOfCall": "2020-07-28",
-  "followUpDate": "2020-08-15",
+  "dateOfContact": "2020-07-28",
+  "appointmentDate": "2020-08-15",
   "createdBy": {
     "userId": 1,
     "firstName": "Joel",
