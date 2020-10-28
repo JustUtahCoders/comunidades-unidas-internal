@@ -6,7 +6,7 @@ The client follow up documents and updates any calls with the client and documen
 
 **_Notes_**
 
-Fields required
+A client follow up must include an associated service id, title of the interaction, the description of the interaction, and a date to follow up with the client.
 
 ### Request
 
