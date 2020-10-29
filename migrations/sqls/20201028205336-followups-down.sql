@@ -1,1 +1,2 @@
-DROP TABLE followUps;
+DROP TABLE IF EXISTS followUps;
+DROP TABLE IF EXISTS followUpServices;
