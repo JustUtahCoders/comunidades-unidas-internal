@@ -7,6 +7,7 @@ const {
   validTime,
   validArray,
 } = require("../../utils/validation-utils");
+const followUpsSql = require("./create-follow-up.sql");
 
 app.post("/api/clients/:clientId/follow-ups", (req, res) => {
   const user = req.session.passport.user;
@@ -16,6 +17,7 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
     ...checkValid(req.params, validArray("serviceIds")),
     // incomplete
   ];
+  const [clientId] = req.params;
 
   const {
     serviceIds,
@@ -28,6 +30,20 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
   if (validationErrors.length > 0) {
     return invalidRequest(res, validationErrors);
   }
+
+  // addedByUser ===> use user variable to query and get user (see if there is already a util function for that)
+  // updatedByUser ===> should be same user as above
+  const addedByUser = null;
+
+  const insertFollowUpSql = mysql.format(followUpsSql, [
+    clientId,
+    title,
+    descriptiono,
+    dateOfContact,
+    appointmentDate,
+    addedByUser,
+    addedByUser,
+  ]);
 
   pool.query(serviceSql, (err, serviceResult) => {
     if (err) {
