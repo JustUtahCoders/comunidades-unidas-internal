@@ -40,36 +40,41 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
     return invalidRequest(res, validationErrors);
   }
 
-  // addedByUser ===> use user variable to query and get user (see if there is already a util function for that)
-  // updatedByUser ===> should be same user as above
-  const addedByUser = null;
+  const insertFollowUpSql = mysql.format(followUpsSql, [
+    clientId,
+    title,
+    description,
+    dateOfContact,
+    appointmentDate,
+    user.id,
+    user.id,
+  ]);
 
-  // const insertFollowUpSql = mysql.format(followUpsSql, [
-  //   clientId,
-  //   title,
-  //   description,
-  //   dateOfContact,
-  //   appointmentDate,
-  //   addedByUser,
-  //   addedByUser,
-  // ]);
+  const insertFollowUpServicesSql = mysql.format(`
+  INSERT INTO followUpServices (serviceId, followUpId) VALUES (?, ?);
+  `);
 
-  // pool.query(insertFollowUpSql, (err, serviceResult) => {
-  //   if (err) {
-  //     return databaseError(req, res, err);
-  //   }
+  pool.query(insertFollowUpSql, (err, insertResult) => {
+    if (err) {
+      return databaseError(req, res, err);
+    }
 
-  //   if (serviceResult.length !== 1) {
-  //     return invalidRequest(
-  //       res,
-  //       `No CU service exists with id '${req.body.serviceId}'`
-  //     );
-  //   }
+    let query = "";
 
-  //   const serviceName = serviceResult[0].serviceName;
+    serviceIds.forEach((id) => {
+      query += `
+      INSERT INTO followUpServices (serviceId, followUpId) VALUES (${id}, ${insertResult.insertId});
+      `;
+    });
 
-  //   // const insertFollowUpSql = mysql.format(`INSERT INTO followUps ()`);
-  // });
+    pool.query(query, (err, joinResult) => {
+      if (err) {
+        return databaseError(req, res, err);
+      }
+
+      console.log(joinResult);
+    });
+  });
 
   // const insertServicesAndFollowUpQuery = mysql.format(
   //   `INSERT INTO followUpServices WHERE`
