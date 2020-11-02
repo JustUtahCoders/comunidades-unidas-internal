@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FormEvent } from "react";
 import { useCss, a } from "kremling";
 import { CUServicesList, CUService } from "../../add-client/services.component";
 import { groupBy } from "lodash-es";
@@ -16,6 +16,10 @@ import {
 export default React.forwardRef<any, SingleClientInteractionProps>(
   function SingleClientInteraction(props, ref) {
     const scope = useCss(css);
+    const [interactionKind, setInteractionKind] = React.useState<
+      InteractionKind
+    >(InteractionKind.cuService);
+    const followUpsEnabled = localStorage.getItem("follow-ups") === "true";
     const [selectedService, setSelectedService] = React.useState<AnyService>(
       null
     );
@@ -65,13 +69,15 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
       return result.concat(...partner.services);
     }, []);
 
-    const partnerServiceSelected =
-      selectedService && selectedService.type === "Partner";
+    React.useEffect(() => {
+      setSelectedService(null);
+    }, [interactionKind]);
 
     React.useEffect(() => {
-      const getter = partnerServiceSelected
-        ? referralGetter
-        : interactionGetter;
+      const getter =
+        interactionKind === InteractionKind.partnerReferral
+          ? referralGetter
+          : interactionGetter;
       props.addInteractionGetter(props.interactionIndex, getter);
       return () => props.removeInteractionGetter(props.interactionIndex);
 
@@ -185,64 +191,53 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
           )}
         </div>
         <div className="inputs">
+          <label>Type:</label>
+          <div className="interaction-kind">
+            <input
+              id={`kind-service-provided-${props.interactionIndex}`}
+              type="radio"
+              name={`interaction-kind-${props.interactionIndex}`}
+              value={InteractionKind.cuService}
+              checked={interactionKind === InteractionKind.cuService}
+              onChange={updateInteractionKind}
+            />
+            <label htmlFor={`kind-service-provided-${props.interactionIndex}`}>
+              Service Provided
+            </label>
+            <input
+              id={`kind-referral-${props.interactionIndex}`}
+              type="radio"
+              name={`interaction-kind-${props.interactionIndex}`}
+              value={InteractionKind.partnerReferral}
+              checked={interactionKind === InteractionKind.partnerReferral}
+              onChange={updateInteractionKind}
+            />
+            <label htmlFor={`kind-referral-${props.interactionIndex}`}>
+              Referral
+            </label>
+            {followUpsEnabled && (
+              <>
+                <input
+                  id={`kind-follow-up-${props.interactionIndex}`}
+                  type="radio"
+                  name={`interaction-kind-${props.interactionIndex}`}
+                  value={InteractionKind.followUp}
+                  checked={interactionKind === InteractionKind.followUp}
+                  onChange={updateInteractionKind}
+                />
+                <label htmlFor={`kind-follow-up-${props.interactionIndex}`}>
+                  Follow-up
+                </label>
+              </>
+            )}
+          </div>
           <label id={`provided-service-${props.interactionIndex}`}>
             Service:
           </label>
           <div>
-            <select
-              ref={ref}
-              value={
-                selectedService
-                  ? selectedService.type + selectedService.service.id
-                  : ""
-              }
-              onChange={(evt) => {
-                if (evt.target.value.startsWith("Partner")) {
-                  const serviceId = Number(
-                    evt.target.value.slice("Partner".length)
-                  );
-                  setSelectedService({
-                    type: "Partner",
-                    service: partnerServices.find((ps) => ps.id === serviceId),
-                  });
-                } else {
-                  const serviceId = Number(evt.target.value.slice("CU".length));
-                  setSelectedService({
-                    type: "CU",
-                    service: services.find((s) => s.id === serviceId),
-                  });
-                }
-              }}
-              aria-labelledby={`provided-service-${props.interactionIndex}`}
-              className="services-select"
-              name={`provided-service-${props.interactionIndex}`}
-              required
-            >
-              <option value="" disabled hidden>
-                Choose here
-              </option>
-              {props.partnersResponse.map((partner) => (
-                <optgroup label={partner.name + " (Referral)"} key={partner.id}>
-                  {partner.services.map((partnerService) => (
-                    <option
-                      key={partnerService.id}
-                      value={"Partner" + partnerService.id}
-                    >
-                      {partnerService.name}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-              {Object.keys(groupedServices).map((programName) => (
-                <optgroup label={programName} key={programName}>
-                  {groupedServices[programName].map((service) => (
-                    <option key={service.id} value={"CU" + service.id}>
-                      {service.serviceName}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
+            {interactionKind === InteractionKind.partnerReferral
+              ? referralSelect()
+              : cuServiceSelect()}
             {selectedService &&
               services.length > 0 &&
               selectedService.type === "CU" &&
@@ -252,10 +247,10 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
                 </div>
               )}
           </div>
-          {!partnerServiceSelected && (
+          {interactionKind === InteractionKind.cuService && (
             <>
               <label id={`interaction-type-${props.interactionIndex}`}>
-                Type:
+                Method:
               </label>
               <select
                 value={selectedInteractionType || ""}
@@ -282,7 +277,7 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
             aria-labelledby={`interaction-date-${props.interactionIndex}`}
             required
           />
-          {!partnerServiceSelected && (
+          {interactionKind === InteractionKind.cuService && (
             <>
               <label id={`interaction-duration-${props.interactionIndex}`}>
                 Duration:
@@ -294,29 +289,30 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
               />
             </>
           )}
-          {!partnerServiceSelected && selectedInteractionType !== "byPhone" && (
-            <>
-              <label id={`interaction-location-${props.interactionIndex}`}>
-                Location:
-              </label>
-              <select
-                value={selectedLocation || ""}
-                onChange={(evt) => setSelectedLocation(evt.target.value)}
-                aria-labelledby={`interaction-location-${props.interactionIndex}`}
-                required
-              >
-                <option value="" disabled hidden>
-                  Choose here
-                </option>
-                {Object.keys(InteractionLocation).map((location) => (
-                  <option key={location} value={location}>
-                    {InteractionLocation[location]}
+          {interactionKind === InteractionKind.cuService &&
+            selectedInteractionType !== "byPhone" && (
+              <>
+                <label id={`interaction-location-${props.interactionIndex}`}>
+                  Location:
+                </label>
+                <select
+                  value={selectedLocation || ""}
+                  onChange={(evt) => setSelectedLocation(evt.target.value)}
+                  aria-labelledby={`interaction-location-${props.interactionIndex}`}
+                  required
+                >
+                  <option value="" disabled hidden>
+                    Choose here
                   </option>
-                ))}
-              </select>
-            </>
-          )}
-          {!partnerServiceSelected && (
+                  {Object.keys(InteractionLocation).map((location) => (
+                    <option key={location} value={location}>
+                      {InteractionLocation[location]}
+                    </option>
+                  ))}
+                </select>
+              </>
+            )}
+          {interactionKind === InteractionKind.cuService && (
             <>
               <label id={`interaction-description-${props.interactionIndex}`}>
                 Description:
@@ -335,6 +331,87 @@ export default React.forwardRef<any, SingleClientInteractionProps>(
         </div>
       </div>
     );
+
+    function updateInteractionKind(evt: React.ChangeEvent<HTMLInputElement>) {
+      setInteractionKind(evt.target.value as InteractionKind);
+    }
+
+    function cuServiceSelect() {
+      return (
+        <select
+          ref={ref}
+          value={
+            selectedService
+              ? selectedService.type + selectedService.service.id
+              : ""
+          }
+          onChange={(evt) => {
+            const serviceId = Number(evt.target.value.slice("CU".length));
+            setSelectedService({
+              type: "CU",
+              service: services.find((s) => s.id === serviceId),
+            });
+          }}
+          aria-labelledby={`provided-service-${props.interactionIndex}`}
+          className="services-select"
+          name={`provided-service-${props.interactionIndex}`}
+          required
+        >
+          <option value="" disabled hidden>
+            Choose here
+          </option>
+          {Object.keys(groupedServices).map((programName) => (
+            <optgroup label={programName} key={programName}>
+              {groupedServices[programName].map((service) => (
+                <option key={service.id} value={"CU" + service.id}>
+                  {service.serviceName}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+      );
+    }
+
+    function referralSelect() {
+      return (
+        <select
+          ref={ref}
+          value={
+            selectedService
+              ? selectedService.type + selectedService.service.id
+              : ""
+          }
+          onChange={(evt) => {
+            const serviceId = Number(evt.target.value.slice("Partner".length));
+            setSelectedService({
+              type: "Partner",
+              service: partnerServices.find((ps) => ps.id === serviceId),
+            });
+          }}
+          aria-labelledby={`provided-service-${props.interactionIndex}`}
+          className="services-select"
+          name={`provided-service-${props.interactionIndex}`}
+          required
+        >
+          <option value="" disabled hidden>
+            Choose here
+          </option>
+          {props.partnersResponse.map((partner) => (
+            <optgroup label={partner.name + " (Referral)"} key={partner.id}>
+              {partner.services.map((partnerService) => (
+                <option
+                  key={partnerService.id}
+                  value={"Partner" + partnerService.id}
+                >
+                  {partnerService.name}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+      );
+    }
   }
 );
 
@@ -342,7 +419,7 @@ function getName(service: AnyService) {
   if (service.type === "CU") {
     return service.service.serviceName;
   } else {
-    return service.service.name + " (Referral)";
+    return service.service.name;
   }
 }
 
@@ -393,6 +470,10 @@ const css = `
 
 & .in-well button.icon:hover {
   background-color: #ffd08a;
+}
+
+& .interaction-kind label {
+  padding-right: 1.6rem;
 }
 `;
 
@@ -453,3 +534,9 @@ type PartnerServiceType = {
 };
 
 type AnyService = CUServiceType | PartnerServiceType;
+
+enum InteractionKind {
+  cuService = "cuService",
+  partnerReferral = "partnerReferral",
+  followUp = "followUp",
+}
