@@ -80,7 +80,6 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
         if (err) {
           return databaseError(err);
         }
-        console.log(result);
         res.send(result);
       });
     });
