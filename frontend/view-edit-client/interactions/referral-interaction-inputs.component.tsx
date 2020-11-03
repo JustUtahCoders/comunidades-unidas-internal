@@ -22,9 +22,6 @@ const ReferralInteractionInputs = React.forwardRef<
   }, []);
 
   useImperativeHandle(ref, () => ({
-    getName() {
-      return partnerService ? partnerService.name : "";
-    },
     save(signal) {
       const now = dayjs();
       const isToday =
