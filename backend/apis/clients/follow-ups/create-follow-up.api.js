@@ -15,6 +15,10 @@ const followUpsSql = fs.readFileSync(
   path.resolve(__dirname, "./create-follow-up.sql"),
   "utf-8"
 );
+const getFollowUpSql = fs.readFileSync(
+  path.resolve(__dirname, "./get-follow-up.sql"),
+  "utf-8"
+);
 
 app.post("/api/clients/:clientId/follow-ups", (req, res) => {
   const user = req.session.passport.user;
@@ -71,22 +75,20 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
       if (err) {
         return databaseError(req, res, err);
       }
-    });
 
-    formattedFollowUpResponse(insertResult.insertId, (err, result) => {
-      if (err) {
-        return databaseError(err);
-      }
-      res.send(result);
+      formattedFollowUpResponse(insertResult.insertId, (err, result) => {
+        if (err) {
+          return databaseError(err);
+        }
+        console.log(result);
+        res.send(result);
+      });
     });
   });
 });
 
 function formattedFollowUpResponse(id, errBack) {
-  // mysql select query to get the information for the response object
-  // callback for it
-
-  const query = mysql.format();
+  const query = mysql.format(getFollowUpSql, [id, id]);
   pool.query(query, (err, followUpResult) => {
     if (err) {
       return errBack(err, null);

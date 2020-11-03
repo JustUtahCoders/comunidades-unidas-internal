@@ -41,7 +41,7 @@ POST /api/clients/:clientId/follow-ups
     "fullName": "Joel Denning",
     "timestamp": "2020-07-28T06:00:00:000Z"
   },
-  "lastUpdateBy": {
+  "lastUpdatedBy": {
     "userId": 1,
     "firstName": "Joel",
     "lastName": "Denning",
