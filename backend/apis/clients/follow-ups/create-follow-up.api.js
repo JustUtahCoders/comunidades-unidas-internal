@@ -71,13 +71,27 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
       if (err) {
         return databaseError(req, res, err);
       }
+    });
 
-      console.log(joinResult);
+    formattedFollowUpResponse(insertResult.insertId, (err, result) => {
+      if (err) {
+        return databaseError(err);
+      }
+      res.send(result);
     });
   });
-
-  // const insertServicesAndFollowUpQuery = mysql.format(
-  //   `INSERT INTO followUpServices WHERE`
-  // );
-  res.send("hi");
 });
+
+function formattedFollowUpResponse(id, errBack) {
+  // mysql select query to get the information for the response object
+  // callback for it
+
+  const query = mysql.format();
+  pool.query(query, (err, followUpResult) => {
+    if (err) {
+      return errBack(err, null);
+    } else {
+      errBack(null, followUpResult);
+    }
+  });
+}
