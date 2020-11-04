@@ -1,5 +1,6 @@
 import React, { useEffect, useReducer, useRef } from "react";
 import { CUService, CUServicesList } from "../../add-client/services.component";
+import FullRichTextEditor from "../../rich-text/full-rich-text-editor.component";
 import Modal from "../../util/modal.component";
 import IntakeServicesInputs from "../../util/services-inputs.component";
 import {
@@ -28,6 +29,18 @@ const FollowUpInteractionInputs = React.forwardRef<
 
   return (
     <>
+      <label htmlFor={`title-${props.interactionIndex}`}>Title:</label>
+      <input
+        id={`title-${props.interactionIndex}`}
+        type="text"
+        onChange={(evt) =>
+          dispatch({ type: ActionType.setTitle, title: evt.target.value })
+        }
+      />
+      <label htmlFor={`contact-date-${props.interactionIndex}`}>
+        Date of Contact:
+      </label>
+      <input type="date" />
       <label htmlFor={`provided-service-${props.interactionIndex}`}>
         Services discussed:
       </label>
@@ -38,7 +51,7 @@ const FollowUpInteractionInputs = React.forwardRef<
           className="primary"
           onClick={() => dispatch({ type: ActionType.openServicesModal })}
         >
-          Update
+          Select
         </button>
       </div>
       {state.showingServicesModal && (
@@ -62,13 +75,16 @@ const FollowUpInteractionInputs = React.forwardRef<
           />
         </Modal>
       )}
-      <label htmlFor={`title-${props.interactionIndex}`}>Title:</label>
-      <input
-        id={`title-${props.interactionIndex}`}
-        type="text"
-        onChange={(evt) =>
-          dispatch({ type: ActionType.setTitle, title: evt.target.value })
-        }
+      <label htmlFor={`appointment-date-${props.interactionIndex}`}>
+        Future Appointment:
+      </label>
+      <input type="date" />
+      <label htmlFor={`description-${props.interactionIndex}`}>
+        Description
+      </label>
+      <FullRichTextEditor
+        placeholder="Describe the follow up"
+        initialHTML={null}
       />
     </>
   );
