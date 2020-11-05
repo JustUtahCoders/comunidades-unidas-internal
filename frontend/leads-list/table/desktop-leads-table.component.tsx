@@ -314,7 +314,7 @@ const css = `
     font-size: 1.5rem;
   }
 
-  & .leads-table th {
+  & .leads-table tr th {
     position: sticky;
     top: 5.5rem;
     background-color: var(--very-light-gray);
@@ -324,7 +324,7 @@ const css = `
   }
 
   & .leads-table.advanced-search th {
-    top: 50rem;
+    top: 47.5;
   }
 
   & .leads-table th button {
