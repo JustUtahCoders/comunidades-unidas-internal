@@ -316,7 +316,7 @@ const css = `
 
   & .leads-table tr th {
     position: sticky;
-    top: 5.5rem;
+    top: 5.8rem;
     background-color: var(--very-light-gray);
     box-shadow: 0 .2rem 0.2rem var(--medium-gray);
     padding: 0 1rem 0 1rem;

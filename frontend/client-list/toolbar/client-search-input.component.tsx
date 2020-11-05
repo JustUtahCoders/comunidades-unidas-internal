@@ -16,9 +16,17 @@ const searchFields = {
   zip: "ZIP Code",
   phone: "Phone",
   programInterest: "Interest",
+  programStartInterest: "Start",
+  programEndInterest: "End",
   serviceInterest: "Interest",
+  serviceStartInterest: "Start",
+  serviceEndInterest: "End",
   programInteraction: "Program Received",
+  programStartInteraction: "Start",
+  programEndInteraction: "Start",
   serviceInteraction: "Service Received",
+  serviceStartInteraction: "Start",
+  serviceEndInteraction: "End",
 };
 
 export default function ClientSearchInput(props: ClientSearchInputProps) {
@@ -136,6 +144,7 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
                 search={search}
                 serviceData={serviceData}
                 updateAdvancedSearch={updateAdvancedSearch}
+                includeDate
               />
             </div>
             <button

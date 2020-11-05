@@ -100,7 +100,13 @@ export type SearchParseValues = {
   event?: string;
   programInterest?: string;
   serviceInterest?: string;
+  programStartInterest?: string;
+  programEndInterest?: string;
   programInteraction?: string;
+  programStartInteraction?: string;
+  programEndInteraction?: string;
   serviceInteraction?: string;
+  serviceStartInteraction?: string;
+  serviceEndInteraction?: string;
   leadStatus?: LeadStatus;
 };
