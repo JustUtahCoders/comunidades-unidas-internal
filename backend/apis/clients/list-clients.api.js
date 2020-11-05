@@ -143,9 +143,6 @@ function clientListQuery(query, pageNum, pageSize) {
     const dbId = isProgram
       ? query.programInteraction
       : query.serviceInteraction;
-    console.log(
-      isProgram ? query.programStartInteraction : query.serviceStartInteraction
-    );
 
     joinInteractions = mysql.format(
       `
@@ -164,8 +161,6 @@ function clientListQuery(query, pageNum, pageSize) {
     `,
       [startDate, endDate, dbId]
     );
-
-    console.log(joinInteractions);
 
     whereClause += `
       AND interactionCounts.numInteractions > 0
