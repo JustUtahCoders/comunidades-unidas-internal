@@ -54,10 +54,6 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
     user.id,
   ]);
 
-  const insertFollowUpServicesSql = mysql.format(`
-  INSERT INTO followUpServices (serviceId, followUpId) VALUES (?, ?);
-  `);
-
   pool.query(insertFollowUpSql, (err, insertResult) => {
     if (err) {
       return databaseError(req, res, err);
