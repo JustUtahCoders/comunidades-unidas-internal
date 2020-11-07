@@ -77,9 +77,14 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
         if (err) {
           return databaseError(req, res, err);
         }
+
+        pool.query(getFollowUpByIdSql, (err, followUp) => {
+          if (err) {
+            return databaseError(req, res, err);
+          }
+          res.send(followUp);
+        });
       });
     });
   });
-
-  res.send("hit");
 });
