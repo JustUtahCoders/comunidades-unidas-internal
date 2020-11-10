@@ -148,7 +148,7 @@ const ServiceInteractionInputs = React.forwardRef<
       <label id={`provided-service-${props.interactionIndex}`}>Service:</label>
       <div>
         <select
-          value={selectedService ? selectedService.id : ""}
+          value={"CU" + (selectedService ? selectedService.id : "")}
           onChange={(evt) => {
             const serviceId = Number(evt.target.value.slice("CU".length));
             setSelectedService(services.find((s) => s.id === serviceId));
