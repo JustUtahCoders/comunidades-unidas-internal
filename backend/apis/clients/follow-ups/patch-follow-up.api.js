@@ -40,7 +40,12 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
     if (err) {
       databaseError(req, res, err);
     }
-    const getCurrentUserSql = `SELECT JSON_OBJECT("userId", users.id, "firstName", users.firstName, "lastName", users.lastName) lastUpdatedBy FROM users WHERE id = ${user.id}`;
+
+    const getCurrentUserSql = mysql.format(
+      'SELECT JSON_OBJECT("userId", users.id, "firstName", users.firstName, "lastName", users.lastName) lastUpdatedBy FROM users WHERE id = ?',
+      [user.id]
+    );
+
     pool.query(getCurrentUserSql, (err, userResult) => {
       if (err) {
         return databaseError(req, res, err);
@@ -67,11 +72,14 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
       );
       const oldServiceIds = JSON.parse(followUpResult[0].serviceIds);
       updateFollowUpSql =
-        `DELETE FROM followUpServices WHERE followUpId = ${newFollowUp.id};
-        ` + updateFollowUpSql;
+        mysql.format("DELETE FROM followUpServices WHERE followUpId = ?", [
+          newFollowUp.id,
+        ]) + updateFollowUpSql;
       newFollowUp.serviceIds.forEach((id) => {
-        updateFollowUpSql += `INSERT INTO followUpServices (serviceId, followUpId) VALUES (${id}, ${newFollowUp.id});
-        `;
+        updateFollowUpSql += mysql.format(
+          "INSERT INTO followUpServices (serviceId, followUpId) VALUES (?, ?)",
+          [id, newFollowUp.id]
+        );
       });
       pool.query(updateFollowUpSql, (err, updateResult) => {
         if (err) {
