@@ -6,7 +6,7 @@ The client follow up documents and updates any calls with the client and documen
 
 **_Notes_**
 
-A client follow up must include an associated service id, title of the interaction, the description of the interaction, and a date to follow up with the client.
+A client follow up must include an array of associated service id(s), title of the interaction, the description of the interaction, and a date to follow up with the client.
 
 ### Request
 
@@ -16,7 +16,7 @@ POST /api/clients/:clientId/follow-ups
 
 ```json
 {
-  "serviceId": 13,
+  "serviceId": [12, 13],
   "title": "COVID test follow up",
   "description": "Client got tested and we will follow up with them for results",
   "dateOfContact": "2020-07-28",
@@ -29,7 +29,7 @@ POST /api/clients/:clientId/follow-ups
 ```json
 {
   "id": 1,
-  "serviceId": 13,
+  "serviceId": [12, 13],
   "title": "Test follow up",
   "description": "Client got tested for COVID and we will follow up with them for results",
   "dateOfContact": "2020-07-28",
@@ -41,7 +41,7 @@ POST /api/clients/:clientId/follow-ups
     "fullName": "Joel Denning",
     "timestamp": "2020-07-28T06:00:00:000Z"
   },
-  "lastUpdateBy": {
+  "lastUpdatedBy": {
     "userId": 1,
     "firstName": "Joel",
     "lastName": "Denning",
