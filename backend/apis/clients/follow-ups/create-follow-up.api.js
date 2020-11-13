@@ -81,7 +81,6 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
         if (err) {
           return databaseError(err);
         }
-
         res.send(result);
       });
     });
@@ -94,13 +93,11 @@ function formattedFollowUpResponse(id, errBack) {
     if (err) {
       return errBack(err, null);
     } else {
-      let formmattedResult = { ...followUpResult[0] };
-      formmattedResult.serviceIds = JSON.parse(formmattedResult.serviceIds);
-      formmattedResult.createdBy = JSON.parse(formmattedResult.createdBy);
-      formmattedResult.lastUpdatedBy = JSON.parse(
-        formmattedResult.lastUpdatedBy
-      );
-      errBack(null, formmattedResult);
+      let formattedResult = { ...followUpResult[0] };
+      formattedResult.serviceIds = JSON.parse(formattedResult.serviceIds);
+      formattedResult.createdBy = JSON.parse(formattedResult.createdBy);
+      formattedResult.lastUpdatedBy = JSON.parse(formattedResult.lastUpdatedBy);
+      errBack(null, formattedResult);
     }
   });
 }
