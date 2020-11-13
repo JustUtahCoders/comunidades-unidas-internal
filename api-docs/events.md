@@ -47,7 +47,21 @@ GET /api/events/:id
     "lastName": "Denning",
     "fullName": "Joel Denning",
     "timestamp": "2019-05-06T06:00:00.000Z"
-  }
+  },
+  "leads": [
+    {
+      "leadId": 1,
+      "firstName": "Justin",
+      "lastName": "McMurdie",
+      "fullName": "Justin McMurdie"
+    },
+    {
+      "leadId": 2,
+      "firstName": "Obi-Wan",
+      "lastName": "Kenobi",
+      "fullName": "Obi-Wan Kenobi"
+    }
+  ]
 }
 ```
 
