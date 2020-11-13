@@ -96,14 +96,12 @@ function getEventById(eventId, cbk, connection) {
 
     const leads = eventLeads.map((lead) => {
       return {
+        leadId: lead.leadId,
         firstName: lead.firstName,
         lastName: lead.lastName,
         fullName: responseFullName(lead.firstName, lead.lastName),
-        id: lead.leadId,
       };
     });
-
-    console.log("leads", leads);
 
     const clientGenders = _.groupBy(eventClients, "gender");
     const clientGenderCounts = Object.keys(clientGenders).reduce(

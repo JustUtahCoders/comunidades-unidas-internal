@@ -21,7 +21,7 @@ export default function ViewEventStats(props: ViewEventStatsProps) {
             {leads.map((lead) => (
               <tr>
                 <td>
-                  <Link to={`/leads/${lead.id}`}>{lead.id}</Link>
+                  <Link to={`/leads/${lead.leadId}`}>{lead.leadId}</Link>
                 </td>
                 <td>{lead.fullName}</td>
               </tr>
