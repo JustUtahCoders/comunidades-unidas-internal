@@ -66,9 +66,10 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
     let query = "";
 
     serviceIds.forEach((id) => {
-      query += `
-      INSERT INTO followUpServices (serviceId, followUpId) VALUES (${id}, ${insertResult.insertId});
-      `;
+      query += mysql.format(
+        `INSERT INTO followUpServices (serviceId, followUpId) VALUES (?, ?);`,
+        [id, insertResult.insertId]
+      );
     });
 
     pool.query(query, (err, joinResult) => {
@@ -80,6 +81,7 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
         if (err) {
           return databaseError(err);
         }
+
         res.send(result);
       });
     });
@@ -92,7 +94,13 @@ function formattedFollowUpResponse(id, errBack) {
     if (err) {
       return errBack(err, null);
     } else {
-      errBack(null, followUpResult);
+      let formmattedResult = { ...followUpResult[0] };
+      formmattedResult.serviceIds = JSON.parse(formmattedResult.serviceIds);
+      formmattedResult.createdBy = JSON.parse(formmattedResult.createdBy);
+      formmattedResult.lastUpdatedBy = JSON.parse(
+        formmattedResult.lastUpdatedBy
+      );
+      errBack(null, formmattedResult);
     }
   });
 }
