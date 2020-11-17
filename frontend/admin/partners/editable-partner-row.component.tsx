@@ -5,6 +5,7 @@ import easyFetch from "../../util/easy-fetch";
 import Modal from "../../util/modal.component";
 import PartnerInputs from "./partner-inputs.component";
 import { Partner } from "./partners.component";
+import { isEmpty } from "lodash-es";
 
 export default function EditablePartnerRow(props: EditablePartnerRowProps) {
   const [partner, setPartner] = React.useState(() => cloneDeep(props.partner));
@@ -22,6 +23,7 @@ export default function EditablePartnerRow(props: EditablePartnerRowProps) {
         body: {
           name: partner.name,
           isActive: partner.isActive,
+          phone: isEmpty(partner.phone) ? null : partner.phone,
         },
       })
         .then(() => {
@@ -57,7 +59,7 @@ export default function EditablePartnerRow(props: EditablePartnerRowProps) {
           headerText="Modify Partner"
           close={closeModal}
           primaryText="Modify Partner"
-          primaryAction={() => setIsSaving(true)}
+          primaryAction={() => formRef.current.requestSubmit()}
           secondaryText="Cancel"
           secondaryAction={closeModal}
         >

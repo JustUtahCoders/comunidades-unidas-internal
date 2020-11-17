@@ -11,6 +11,7 @@ const {
   checkValid,
   validId,
   nullableNonEmptyString,
+  nullableValidPhone,
   nullableValidBoolean,
 } = require("../utils/validation-utils");
 const fs = require("fs");
@@ -37,7 +38,8 @@ app.patch("/api/partners/:partnerId", (req, res) => {
     ...checkValid(
       req.body,
       nullableNonEmptyString("name"),
-      nullableValidBoolean("isActive")
+      nullableValidBoolean("isActive"),
+      nullableValidPhone("phone")
     ),
   ];
 
@@ -60,11 +62,13 @@ app.patch("/api/partners/:partnerId", (req, res) => {
       isActive: req.body.hasOwnProperty("isActive")
         ? req.body.isActive
         : partner.isActive,
+      phone: req.body.hasOwnProperty("phone") ? req.body.phone : partner.phone,
     };
 
     const updateQuery = mysql.format(updateSql, [
       finalPartner.name,
       finalPartner.isActive,
+      finalPartner.phone,
       finalPartner.id,
     ]);
 
