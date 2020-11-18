@@ -22,6 +22,7 @@ exports.pool = mysql.createPool({
   database: process.env.MYSQL_DB_NAME || "local_db",
   port: process.env.MYSQL_PORT || "3306",
   multipleStatements: true,
+  timezone: "+00:00",
 });
 
 const getConnection = exports.pool.getConnection;
