@@ -33,8 +33,8 @@ app.delete("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
         UPDATE clientLogs
         SET isDeleted = true
         WHERE detailId = ?
-          AND logType IN ("clientInteraction:created", "clientInteraction:updated");
-        
+          AND logType IN ("clientInteraction:created", "clientInteraction:updated", "clientInteraction:serviceProvided");
+
         ${insertActivityLogQuery({
           clientId,
           title: `Client interaction for service ${serviceName} was deleted`,

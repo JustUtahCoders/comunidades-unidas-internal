@@ -2,7 +2,7 @@ const dateFormat = require("dateformat");
 
 exports.responseDateWithoutTime = (date) => {
   if (date) {
-    return dateFormat(date, "yyyy-mm-dd");
+    return dateFormat(date, "UTC:yyyy-mm-dd");
   } else {
     return null;
   }
