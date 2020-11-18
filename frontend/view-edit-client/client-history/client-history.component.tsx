@@ -40,7 +40,6 @@ export default function ClientHistory(props: ClientHistoryProps) {
               ...log,
               createdBy: {
                 ...log.createdBy,
-                // @ts-ignore
                 timestampDate: dayjs(log.createdBy.timestamp),
               },
             })),
