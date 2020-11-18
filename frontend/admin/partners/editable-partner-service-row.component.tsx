@@ -61,9 +61,9 @@ export default function EditablePartnerServiceRow(
       </tr>
       {showingModal && (
         <Modal
-          headerText="Modify Service"
+          headerText="Modify Partner Service"
           close={closeModal}
-          primaryText="Modify Service"
+          primaryText="Modify Partner Service"
           primaryAction={() => setIsSaving(true)}
           secondaryText="Cancel"
           secondaryAction={closeModal}
