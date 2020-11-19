@@ -23,7 +23,7 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
     ...checkValid(req.params, validId("clientId"), validId("followUpId")),
     ...checkValid(req.body, validArray("serviceIds", validId)),
     ...checkValid(req.body, validDateTime("dateOfContact")),
-    ...checkValid(req.body, nullableValidDateTime("appointmenetDate")),
+    ...checkValid(req.body, nullableValidDateTime("appointmentDate")),
   ];
 
   const { clientId, followUpId } = req.params;
@@ -53,7 +53,7 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
 
     const newFollowUpInfo = { ...req.body };
     const newFollowUp = Object.assign({}, followUpResult[0], newFollowUpInfo);
-    console.log(newFollowUp);
+
     let updateFollowUpSql = mysql.format(
       `UPDATE followUps SET
           title = ?,
