@@ -19,7 +19,12 @@ const getFollowUpSql = fs.readFileSync(
 app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
   const user = req.session.passport.user;
 
-  // validations here
+  const validationErrors = [
+    ...checkValid(req.params, validId("clientId"), validId("followUpId")),
+    ...checkValid(req.body, validArray("serviceIds", validId)),
+    ...checkValid(req.body, validDateTime("dateOfContact")),
+    ...checkValid(req.body, nullableValidDateTime("appointmenetDate")),
+  ];
 
   const { clientId, followUpId } = req.params;
 
@@ -42,18 +47,15 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
     }
 
     const getCurrentUserSql = mysql.format(
-      'SELECT JSON_OBJECT("userId", users.id, "firstName", users.firstName, "lastName", users.lastName) lastUpdatedBy FROM users WHERE id = ?',
+      'SELECT JSON_OBJECT("userId", users.id, "firstName", users.firstName, "lastName", users.lastName) lastUpdatedBy FROM users WHERE id = ?;',
       [user.id]
     );
 
-    pool.query(getCurrentUserSql, (err, userResult) => {
-      if (err) {
-        return databaseError(req, res, err);
-      }
-      const newFollowUpInfo = { ...req.body, ...userResult[0] };
-      const newFollowUp = Object.assign({}, followUpResult[0], newFollowUpInfo);
-      let updateFollowUpSql = mysql.format(
-        `UPDATE followUps SET
+    const newFollowUpInfo = { ...req.body };
+    const newFollowUp = Object.assign({}, followUpResult[0], newFollowUpInfo);
+    console.log(newFollowUp);
+    let updateFollowUpSql = mysql.format(
+      `UPDATE followUps SET
           title = ?,
           description = ?,
           dateOfContact = ?,
@@ -61,37 +63,36 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
           updatedBy = ?
         WHERE id = ?;
       `,
-        [
-          newFollowUp.title,
-          newFollowUp.description,
-          newFollowUp.dateOfContact,
-          newFollowUp.appointmentDate,
-          user.id,
-          newFollowUp.id,
-        ]
+      [
+        newFollowUp.title,
+        newFollowUp.description,
+        newFollowUp.dateOfContact,
+        newFollowUp.appointmentDate,
+        user.id,
+        newFollowUp.id,
+      ]
+    );
+    const oldServiceIds = JSON.parse(followUpResult[0].serviceIds);
+    updateFollowUpSql =
+      mysql.format("DELETE FROM followUpServices WHERE followUpId = ?;", [
+        newFollowUp.id,
+      ]) + updateFollowUpSql;
+    newFollowUp.serviceIds.forEach((id) => {
+      updateFollowUpSql += mysql.format(
+        "INSERT INTO followUpServices (serviceId, followUpId) VALUES (?, ?);",
+        [id, newFollowUp.id]
       );
-      const oldServiceIds = JSON.parse(followUpResult[0].serviceIds);
-      updateFollowUpSql =
-        mysql.format("DELETE FROM followUpServices WHERE followUpId = ?", [
-          newFollowUp.id,
-        ]) + updateFollowUpSql;
-      newFollowUp.serviceIds.forEach((id) => {
-        updateFollowUpSql += mysql.format(
-          "INSERT INTO followUpServices (serviceId, followUpId) VALUES (?, ?)",
-          [id, newFollowUp.id]
-        );
-      });
-      pool.query(updateFollowUpSql, (err, updateResult) => {
+    });
+    pool.query(updateFollowUpSql, (err, updateResult) => {
+      if (err) {
+        return databaseError(req, res, err);
+      }
+
+      pool.query(getFollowUpByIdSql, (err, followUp) => {
         if (err) {
           return databaseError(req, res, err);
         }
-
-        pool.query(getFollowUpByIdSql, (err, followUp) => {
-          if (err) {
-            return databaseError(req, res, err);
-          }
-          res.send(followUp);
-        });
+        res.send(followUp);
       });
     });
   });
