@@ -122,7 +122,7 @@ const ServiceInteractionInputs = React.forwardRef<
   }, [props.servicesResponse, selectedService]);
 
   React.useEffect(() => {
-    if (!selectedService) {
+    if (!selectedService || props.initialInteraction) {
       return;
     } else {
       if (selectedService.defaultInteractionLocation) {
