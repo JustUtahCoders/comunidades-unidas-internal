@@ -19,6 +19,7 @@ POST /api/clients/:clientId/follow-ups
   "serviceId": [12, 13],
   "title": "COVID test follow up",
   "description": "Client got tested and we will follow up with them for results",
+  "duration": "1:00:00",
   "dateOfContact": "2020-07-28",
   "appointmentDate": "2020-08-12"
 }
@@ -33,6 +34,7 @@ POST /api/clients/:clientId/follow-ups
   "title": "Test follow up",
   "description": "Client got tested for COVID and we will follow up with them for results",
   "dateOfContact": "2020-07-28",
+  "duration": "1:00:00",
   "appointmentDate": "2020-08-12",
   "createdBy": {
     "userId": 1,
@@ -64,6 +66,7 @@ PATCH /api/clients/:clientId/follow-ups/:followUpId
   "serviceId": 12,
   "title": "COVID test follow up",
   "description": "Client got tested for COVID and we will follow up with them for results",
+  "duration": "1:30:00",
   "dateOfContact": "2020-07-28",
   "appointmentDate": "2020-08-15"
 }
@@ -77,6 +80,7 @@ PATCH /api/clients/:clientId/follow-ups/:followUpId
   "serviceId": 12,
   "title": "COVID test follow up",
   "description": "Client got tested for COVID and we will follow up with them for results",
+  "duration": "1:30:00",
   "dateOfContact": "2020-07-28",
   "appointmentDate": "2020-08-15",
   "createdBy": {

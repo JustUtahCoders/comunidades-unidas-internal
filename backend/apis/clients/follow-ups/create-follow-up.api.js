@@ -51,6 +51,7 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
     description,
     dateOfContact,
     appointmentDate,
+    duration,
     user.id,
     user.id,
   ]);
