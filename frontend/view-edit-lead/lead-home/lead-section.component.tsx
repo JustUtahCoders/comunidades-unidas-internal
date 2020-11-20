@@ -1,12 +1,12 @@
 import React from "react";
 import { useCss } from "kremling";
+import LeadMetadata from "./lead-metadata.component";
 
 export default function LeadSection(props: LeadSectionProps) {
+  const { title, metadata, children } = props;
   const [expanded, setExpanded] = React.useState(() =>
-    localStorage.getItem(`cu-lead-section-expanded:${props.title}`)
-      ? JSON.parse(
-          localStorage.getItem(`cu-lead-section-expanded:${props.title}`)
-        )
+    localStorage.getItem(`cu-lead-section-expanded:${title}`)
+      ? JSON.parse(localStorage.getItem(`cu-lead-section-expanded:${title}`))
       : true
   );
 
@@ -14,7 +14,7 @@ export default function LeadSection(props: LeadSectionProps) {
 
   const toggleExpandAndStore = () => {
     localStorage.setItem(
-      `cu-lead-section-expanded:${props.title}`,
+      `cu-lead-section-expanded:${title}`,
       JSON.stringify(!expanded)
     );
     setExpanded(!expanded);
@@ -26,21 +26,40 @@ export default function LeadSection(props: LeadSectionProps) {
         className="unstyled lead-section-header"
         onClick={toggleExpandAndStore}
       >
-        <h1>{props.title}</h1>
+        <h1>{title}</h1>
+        {metadata && <LeadMetadata metadata={metadata} />}
       </button>
-      {expanded && <div className="lead-section-content">{props.children}</div>}
+      {expanded && <div className="lead-section-content">{children}</div>}
     </div>
   );
 }
 
 type LeadSectionProps = {
   title: string;
+  metadata?: {
+    createdBy: {
+      firstName: string;
+      lastName: string;
+      timestamp: string;
+    };
+    lastUpdatedBy: {
+      firstName: string;
+      lastName: string;
+      timestamp: string;
+    };
+  };
   children: JSX.Element | JSX.Element[];
 };
 
 const css = `
   & h1 {
     font-size: 2.1rem;
+  }
+
+  & .lead-metadata {
+    font-style: italic;
+    font-size: 1.2rem;
+    text-align: center;
   }
 
   & button.unstyled.lead-section-header {
