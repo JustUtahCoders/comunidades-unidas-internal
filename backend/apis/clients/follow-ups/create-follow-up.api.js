@@ -19,6 +19,7 @@ const getFollowUpSql = fs.readFileSync(
   path.resolve(__dirname, "./get-follow-up.sql"),
   "utf-8"
 );
+const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 
 app.post("/api/clients/:clientId/follow-ups", (req, res) => {
   const user = req.session.passport.user;
@@ -70,6 +71,16 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
         `INSERT INTO followUpServices (serviceId, followUpId) VALUES (?, ?);`,
         [id, insertResult.insertId]
       );
+    });
+
+    query += insertActivityLogQuery({
+      detailIdIsLastInsertId: true,
+      clientId,
+      title,
+      description,
+      logType: "follow-up",
+      addedBy: user.id,
+      dateAdded: dateOfContact,
     });
 
     pool.query(query, (err, joinResult) => {
