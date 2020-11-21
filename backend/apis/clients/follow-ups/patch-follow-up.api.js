@@ -46,11 +46,6 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
       databaseError(req, res, err);
     }
 
-    const getCurrentUserSql = mysql.format(
-      'SELECT JSON_OBJECT("userId", users.id, "firstName", users.firstName, "lastName", users.lastName) lastUpdatedBy FROM users WHERE id = ?;',
-      [user.id]
-    );
-
     const newFollowUpInfo = { ...req.body };
     const newFollowUp = Object.assign({}, followUpResult[0], newFollowUpInfo);
 
