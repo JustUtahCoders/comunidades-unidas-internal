@@ -34,6 +34,7 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
     description,
     dateOfContact,
     appointmentDate,
+    duration,
   } = req.body;
 
   const getFollowUpByIdSql = mysql.format(getFollowUpSql, [
@@ -55,6 +56,7 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
           description = ?,
           dateOfContact = ?,
           appointmentDate = ?,
+          duration = ?,
           updatedBy = ?
         WHERE id = ?;
       `,
@@ -63,6 +65,7 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
         newFollowUp.description,
         newFollowUp.dateOfContact,
         newFollowUp.appointmentDate,
+        newFollowUp.duration,
         user.id,
         newFollowUp.id,
       ]
@@ -78,6 +81,9 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
         [id, newFollowUp.id]
       );
     });
+
+    // update client logs here as well???? TBD
+
     pool.query(updateFollowUpSql, (err, updateResult) => {
       if (err) {
         return databaseError(req, res, err);
