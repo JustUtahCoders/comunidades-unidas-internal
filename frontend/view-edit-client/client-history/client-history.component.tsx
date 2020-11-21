@@ -442,6 +442,8 @@ function getBackgroundColor(logType: LogType) {
       return "purple";
     case LogType["referral"]:
       return "red";
+    case LogType["follow-up"]:
+      return "coral";
     default:
       return "black";
   }
@@ -586,6 +588,7 @@ export enum LogType {
   "payment:created" = "payment:created",
   "payment:updated" = "payment:updated",
   "referral" = "referral",
+  "follow-up" = "follow-up",
 }
 
 const allFiltersOn: ClientHistoryFilterOptions = Object.keys(LogType).reduce(

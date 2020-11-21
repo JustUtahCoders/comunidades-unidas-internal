@@ -77,7 +77,7 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
     });
 
     query += insertActivityLogQuery({
-      detailIdIsLastInsertId: true,
+      detailId: insertResult.insertId,
       clientId,
       title,
       description,
