@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS followUps (
   description MEDIUMTEXT,
   dateOfContact DATETIME NOT NULL,
   appointmentDate DATETIME,
+  duration TIME DEFAULT '0:00:00' NOT NULL,
   addedBy INT NOT NULL,
   updatedBy INT NOT NULL,
   FOREIGN KEY (clientId) REFERENCES clients(id),

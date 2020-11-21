@@ -1,5 +1,5 @@
 SELECT
-followUps.id, followUps.clientId, followUps.title, followUps.description, followUps.dateOfContact, followUps.appointmentDate, JSON_ARRAYAGG(followUpServices.serviceId) AS serviceIds,
+followUps.id, followUps.clientId, followUps.title, followUps.description, followUps.dateOfContact, followUps.appointmentDate, followUps.duration, JSON_ARRAYAGG(followUpServices.serviceId) AS serviceIds,
 JSON_OBJECT(
   "userId", addedUser.id,
   "firstName", addedUser.firstName,

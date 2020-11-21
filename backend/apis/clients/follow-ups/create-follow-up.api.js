@@ -28,6 +28,7 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
     ...checkValid(req.params, validId("clientId")),
     ...checkValid(req.body, validArray("serviceIds", validId)),
     ...checkValid(req.body, validDateTime("dateOfContact")),
+    ...checkValid(req.body, validTime("duration")),
     ...checkValid(req.body, nullableValidDateTime("appointmenetDate")),
   ];
 
@@ -39,6 +40,7 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
     description,
     dateOfContact,
     appointmentDate,
+    duration,
   } = req.body;
 
   if (validationErrors.length > 0) {
