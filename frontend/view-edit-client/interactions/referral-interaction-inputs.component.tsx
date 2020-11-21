@@ -6,6 +6,7 @@ import {
 } from "./single-interaction-slat.component";
 import dayjs from "dayjs";
 import easyFetch from "../../util/easy-fetch";
+import { formatPhone } from "../../util/formatters";
 
 const ReferralInteractionInputs = React.forwardRef<
   InteractionInputsRef,
@@ -49,6 +50,11 @@ const ReferralInteractionInputs = React.forwardRef<
     props.setName(partnerService ? partnerService.name : "");
   }, [partnerService, props.setName]);
 
+  const getPartnerLabel = (partner) => {
+    const phoneLabel = partner.phone ? `; ${formatPhone(partner.phone)}` : "";
+    return `${partner.name} (Referral)` + phoneLabel;
+  };
+
   return (
     <>
       <label id={`provided-service-${props.interactionIndex}`}>Service:</label>
@@ -67,7 +73,7 @@ const ReferralInteractionInputs = React.forwardRef<
           Choose here
         </option>
         {props.partnersResponse.map((partner) => (
-          <optgroup label={partner.name + " (Referral)"} key={partner.id}>
+          <optgroup label={getPartnerLabel(partner)} key={partner.id}>
             {partner.services.map((partnerService) => (
               <option
                 key={partnerService.id}

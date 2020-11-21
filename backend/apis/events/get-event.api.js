@@ -62,7 +62,7 @@ function getEventById(eventId, cbk, connection) {
       WHERE events.id = ? AND isDeleted = false;
 
       SELECT
-        leadEvents.leadId, leads.gender, leads.leadStatus
+        leadEvents.leadId, leads.gender, leads.leadStatus, leads.firstName, leads.lastName
       FROM leadEvents JOIN leads ON leads.id = leadEvents.leadId
       WHERE leadEvents.eventId = ? AND leads.isDeleted = false;
     `,
@@ -93,6 +93,15 @@ function getEventById(eventId, cbk, connection) {
       },
       {}
     );
+
+    const leads = eventLeads.map((lead) => {
+      return {
+        leadId: lead.leadId,
+        firstName: lead.firstName,
+        lastName: lead.lastName,
+        fullName: responseFullName(lead.firstName, lead.lastName),
+      };
+    });
 
     const clientGenders = _.groupBy(eventClients, "gender");
     const clientGenderCounts = Object.keys(clientGenders).reduce(
@@ -128,6 +137,7 @@ function getEventById(eventId, cbk, connection) {
         fullName: responseFullName(e.modifiedByFirstName, e.modifiedByLastName),
         timestamp: e.dateModified,
       },
+      leads,
     };
 
     cbk(err, event);

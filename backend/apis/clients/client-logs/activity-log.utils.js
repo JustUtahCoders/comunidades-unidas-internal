@@ -1,5 +1,8 @@
 const mysql = require("mysql");
-const { responseFullName } = require("../../utils/transform-utils");
+const {
+  responseFullName,
+  responseDateWithoutTime,
+} = require("../../utils/transform-utils");
 const { insertTagsQuery } = require("../../tags/tag.utils");
 
 const modifiableLogTypes = [
@@ -83,6 +86,8 @@ exports.insertActivityLogQuery = function (params) {
   }
 };
 
+const logTypesWithoutTime = ["clientInteraction:serviceProvided"];
+
 exports.createResponseLogObject = function createResponseLogObject(
   log,
   redactedTags = []
@@ -91,6 +96,7 @@ exports.createResponseLogObject = function createResponseLogObject(
   if (typeof tags === "string") tags = JSON.parse(tags);
 
   const redact = tags.some((t) => redactedTags.includes(t));
+  const doesntHaveTime = logTypesWithoutTime.includes(log.logType);
 
   return {
     id: log.id,
@@ -108,7 +114,9 @@ exports.createResponseLogObject = function createResponseLogObject(
       firstName: log.createdByFirstName,
       lastName: log.createdByLastName,
       fullName: responseFullName(log.createdByFirstName, log.createdByLastName),
-      timestamp: log.dateAdded,
+      timestamp: doesntHaveTime
+        ? responseDateWithoutTime(log.dateAdded)
+        : log.dateAdded,
     },
   };
 };
