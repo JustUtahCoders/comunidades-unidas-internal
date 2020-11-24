@@ -1,7 +1,6 @@
 const { upsertClient } = require("juntos-por-la-salud-node-client");
 
 module.exports = function juntosPorLaSalud(integration, client) {
-  console.log("upserting client to jpls");
   return upsertClient({
     client,
     participantId: integration.externalId,
