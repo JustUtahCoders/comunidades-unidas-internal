@@ -1,0 +1,2 @@
+ALTER TABLE followUps
+ADD duration TIME DEFAULT '0:00:00' NOT NULL;
