@@ -71,30 +71,42 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
 
     serviceIds.forEach((id) => {
       query += mysql.format(
-        `INSERT INTO followUpServices (serviceId, followUpId) VALUES (?, ?);`,
+        `INSERT INTO followUpServices (serviceId, followUpId) VALUES (?, ?);
+        `,
         [id, insertResult.insertId]
       );
     });
 
-    query += insertActivityLogQuery({
-      detailId: insertResult.insertId,
-      clientId,
-      title,
-      description,
-      logType: "follow-up",
-      addedBy: user.id,
-    });
+    query += mysql.format(
+      `SELECT GROUP_CONCAT(services.serviceName SEPARATOR ', ') services FROM services WHERE id IN (?);`,
+      [serviceIds]
+    );
 
     pool.query(query, (err, joinResult) => {
       if (err) {
         return databaseError(req, res, err);
       }
 
-      formattedFollowUpResponse(insertResult.insertId, (err, result) => {
+      const query = insertActivityLogQuery({
+        detailId: insertResult.insertId,
+        clientId,
+        title: `Client received follow-up regarding ${joinResult[2][0]["services"]}`,
+        description: null,
+        logType: "follow-up",
+        addedBy: user.id,
+      });
+
+      pool.query(query, (err, logResult) => {
         if (err) {
-          return databaseError(err);
+          return databaseError(req, res, err);
         }
-        res.send(result);
+
+        formattedFollowUpResponse(insertResult.insertId, (err, result) => {
+          if (err) {
+            return databaseError(err);
+          }
+          res.send(result);
+        });
       });
     });
   });
