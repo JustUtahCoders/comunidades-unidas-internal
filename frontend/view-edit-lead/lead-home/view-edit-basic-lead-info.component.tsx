@@ -49,6 +49,10 @@ export default function ViewEditBasicLeadInfo(
       title={
         apiStatus.isEditing ? "Edit Basic Information" : "Basic information"
       }
+      metadata={{
+        createdBy: lead.createdBy,
+        lastUpdatedBy: lead.lastUpdatedBy,
+      }}
     >
       {apiStatus.isEditing ? (
         <BasicLeadInformationInputs
