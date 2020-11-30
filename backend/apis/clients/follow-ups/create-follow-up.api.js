@@ -90,7 +90,9 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
       const query = insertActivityLogQuery({
         detailId: insertResult.insertId,
         clientId,
-        title: `Client received follow-up regarding ${joinResult[2][0]["services"]}`,
+        title: `Client received follow-up regarding ${
+          joinResult[joinResult.length - 1][0]["services"]
+        }`,
         description: null,
         logType: "follow-up",
         addedBy: user.id,
