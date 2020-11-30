@@ -1,9 +1,8 @@
 import React from "react";
 import dayjs from "dayjs";
 
-export default function LeadMetadata(props) {
-  const { metadata } = props;
-  const { createdBy, lastUpdatedBy } = metadata;
+export default function LeadMetadata(props: LeadMetadataProps) {
+  const { createdBy, lastUpdatedBy } = props;
   return (
     <div className="lead-metadata">
       <div>
@@ -18,3 +17,16 @@ export default function LeadMetadata(props) {
     </div>
   );
 }
+
+export type LeadMetadataProps = {
+  createdBy: {
+    firstName: string;
+    lastName: string;
+    timestamp: string;
+  };
+  lastUpdatedBy: {
+    firstName: string;
+    lastName: string;
+    timestamp: string;
+  };
+};

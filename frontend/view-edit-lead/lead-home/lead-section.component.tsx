@@ -1,6 +1,6 @@
 import React from "react";
 import { useCss } from "kremling";
-import LeadMetadata from "./lead-metadata.component";
+import LeadMetadata, { LeadMetadataProps } from "./lead-metadata.component";
 
 export default function LeadSection(props: LeadSectionProps) {
   const { title, metadata, children } = props;
@@ -27,7 +27,7 @@ export default function LeadSection(props: LeadSectionProps) {
         onClick={toggleExpandAndStore}
       >
         <h1>{title}</h1>
-        {metadata && <LeadMetadata metadata={metadata} />}
+        {metadata && <LeadMetadata {...metadata} />}
       </button>
       {expanded && <div className="lead-section-content">{children}</div>}
     </div>
@@ -36,18 +36,7 @@ export default function LeadSection(props: LeadSectionProps) {
 
 type LeadSectionProps = {
   title: string;
-  metadata?: {
-    createdBy: {
-      firstName: string;
-      lastName: string;
-      timestamp: string;
-    };
-    lastUpdatedBy: {
-      firstName: string;
-      lastName: string;
-      timestamp: string;
-    };
-  };
+  metadata?: LeadMetadataProps;
   children: JSX.Element | JSX.Element[];
 };
 
