@@ -15,6 +15,7 @@ const getFollowUpSql = fs.readFileSync(
   path.resolve(__dirname, "./get-follow-up.sql"),
   "utf-8"
 );
+const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 
 app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
   const user = req.session.passport.user;
@@ -34,6 +35,7 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
     description,
     dateOfContact,
     appointmentDate,
+    duration,
   } = req.body;
 
   const getFollowUpByIdSql = mysql.format(getFollowUpSql, [
@@ -55,6 +57,7 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
           description = ?,
           dateOfContact = ?,
           appointmentDate = ?,
+          duration = ?,
           updatedBy = ?
         WHERE id = ?;
       `,
@@ -63,31 +66,76 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
         newFollowUp.description,
         newFollowUp.dateOfContact,
         newFollowUp.appointmentDate,
+        newFollowUp.duration,
         user.id,
         newFollowUp.id,
       ]
     );
+
     const oldServiceIds = JSON.parse(followUpResult[0].serviceIds);
+
     updateFollowUpSql =
-      mysql.format("DELETE FROM followUpServices WHERE followUpId = ?;", [
+      mysql.format(`DELETE FROM followUpServices WHERE followUpId = ?;`, [
         newFollowUp.id,
       ]) + updateFollowUpSql;
+
     newFollowUp.serviceIds.forEach((id) => {
       updateFollowUpSql += mysql.format(
-        "INSERT INTO followUpServices (serviceId, followUpId) VALUES (?, ?);",
+        `INSERT INTO followUpServices (serviceId, followUpId) VALUES (?, ?);
+        `,
         [id, newFollowUp.id]
       );
     });
+
+    updateFollowUpSql += mysql.format(
+      `SELECT GROUP_CONCAT(services.serviceName SEPARATOR ', ') services FROM services WHERE id IN (?);`,
+      [serviceIds]
+    );
+
     pool.query(updateFollowUpSql, (err, updateResult) => {
       if (err) {
         return databaseError(req, res, err);
       }
 
-      pool.query(getFollowUpByIdSql, (err, followUp) => {
+      let clientLogUpdate = insertActivityLogQuery({
+        detailId: newFollowUp.id,
+        clientId,
+        title: `Client received follow up regarding ${
+          updateResult[updateResult.length - 1][0]["services"]
+        }`,
+        description: null,
+        logType: "follow-up",
+        addedBy: user.id,
+      });
+
+      clientLogUpdate += mysql.format(
+        `
+        WITH oldLog AS (
+          SELECT id FROM clientLogs
+          WHERE logType IN ("follow-up")
+            AND detailId = ?
+          ORDER BY dateAdded DESC
+          LIMIT 1, 1
+        )
+
+        UPDATE clientLogs
+        SET idOfUpdatedLog = LAST_INSERT_ID()
+        WHERE id = (SELECT id FROM oldLog);
+      `,
+        [newFollowUp.id]
+      );
+
+      pool.query(clientLogUpdate, (err, clientLogResult) => {
         if (err) {
           return databaseError(req, res, err);
         }
-        res.send(followUp);
+
+        pool.query(getFollowUpByIdSql, (err, followUp) => {
+          if (err) {
+            return databaseError(req, res, err);
+          }
+          res.send(followUp);
+        });
       });
     });
   });

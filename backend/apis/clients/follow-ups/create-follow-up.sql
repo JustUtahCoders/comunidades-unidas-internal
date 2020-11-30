@@ -1,4 +1,4 @@
 INSERT INTO followUps
-(clientId, title, description, dateOfContact, appointmentDate, addedBy, updatedBy)
+(clientId, title, description, dateOfContact, appointmentDate, duration, addedBy, updatedBy)
 VALUES
-(?, ?, ?, ?, ?, ?, ?);
+(?, ?, ?, ?, ?, ?, ?, ?);

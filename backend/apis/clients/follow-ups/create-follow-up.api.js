@@ -19,6 +19,7 @@ const getFollowUpSql = fs.readFileSync(
   path.resolve(__dirname, "./get-follow-up.sql"),
   "utf-8"
 );
+const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 
 app.post("/api/clients/:clientId/follow-ups", (req, res) => {
   const user = req.session.passport.user;
@@ -27,6 +28,7 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
     ...checkValid(req.params, validId("clientId")),
     ...checkValid(req.body, validArray("serviceIds", validId)),
     ...checkValid(req.body, validDateTime("dateOfContact")),
+    ...checkValid(req.body, validTime("duration")),
     ...checkValid(req.body, nullableValidDateTime("appointmenetDate")),
   ];
 
@@ -38,6 +40,7 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
     description,
     dateOfContact,
     appointmentDate,
+    duration,
   } = req.body;
 
   if (validationErrors.length > 0) {
@@ -50,6 +53,7 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
     description,
     dateOfContact,
     appointmentDate,
+    duration,
     user.id,
     user.id,
   ]);
@@ -67,21 +71,44 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
 
     serviceIds.forEach((id) => {
       query += mysql.format(
-        `INSERT INTO followUpServices (serviceId, followUpId) VALUES (?, ?);`,
+        `INSERT INTO followUpServices (serviceId, followUpId) VALUES (?, ?);
+        `,
         [id, insertResult.insertId]
       );
     });
+
+    query += mysql.format(
+      `SELECT GROUP_CONCAT(services.serviceName SEPARATOR ', ') services FROM services WHERE id IN (?);`,
+      [serviceIds]
+    );
 
     pool.query(query, (err, joinResult) => {
       if (err) {
         return databaseError(req, res, err);
       }
 
-      formattedFollowUpResponse(insertResult.insertId, (err, result) => {
+      const query = insertActivityLogQuery({
+        detailId: insertResult.insertId,
+        clientId,
+        title: `Client received follow-up regarding ${
+          joinResult[joinResult.length - 1][0]["services"]
+        }`,
+        description: null,
+        logType: "follow-up",
+        addedBy: user.id,
+      });
+
+      pool.query(query, (err, logResult) => {
         if (err) {
-          return databaseError(err);
+          return databaseError(req, res, err);
         }
-        res.send(result);
+
+        formattedFollowUpResponse(insertResult.insertId, (err, result) => {
+          if (err) {
+            return databaseError(err);
+          }
+          res.send(result);
+        });
       });
     });
   });
