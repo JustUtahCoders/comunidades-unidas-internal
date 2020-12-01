@@ -4,4 +4,4 @@
 
 
 -- num hours per service
--- SELECT  SUM(TIME_TO_SEC(duration)) totalInteractionSeconds, followUpServices.serviceId serviceId FROM followUps JOIN clients ON clients.id = followUps.clientId  JOIN followUpServices ON followUpServices.followUpId = followUps.id GROUP BY followUpServices.serviceId;
+-- SELECT clientHours.totalInteractionSeconds, services.id serviceId FROM services INNER JOIN (SELECT SUM(TIME_TO_SEC(duration)) totalInteractionSeconds, followUpServices.serviceId serviceId FROM followUps JOIN clients ON clients.id = followUps.clientId  JOIN followUpServices ON followUpServices.followUpId = followUps.id GROUP BY followUpServices.serviceId) clientHours ON services.id = clientHours.serviceId
