@@ -28,5 +28,5 @@ type PhoneInputProps = {
   phone: string;
   setPhone(phone: string): void;
   autoFocus?: boolean;
-  required: boolean;
+  required?: boolean;
 };

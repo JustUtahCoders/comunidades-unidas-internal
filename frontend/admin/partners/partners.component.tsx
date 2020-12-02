@@ -15,6 +15,7 @@ import CreateNewPartnerService from "./create-new-partner-service.component";
 import CreateNewPartner from "./create-new-partner.component";
 import EditablePartnerRow from "./editable-partner-row.component";
 import EditablePartnerServiceRow from "./editable-partner-service-row.component";
+import { formatPhone } from "../../util/formatters";
 import css from "./partners.css";
 
 export default function Partners(props) {
@@ -78,15 +79,12 @@ export default function Partners(props) {
           tableStyle={{ width: "100%" }}
           headerRows={
             <tr>
-              <th style={{ minWidth: "30%", maxWidth: "30%", width: "30%" }}>
-                Partner
-              </th>
-              <th style={{ minWidth: "30%", maxWidth: "30%", width: "30%" }}>
-                Service
-              </th>
-              <th style={{ minWidth: "10%", maxWidth: "10%", width: "30%" }}>
+              <th>Partner</th>
+              <th>Service</th>
+              <th style={{ minWidth: "18%", maxWidth: "18%", width: "18%" }}>
                 Active?
               </th>
+              <th>Phone</th>
             </tr>
           }
           contentRows={
@@ -106,6 +104,9 @@ export default function Partners(props) {
                         <ToggleCollapseButton />
                       </td>
                       <td>{checkmark(partner.isActive)}</td>
+                      <td>
+                        {partner.phone ? formatPhone(partner.phone) : "—"}
+                      </td>
                     </EditablePartnerRow>
                   }
                   collapsibleRows={partner.services.map((service) => (
@@ -171,6 +172,7 @@ export type Partner = NewPartner & {
 export type NewPartner = {
   name: string;
   isActive: boolean;
+  phone: string;
 };
 
 export type NewPartnerService = {

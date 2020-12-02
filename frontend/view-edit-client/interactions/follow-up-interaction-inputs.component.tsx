@@ -1,8 +1,15 @@
-import React, { useEffect, useReducer, useRef } from "react";
+import React, {
+  useEffect,
+  useImperativeHandle,
+  useReducer,
+  useRef,
+} from "react";
 import { CUService, CUServicesList } from "../../add-client/services.component";
 import FullRichTextEditor from "../../rich-text/full-rich-text-editor.component";
+import easyFetch from "../../util/easy-fetch";
 import Modal from "../../util/modal.component";
 import IntakeServicesInputs from "../../util/services-inputs.component";
+import { TimeDuration } from "../../util/time-duration-input.component";
 import {
   InteractionInputsRef,
   InteractionInputsProps,
@@ -18,6 +25,7 @@ const FollowUpInteractionInputs = React.forwardRef<
     getInitialState
   );
   const intakeServicesInputsRef = useRef(null);
+  const descrRef = useRef(null);
 
   useEffect(() => {
     props.setName(
@@ -26,6 +34,23 @@ const FollowUpInteractionInputs = React.forwardRef<
         : "Follow Up"
     );
   }, [state.services]);
+
+  useImperativeHandle(ref, () => ({
+    save(signal) {
+      return easyFetch(`/api/${props.clientId}/follow-ups`, {
+        method: "POST",
+        signal,
+        body: {
+          serviceId: state.services.map((s) => s.id),
+          title: state.title,
+          description: descrRef.current.getHTML(),
+          duration: state.duration,
+          dateOfContact: state.dateOfContact,
+          appointmentDate: state.appointmentDate || null,
+        },
+      });
+    },
+  }));
 
   return (
     <>
@@ -85,6 +110,7 @@ const FollowUpInteractionInputs = React.forwardRef<
       <FullRichTextEditor
         placeholder="Describe the follow up"
         initialHTML={null}
+        ref={descrRef}
       />
     </>
   );
@@ -102,6 +128,11 @@ const FollowUpInteractionInputs = React.forwardRef<
       dateOfContact: null,
       description: null,
       title: null,
+      duration: {
+        stringValue: "00:30",
+        hours: 0,
+        minutes: 0,
+      },
     };
   }
 });
@@ -142,6 +173,7 @@ type State = {
   description: string;
   dateOfContact: string;
   appointmentDate: string;
+  duration: TimeDuration;
 };
 
 type SetServices = {
@@ -162,13 +194,38 @@ type SetTitle = {
   title: string;
 };
 
-type Action = SetServices | CloseServicesModal | OpenServicesModal | SetTitle;
+type SetDateOfContact = {
+  type: ActionType.setDateOfContact;
+  dateOfContact: string;
+};
+
+type SetAppointmentDate = {
+  type: ActionType.setAppointmentDate;
+  appointmentDate: string;
+};
+
+type SetDuration = {
+  type: ActionType.setDuration;
+  duration: TimeDuration;
+};
+
+type Action =
+  | SetServices
+  | CloseServicesModal
+  | OpenServicesModal
+  | SetTitle
+  | SetDuration
+  | SetDateOfContact
+  | SetAppointmentDate;
 
 enum ActionType {
   setServices = "setServices",
   closeServicesModal = "closeServicesModal",
   openServicesModal = "openServicesModal",
   setTitle = "setTitle",
+  setDuration = "setDuration",
+  setDateOfContact = "setDateOfContact",
+  setAppointmentDate = "setAppointmentDate",
 }
 
 type Reducer = (oldState: State, action: Action) => State;

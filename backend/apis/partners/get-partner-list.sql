@@ -1,5 +1,5 @@
 SELECT
-partners.id, partners.name, partners.isActive, partners.dateAdded, partners.addedBy,
+partners.id, partners.name, partners.isActive, partners.phone, partners.dateAdded, partners.addedBy,
 partners.dateModified, partners.modifiedBy,
 JSON_ARRAYAGG(JSON_OBJECT(
   'id', partnerServices.id,

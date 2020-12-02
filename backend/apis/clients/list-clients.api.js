@@ -7,6 +7,7 @@ const {
   nullableValidId,
   nullableValidEnum,
   nullableValidBoolean,
+  nullableValidDate,
 } = require("../utils/validation-utils");
 const {
   responseFullName,
@@ -127,9 +128,21 @@ function clientListQuery(query, pageNum, pageSize) {
 
   let joinInteractions = "";
   if (query.programInteraction || query.serviceInteraction) {
-    const serviceId = query.programInteraction
+    const isProgram = Boolean(query.programInteraction);
+    const serviceId = isProgram
       ? `IN (SELECT id FROM services WHERE programId = ?)`
       : `= ?`;
+
+    const startDate =
+      (isProgram
+        ? query.programStartInteraction
+        : query.serviceStartInteraction) || "1000-01-01";
+    const endDate =
+      (isProgram ? query.programEndInteraction : query.serviceEndInteraction) ||
+      "3000-01-01";
+    const dbId = isProgram
+      ? query.programInteraction
+      : query.serviceInteraction;
 
     joinInteractions = mysql.format(
       `
@@ -139,12 +152,14 @@ function clientListQuery(query, pageNum, pageSize) {
         WHERE
           clientInteractions.isDeleted = false
           AND
+          clientInteractions.dateOfInteraction BETWEEN ? AND ?
+          AND
           serviceId ${serviceId}
         GROUP BY clientId
       ) interactionCounts
       ON interactionCounts.clientId = cl.id
     `,
-      [query.programInteraction || query.serviceInteraction]
+      [startDate, endDate, dbId]
     );
 
     whereClause += `
@@ -172,7 +187,7 @@ function clientListQuery(query, pageNum, pageSize) {
       us.lastname as addedByLastName, cl.dateAdded
     FROM 
       clients cl 
-    JOIN 
+    JOIN
       (
         SELECT *
         FROM
@@ -184,7 +199,7 @@ function clientListQuery(query, pageNum, pageSize) {
           ) latestCt
           ON latestCt.latestDateAdded = innerCt.dateAdded AND latestCt.latestClientId = innerCt.clientId
       ) ct ON cl.id = ct.clientId
-    JOIN 
+    JOIN
       users us ON cl.addedBy = us.id 
     ${joinIntakeServices}
     ${joinInteractions}
@@ -215,7 +230,11 @@ function validateClientListQuery(query) {
     "programInterest",
     "serviceInterest",
     "programInteraction",
+    "programStartInteraction",
+    "programEndInteraction",
     "serviceInteraction",
+    "serviceStartInteraction",
+    "serviceEndInteraction",
     "sortField",
     "sortOrder",
     "wantsSMS",
@@ -230,7 +249,11 @@ function validateClientListQuery(query) {
       nullableValidId("programInterest"),
       nullableValidId("serviceInterest"),
       nullableValidId("programInteraction"),
+      nullableValidDate("programStartInteraction"),
+      nullableValidDate("programEndInteraction"),
       nullableValidId("serviceInteraction"),
+      nullableValidDate("serviceStartInteraction"),
+      nullableValidDate("serviceEndInteraction"),
       nullableValidEnum("sortField", "id", "firstName", "lastName", "birthday"),
       nullableValidEnum("sortOrder", "asc", "desc"),
       nullableNonEmptyString("zip"),

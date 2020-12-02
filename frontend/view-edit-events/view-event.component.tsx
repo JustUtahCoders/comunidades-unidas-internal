@@ -121,6 +121,7 @@ export type SingleEvent = {
   totalConvertedToClients?: number;
   leadGenders?: any;
   clientGenders?: any;
+  leads?: any;
 };
 
 type ViewEventProps = {

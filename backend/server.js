@@ -22,6 +22,7 @@ exports.pool = mysql.createPool({
   database: process.env.MYSQL_DB_NAME || "local_db",
   port: process.env.MYSQL_PORT || "3306",
   multipleStatements: true,
+  timezone: "+00:00",
 });
 
 const getConnection = exports.pool.getConnection;
@@ -133,6 +134,8 @@ require("./apis/clients/client-interactions/delete-client-interaction.api");
 require("./apis/clients/client-logs/patch-activity-log.api");
 require("./apis/clients/integrations/get-integrations.api");
 require("./apis/clients/integrations/patch-integration.api");
+require("./apis/clients/follow-ups/create-follow-up.api");
+require("./apis/clients/follow-ups/patch-follow-up.api");
 require("./apis/events/list-events.api");
 require("./apis/leads/get-lead.api");
 require("./apis/events/get-event.api");

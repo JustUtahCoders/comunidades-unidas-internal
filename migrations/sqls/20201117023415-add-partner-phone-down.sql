@@ -1,0 +1,2 @@
+ALTER TABLE partners
+DROP COLUMN phone;
