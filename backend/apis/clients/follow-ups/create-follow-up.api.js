@@ -80,8 +80,6 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
       [serviceIds.length > 0 ? serviceIds : null]
     );
 
-    console.log(query);
-
     pool.query(query, (err, joinResult) => {
       if (err) {
         return databaseError(req, res, err);
@@ -90,7 +88,9 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
       let title = `Client received follow-up`;
 
       if (serviceIds.length > 0) {
-        title += ` ${joinResult[joinResult.length - 1][0]["services"]}`;
+        title += ` regarding ${
+          joinResult[joinResult.length - 1][0]["services"]
+        }`;
       }
 
       const query = insertActivityLogQuery({
