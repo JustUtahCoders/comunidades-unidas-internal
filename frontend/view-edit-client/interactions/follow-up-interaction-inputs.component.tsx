@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import React, {
   useEffect,
   useImperativeHandle,
@@ -9,7 +10,9 @@ import FullRichTextEditor from "../../rich-text/full-rich-text-editor.component"
 import easyFetch from "../../util/easy-fetch";
 import Modal from "../../util/modal.component";
 import IntakeServicesInputs from "../../util/services-inputs.component";
-import { TimeDuration } from "../../util/time-duration-input.component";
+import TimeDurationInput, {
+  TimeDuration,
+} from "../../util/time-duration-input.component";
 import {
   InteractionInputsRef,
   InteractionInputsProps,
@@ -37,14 +40,14 @@ const FollowUpInteractionInputs = React.forwardRef<
 
   useImperativeHandle(ref, () => ({
     save(signal) {
-      return easyFetch(`/api/${props.clientId}/follow-ups`, {
+      return easyFetch(`/api/clients/${props.clientId}/follow-ups`, {
         method: "POST",
         signal,
         body: {
-          serviceId: state.services.map((s) => s.id),
+          serviceIds: state.services.map((s) => s.id),
           title: state.title,
           description: descrRef.current.getHTML(),
-          duration: state.duration,
+          duration: state.duration.stringValue,
           dateOfContact: state.dateOfContact,
           appointmentDate: state.appointmentDate || null,
         },
@@ -61,11 +64,30 @@ const FollowUpInteractionInputs = React.forwardRef<
         onChange={(evt) =>
           dispatch({ type: ActionType.setTitle, title: evt.target.value })
         }
+        required
       />
       <label htmlFor={`contact-date-${props.interactionIndex}`}>
         Date of Contact:
       </label>
-      <input type="date" />
+      <input
+        type="date"
+        required
+        value={state.dateOfContact}
+        onChange={(evt) =>
+          dispatch({
+            type: ActionType.setDateOfContact,
+            dateOfContact: evt.target.value,
+          })
+        }
+      />
+      <label htmlFor={`duration-${props.interactionIndex}`}>Duration</label>
+      <TimeDurationInput
+        duration={state.duration}
+        setDuration={(duration) =>
+          dispatch({ type: ActionType.setDuration, duration })
+        }
+        labelId={`duration-${props.interactionIndex}`}
+      />
       <label htmlFor={`provided-service-${props.interactionIndex}`}>
         Services discussed:
       </label>
@@ -103,7 +125,16 @@ const FollowUpInteractionInputs = React.forwardRef<
       <label htmlFor={`appointment-date-${props.interactionIndex}`}>
         Future Appointment:
       </label>
-      <input type="date" />
+      <input
+        type="date"
+        value={state.appointmentDate || ""}
+        onChange={(evt) =>
+          dispatch({
+            type: ActionType.setAppointmentDate,
+            appointmentDate: evt.target.value,
+          })
+        }
+      />
       <label htmlFor={`description-${props.interactionIndex}`}>
         Description
       </label>
@@ -125,11 +156,11 @@ const FollowUpInteractionInputs = React.forwardRef<
       showingServicesModal: false,
       services: [],
       appointmentDate: null,
-      dateOfContact: null,
+      dateOfContact: dayjs().format("YYYY-MM-DD"),
       description: null,
-      title: null,
+      title: "",
       duration: {
-        stringValue: "00:30",
+        stringValue: "00:30:00",
         hours: 0,
         minutes: 0,
       },
@@ -159,6 +190,21 @@ function reducer(oldState: State, action: Action): State {
       return {
         ...oldState,
         title: action.title,
+      };
+    case ActionType.setDuration:
+      return {
+        ...oldState,
+        duration: action.duration,
+      };
+    case ActionType.setDateOfContact:
+      return {
+        ...oldState,
+        dateOfContact: action.dateOfContact,
+      };
+    case ActionType.setAppointmentDate:
+      return {
+        ...oldState,
+        appointmentDate: action.appointmentDate,
       };
     default:
       throw Error();

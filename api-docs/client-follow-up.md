@@ -16,7 +16,7 @@ POST /api/clients/:clientId/follow-ups
 
 ```json
 {
-  "serviceId": [12, 13],
+  "serviceIds": [12, 13],
   "title": "COVID test follow up",
   "description": "Client got tested and we will follow up with them for results",
   "duration": "1:00:00",
@@ -30,7 +30,7 @@ POST /api/clients/:clientId/follow-ups
 ```json
 {
   "id": 1,
-  "serviceId": [12, 13],
+  "serviceIds": [12, 13],
   "title": "Test follow up",
   "description": "Client got tested for COVID and we will follow up with them for results",
   "dateOfContact": "2020-07-28",
@@ -63,7 +63,7 @@ PATCH /api/clients/:clientId/follow-ups/:followUpId
 
 ```json
 {
-  "serviceId": 12,
+  "serviceIds": 12,
   "title": "COVID test follow up",
   "description": "Client got tested for COVID and we will follow up with them for results",
   "duration": "1:30:00",
@@ -77,7 +77,7 @@ PATCH /api/clients/:clientId/follow-ups/:followUpId
 ```json
 {
   "id": 1,
-  "serviceId": 12,
+  "serviceIds": 12,
   "title": "COVID test follow up",
   "description": "Client got tested for COVID and we will follow up with them for results",
   "duration": "1:30:00",
