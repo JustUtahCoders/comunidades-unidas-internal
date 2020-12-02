@@ -28,7 +28,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
         (
           SELECT COUNT(*) totalInteractions, serviceId
           FROM clientInteractions
-          WHERE isDeleted = false AND dateOfInteraction >= ? AND dateOfInteraction <= ?
+          WHERE isDeleted = false AND dateOfInteraction >= '2000-01-01' AND dateOfInteraction <= '2020-12-31'
           GROUP BY serviceId
         ) numInteractions
         ON services.id = numInteractions.serviceId
@@ -56,7 +56,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       SELECT clientHours.totalInteractionSeconds, services.id serviceId
       FROM
         services
-        INNER JOIN 
+        INNER JOIN
         (
           SELECT serviceId, SUM(TIME_TO_SEC(duration)) totalInteractionSeconds
           FROM clientInteractions JOIN clients ON clients.id = clientInteractions.clientId
@@ -71,7 +71,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       ;
 
       -- num total clients
-      SELECT COUNT(DISTINCT clientInteractions.clientId) numClients
+      SELECT (COUNT(DISTINCT clientInteractions.clientId) + (SELECT COUNT(DISTINCT followUps.clientId) FROM followUps WHERE followUps.clientId <> clientInteractions.clientId)) numClients
         FROM clientInteractions
         JOIN clients
         ON clients.id = clientInteractions.clientId
@@ -80,8 +80,45 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
         AND clientInteractions.isDeleted = false
         AND clientInteractions.dateOfInteraction >= ?
         AND clientInteractions.dateOfInteraction <= ?
+      ;
+
+      -- num of FOLLOW UP hours by service between selected dates
+      SELECT services.id serviceId, clientHours.totalFollowUpSeconds
+      FROM services
+      INNER JOIN (
+        SELECT followUpServices.serviceId serviceId, SUM(TIME_TO_SEC(duration)) totalFollowUpSeconds, followUps.dateOfContact dateOfContact
+        FROM followUps
+          JOIN clients ON clients.id = followUps.clientId
+          JOIN followUpServices ON followUpServices.followUpId = followUps.id
+        WHERE clients.isDeleted = false
+          AND dateOfContact >= ?
+          AND dateOfContact <= ?
+        GROUP BY followUpServices.serviceId
+      ) clientHours
+      ON services.id = clientHours.serviceId
+      ;
+
+      -- num of follow ups per service
+      SELECT totalFollowUps, services.id serviceId, services.serviceName, programs.id programId, programs.programName
+      FROM
+        services
+        LEFT OUTER JOIN
+        (
+          SELECT COUNT(*) totalFollowUps, serviceId, followUpId
+          FROM followUpServices
+          JOIN followUps ON followUps.id = followUpId
+          WHERE followUps.dateOfContact >= ? AND followUps.dateOfContact <= ?
+          GROUP BY serviceId
+        ) numFollowUps
+      ON services.id = numFollowUps.serviceId
+      JOIN programs ON programs.id = services.programId
+      ;
     `,
     [
+      startDate,
+      endDate,
+      startDate,
+      endDate,
       startDate,
       endDate,
       startDate,
@@ -108,12 +145,19 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       programClients,
       serviceHours,
       totalClients,
+      serviceHoursByFollowUps,
+      serviceFollowUps,
     ] = result;
 
     const groupedServiceInteractions = _.groupBy(
       serviceInteractions,
       "programId"
     );
+
+    const groupedServiceFollowUps = _.groupBy(serviceFollowUps, "programId");
+
+    console.log(groupedServiceFollowUps, groupedServiceInteractions);
+
     const programTotals = Object.keys(groupedServiceInteractions).map(
       (programId) => {
         return {
@@ -142,7 +186,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       programId: service.programId,
     }));
 
-    serviceClients.forEach((serviceRow) => {
+    const followUpServicesTotal = serviceClients.forEach((serviceRow) => {
       const service = serviceTotals.find(
         (s) => s.serviceId === serviceRow.serviceId
       );
@@ -169,6 +213,10 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       program.totalInteractionSeconds += serviceHour.totalInteractionSeconds;
     });
 
+    // serviceFollowUps.forEach((serviceHour) => {
+    //   const service =
+    // });
+
     programTotals.forEach((program) => {
       program.totalDuration = toDuration(program.totalInteractionSeconds);
     });
@@ -186,6 +234,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       grandTotal,
       programs: programTotals,
       services: serviceTotals,
+      followUpServicesTotal: followUpServicesTotal,
       reportParameters: {
         start: req.query.start || null,
         end: req.query.end || null,
