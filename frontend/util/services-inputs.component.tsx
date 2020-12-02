@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useImperativeHandle } from "react";
 import { groupBy } from "lodash-es";
 import { useCss } from "kremling";
 import { CUService } from "../add-client/services.component";
@@ -12,12 +12,9 @@ export default React.forwardRef<ServicesRef, IntakeServicesInputsProps>(
     const scope = useCss(css);
     const groupedServices = groupBy<CUService>(props.services, "programName");
 
-    React.useEffect(() => {
-      // @ts-ignore
-      ref.current = {
-        checkedServices,
-      };
-    });
+    useImperativeHandle(ref, () => ({
+      checkedServices,
+    }));
 
     return (
       <div {...scope}>
@@ -99,5 +96,5 @@ type IntakeServicesInputsProps = {
 };
 
 type ServicesRef = {
-  checkedServices: number[];
+  checkedServices: IntakeService[];
 };
