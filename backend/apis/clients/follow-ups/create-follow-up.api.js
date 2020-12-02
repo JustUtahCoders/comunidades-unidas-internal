@@ -32,7 +32,9 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
     ...checkValid(req.body, nullableValidDateTime("appointmenetDate")),
   ];
 
-  const { clientId } = req.params;
+  let { clientId } = req.params;
+
+  clientId = Number(clientId);
 
   const {
     serviceIds,
@@ -58,10 +60,6 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
     user.id,
   ]);
 
-  const insertFollowUpServicesSql = mysql.format(`
-  INSERT INTO followUpServices (serviceId, followUpId) VALUES (?, ?);
-  `);
-
   pool.query(insertFollowUpSql, (err, insertResult) => {
     if (err) {
       return databaseError(req, res, err);
@@ -79,7 +77,7 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
 
     query += mysql.format(
       `SELECT GROUP_CONCAT(services.serviceName SEPARATOR ', ') services FROM services WHERE id IN (?);`,
-      [serviceIds]
+      [serviceIds.length > 0 ? serviceIds : null]
     );
 
     pool.query(query, (err, joinResult) => {
@@ -87,12 +85,18 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
         return databaseError(req, res, err);
       }
 
+      let title = `Client received follow-up`;
+
+      if (serviceIds.length > 0) {
+        title += ` regarding ${
+          joinResult[joinResult.length - 1][0]["services"]
+        }`;
+      }
+
       const query = insertActivityLogQuery({
         detailId: insertResult.insertId,
         clientId,
-        title: `Client received follow-up regarding ${
-          joinResult[joinResult.length - 1][0]["services"]
-        }`,
+        title,
         description: null,
         logType: "follow-up",
         addedBy: user.id,
