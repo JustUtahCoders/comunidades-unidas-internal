@@ -30,7 +30,6 @@ const SingleInteractionSlat = React.forwardRef<
   const [interactionKind, setInteractionKind] = React.useState<InteractionKind>(
     InteractionKind.cuService
   );
-  const followUpsEnabled = localStorage.getItem("follow-ups") === "true";
   const [name, setName] = React.useState("");
 
   const Inputs = InteractionKindInputs[interactionKind];
@@ -85,21 +84,17 @@ const SingleInteractionSlat = React.forwardRef<
               <label htmlFor={`kind-referral-${props.interactionIndex}`}>
                 Referral
               </label>
-              {followUpsEnabled && (
-                <>
-                  <input
-                    id={`kind-follow-up-${props.interactionIndex}`}
-                    type="radio"
-                    name={`interaction-kind-${props.interactionIndex}`}
-                    value={InteractionKind.followUp}
-                    checked={interactionKind === InteractionKind.followUp}
-                    onChange={updateInteractionKind}
-                  />
-                  <label htmlFor={`kind-follow-up-${props.interactionIndex}`}>
-                    Follow-up
-                  </label>
-                </>
-              )}
+              <input
+                id={`kind-follow-up-${props.interactionIndex}`}
+                type="radio"
+                name={`interaction-kind-${props.interactionIndex}`}
+                value={InteractionKind.followUp}
+                checked={interactionKind === InteractionKind.followUp}
+                onChange={updateInteractionKind}
+              />
+              <label htmlFor={`kind-follow-up-${props.interactionIndex}`}>
+                Follow-up
+              </label>
             </div>
           </>
         )}
