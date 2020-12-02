@@ -10,6 +10,7 @@ const modifiableLogTypes = [
   "clientInteraction:created",
   "clientInteraction:updated",
   "clientInteraction:serviceProvided",
+  "follow-up",
 ];
 
 exports.modifiableLogTypes = modifiableLogTypes;
@@ -78,7 +79,7 @@ exports.insertActivityLogQuery = function (params) {
       });
 
       SET @logId := LAST_INSERT_ID();
-      
+
       ${insertTagsQuery({ rawValue: "@logId" }, "clientLogs", params.tags)}
     `,
       data
@@ -86,7 +87,7 @@ exports.insertActivityLogQuery = function (params) {
   }
 };
 
-const logTypesWithoutTime = ["clientInteraction:serviceProvided"];
+const logTypesWithoutTime = ["clientInteraction:serviceProvided", "follow-up"];
 
 exports.createResponseLogObject = function createResponseLogObject(
   log,

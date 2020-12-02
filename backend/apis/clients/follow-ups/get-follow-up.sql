@@ -13,4 +13,4 @@ JSON_OBJECT(
 FROM followUps
 JOIN users addedUser ON followUps.addedBy = addedUser.id
 JOIN users updatedBy ON followUps.updatedBy = updatedBy.id
-JOIN followUpServices ON followUpServices.followUpId = ? WHERE followUps.id = ?;
+LEFT JOIN followUpServices ON followUpServices.followUpId = ? WHERE followUps.id = ?;

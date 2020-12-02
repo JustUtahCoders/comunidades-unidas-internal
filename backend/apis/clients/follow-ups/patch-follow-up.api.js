@@ -1,10 +1,14 @@
-const { app, databaseError, pool, invalidRequest } = require("../../../server");
+const {
+  app,
+  databaseError,
+  pool,
+  invalidRequest,
+  notFound,
+} = require("../../../server");
 const mysql = require("mysql");
 const {
   checkValid,
   validId,
-  validDate,
-  validTime,
   validArray,
   validDateTime,
   nullableValidDateTime,
@@ -16,6 +20,7 @@ const getFollowUpSql = fs.readFileSync(
   "utf-8"
 );
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
+const { formatFollowUpRow } = require("./get-follow-up.api");
 
 app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
   const user = req.session.passport.user;
@@ -27,16 +32,16 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
     ...checkValid(req.body, nullableValidDateTime("appointmentDate")),
   ];
 
-  const { clientId, followUpId } = req.params;
+  if (validationErrors.length > 0) {
+    return invalidRequest(res, validationErrors);
+  }
 
-  const {
-    serviceIds,
-    title,
-    description,
-    dateOfContact,
-    appointmentDate,
-    duration,
-  } = req.body;
+  let { clientId, followUpId } = req.params;
+
+  clientId = Number(clientId);
+  followUpId = Number(followUpId);
+
+  const { serviceIds } = req.body;
 
   const getFollowUpByIdSql = mysql.format(getFollowUpSql, [
     followUpId,
@@ -72,8 +77,6 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
       ]
     );
 
-    const oldServiceIds = JSON.parse(followUpResult[0].serviceIds);
-
     updateFollowUpSql =
       mysql.format(`DELETE FROM followUpServices WHERE followUpId = ?;`, [
         newFollowUp.id,
@@ -89,7 +92,7 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
 
     updateFollowUpSql += mysql.format(
       `SELECT GROUP_CONCAT(services.serviceName SEPARATOR ', ') services FROM services WHERE id IN (?);`,
-      [serviceIds]
+      [serviceIds.length > 0 ? serviceIds : null]
     );
 
     pool.query(updateFollowUpSql, (err, updateResult) => {
@@ -97,32 +100,30 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
         return databaseError(req, res, err);
       }
 
+      let title = `Client received follow up`;
+      if (serviceIds.length > 0) {
+        title += ` regarding ${
+          updateResult[updateResult.length - 1][0]["services"]
+        }`;
+      }
+
       let clientLogUpdate = insertActivityLogQuery({
         detailId: newFollowUp.id,
         clientId,
-        title: `Client received follow up regarding ${
-          updateResult[updateResult.length - 1][0]["services"]
-        }`,
+        title,
         description: null,
         logType: "follow-up",
         addedBy: user.id,
+        dateAdded: newFollowUp.dateOfContact,
       });
 
       clientLogUpdate += mysql.format(
         `
-        WITH oldLog AS (
-          SELECT id FROM clientLogs
-          WHERE logType IN ("follow-up")
-            AND detailId = ?
-          ORDER BY dateAdded DESC
-          LIMIT 1, 1
-        )
-
         UPDATE clientLogs
-        SET idOfUpdatedLog = LAST_INSERT_ID()
-        WHERE id = (SELECT id FROM oldLog);
+        SET idOfUpdatedLog = @logId
+        WHERE detailId = ? AND id <> @logId
       `,
-        [newFollowUp.id]
+        [newFollowUp.id, newFollowUp.id]
       );
 
       pool.query(clientLogUpdate, (err, clientLogResult) => {
@@ -130,11 +131,25 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
           return databaseError(req, res, err);
         }
 
-        pool.query(getFollowUpByIdSql, (err, followUp) => {
+        pool.query(getFollowUpByIdSql, (err, result) => {
           if (err) {
             return databaseError(req, res, err);
           }
-          res.send(followUp);
+
+          const row = result[0];
+
+          if (!row.id) {
+            return notFound(res, `No follow up found with id ${followUpId}`);
+          }
+
+          if (row.clientId !== clientId) {
+            return notFound(
+              res,
+              `Follow up with id ${followUpId} does not belong to client ${clientId}`
+            );
+          }
+
+          res.send(formatFollowUpRow(row));
         });
       });
     });
