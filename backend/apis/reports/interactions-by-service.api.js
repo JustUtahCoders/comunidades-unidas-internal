@@ -113,8 +113,20 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       ON services.id = numFollowUps.serviceId
       JOIN programs ON programs.id = services.programId
       ;
+
+      -- num of clients per follow up per program
+      SELECT COUNT(DISTINCT followUps.clientId) numClients, services.programId programId
+      FROM
+        followUps
+        JOIN clients ON clients.id = followUps.clientId
+        JOIN followUpServices ON followUpServices.followUpId = followUps.id
+        JOIN services ON services.id = followUpServices.serviceId
+      WHERE clients.isDeleted = false AND followUps.dateOfContact >= ? AND followUps.dateOfContact <= ?
+      GROUP BY services.programId;
     `,
     [
+      startDate,
+      endDate,
       startDate,
       endDate,
       startDate,
@@ -147,6 +159,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       totalClients,
       serviceHoursByFollowUps,
       serviceFollowUps,
+      programFollowUpClients,
     ] = result;
 
     const groupedServiceInteractions = _.groupBy(
@@ -155,8 +168,6 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
     );
 
     const groupedServiceFollowUps = _.groupBy(serviceFollowUps, "programId");
-
-    console.log(groupedServiceFollowUps, groupedServiceInteractions);
 
     const programTotals = Object.keys(groupedServiceInteractions).map(
       (programId) => {
@@ -175,6 +186,19 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       }
     );
 
+    const followUpProgramTotals = Object.keys(groupedServiceFollowUps).map(
+      (programId) => ({
+        programId: Number(programId),
+        programName: groupedServiceFollowUps[programId][0].programName,
+        numFollowUps: _.sum(
+          groupedServiceFollowUps[programId].map((s) => s.totalFollowUps || 0)
+        ),
+        numClients: 0,
+        totalFollowUpSeconds: 0,
+        totalDuration: "00:00:00",
+      })
+    );
+
     const serviceTotals = serviceInteractions.map((service) => ({
       serviceName: service.serviceName,
       programName: service.programName,
@@ -186,15 +210,26 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       programId: service.programId,
     }));
 
-    const followUpServicesTotal = serviceClients.forEach((serviceRow) => {
-      const service = serviceTotals.find(
-        (s) => s.serviceId === serviceRow.serviceId
-      );
-      service.numClients = serviceRow.numClients;
-    });
+    const followUpServicesTotal = serviceFollowUps.map((service) => ({
+      serviceName: service.serviceName,
+      programName: service.programName,
+      numFollowUps: service.totalFollowUps || 0,
+      numClients: 0,
+      totalFollowUpSeconds: 0,
+      totalDuration: "00:00:00",
+      serviceId: service.serviceId,
+      programId: service.programId,
+    }));
 
     programClients.forEach((programRow) => {
       const program = programTotals.find(
+        (p) => p.programId === programRow.programId
+      );
+      program.numClients = programRow.numClients;
+    });
+
+    programFollowUpClients.forEach((programRow) => {
+      const program = followUpProgramTotals.find(
         (p) => p.programId === programRow.programId
       );
       program.numClients = programRow.numClients;
@@ -213,26 +248,49 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       program.totalInteractionSeconds += serviceHour.totalInteractionSeconds;
     });
 
-    // serviceFollowUps.forEach((serviceHour) => {
-    //   const service =
-    // });
+    serviceHoursByFollowUps.forEach((serviceHour) => {
+      const service = followUpServicesTotal.find(
+        (s) => s.serviceId === serviceHour.serviceId
+      );
+
+      service.totalFollowUpSeconds = serviceHour.totalFollowUpSeconds;
+      service.totalDuration = toDuration(serviceHour.totalFollowUpSeconds);
+      const program = followUpProgramTotals.find(
+        (p) => p.programId === service.programId
+      );
+
+      program.totalFollowUpSeconds += serviceHour.totalFollowUpSeconds;
+    });
 
     programTotals.forEach((program) => {
       program.totalDuration = toDuration(program.totalInteractionSeconds);
     });
 
+    followUpProgramTotals.forEach((program) => {
+      program.totalDuration = toDuration(program.totalFollowUpSeconds);
+    });
+
     const grandTotal = {
       numInteractions: _.sum(programTotals.map((p) => p.numInteractions)),
+      numFollowUps: _.sum(followUpProgramTotals.map((p) => p.numInteractions)),
       numClients: totalClients[0].numClients,
       totalInteractionSeconds: _.sum(
         programTotals.map((p) => p.totalInteractionSeconds)
       ),
+      totalFollowUpSeconds: _.sum(
+        followUpProgramTotals.map((p) => p.totalFollowUpSeconds)
+      ),
     };
     grandTotal.totalDuration = toDuration(grandTotal.totalInteractionSeconds);
+
+    grandTotal.totalFollowUpDuration = toDuration(
+      grandTotal.totalFollowUpSeconds
+    );
 
     res.send({
       grandTotal,
       programs: programTotals,
+      followUpProgramTotals: followUpProgramTotals,
       services: serviceTotals,
       followUpServicesTotal: followUpServicesTotal,
       reportParameters: {
