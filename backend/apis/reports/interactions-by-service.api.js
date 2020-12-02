@@ -28,7 +28,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
         (
           SELECT COUNT(*) totalInteractions, serviceId
           FROM clientInteractions
-          WHERE isDeleted = false AND dateOfInteraction >= '2000-01-01' AND dateOfInteraction <= '2020-12-31'
+          WHERE isDeleted = false AND dateOfInteraction >= ? AND dateOfInteraction <= ?
           GROUP BY serviceId
         ) numInteractions
         ON services.id = numInteractions.serviceId
@@ -123,8 +123,20 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
         JOIN services ON services.id = followUpServices.serviceId
       WHERE clients.isDeleted = false AND followUps.dateOfContact >= ? AND followUps.dateOfContact <= ?
       GROUP BY services.programId;
+
+      -- num of clients for follow ups per service
+      SELECT COUNT(DISTINCT followUps.clientId) numClients, followUpServices.serviceId
+      FROM followUps
+      JOIN clients ON clients.id = followUps.clientId
+      JOIN followUpServices ON followUps.id = followUpServices.followUpId
+      WHERE clients.isDeleted = false
+        AND followUps.dateOfContact >= ?
+        AND followUps.dateOfContact <= ?
+      GROUP BY followUpServices.serviceId;
     `,
     [
+      startDate,
+      endDate,
       startDate,
       endDate,
       startDate,
@@ -160,6 +172,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       serviceHoursByFollowUps,
       serviceFollowUps,
       programFollowUpClients,
+      serviceFollowUpClients,
     ] = result;
 
     const groupedServiceInteractions = _.groupBy(
@@ -220,6 +233,20 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       serviceId: service.serviceId,
       programId: service.programId,
     }));
+
+    serviceClients.forEach((serviceRow) => {
+      const service = serviceTotals.find(
+        (s) => s.serviceId === serviceRow.serviceId
+      );
+      service.numClients = serviceRow.numClients;
+    });
+
+    serviceFollowUpClients.forEach((serviceRow) => {
+      const service = followUpServicesTotal.find(
+        (s) => s.serviceId === serviceRow.serviceId
+      );
+      service.numClients = serviceRow.numClients;
+    });
 
     programClients.forEach((programRow) => {
       const program = programTotals.find(
