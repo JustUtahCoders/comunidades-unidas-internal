@@ -207,28 +207,25 @@ export default function ClientHistory(props: ClientHistoryProps) {
   }
 
   function getDate(log, index) {
+    const previousTimestampDate =
+      index > 0
+        ? logState.filteredLogs[index - 1].createdBy.timestampDate
+        : dayjs(0);
+
     if (!dateHasTime(log.createdBy.timestamp)) {
       const [year, month, day] = log.createdBy.timestamp.split("-");
       const timestamp = dayjs()
         .year(year)
         .month(month - 1)
         .set("date", day);
-      if (
-        timestamp.isSame(
-          logState.filteredLogs[index - 1].createdBy.timestampDate,
-          "day"
-        )
-      ) {
+      if (timestamp.isSame(previousTimestampDate, "day")) {
         return null;
       } else {
         return <div>{timestamp.format("MMM D, YYYY")}</div>;
       }
     } else if (
       index === 0 ||
-      !logState.filteredLogs[index - 1].createdBy.timestampDate.isSame(
-        log.createdBy.timestampDate,
-        "year"
-      )
+      !previousTimestampDate.isSame(log.createdBy.timestampDate, "year")
     ) {
       return (
         <>
@@ -237,17 +234,11 @@ export default function ClientHistory(props: ClientHistoryProps) {
         </>
       );
     } else if (
-      !logState.filteredLogs[index - 1].createdBy.timestampDate.isSame(
-        log.createdBy.timestampDate,
-        "day"
-      )
+      !previousTimestampDate.isSame(log.createdBy.timestampDate, "day")
     ) {
       return <div>{log.createdBy.timestampDate.format("MMM D h:mm a")}</div>;
     } else if (
-      !logState.filteredLogs[index - 1].createdBy.timestampDate.isSame(
-        log.createdBy.timestampDate,
-        "minute"
-      )
+      !previousTimestampDate.isSame(log.createdBy.timestampDate, "minute")
     ) {
       return <div>{log.createdBy.timestampDate.format("h:mm a")}</div>;
     } else {

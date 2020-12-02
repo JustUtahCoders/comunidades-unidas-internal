@@ -1,16 +1,18 @@
 import React from "react";
-import { ClientLog, LogType } from "./client-history.component";
+import { ClientLog } from "./client-history.component";
 import { startCase } from "lodash-es";
 import Modal from "../../util/modal.component";
 import EditCaseNote from "../case-notes/edit-case-note.component";
 import { showGrowl, GrowlType } from "../../growls/growls.component";
 import EditClientInteraction from "../interactions/edit-client-interaction.component";
+import EditFollowUpInteraction from "../interactions/edit-follow-up-interaction.component";
 
 const editLogComponents = {
   caseNote: EditCaseNote,
   ["clientInteraction:created"]: EditClientInteraction,
   ["clientInteraction:updated"]: EditClientInteraction,
   ["clientInteraction:serviceProvided"]: EditClientInteraction,
+  "follow-up": EditFollowUpInteraction,
 };
 
 export default function EditLog({
@@ -88,6 +90,7 @@ export default function EditLog({
       secondaryAction={editable ? deleteLog : null}
       secondaryText={editable ? "Delete" : null}
       close={close}
+      wide={Edit.wideModal}
     >
       <Edit
         log={log}

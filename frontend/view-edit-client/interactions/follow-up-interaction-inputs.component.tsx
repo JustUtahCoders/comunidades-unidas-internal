@@ -13,13 +13,14 @@ import IntakeServicesInputs from "../../util/services-inputs.component";
 import TimeDurationInput, {
   TimeDuration,
 } from "../../util/time-duration-input.component";
+import { CUObjectAudit } from "../invoices/edit-invoice.component";
 import {
   InteractionInputsRef,
   InteractionInputsProps,
 } from "./single-interaction-slat.component";
 
 const FollowUpInteractionInputs = React.forwardRef<
-  InteractionInputsRef,
+  FollowUpInputsRef,
   InteractionInputsProps
 >((props, ref) => {
   const [state, dispatch] = useReducer<Reducer, State>(
@@ -38,22 +39,37 @@ const FollowUpInteractionInputs = React.forwardRef<
     );
   }, [state.services]);
 
-  useImperativeHandle(ref, () => ({
-    save(signal) {
-      return easyFetch(`/api/clients/${props.clientId}/follow-ups`, {
-        method: "POST",
-        signal,
-        body: {
-          serviceIds: state.services.map((s) => s.id),
-          title: state.title,
-          description: descrRef.current.getHTML(),
-          duration: state.duration.stringValue,
-          dateOfContact: state.dateOfContact,
-          appointmentDate: state.appointmentDate || null,
-        },
-      });
-    },
-  }));
+  useImperativeHandle(ref, () => {
+    return {
+      save(signal) {
+        return easyFetch(`/api/clients/${props.clientId}/follow-ups`, {
+          method: "POST",
+          signal,
+          body: {
+            serviceIds: state.services.map((s) => s.id),
+            title: state.title,
+            description: descrRef.current.getHTML(),
+            duration: state.duration.stringValue,
+            dateOfContact: state.dateOfContact,
+            appointmentDate: state.appointmentDate || null,
+          },
+        });
+      },
+      getFollowUp,
+    };
+
+    function getFollowUp() {
+      return {
+        id: props.initialFollowUp ? props.initialFollowUp.id : null,
+        serviceIds: state.services.map((s) => s.id),
+        title: state.title,
+        description: descrRef.current.getHTML(),
+        duration: state.duration.stringValue,
+        dateOfContact: state.dateOfContact,
+        appointmentDate: state.appointmentDate || null,
+      };
+    }
+  });
 
   return (
     <>
@@ -61,6 +77,7 @@ const FollowUpInteractionInputs = React.forwardRef<
       <input
         id={`title-${props.interactionIndex}`}
         type="text"
+        value={state.title}
         onChange={(evt) =>
           dispatch({ type: ActionType.setTitle, title: evt.target.value })
         }
@@ -140,7 +157,7 @@ const FollowUpInteractionInputs = React.forwardRef<
       </label>
       <FullRichTextEditor
         placeholder="Describe the follow up"
-        initialHTML={null}
+        initialHTML={state.description}
         ref={descrRef}
       />
     </>
@@ -154,16 +171,31 @@ const FollowUpInteractionInputs = React.forwardRef<
     return {
       servicesResponse: props.servicesResponse,
       showingServicesModal: false,
-      services: [],
-      appointmentDate: null,
-      dateOfContact: dayjs().format("YYYY-MM-DD"),
-      description: null,
-      title: "",
-      duration: {
-        stringValue: "00:30:00",
-        hours: 0,
-        minutes: 0,
-      },
+      services:
+        props.initialFollowUp && props.initialFollowUp.services
+          ? props.initialFollowUp.services
+          : [],
+      appointmentDate: props.initialFollowUp
+        ? props.initialFollowUp.appointmentDate
+        : null,
+      dateOfContact: props.initialFollowUp
+        ? props.initialFollowUp.dateOfContact
+        : dayjs().format("YYYY-MM-DD"),
+      description: props.initialFollowUp
+        ? props.initialFollowUp.description
+        : null,
+      title: props.initialFollowUp ? props.initialFollowUp.title : "",
+      duration: props.initialFollowUp
+        ? {
+            stringValue: props.initialFollowUp.duration,
+            hours: null,
+            minutes: null,
+          }
+        : {
+            stringValue: "00:30:00",
+            hours: 0,
+            minutes: 0,
+          },
     };
   }
 });
@@ -275,5 +307,22 @@ enum ActionType {
 }
 
 type Reducer = (oldState: State, action: Action) => State;
+
+export type FollowUp = {
+  id: number;
+  serviceIds: number[];
+  services?: CUService[];
+  title: string;
+  description: string;
+  dateOfContact: string;
+  duration: string;
+  appointmentDate: string;
+  createdBy?: CUObjectAudit;
+  lastUpdatedBy?: CUObjectAudit;
+};
+
+export type FollowUpInputsRef = InteractionInputsRef & {
+  getFollowUp?(): FollowUp;
+};
 
 export default FollowUpInteractionInputs;

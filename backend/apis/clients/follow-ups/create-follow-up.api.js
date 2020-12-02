@@ -96,6 +96,7 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
         description: null,
         logType: "follow-up",
         addedBy: user.id,
+        dateAdded: dateOfContact,
       });
 
       pool.query(query, (err, logResult) => {

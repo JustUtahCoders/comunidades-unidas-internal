@@ -5,7 +5,9 @@ import { FullPartner } from "../../admin/partners/partners.component";
 import ServiceInteractionInputs, {
   ClientInteraction,
 } from "./service-interaction-inputs.component";
-import FollowUpInteractionInputs from "./follow-up-interaction-inputs.component";
+import FollowUpInteractionInputs, {
+  FollowUp,
+} from "./follow-up-interaction-inputs.component";
 import ReferralInteractionInputs from "./referral-interaction-inputs.component";
 
 enum InteractionKind {
@@ -212,6 +214,7 @@ export type InteractionInputsProps = {
   clientId: string;
   setName(string): any;
   initialInteraction?: ClientInteraction;
+  initialFollowUp?: FollowUp;
 };
 
 export type InteractionInputsRef = {
