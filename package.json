@@ -57,7 +57,7 @@
     "ext-name": "^5.0.0",
     "fuzzy-search": "^3.2.1",
     "js-cookie": "^2.2.1",
-    "juntos-por-la-salud-node-client": "^1.1.2",
+    "juntos-por-la-salud-node-client": "^1.2.0",
     "keygrip": "^1.1.0",
     "kremling": "^2.0.4",
     "lodash-es": "^4.17.15",
