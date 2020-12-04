@@ -71,16 +71,22 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       ;
 
       -- num total clients
-      SELECT (COUNT(DISTINCT clientInteractions.clientId) + (SELECT COUNT(DISTINCT followUps.clientId) FROM followUps WHERE followUps.clientId <> clientInteractions.clientId)) numClients
+      SELECT COUNT(clientId) numClients
+      FROM (
+        SELECT DISTINCT clientId
         FROM clientInteractions
-        JOIN clients
-        ON clients.id = clientInteractions.clientId
-      WHERE
-        clients.isDeleted = false
-        AND clientInteractions.isDeleted = false
+        JOIN clients ON clients.id = clientInteractions.clientId
+        WHERE clients.isDeleted = false
         AND clientInteractions.dateOfInteraction >= ?
         AND clientInteractions.dateOfInteraction <= ?
-      ;
+        UNION
+        SELECT DISTINCT clientId
+        FROM followUps
+        JOIN clients ON clients.id = followUps.clientId
+        WHERE clients.isDeleted = false
+        AND followUps.dateOfContact >= ?
+        AND followUps.dateOfContact <= ?
+      ) totalClients;
 
       -- num of FOLLOW UP hours by service between selected dates
       SELECT services.id serviceId, clientHours.totalFollowUpSeconds
