@@ -6972,7 +6972,7 @@ jsx-ast-utils@^2.4.1:
     array-includes "^3.1.1"
     object.assign "^4.1.0"
 
-juntos-por-la-salud-node-client@^1.1.2:
+juntos-por-la-salud-node-client@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/juntos-por-la-salud-node-client/-/juntos-por-la-salud-node-client-1.2.0.tgz#1c217d842248f35ef329d0eb4b9d043f29430459"
   integrity sha512-y3YUPT+DO3WTKpey2zLN9jaOcx8Su+rhK0OmNrmoacdnTwZ+6o1AcX06ATxVcBbhPuN6Mgvu2gEJ0jNdDJljqQ==
