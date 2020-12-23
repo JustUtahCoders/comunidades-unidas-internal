@@ -9,7 +9,7 @@ jobs:
       matrix:
         node-version: [14.x]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@master
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -24,3 +24,8 @@ jobs:
       - run: pnpm run build
       - run: find static -type f ! -path static/manifest.json -exec gzip -9 {} \; -exec mv {}.gz {} \;
       - run: ls -al
+      - name: "Upload frontend artifacts"
+        uses: actions/upload/artifact@v2
+        with:
+          name: static-assets
+          path: static
