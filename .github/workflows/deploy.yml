@@ -11,7 +11,7 @@ jobs:
         uses: fountainhead/action-wait-for-check@v1.0.0
         id: wait-for-build
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.WAIT_TOKEN }}
           checkName: build
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Build failed
@@ -34,7 +34,7 @@ jobs:
         uses: fountainhead/action-wait-for-check@v1.0.0
         id: wait-for-build
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.WAIT_TOKEN }}
           checkName: build
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Build failed
