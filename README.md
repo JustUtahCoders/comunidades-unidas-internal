@@ -21,16 +21,15 @@ First, install the following:
 - [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 - [Docker](https://www.docker.com/get-started). This will also install docker-compose.
 - [Node](https://nodejs.org/en/download/). Feel free to use [nvm](https://github.com/creationix/nvm) for this if you prefer, but any installation will work. Version >=13 is needed.
-- [Yarn](https://yarnpkg.com/lang/en/docs/install/#mac-stable). If you use Mac, this may require that you first install
-  [Homebrew](https://brew.sh/).
+- [pnpm](https://pnpm.js.org/).
 
 Now, run the following commands in a terminal:
 
 ```sh
 git clone git@github.com:JustUtahCoders/comunidades-unidas-internal.git
 cd comunidades-unidas-internal
-yarn install
-yarn fix-everything
+pnpm install
+pnpm run fix-everything
 ```
 
 Now create a file inside of the comunidades-unidas-internal directory called `.env`.
@@ -58,7 +57,7 @@ KEYGRIP_SECRET=123
 Now run the following command:
 
 ```sh
-yarn develop
+pnpm run develop
 ```
 
 Now go to http://localhost:8080 in a browser.
@@ -74,13 +73,13 @@ You can see all current and previous deployments at https://travis-ci.org/JustUt
 If you need to make a change to the database schema, create a database migration by running the following command:
 
 ```sh
-yarn db-migrate create name-of-the-migration --sql-file
+./node_modules/.bin/db-migrate create name-of-the-migration --sql-file
 ```
 
 This will create a directory in the `migrations` folder that has an "up" and a "down" sql file. The up file should create tables or modify columns,
 the down file should drop tables and unmodify columns.
 
-After creating a migration, you'll have to run `yarn db-migrate up` to run it against your local database. You can run either `yarn develop-database` or `yarn develop` to start up your database. `yarn db-migrate` down should also be tested, to ensure that the migration can be undone. The migration will automatically run on the production database during the deployment in Travis CI.
+After creating a migration, you'll have to run `./node_modules/.bin/db-migrate up` to run it against your local database. You can run either `pnpm run develop-database` or `pnpm run develop` to start up your database. `./node_modules/.bin/db-migrate down` should also be tested, to ensure that the migration can be undone. The migration will automatically run on the production database during the deployment in Travis CI.
 
 ## Connecting to the database
 

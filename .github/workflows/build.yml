@@ -1,0 +1,23 @@
+name: Build code
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: pnpm/action-setup@v1.2.1
+      - run: pnpm install
+      - run: pnpm run typescript
+      - run: pnpm run check-format
+      - run: pnpm run lint
+      - run: pnpm run build
+      - run: find static -type f ! -path static/manifest.json -exec gzip -9 {} \; -exec mv {}.gz {} \;
+      - run: ls -al
