@@ -305,7 +305,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
 
     const grandTotal = {
       numInteractions: _.sum(programTotals.map((p) => p.numInteractions)),
-      numFollowUps: _.sum(followUpProgramTotals.map((p) => p.numInteractions)),
+      numFollowUps: _.sum(followUpProgramTotals.map((p) => p.numFollowUps)),
       numClients: totalClients[0].numClients,
       totalInteractionSeconds: _.sum(
         programTotals.map((p) => p.totalInteractionSeconds)
