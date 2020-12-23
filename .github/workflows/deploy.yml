@@ -7,7 +7,7 @@ jobs:
   deploy-frontend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@master
+      - uses: actions/download-artifact@v2
         with:
           name: static-assets
       - uses: shallwefootball/s3-upload-action@master
@@ -20,7 +20,7 @@ jobs:
   deploy-server:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
       - uses: hmanzur/actions-aws-eb@v1.0.0
         with:
           command: "deploy comunidades-unidas-prod-2"
