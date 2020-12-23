@@ -12,7 +12,7 @@ jobs:
         id: wait-for-build
         with:
           token: ${{ secrets.WAIT_TOKEN }}
-          checkName: build
+          checkName: Build
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Build failed
         if: steps.wait-for-build.outputs.conclusion == 'failure'
@@ -35,7 +35,7 @@ jobs:
         id: wait-for-build
         with:
           token: ${{ secrets.WAIT_TOKEN }}
-          checkName: build
+          checkName: Build
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Build failed
         if: steps.wait-for-build.outputs.conclusion == 'failure'
