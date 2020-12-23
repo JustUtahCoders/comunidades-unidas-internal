@@ -18,9 +18,10 @@ import { CUServicesList } from "../../add-client/services.component";
 import { FullPartner } from "../../admin/partners/partners.component";
 
 export default function AddClientInteraction(props: AddClientInteractionProps) {
-  const [servicesResponse, setServicesResponse] = React.useState<
-    CUServicesList
-  >(null);
+  const [
+    servicesResponse,
+    setServicesResponse,
+  ] = React.useState<CUServicesList>(null);
   const [partnersResponse, setPartnersResponse] = React.useState<FullPartner[]>(
     []
   );

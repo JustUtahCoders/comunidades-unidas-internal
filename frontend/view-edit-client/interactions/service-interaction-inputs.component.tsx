@@ -26,9 +26,10 @@ const ServiceInteractionInputs = React.forwardRef<
     ? props.servicesResponse.services
     : [];
   const groupedServices = groupBy(services, "programName");
-  const [selectedInteractionType, setSelectedInteractionType] = React.useState<
-    string
-  >(
+  const [
+    selectedInteractionType,
+    setSelectedInteractionType,
+  ] = React.useState<string>(
     props.initialInteraction
       ? props.initialInteraction.interactionType
       : "inPerson"

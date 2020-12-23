@@ -4,7 +4,9 @@ import Root from "./root.component";
 
 ReactDOM.render(<Root />, document.getElementById("root"));
 
+// @ts-ignore
 if (process.env.NODE_ENV !== "production") {
-  const axe = require("react-axe");
-  axe(React, ReactDOM, 1000);
+  import("react-axe").then((axe) => {
+    axe.default(React, ReactDOM, 1000);
+  });
 }
