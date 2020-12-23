@@ -16,13 +16,15 @@ export default function EditClientInteraction({
   clientId,
   notEditable,
 }: LogTypeEditProps) {
-  const [servicesResponse, setServicesResponse] = React.useState<
-    CUServicesList
-  >(null);
+  const [
+    servicesResponse,
+    setServicesResponse,
+  ] = React.useState<CUServicesList>(null);
 
-  const [originalInteraction, setOriginalInteraction] = React.useState<
-    ClientInteraction
-  >(null);
+  const [
+    originalInteraction,
+    setOriginalInteraction,
+  ] = React.useState<ClientInteraction>(null);
 
   const { userMode } = React.useContext(UserModeContext);
 

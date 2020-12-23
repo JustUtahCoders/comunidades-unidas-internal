@@ -15,4 +15,5 @@ LICENSE
 *.png
 *.webp
 *.yml.save
-pnpm-lock.yml
+migrations
+pnpm-lock.yaml
