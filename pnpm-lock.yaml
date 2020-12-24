@@ -26,6 +26,7 @@ dependencies:
   juntos-por-la-salud-node-client: 1.2.0
   keygrip: 1.1.0
   kremling: 2.0.4
+  lodash: 4.17.20
   lodash-es: 4.17.20
   morgan: 1.10.0
   mysql: 2.18.1
@@ -10961,6 +10962,7 @@ specifiers:
   keygrip: ^1.1.0
   kremling: ^2.0.4
   kremling-loader: ^1.0.2
+  lodash: ^4.17.20
   lodash-es: ^4.17.20
   morgan: ^1.10.0
   mysql: ^2.18.1
