@@ -8,14 +8,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Wait for build
-        uses: fountainhead/action-wait-for-check@v1.0.0
-        id: wait-for-build
+        uses: tomchv/wait-my-workflow@v1.1.0
+        id: wait-build
         with:
           token: ${{ secrets.WAIT_TOKEN }}
           checkName: build
       - name: Build failed
-        if: steps.wait-for-build.outputs.conclusion == 'failure'
+        if: steps.wait-build.outputs.conclusion == 'failure'
         run: echo "Build failed" && false
+      - name: No build found
+        if: steps.wait-build.outputs.conclusion == 'does not exist'
+        run: echo "Build doesn't exist" && false
+      - name: Build timeout
+        if: steps.wait-build.outputs.conclusion == 'does not exist'
+        run: echo "Build timed out" && false
       - uses: actions/download-artifact@v2
         with:
           name: static-assets
@@ -30,14 +36,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Wait for build
-        uses: fountainhead/action-wait-for-check@v1.0.0
-        id: wait-for-build
+        uses: tomchv/wait-my-workflow@v1.1.0
+        id: wait-build
         with:
           token: ${{ secrets.WAIT_TOKEN }}
           checkName: build
       - name: Build failed
-        if: steps.wait-for-build.outputs.conclusion == 'failure'
+        if: steps.wait-build.outputs.conclusion == 'failure'
         run: echo "Build failed" && false
+      - name: No build found
+        if: steps.wait-build.outputs.conclusion == 'does not exist'
+        run: echo "Build doesn't exist" && false
+      - name: Build timeout
+        if: steps.wait-build.outputs.conclusion == 'does not exist'
+        run: echo "Build timed out" && false
       - uses: actions/checkout@v2
       - uses: hmanzur/actions-aws-eb@v1.0.0
         with:
