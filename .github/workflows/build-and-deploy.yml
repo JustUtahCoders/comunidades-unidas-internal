@@ -29,7 +29,7 @@ jobs:
       - uses: pnpm/action-setup@v1.2.1
         with:
           version: 5.14.1
-      - run: pnpm config set store-dir ~/.pnpm-store
+          dest: ~/.pnpm-store
       - run: pnpm install
       - run: pnpm run typescript
       - run: pnpm run check-format
