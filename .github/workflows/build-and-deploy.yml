@@ -46,10 +46,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
-      - run: find .
       - uses: actions/download-artifact@v2
         with:
           name: static-assets
+      - run: find .
       - uses: shallwefootball/s3-upload-action@master
         with:
           aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
