@@ -9,6 +9,9 @@ jobs:
       matrix:
         node-version: [14.x]
     steps:
+      - name: echo actor
+        run: |
+          echo ${{github.actor}}
       - uses: actions/checkout@v2
       - name: Cache node modules
         uses: actions/cache@v2
