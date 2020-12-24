@@ -14,7 +14,7 @@
     "build": "webpack --mode=production --env.prod=true",
     "analyze-frontend-build": "webpack --mode=production --env.analyze=true",
     "nuke-database": "docker-compose down -v",
-    "db-migrate-prod": "db-migrate up --env prod",
+    "db-migrate-prod": "db-migrate up --env prod --verbose",
     "lint": "eslint frontend",
     "format": "prettier './**/*' --write",
     "check-format": "prettier './**/*' --check",
