@@ -6,8 +6,6 @@ const ManifestPlugin = require("webpack-manifest-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
 
-console.log("public path", process.env.PUBLIC_PATH);
-
 module.exports = (env, argv) => ({
   entry: {
     "comunidades-unidas-internal": "./frontend/comunidades-unidas-internal.tsx",
