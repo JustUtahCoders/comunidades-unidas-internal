@@ -42,7 +42,7 @@ jobs:
           name: static-assets
           path: static
   deploy-frontend:
-    if: github.ref == 'refs/heads/master' && github.actor == 'repo-owner'
+    if: github.ref == 'refs/heads/master' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v2
@@ -56,7 +56,7 @@ jobs:
           source_dir: static
   deploy-server:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' && github.actor == 'repo-owner'
+    if: github.ref == 'refs/heads/master' && github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - uses: actions/checkout@v2
       - uses: hmanzur/actions-aws-eb@v1.0.0
