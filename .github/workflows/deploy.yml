@@ -12,10 +12,10 @@ jobs:
         id: wait-for-build
         with:
           token: ${{ secrets.WAIT_TOKEN }}
-          checkName: Build
+          checkName: build
       - name: Build failed
         if: steps.wait-for-build.outputs.conclusion == 'failure'
-        run: echo "Build failed" && exit 1
+        run: echo "Build failed" && false
       - uses: actions/download-artifact@v2
         with:
           name: static-assets
@@ -34,11 +34,11 @@ jobs:
         id: wait-for-build
         with:
           token: ${{ secrets.WAIT_TOKEN }}
-          checkName: Build
+          checkName: build
       - name: Build failed
         if: steps.wait-for-build.outputs.conclusion == 'failure'
-        run: echo "Build failed" && exit 1
-      - uses: actions/checkout@v2
+        run: echo "Build failed" && false
+        uses: actions/checkout@v2
       - uses: hmanzur/actions-aws-eb@v1.0.0
         with:
           command: "deploy comunidades-unidas-prod-2"
