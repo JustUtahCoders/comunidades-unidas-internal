@@ -10,3 +10,5 @@ if (process.env.NODE_ENV !== "production") {
     axe.default(React, ReactDOM, 1000);
   });
 }
+
+console.log("deploy 1");
