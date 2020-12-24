@@ -50,13 +50,13 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: static-assets
-      - run: find .
       - uses: joeldenning/upload-s3-action@master
         with:
           aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
           aws_bucket: comunidades-unidas-frontend-assets
           source_dir: .
+          destination_dir: .
   deploy-server:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master' && github.repository_owner == 'JustUtahCoders'
