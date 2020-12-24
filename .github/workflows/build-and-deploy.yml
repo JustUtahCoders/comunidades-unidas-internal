@@ -66,6 +66,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: static-assets
+          path: static
       - uses: hmanzur/actions-aws-eb@v1.0.0
         with:
           command: "deploy comunidades-unidas-prod-2"
