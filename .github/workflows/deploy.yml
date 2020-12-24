@@ -38,7 +38,7 @@ jobs:
       - name: Build failed
         if: steps.wait-for-build.outputs.conclusion == 'failure'
         run: echo "Build failed" && false
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
       - uses: hmanzur/actions-aws-eb@v1.0.0
         with:
           command: "deploy comunidades-unidas-prod-2"
