@@ -35,7 +35,7 @@ jobs:
       - run: pnpm run lint
       - run: pnpm run build
       - run: find static -type f ! -path static/manifest.json -exec gzip -9 {} \; -exec mv {}.gz {} \;
-      - run: ls -al
+      - run: find static
       - name: "Upload frontend artifacts"
         uses: actions/upload-artifact@v2
         with:
@@ -46,6 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
+      - run: find .
       - uses: actions/download-artifact@v2
         with:
           name: static-assets
