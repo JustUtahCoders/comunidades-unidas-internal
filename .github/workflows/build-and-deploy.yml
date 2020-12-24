@@ -34,7 +34,7 @@ jobs:
       - run: pnpm run typescript
       - run: pnpm run check-format
       - run: pnpm run lint
-      - run: pnpm run build
+      - run: PUBLIC_PATH=https://comunidades-unidas-frontend-assets.s3.amazonaws.com/ pnpm run build
       - run: find static -type f ! -path static/manifest.json -exec gzip -9 {} \; -exec mv {}.gz {} \;
       - run: find static
       - name: "Upload frontend artifacts"
@@ -51,7 +51,7 @@ jobs:
         with:
           name: static-assets
       - run: find .
-      - uses: shallwefootball/s3-upload-action@master
+      - uses: joeldenning/s3-upload-action@master
         with:
           aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
