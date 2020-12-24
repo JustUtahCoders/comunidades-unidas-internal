@@ -16,7 +16,7 @@ jobs:
           cache-name: cache-node-modules
         with:
           # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: ~/.npm
+          path: ~/.pnpm-store
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -29,6 +29,7 @@ jobs:
       - uses: pnpm/action-setup@v1.2.1
         with:
           version: 5.14.1
+      - run: pnpm config set store-dir ~/.pnpm-store
       - run: pnpm install
       - run: pnpm run typescript
       - run: pnpm run check-format
