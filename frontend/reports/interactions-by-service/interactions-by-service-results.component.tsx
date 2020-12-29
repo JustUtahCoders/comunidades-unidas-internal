@@ -1,13 +1,13 @@
 import React from "react";
 import { useReportsApi } from "../shared/use-reports-api";
 import BasicTableReport from "../shared/basic-table-report.component";
-import { formatPercentage, formatDuration } from "../shared/report.helpers";
+import { formatDuration } from "../shared/report.helpers";
 import CollapsibleTableRows, {
   ToggleCollapseButton,
   ToggleAllButton,
 } from "../shared/collapsible-table-rows.component";
 import dayjs from "dayjs";
-import { values } from "lodash-es";
+import { sumBy, values } from "lodash-es";
 
 export default function InteractionsByService(props) {
   const { isLoading, data, error } = useReportsApi(
@@ -74,6 +74,30 @@ export default function InteractionsByService(props) {
     );
   };
 
+  const renderUnspecifiedRow = () => {
+    return (
+      <CollapsibleTableRows
+        key="unspecified"
+        everpresentRow={
+          <tr>
+            <th>Unspecified</th>
+            <td />
+            <td />
+            <td />
+            <td />
+            <td>
+              {data.unspecifiedFollowUpTotals.numFollowUps.toLocaleString()}
+            </td>
+            <td>
+              {formatDuration(data.unspecifiedFollowUpTotals.totalDuration)}
+            </td>
+          </tr>
+        }
+        collapsibleRows={[]}
+      />
+    );
+  };
+
   return (
     <>
       <BasicTableReport
@@ -118,7 +142,10 @@ export default function InteractionsByService(props) {
             <th>Follow-up Hours</th>
           </tr>
         }
-        contentRows={data.programs.map(renderProgramRows)}
+        contentRows={[
+          ...data.programs.map(renderProgramRows),
+          renderUnspecifiedRow(),
+        ]}
         footerRows={
           <tr>
             <th>All programs</th>
@@ -129,7 +156,7 @@ export default function InteractionsByService(props) {
             <td>{data.grandTotal.numInteractions}</td>
             <td>{formatDuration(data.grandTotal.totalDuration)}</td>
             <td>{data.grandTotal.numFollowUps}</td>
-            <td>{formatDuration(data.grandTotal.totalFollowUpDuration)}</td>
+            <td>{formatDuration(data.grandTotal.allFollowUpDuration)}</td>
           </tr>
         }
       />
