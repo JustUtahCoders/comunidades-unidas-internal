@@ -104,6 +104,23 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       ON services.id = clientHours.serviceId
       ;
 
+      -- unspecified follow ups (unassociated with a program) between selected dates
+      SELECT id, TIME_TO_SEC(duration) followUpSeconds
+      FROM followUps
+      WHERE dateOfContact >= ?
+        AND dateOfContact <= ?
+        AND id NOT IN
+          (SELECT followUpId 
+          FROM followUpServices)
+      ;
+
+      -- all follow ups, including those not associated with a program, between selected dates
+      SELECT COUNT(*) totalFollowUps, SUM(TIME_TO_SEC(duration)) totalFollowUpSeconds
+      FROM followUps
+      WHERE dateOfContact >= ?
+        AND dateOfContact <= ?
+      ;
+
       -- num of follow ups per service
       SELECT totalFollowUps, services.id serviceId, services.serviceName, programs.id programId, programs.programName
       FROM
@@ -161,6 +178,10 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       endDate,
       startDate,
       endDate,
+      startDate,
+      endDate,
+      startDate,
+      endDate,
     ]
   );
 
@@ -176,6 +197,8 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       serviceHours,
       totalClients,
       serviceHoursByFollowUps,
+      unspecifiedFollowUps,
+      allFollowUps,
       serviceFollowUps,
       programFollowUpClients,
       serviceFollowUpClients,
@@ -216,6 +239,16 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
         totalFollowUpSeconds: 0,
         totalDuration: "00:00:00",
       })
+    );
+
+    const unspecifiedFollowUpTotals = {
+      numFollowUps: unspecifiedFollowUps.length,
+      totalSeconds: _.sum(
+        unspecifiedFollowUps.map((followUp) => followUp.followUpSeconds)
+      ),
+    };
+    unspecifiedFollowUpTotals.totalDuration = toDuration(
+      unspecifiedFollowUpTotals.totalSeconds
     );
 
     const serviceTotals = serviceInteractions.map((service) => ({
@@ -305,25 +338,21 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
 
     const grandTotal = {
       numInteractions: _.sum(programTotals.map((p) => p.numInteractions)),
-      numFollowUps: _.sum(followUpProgramTotals.map((p) => p.numInteractions)),
+      numFollowUps: allFollowUps[0].totalFollowUps,
       numClients: totalClients[0].numClients,
       totalInteractionSeconds: _.sum(
         programTotals.map((p) => p.totalInteractionSeconds)
       ),
-      totalFollowUpSeconds: _.sum(
-        followUpProgramTotals.map((p) => p.totalFollowUpSeconds)
-      ),
+      allFollowUpSeconds: allFollowUps[0].totalFollowUpSeconds,
+      allFollowUpDuration: toDuration(allFollowUps[0].totalFollowUpSeconds),
     };
     grandTotal.totalDuration = toDuration(grandTotal.totalInteractionSeconds);
-
-    grandTotal.totalFollowUpDuration = toDuration(
-      grandTotal.totalFollowUpSeconds
-    );
 
     res.send({
       grandTotal,
       programs: programTotals,
       followUpProgramTotals: followUpProgramTotals,
+      unspecifiedFollowUpTotals: unspecifiedFollowUpTotals,
       services: serviceTotals,
       followUpServicesTotal: followUpServicesTotal,
       reportParameters: {
