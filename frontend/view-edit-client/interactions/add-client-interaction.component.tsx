@@ -1,11 +1,9 @@
-import React from "react";
+import React, { createRef } from "react";
 import PageHeader from "../../page-header.component";
 import SingleClientSearchInputComponent from "../../client-search/single-client/single-client-search-input.component";
 import easyFetch from "../../util/easy-fetch";
 import SingleInteractionSlat, {
-  InteractionGetter,
-  InteractionSlatData,
-  Referral,
+  InteractionInputsRef,
 } from "./single-interaction-slat.component";
 import { useCss } from "kremling";
 import { showGrowl, GrowlType } from "../../growls/growls.component";
@@ -20,15 +18,14 @@ import { CUServicesList } from "../../add-client/services.component";
 import { FullPartner } from "../../admin/partners/partners.component";
 
 export default function AddClientInteraction(props: AddClientInteractionProps) {
-  const firstInputRef = React.useRef(null);
-  const [servicesResponse, setServicesResponse] = React.useState(null);
+  const [
+    servicesResponse,
+    setServicesResponse,
+  ] = React.useState<CUServicesList>(null);
   const [partnersResponse, setPartnersResponse] = React.useState<FullPartner[]>(
     []
   );
   const [tempInteractionIds, setTempInteractionIds] = React.useState([0]);
-  const [interactionGetters, setInteractionGetters] = React.useState<
-    Array<InteractionGetter>
-  >([]);
   const [savingInteraction, setSavingInteraction] = React.useState(false);
   const interestedServicesRef = React.useRef(null);
   const clientSearchRef = React.useRef(null);
@@ -39,6 +36,15 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
     ? clientSearchRef.current.clientId
     : props.clientId;
   const userMode = React.useContext(UserModeContext);
+  const [interactionRefs, setInteractionRefs] = React.useState([]);
+
+  React.useEffect(() => {
+    setInteractionRefs((oldRefs) =>
+      Array(tempInteractionIds.length)
+        .fill(null)
+        .map((_, i) => oldRefs[i] || createRef())
+    );
+  }, [tempInteractionIds.length]);
 
   React.useEffect(() => {
     const abortController = new AbortController();
@@ -73,11 +79,12 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
       const intakeServicesChanged =
         newIntakeServices.length !== oldIntakeServices.length ||
         differenceBy(newIntakeServices, oldIntakeServices, "id").length > 0;
-      const intakeAbortController = new AbortController();
+
+      const ac = new AbortController();
 
       const intakeServicesPromise = intakeServicesChanged
         ? easyFetch(`/api/clients/${clientId}`, {
-            signal: intakeAbortController.signal,
+            signal: ac.signal,
             method: "PATCH",
             body: {
               intakeServices: newIntakeServices.map((s) => s.id),
@@ -89,34 +96,11 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
           })
         : Promise.resolve();
 
-      const interactions = interactionGetters.map((getter) => getter());
-
-      const abortControllers = [...Array(interactions.length)].map(
-        () => new AbortController()
-      );
-
       Promise.all(
-        interactions
-          .map((interaction) => {
-            if ((interaction as Referral).partnerServiceId) {
-              return easyFetch(`/api/clients/${clientId}/referrals`, {
-                method: "POST",
-                body: interaction,
-              });
-            } else {
-              return easyFetch(
-                `/api/clients/${clientId}/interactions${getTagsQuery(
-                  userMode.userMode,
-                  interaction as InteractionSlatData,
-                  servicesResponse
-                )}`,
-                {
-                  method: "POST",
-                  body: interaction,
-                }
-              );
-            }
-          })
+        interactionRefs
+          .map((ref: React.RefObject<InteractionInputsRef>, i) =>
+            ref.current.save(ac.signal)
+          )
           .concat(intakeServicesPromise)
       )
         .then(() => {
@@ -136,11 +120,10 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
         });
 
       return () => {
-        abortControllers.forEach((ac) => ac.abort());
-        intakeAbortController.abort();
+        ac.abort();
       };
     }
-  }, [savingInteraction, interactionGetters, clientId]);
+  }, [savingInteraction, interactionRefs, clientId]);
 
   return (
     <>
@@ -152,7 +135,6 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
         {props.isGlobalAdd && (
           <SingleClientSearchInputComponent
             autoFocus
-            nextThingToFocusRef={firstInputRef}
             clientChanged={clientChanged}
             ref={clientSearchRef}
           />
@@ -160,23 +142,13 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
         {tempInteractionIds.map((item, index) => (
           <SingleInteractionSlat
             inWell
-            addInteractionGetter={(index, getter) => {
-              const newGetters = [...interactionGetters];
-              newGetters[index] = getter;
-              setInteractionGetters(newGetters);
-            }}
-            removeInteractionGetter={(index) => {
-              const newGetters = interactionGetters.filter(
-                (g, i) => i !== index
-              );
-              setInteractionGetters(newGetters);
-            }}
             servicesResponse={servicesResponse}
             partnersResponse={partnersResponse}
             interactionIndex={index}
             removeInteraction={() => removeInteraction(item)}
             key={item}
-            ref={index === 0 ? firstInputRef : null}
+            clientId={clientId}
+            ref={interactionRefs[index]}
           />
         ))}
         <div className="add-another">
@@ -240,11 +212,11 @@ export default function AddClientInteraction(props: AddClientInteractionProps) {
 
 export function getTagsQuery(
   userMode: UserMode,
-  interaction: InteractionSlatData,
+  serviceId: number,
   servicesResponse: CUServicesList
 ) {
   return userMode === UserMode.immigration &&
-    isServiceWithinImmigrationProgram(servicesResponse, interaction.serviceId)
+    isServiceWithinImmigrationProgram(servicesResponse, serviceId)
     ? "?tags=immigration"
     : "";
 }

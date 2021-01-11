@@ -14,47 +14,48 @@ import createDOMPurify from "dompurify";
 
 const DOMPurify = createDOMPurify(window);
 
-export default React.forwardRef(function FullRichTextEditor(
-  props: FullRichTextEditorProps,
-  externalRef
-) {
-  const scope = useCss(css);
-  const richTextEditorRef = React.useRef(null);
+const FullRichTextEditor = React.forwardRef(
+  (props: FullRichTextEditorProps, externalRef) => {
+    const scope = useCss(css);
+    const richTextEditorRef = React.useRef(null);
 
-  React.useEffect(() => {
-    if (externalRef) {
-      // @ts-ignore
-      externalRef.current = {
-        getHTML: richTextEditorRef.current.getHTML,
-      };
-    }
-  }, [externalRef]);
+    React.useEffect(() => {
+      if (externalRef) {
+        // @ts-ignore
+        externalRef.current = {
+          getHTML: richTextEditorRef.current.getHTML,
+        };
+      }
+    }, [externalRef]);
 
-  return (
-    <div className="editor-container" {...scope}>
-      <RichTextContainer>
-        <div className="control-buttons">
-          <Bold />
-          <Italic />
-          <Underline />
-          <BulletedList />
-          <NumberedList />
-          <Indent />
-          <Outdent />
-          <RichTextLink richTextEditorRef={richTextEditorRef} />
-          <RichTextImage />
-        </div>
-        <RichTextEditor
-          placeholder={props.placeholder}
-          initialHTML={props.initialHTML}
-          ref={richTextEditorRef}
-          className="editor"
-          sanitizeHTML={DOMPurify.sanitize}
-        />
-      </RichTextContainer>
-    </div>
-  );
-});
+    return (
+      <div className="editor-container" {...scope}>
+        <RichTextContainer>
+          <div className="control-buttons">
+            <Bold />
+            <Italic />
+            <Underline />
+            <BulletedList />
+            <NumberedList />
+            <Indent />
+            <Outdent />
+            <RichTextLink richTextEditorRef={richTextEditorRef} />
+            <RichTextImage />
+          </div>
+          <RichTextEditor
+            placeholder={props.placeholder}
+            initialHTML={props.initialHTML}
+            ref={richTextEditorRef}
+            className="editor"
+            sanitizeHTML={DOMPurify.sanitize}
+          />
+        </RichTextContainer>
+      </div>
+    );
+  }
+);
+
+export default FullRichTextEditor;
 
 const css = `
 & .editor-container {

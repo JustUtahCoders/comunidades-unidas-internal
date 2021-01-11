@@ -4,6 +4,7 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
 const ManifestPlugin = require("webpack-manifest-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const webpack = require("webpack");
 
 module.exports = (env, argv) => ({
   entry: {
@@ -65,6 +66,9 @@ module.exports = (env, argv) => ({
       analyzerMode: env && env.analyze ? "server" : "disabled",
     }),
     new ManifestPlugin(),
+    new webpack.DefinePlugin({
+      "process.env.NODE_ENV": JSON.stringify(argv.mode || "production"),
+    }),
   ],
   optimization: {
     namedChunks: true,

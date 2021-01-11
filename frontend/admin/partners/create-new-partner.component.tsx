@@ -4,6 +4,7 @@ import easyFetch from "../../util/easy-fetch";
 import Modal from "../../util/modal.component";
 import PartnerInputs from "./partner-inputs.component";
 import { NewPartner } from "./partners.component";
+import { isEmpty } from "lodash-es";
 
 export default function CreateNewPartner(props: CreateNewPartnerProps) {
   const formRef = React.useRef<HTMLFormElement>();
@@ -16,7 +17,11 @@ export default function CreateNewPartner(props: CreateNewPartnerProps) {
       easyFetch(`/api/partners`, {
         signal: ac.signal,
         method: "POST",
-        body: partner,
+        body: {
+          name: partner.name,
+          isActive: partner.isActive,
+          phone: isEmpty(partner.phone) ? null : partner.phone,
+        },
       })
         .then(() => {
           props.refetch();
@@ -65,6 +70,7 @@ export default function CreateNewPartner(props: CreateNewPartnerProps) {
 const emptyPartner: NewPartner = {
   name: "",
   isActive: true,
+  phone: "",
 };
 
 type CreateNewPartnerProps = {

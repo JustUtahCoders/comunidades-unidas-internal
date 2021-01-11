@@ -219,7 +219,7 @@ const css = `
 }
 
 & .clients-table.advanced-search th {
-  top: 43.3rem;
+  top: 47.8rem;
 }
 
 @media print {

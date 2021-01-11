@@ -62,15 +62,21 @@ app.post("/api/leads", (req, res) => {
     }
   }
 
-  let leadQuery = "";
+  let leadQuery = `
+    CREATE TEMPORARY TABLE newLeadIds (id INT);
+  `;
   const leadDataArray = [];
 
   for (let i = 0; i < leads.length; i++) {
     const lead = leads[i];
 
-    const addToLeadQuery =
-      "INSERT INTO leads (dateOfSignUp, firstName, lastName, phone, smsConsent, zip, age, gender, addedBy, modifiedBy, firstContactAttempt, secondContactAttempt, thirdContactAttempt, leadStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, null, null, null, 'active');";
-    const setLeadId = "SET @leadId = LAST_INSERT_ID();";
+    const addToLeadQuery = `INSERT INTO leads (dateOfSignUp, firstName, lastName, phone, smsConsent, zip, age, gender, addedBy, modifiedBy, firstContactAttempt, secondContactAttempt, thirdContactAttempt, leadStatus)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, null, null, null, 'active');
+    `;
+    const setLeadId = `
+      SET @leadId = LAST_INSERT_ID();
+      INSERT INTO newLeadIds (id) VALUES(@leadId);
+    `;
 
     leadDataArray.push(
       lead.dateOfSignUp || new Date(),
@@ -155,6 +161,12 @@ app.post("/api/leads", (req, res) => {
     leadQuery = `${leadQuery} ${newLeadQuery}`;
   }
 
+  leadQuery += `
+    SELECT * FROM newLeadIds;
+
+    DROP TEMPORARY TABLE newLeadIds;
+  `;
+
   let newLeadsData = mysql.format(leadQuery, leadDataArray);
 
   pool.query(newLeadsData, (err, result) => {
@@ -162,6 +174,11 @@ app.post("/api/leads", (req, res) => {
       return databaseError(req, res, err);
     }
 
-    res.json({ message: `Created ${leads.length} leads.` });
+    const newLeadIds = result[result.length - 2];
+
+    res.json({
+      message: `Created ${leads.length} leads.`,
+      leadIds: newLeadIds.map((row) => row.id),
+    });
   });
 });

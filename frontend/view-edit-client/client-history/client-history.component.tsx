@@ -11,6 +11,7 @@ import ViewOutdatedLog from "./view-outdated-log.component";
 import { partial, lowerCase } from "lodash-es";
 import { UserModeContext, UserMode } from "../../util/user-mode.context";
 import ClientFilePreviewer from "../../client-files/client-file-previewer.component";
+import { dateHasTime } from "../../util/timestamp.helpers";
 
 export default function ClientHistory(props: ClientHistoryProps) {
   const [logState, dispatchLogState] = React.useReducer(
@@ -39,7 +40,7 @@ export default function ClientHistory(props: ClientHistoryProps) {
               ...log,
               createdBy: {
                 ...log.createdBy,
-                timestamp: dayjs(log.createdBy.timestamp),
+                timestampDate: dayjs(log.createdBy.timestamp),
               },
             })),
           });
@@ -206,33 +207,40 @@ export default function ClientHistory(props: ClientHistoryProps) {
   }
 
   function getDate(log, index) {
-    if (
+    const previousTimestampDate =
+      index > 0
+        ? logState.filteredLogs[index - 1].createdBy.timestampDate
+        : dayjs(0);
+
+    if (!dateHasTime(log.createdBy.timestamp)) {
+      const [year, month, day] = log.createdBy.timestamp.split("-");
+      const timestamp = dayjs()
+        .year(year)
+        .month(month - 1)
+        .set("date", day);
+      if (timestamp.isSame(previousTimestampDate, "day")) {
+        return null;
+      } else {
+        return <div>{timestamp.format("MMM D, YYYY")}</div>;
+      }
+    } else if (
       index === 0 ||
-      !logState.filteredLogs[index - 1].createdBy.timestamp.isSame(
-        log.createdBy.timestamp,
-        "year"
-      )
+      !previousTimestampDate.isSame(log.createdBy.timestampDate, "year")
     ) {
       return (
         <>
-          <div>{log.createdBy.timestamp.format("MMM D, YYYY")}</div>
-          <div>{log.createdBy.timestamp.format("h:mm a")}</div>
+          <div>{log.createdBy.timestampDate.format("MMM D, YYYY")}</div>
+          <div>{log.createdBy.timestampDate.format("h:mm a")}</div>
         </>
       );
     } else if (
-      !logState.filteredLogs[index - 1].createdBy.timestamp.isSame(
-        log.createdBy.timestamp,
-        "day"
-      )
+      !previousTimestampDate.isSame(log.createdBy.timestampDate, "day")
     ) {
-      return <div>{log.createdBy.timestamp.format("MMM D h:mm a")}</div>;
+      return <div>{log.createdBy.timestampDate.format("MMM D h:mm a")}</div>;
     } else if (
-      !logState.filteredLogs[index - 1].createdBy.timestamp.isSame(
-        log.createdBy.timestamp,
-        "minute"
-      )
+      !previousTimestampDate.isSame(log.createdBy.timestampDate, "minute")
     ) {
-      return <div>{log.createdBy.timestamp.format("h:mm a")}</div>;
+      return <div>{log.createdBy.timestampDate.format("h:mm a")}</div>;
     } else {
       return null;
     }
@@ -442,6 +450,8 @@ function getBackgroundColor(logType: LogType) {
       return "purple";
     case LogType["referral"]:
       return "red";
+    case LogType["follow-up"]:
+      return "coral";
     default:
       return "black";
   }
@@ -541,7 +551,8 @@ export type ClientLog = {
     firstName: string;
     lastName: string;
     fullName: string;
-    timestamp: dayjs.Dayjs;
+    timestamp: string;
+    timestampDate?: dayjs.Dayjs;
   };
 };
 
@@ -586,6 +597,7 @@ export enum LogType {
   "payment:created" = "payment:created",
   "payment:updated" = "payment:updated",
   "referral" = "referral",
+  "follow-up" = "follow-up",
 }
 
 const allFiltersOn: ClientHistoryFilterOptions = Object.keys(LogType).reduce(

@@ -4,8 +4,10 @@ const { checkUserRole } = require("../utils/auth-utils");
 const {
   checkValid,
   nonEmptyString,
+  nullableValidPhone,
   validBoolean,
 } = require("../utils/validation-utils");
+const { requestPhone } = require("../utils/transform-utils");
 const fs = require("fs");
 const path = require("path");
 
@@ -24,7 +26,8 @@ app.post("/api/partners", (req, res, next) => {
   const validationErrors = checkValid(
     req.body,
     nonEmptyString("name"),
-    validBoolean("isActive")
+    validBoolean("isActive"),
+    nullableValidPhone("phone")
   );
 
   if (validationErrors.length > 0) {
@@ -35,6 +38,7 @@ app.post("/api/partners", (req, res, next) => {
   const query = mysql.format(insertSql, [
     req.body.name,
     req.body.isActive,
+    requestPhone(req.body.phone),
     user.id,
     user.id,
   ]);
@@ -70,6 +74,7 @@ function getPartner({ id, includeInactive = false }, errBack) {
         id: partner.id,
         name: partner.name,
         isActive: Boolean(partner.isActive),
+        phone: partner.phone,
         dateAdded: partner.dateAdded,
         addedBy: partner.addedBy,
         dateModified: partner.dateModified,

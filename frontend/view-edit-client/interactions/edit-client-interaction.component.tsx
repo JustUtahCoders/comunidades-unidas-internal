@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useImperativeHandle } from "react";
 import { LogTypeEditProps } from "../client-history/edit-log.component";
 import SingleInteractionSlatComponent, {
-  InteractionGetter,
-  InteractionSlatData,
+  InteractionInputsRef,
 } from "./single-interaction-slat.component";
 import { CUServicesList } from "../../add-client/services.component";
 import easyFetch from "../../util/easy-fetch";
 import { UserModeContext } from "../../util/user-mode.context";
 import dayjs from "dayjs";
 import { getTagsQuery } from "./add-client-interaction.component";
+import { ClientInteraction } from "./service-interaction-inputs.component";
 
 export default function EditClientInteraction({
   log,
@@ -16,17 +16,19 @@ export default function EditClientInteraction({
   clientId,
   notEditable,
 }: LogTypeEditProps) {
-  const [interactionGetter, setInteractionGetter] = React.useState<
-    InteractionGetter
-  >(null);
+  const [
+    servicesResponse,
+    setServicesResponse,
+  ] = React.useState<CUServicesList>(null);
 
-  const [servicesResponse, setServicesResponse] = React.useState<
-    CUServicesList
-  >(null);
-
-  const [originalInteraction, setOriginalInteraction] = React.useState(null);
+  const [
+    originalInteraction,
+    setOriginalInteraction,
+  ] = React.useState<ClientInteraction>(null);
 
   const { userMode } = React.useContext(UserModeContext);
+
+  const inputsRef = React.useRef<InteractionInputsRef>(null);
 
   React.useEffect(() => {
     const abortController = new AbortController();
@@ -66,26 +68,11 @@ export default function EditClientInteraction({
     });
   }, [log.detailId]);
 
-  React.useEffect(() => {
-    actionsRef.current.save = (abortController) => {
-      const interaction = interactionGetter();
-      return easyFetch(
-        `/api/clients/${clientId}/interactions/${
-          originalInteraction.id
-        }${getTagsQuery(
-          userMode,
-          interaction as InteractionSlatData,
-          servicesResponse
-        )}`,
-        {
-          signal: abortController.signal,
-          method: "PATCH",
-          body: interaction,
-        }
-      );
-    };
-
-    actionsRef.current.delete = (abortController) => {
+  useImperativeHandle(actionsRef, () => ({
+    save(abortController) {
+      return inputsRef.current.save(abortController.signal, { edit: true });
+    },
+    delete(abortController) {
       return easyFetch(
         `/api/clients/${clientId}/interactions/${originalInteraction.id}`,
         {
@@ -93,8 +80,8 @@ export default function EditClientInteraction({
           method: "DELETE",
         }
       );
-    };
-  });
+    },
+  }));
 
   if (originalInteraction) {
     if (originalInteraction.redacted) {
@@ -117,15 +104,14 @@ export default function EditClientInteraction({
     } else if (servicesResponse) {
       return (
         <SingleInteractionSlatComponent
-          addInteractionGetter={(index, getter) =>
-            setInteractionGetter(() => getter)
-          }
-          removeInteractionGetter={() => setInteractionGetter(null)}
           interactionIndex={0}
           removeInteraction={null}
           servicesResponse={servicesResponse}
-          initialInteraction={originalInteraction}
           partnersResponse={[]}
+          clientId={clientId}
+          hideInteractionKind
+          initialInteraction={originalInteraction}
+          ref={inputsRef}
         />
       );
     }

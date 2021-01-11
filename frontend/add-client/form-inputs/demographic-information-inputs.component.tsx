@@ -22,9 +22,12 @@ export default function DemographicInformationInputs(
   const [currentlyEmployed, setCurrentlyEmployed] = useState(
     props.client.currentlyEmployed || "unknown"
   );
-  const [weeklyEmployedHours, setWeeklyEmployedHours] = useState<
-    WeeklyEmployedHours
-  >(props.client.weeklyEmployedHours || WeeklyEmployedHours["0-20"]);
+  const [
+    weeklyEmployedHours,
+    setWeeklyEmployedHours,
+  ] = useState<WeeklyEmployedHours>(
+    props.client.weeklyEmployedHours || WeeklyEmployedHours["0-20"]
+  );
   const [employmentSector, setEmploymentSector] = useState(
     getInitialEmploymentSector(props.client.employmentSector)
   );

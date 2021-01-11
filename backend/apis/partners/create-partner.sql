@@ -1,4 +1,4 @@
 INSERT INTO partners
-(name, isActive, addedBy, modifiedBy)
+(name, isActive, phone, addedBy, modifiedBy)
 VALUES
-(?, ?, ?, ?);
+(?, ?, ?, ?, ?);
