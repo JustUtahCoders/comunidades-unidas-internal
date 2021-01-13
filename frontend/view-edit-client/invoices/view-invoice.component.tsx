@@ -64,14 +64,17 @@ export default function ViewInvoice(props: ViewInvoiceProps) {
     const clientIds = invoice.clients.filter(
       (item) => item !== props.client.id
     );
-    easyFetch(`/api/clients-by-id?clientId=${clientIds.join("&clientId=")}`, {
-      signal: ac.signal,
-    })
-      .then((data) => setExtraClients(data.clients))
-      .catch(handlePromiseError);
-    return () => {
-      ac.abort();
-    };
+
+    if (clientIds.length > 1) {
+      easyFetch(`/api/clients-by-id?clientId=${clientIds.join("&clientId=")}`, {
+        signal: ac.signal,
+      })
+        .then((data) => setExtraClients(data.clients))
+        .catch(handlePromiseError);
+      return () => {
+        ac.abort();
+      };
+    }
   }, [props.client]);
 
   if (invoice.redacted) {
