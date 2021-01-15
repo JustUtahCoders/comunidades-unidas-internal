@@ -6,5 +6,7 @@ CREATE TABLE materials (
 CREATE TABLE eventMaterials (
   eventId INT NOT NULL,
   materialId INT NOT NULL,
-  quantityDistributed INT NOT NULL
+  quantityDistributed INT NOT NULL,
+  FOREIGN KEY (eventId) REFERENCES events(id),
+  FOREIGN KEY (materialId) REFERENCES materials(id)
 );
