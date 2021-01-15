@@ -23,6 +23,13 @@ GET /api/events/:id
   "totalAttendance": 150,
   "totalLeads": 15,
   "leadsConvertedToClients": 5,
+  "materialsDistributed": [
+    {
+      "materialId": 1,
+      "name": "Servicios De CU",
+      "quantityDistributed": 25
+    }
+  ],
   "leadGenders": {
     "male": 2,
     "female": 3,
@@ -96,6 +103,7 @@ GET /api/events
     "totalLeads": 15,
     "leadsConvertedToClients": 5,
     "isDeleted": false,
+    "totalMaterialsDistributed": 50,
     "createdBy": {
       "userId": 1,
       "firstName": "Joel",
@@ -155,7 +163,13 @@ POST /api/events
   "eventName": "Job Fair",
   "eventDate": "2019-09-24",
   "eventLocation": "Salt Lake City Library",
-  "totalAttendance": 150
+  "totalAttendance": 150,
+  "materialsDistributed": [
+    {
+      "materialId": 1,
+      "quantityDistributed": 50
+    }
+  ]
 }
 ```
 
@@ -174,7 +188,13 @@ PATCH /api/events/:id
   "eventName": "Job Fair",
   "eventDate": "2019-09-24",
   "eventLocation": "Salt Lake City Library",
-  "totalAttendance": 150
+  "totalAttendance": 150,
+  "materialsDistributed": [
+    {
+      "materialId": 1,
+      "quantityDistributed": 50
+    }
+  ]
 }
 ```
 
@@ -213,28 +233,93 @@ An HTTP 204 status is returned if the deletion was successful.
 
 An HTTP 400 status is returned if you cannot delete this event.
 
-## Update an event
+## Get Event Materials
+
+Event materials are things like pamphlets, documents, etc that are given to people who attend CU events.
 
 ### Request
 
-```http
-PATCH /api/events/:id
+```sh
+GET /api/materials
+```
+
+### Response
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Servicios de CU"
+  },
+  {
+    "id": 2,
+    "name": "Derechos de los trabajadores"
+  },
+  {
+    "id": 3,
+    "name": "Lista de recursos"
+  },
+  {
+    "id": 4,
+    "name": "Censo"
+  }
+]
+```
+
+## Create Event Material
+
+### Request
+
+```sh
+POST /api/materials
 ```
 
 ```json
 {
-  "eventName": "Heath Fair",
-  "eventDate": "2019-09-16",
-  "eventLocation": "Saint Marks",
-  "totalAttendance": 150
+  "name": "Servicios De CU"
 }
 ```
 
-_Notes:_
+### Response
 
-- Only the properties shown in the example request are modifiable.
-- Any property may be omitted if it has not been changed.
+```json
+{
+  "id": 1,
+  "name": "Servicios de CU"
+}
+```
+
+## Update Event Material
+
+### Request
+
+```sh
+PATCH /api/materials/:materialId
+```
+
+```json
+{
+  "name": "Servicios de CU"
+}
+```
 
 ### Response
 
-The response is the same object as a subsequent GET.
+```json
+{
+  "id": 1,
+  "name": "Servicios de CU"
+}
+```
+
+## Delete Event Material
+
+### Request
+
+```sh
+DELETE /api/materials/:materialId
+```
+
+### Response
+
+HTTP 204 (No Content)
