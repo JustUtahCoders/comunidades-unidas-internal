@@ -62,6 +62,18 @@ pnpm run develop
 
 Now go to http://localhost:8080 in a browser.
 
+## DB Migrate errors
+
+The nodejs server starts up before the database, so it's expected to see some database connection issues. If you're seeing other db-migrate errors, though, that are not related to connection, check if you have a `DATABASE_URL` environment variable set. If so, remove it.
+
+```sh
+# check if you have a database url env variable set, which can cause issues
+printenv | grep DATABASE_URL
+
+# remove the env variable
+unset DATABASE_URL
+```
+
 ## Deployments
 
 This project is hosted by [AWS Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/). To deploy the code,

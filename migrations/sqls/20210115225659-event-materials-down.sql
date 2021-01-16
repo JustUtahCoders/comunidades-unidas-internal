@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS eventMaterials;
+DROP TABLE IF EXISTS materials;
