@@ -4,7 +4,7 @@ const mysql = require("mysql");
 const _ = require("lodash");
 const ClientCapability = require("twilio/lib/jwt/ClientCapability");
 
-app.get(`/api/reports/zipcode-report`, (req, res) => {
+app.get(`/api/reports/client-zipcodes`, (req, res) => {
   const validationErrors = checkValid(
     req.query,
     nullableValidDate("start"),
@@ -20,27 +20,39 @@ app.get(`/api/reports/zipcode-report`, (req, res) => {
 
   const sql = mysql.format(
     `
-        SELECT zip, city, COUNT(*) as clientCount
-        FROM contactInformation GROUP BY zip ORDER BY clientCount DESC;
+      SELECT zip, city, COUNT(*) as clientCount
+      FROM clients
+        INNER JOIN (
+          SELECT * FROM contactInformation innerContactInformation
+          JOIN (
+            SELECT clientId latestClientId,
+              MAX(dateAdded) latestDateAdded
+              FROM contactInformation
+            GROUP BY clientId
+            ) latestContactInformation ON latestContactInformation.latestDateAdded = innerContactInformation.dateAdded
+            ) contactInfo ON contactInfo.clientId = clients.id
+            GROUP BY zip ORDER BY clientCount DESC;
         `,
+        
+
     [startDate, endDate, startDate, endDate]
   );
 
-  pool.query(sql, (err, result) => {
+  pool.query(sql, (err, results) => {
     if (err) {
       return databaseError(req, res, err);
     }
 
     const [clientZipcode, clientCity, clientCount] = results;
+   
 
     res.send({
-      zipcode: clientZipcode,
-      city: clientCity,
-      clientCount: clientCount,
+      results, 
       reportParameters: {
-        start: req.query.start || null,
-        end: req.query.end || null,
-      },
-    });
+            start: req.query.start || null,
+            end: req.query.end || null,
+      }
+    })
+    
   });
 });

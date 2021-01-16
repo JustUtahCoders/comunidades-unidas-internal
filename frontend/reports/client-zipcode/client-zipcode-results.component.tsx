@@ -7,8 +7,9 @@ import { capitalize } from "../shared/report.helpers";
 
 export default function ClientZipcodeResults(props) {
   const { isLoading, data, error } = useReportsApi(
-    `/api/reports/client-zipcode`
+    `/api/reports/client-zipcodes`
   );
+
 
   if (isLoading || error) {
     return <div>Loading...</div>;
@@ -56,11 +57,13 @@ export default function ClientZipcodeResults(props) {
         }
         contentRows={
           <>
-            <tr>
-              <td>{data.results.clientZipcode}</td>
-              <td>{data.results.clientCity}</td>
-              <td>{data.results.clientCount}</td>
-            </tr>
+            {data && data.results.map((result) => 
+              <tr>
+                <td>{result.zip}</td>
+                <td>{result.city}</td>
+                <td>{result.clientCount}</td>
+              </tr>
+            )}
           </>
         }
       />
