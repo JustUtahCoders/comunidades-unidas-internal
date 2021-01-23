@@ -10,7 +10,6 @@ export default function ClientZipcodeResults(props) {
     `/api/reports/client-zipcodes`
   );
 
-
   if (isLoading || error) {
     return <div>Loading...</div>;
   }
@@ -51,19 +50,18 @@ export default function ClientZipcodeResults(props) {
         headerRows={
           <tr>
             <th>Zipcode</th>
-            <th>City</th>
             <th>Client Count</th>
           </tr>
         }
         contentRows={
           <>
-            {data && data.results.map((result) => 
-              <tr>
-                <td>{result.zip}</td>
-                <td>{result.city}</td>
-                <td>{result.clientCount}</td>
-              </tr>
-            )}
+            {data &&
+              data.results.map((result) => (
+                <tr>
+                  <td>{result.zip || "(No Zip)"}</td>
+                  <td>{result.clientCount}</td>
+                </tr>
+              ))}
           </>
         }
       />

@@ -20,7 +20,7 @@ app.get(`/api/reports/client-zipcodes`, (req, res) => {
 
   const sql = mysql.format(
     `
-      SELECT zip, city, COUNT(*) as clientCount
+      SELECT zip, COUNT(*) as clientCount
       FROM clients
         INNER JOIN (
           SELECT * FROM contactInformation innerContactInformation
@@ -33,7 +33,6 @@ app.get(`/api/reports/client-zipcodes`, (req, res) => {
             ) contactInfo ON contactInfo.clientId = clients.id
             GROUP BY zip ORDER BY clientCount DESC;
         `,
-        
 
     [startDate, endDate, startDate, endDate]
   );
@@ -43,16 +42,12 @@ app.get(`/api/reports/client-zipcodes`, (req, res) => {
       return databaseError(req, res, err);
     }
 
-    const [clientZipcode, clientCity, clientCount] = results;
-   
-
     res.send({
-      results, 
+      results,
       reportParameters: {
-            start: req.query.start || null,
-            end: req.query.end || null,
-      }
-    })
-    
+        start: req.query.start || null,
+        end: req.query.end || null,
+      },
+    });
   });
 });
