@@ -122,6 +122,13 @@ export type SingleEvent = {
   leadGenders?: any;
   clientGenders?: any;
   leads?: any;
+  materialsDistributed: MaterialDistributed[];
+};
+
+export type MaterialDistributed = {
+  materialId: number;
+  name: number;
+  quantityDistributed: number;
 };
 
 type ViewEventProps = {

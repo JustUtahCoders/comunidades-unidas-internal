@@ -17,6 +17,7 @@ export default function EventSection(props: EventSectionProps) {
       `cu-event-section-expanded:${props.title}`,
       JSON.stringify(!expanded)
     );
+    setExpanded(!expanded);
   };
 
   return (
