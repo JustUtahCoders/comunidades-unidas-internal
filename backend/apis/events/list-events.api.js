@@ -21,7 +21,8 @@ app.get("/api/events", (req, res, next) => {
       "eventName",
       "eventDate",
       "eventLocation",
-      "totalAttendance"
+      "totalAttendance",
+      "totalMaterialsDistributed"
     ),
     nullableValidEnum("sortOrder", "asc", "desc")
   );
@@ -49,7 +50,9 @@ app.get("/api/events", (req, res, next) => {
   let columnsToOrder = `events.eventDate ${sortOrder}`;
 
   if (req.query.sortField) {
-    columnsToOrder = `events.${req.query.sortField} ${sortOrder}`;
+    const fieldPrefix =
+      req.query.sortField === "totalMaterialsDistributed" ? "" : "events.";
+    columnsToOrder = `${fieldPrefix}${req.query.sortField} ${sortOrder}`;
   }
 
   const mysqlQuery = `
