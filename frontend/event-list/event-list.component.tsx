@@ -280,6 +280,7 @@ export enum SortField {
   eventDate = "eventDate",
   eventLocation = "eventLocation",
   totalAttendance = "totalAttendance",
+  totalMaterialsDistributed = "totalMaterialsDistributed",
 }
 
 export enum SortOrder {
@@ -360,6 +361,7 @@ export type EventListEvent = {
   eventName: string;
   eventLocation: string;
   totalAttendance: number;
+  totalMaterialsDistributed: number;
   createdBy: {
     userId: number;
     fullName: string;

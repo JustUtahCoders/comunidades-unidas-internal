@@ -58,6 +58,15 @@ export default function DesktopEventTable(props: EventTableProps) {
                 Total Attendance{sortableColumnIcon(SortField.totalAttendance)}
               </button>
             </th>
+            <th>
+              <button
+                className="unstyled"
+                onClick={sortColumnClicked(SortField.totalMaterialsDistributed)}
+              >
+                Materials Distributed
+                {sortableColumnIcon(SortField.totalMaterialsDistributed)}
+              </button>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -97,6 +106,11 @@ export default function DesktopEventTable(props: EventTableProps) {
                   <td>
                     <Link to={`/events/${event.id}`} className="unstyled">
                       {event.totalAttendance}
+                    </Link>
+                  </td>
+                  <td>
+                    <Link to={`/events/${event.id}`} className="unstyled">
+                      {event.totalMaterialsDistributed.toLocaleString()}
                     </Link>
                   </td>
                 </tr>
