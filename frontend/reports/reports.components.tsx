@@ -84,7 +84,7 @@ export default function Reports(props: ReportsProps) {
             <AgesAndGendersResults path="ages-and-genders/results" />
             <ClientZipcodeParams
               path="client-zipcodes"
-              title="Client Zipcodes"
+              title="Client Zip Codes"
             />
             <ClientZipcodeResults path="client-zipcodes/results" />
             <OutstandingInvoicesParams

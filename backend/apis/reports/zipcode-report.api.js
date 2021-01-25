@@ -1,8 +1,6 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
 const { checkValid, nullableValidDate } = require("../utils/validation-utils");
 const mysql = require("mysql");
-const _ = require("lodash");
-const ClientCapability = require("twilio/lib/jwt/ClientCapability");
 
 app.get(`/api/reports/client-zipcodes`, (req, res) => {
   const validationErrors = checkValid(
