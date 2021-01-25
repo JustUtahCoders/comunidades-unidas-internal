@@ -67,11 +67,14 @@ app.get("/api/events", (req, res, next) => {
       created.firstName AS createdByFirstName,
       created.lastName AS createdByLastName,
       modified.firstName AS modifiedByFirstName,
-      modified.lastName AS modifiedByLastName
+      modified.lastName AS modifiedByLastName,
+      SUM(eventMaterials.quantityDistributed) totalMaterialsDistributed
     FROM events
     INNER JOIN users created ON created.id = events.addedBy
     INNER JOIN users modified ON modified.id = events.modifiedBy
+    LEFT JOIN eventMaterials ON eventMaterials.eventId = events.id
     ${whereClause}
+    GROUP BY events.id
     ORDER BY ${columnsToOrder}
     LIMIT ?, ?;
     SELECT FOUND_ROWS();
@@ -103,6 +106,7 @@ app.get("/api/events", (req, res, next) => {
         eventLocation: result.eventLocation,
         totalAttendance: result.totalAttendance,
         isDeleted: responseBoolean(result.isDeleted),
+        totalMaterialsDistributed: result.totalMaterialsDistributed || 0,
         createdBy: {
           userId: result.createdByUserId,
           firstName: result.createdByFirstName,

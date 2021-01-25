@@ -65,6 +65,12 @@ function getEventById(eventId, cbk, connection) {
         leadEvents.leadId, leads.gender, leads.leadStatus, leads.firstName, leads.lastName
       FROM leadEvents JOIN leads ON leads.id = leadEvents.leadId
       WHERE leadEvents.eventId = ? AND leads.isDeleted = false;
+
+      SELECT materials.id, materials.name, eventMaterials.quantityDistributed
+      FROM materials LEFT JOIN eventMaterials ON materials.id = eventMaterials.materialId
+      WHERE eventMaterials.eventId = ? AND materials.isDeleted = false
+      ORDER BY materials.name ASC
+      ;
     `,
     [eventId, eventId, eventId]
   );
@@ -80,6 +86,7 @@ function getEventById(eventId, cbk, connection) {
 
     const e = data[0][0];
     const leadResult = data[1];
+    const materialsResult = data[2];
     const [eventLeads, eventClients] = _.partition(
       leadResult,
       (r) => r.leadStatus !== "convertedToClient"
@@ -123,6 +130,11 @@ function getEventById(eventId, cbk, connection) {
       leadGenders: leadGenderCounts,
       clientGenders: clientGenderCounts,
       isDeleted: responseBoolean(e.isDeleted),
+      materialsDistributed: materialsResult.map((row) => ({
+        materialId: row.id,
+        name: row.name,
+        quantityDistributed: row.quantityDistributed,
+      })),
       createdBy: {
         userId: e.createdByUserId,
         firstName: e.createdByFirstName,

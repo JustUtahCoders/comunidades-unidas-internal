@@ -10,7 +10,9 @@ const {
   validId,
   nullableNonEmptyString,
   nullableValidDate,
+  nullableValidArray,
   nullableValidInteger,
+  validInteger,
 } = require("../utils/validation-utils");
 const {
   responseFullName,
@@ -27,7 +29,17 @@ app.patch("/api/events/:eventId", (req, res) => {
       nullableNonEmptyString("eventName"),
       nullableNonEmptyString("eventLocation"),
       nullableValidDate("eventDate"),
-      nullableValidInteger("totalAttendance")
+      nullableValidInteger("totalAttendance"),
+      nullableValidArray("materialsDistributed", (index) => {
+        return (materialsDistributed) => {
+          const errs = checkValid(
+            materialsDistributed[index],
+            validId("materialId"),
+            validInteger("quantityDistributed")
+          );
+          return errs.length > 0 ? errs : null;
+        };
+      })
     ),
     ...checkValid(req.params, validId("eventId")),
   ];
@@ -45,7 +57,7 @@ app.patch("/api/events/:eventId", (req, res) => {
 
     const updatedEvent = Object.assign({}, event, req.body);
 
-    const updateSql = mysql.format(
+    let updateSql = mysql.format(
       `
       UPDATE events
       SET eventName = ?, eventDate = ?, eventLocation = ?, totalAttendance = ?
@@ -60,12 +72,45 @@ app.patch("/api/events/:eventId", (req, res) => {
       ]
     );
 
+    if (req.body.materialsDistributed) {
+      updateSql += mysql.format(
+        `
+        DELETE FROM eventMaterials WHERE eventId = ?;
+        `,
+        [eventId]
+      );
+
+      req.body.materialsDistributed.forEach((r) => {
+        updateSql += mysql.format(
+          `
+          INSERT INTO eventMaterials (eventId, materialId, quantityDistributed)
+          VALUES (?, ?, ?);
+        `,
+          [eventId, r.materialId, r.quantityDistributed]
+        );
+      });
+    }
+
     pool.query(updateSql, (err, data) => {
       if (err) {
-        return databaseError(err);
+        return databaseError(req, res, err);
       }
 
-      res.send(updatedEvent);
+      getEventById(eventId, (err, event) => {
+        if (err) {
+          return databaseError(req, res, err);
+        }
+
+        if (event === null) {
+          return databaseError(
+            req,
+            res,
+            `Could not retrieve event after updating it`
+          );
+        }
+
+        res.send(event);
+      });
     });
   });
 });

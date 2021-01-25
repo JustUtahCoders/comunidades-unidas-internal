@@ -5,6 +5,8 @@ const {
   nonEmptyString,
   validDate,
   validInteger,
+  nullableValidArray,
+  validId,
 } = require("../utils/validation-utils");
 const { getEventById } = require("./get-event.api");
 
@@ -14,7 +16,17 @@ app.post("/api/events", (req, res) => {
     nonEmptyString("eventName"),
     nonEmptyString("eventLocation"),
     validDate("eventDate"),
-    validInteger("totalAttendance")
+    validInteger("totalAttendance"),
+    nullableValidArray("materialsDistributed", (index) => {
+      return (materialsDistributed) => {
+        const errs = checkValid(
+          materialsDistributed[index],
+          validId("materialId"),
+          validInteger("quantityDistributed")
+        );
+        return errs.length > 0 ? errs : null;
+      };
+    })
   );
 
   if (validityErrors.length > 0) {
@@ -23,7 +35,7 @@ app.post("/api/events", (req, res) => {
 
   const user = req.session.passport.user;
 
-  const newEvent = mysql.format(
+  let newEvent = mysql.format(
     `
       INSERT INTO events (
         eventName,
@@ -33,7 +45,9 @@ app.post("/api/events", (req, res) => {
         addedBy,
         modifiedBy
       )
-      VALUES (?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?);
+
+      SET @idOfEvent := LAST_INSERT_ID();
     `,
     [
       req.body.eventName,
@@ -45,14 +59,28 @@ app.post("/api/events", (req, res) => {
     ]
   );
 
+  const materialsDistributed = req.body.materialsDistributed || [];
+
+  materialsDistributed.forEach((r) => {
+    newEvent += mysql.format(
+      `
+      INSERT INTO eventMaterials (eventId, materialId, quantityDistributed)
+      VALUES (@idOfEvent, ?, ?);
+    `,
+      [r.materialId, r.quantityDistributed]
+    );
+  });
+
   pool.query(newEvent, (err, result) => {
     if (err) {
       return databaseError(req, res, err);
     }
 
-    getEventById(result.insertId, (err, event) => {
+    const insertResult = result[0];
+
+    getEventById(insertResult.insertId, (err, event) => {
       if (err) {
-        return databaseError(req, res);
+        return databaseError(req, res, err);
       }
       res.send(event);
     });
