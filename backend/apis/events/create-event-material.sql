@@ -1,0 +1,1 @@
+INSERT INTO materials (name) VALUES (?);

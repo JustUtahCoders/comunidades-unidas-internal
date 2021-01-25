@@ -149,6 +149,11 @@ require("./apis/events/delete-event.api");
 require("./apis/leads/delete-lead.api");
 require("./apis/sms/send-bulk-sms.api");
 require("./apis/sms/check-bulk-sms.api");
+require("./apis/events/create-event-material.api");
+require("./apis/events/get-event-material.api");
+require("./apis/events/update-event-material.api");
+require("./apis/events/delete-event-material.api");
+require("./apis/events/get-all-event-materials.api");
 
 require("./apis/reports/interaction-hours-by-client.api");
 require("./apis/reports/interactions-by-service.api");
