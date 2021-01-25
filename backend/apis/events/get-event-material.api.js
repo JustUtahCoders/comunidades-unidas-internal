@@ -49,8 +49,6 @@ function getMaterial(id, errBack) {
       return errBack(404);
     }
 
-    console.log("result", result, result.length);
-
     errBack(null, {
       id: result[0].id,
       name: result[0].name,
