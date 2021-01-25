@@ -1,0 +1,1 @@
+UPDATE materials SET isDeleted = true WHERE id = ?;

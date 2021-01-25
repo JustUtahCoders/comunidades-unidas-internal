@@ -1,0 +1,1 @@
+SELECT id, name FROM materials WHERE id = ? AND isDeleted = false;

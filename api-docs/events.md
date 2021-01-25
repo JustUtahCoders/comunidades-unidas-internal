@@ -266,6 +266,23 @@ GET /api/materials
 ]
 ```
 
+## Get Event Material
+
+### Request
+
+```
+GET /api/materials/:materialId
+```
+
+### Response
+
+```json
+{
+  "id": 8,
+  "name": "Test Material"
+}
+```
+
 ## Create Event Material
 
 ### Request
