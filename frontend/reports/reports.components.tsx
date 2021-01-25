@@ -18,6 +18,8 @@ import ClientSourcesParams from "./client-sources/client-sources-params.componen
 import ClientSourcesResults from "./client-sources/client-sources-results.component";
 import AgesAndGendersParams from "./ages-and-genders/ages-and-genders-params.component";
 import AgesAndGendersResults from "./ages-and-genders/ages-and-genders-results.components";
+import ClientZipcodeParams from "./client-zipcode/client-zipcode-params.component";
+import ClientZipcodeResults from "./client-zipcode/client-zipcode-results.component";
 import ServiceInterestsParams from "./service-interests/service-interests-params.component";
 import ServiceInterestsResults from "./service-interests/service-interests-results.component";
 import OutstandingInvoicesParams from "./outstanding-invoices/outstanding-invoices-params.component";
@@ -80,6 +82,11 @@ export default function Reports(props: ReportsProps) {
               title="Ages and Genders"
             />
             <AgesAndGendersResults path="ages-and-genders/results" />
+            <ClientZipcodeParams
+              path="client-zipcodes"
+              title="Client Zip Codes"
+            />
+            <ClientZipcodeResults path="client-zipcodes/results" />
             <OutstandingInvoicesParams
               path="outstanding-invoices"
               title="Outstanding Invoices"

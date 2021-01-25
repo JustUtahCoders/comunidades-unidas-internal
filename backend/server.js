@@ -162,6 +162,7 @@ require("./apis/reports/english-level.api");
 require("./apis/reports/country-of-origin-report.api");
 require("./apis/reports/client-sources-report.api");
 require("./apis/reports/ages-and-genders-report.api");
+require("./apis/reports/zipcode-report.api");
 require("./apis/reports/service-interest-report.api");
 require("./apis/reports/outstanding-invoices.api");
 require("./apis/reports/revenue-by-service.api");
