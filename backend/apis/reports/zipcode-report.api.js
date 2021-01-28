@@ -16,18 +16,18 @@ app.get(`/api/reports/client-zipcodes`, (req, res) => {
     return invalidRequest(res, validationErrors);
   }
 
-  const startDate = req.query.start || "2000-01-01T0";
-  const endDate = req.query.end || "3000-01-01T0";
+  const startDate = (req.query.start || "2000-01-01") + "T00:00:00";
+  const endDate = (req.query.end || "3000-01-01") + "T11:59:00";
 
   const sql = mysql.format(
     `
       SELECT contactInformation.zip, COUNT(*) clientCount
       FROM
         contactInformation JOIN (
-          SELECT MAX(contactInformation.dateAdded) latestDateAdded, contactInformation.clientId
+          SELECT MAX(contactInformation.dateAdded) latestDateAdded, contactInformation.id
           FROM contactInformation
           GROUP BY clientId
-        ) latestContactInfo ON contactInformation.dateAdded = latestContactInfo.latestDateAdded
+        ) latestContactInfo ON contactInformation.id = latestContactInfo.id
       JOIN clients ON clients.id = contactInformation.clientId
       WHERE clients.isDeleted = false AND clients.dateAdded BETWEEN ? AND ?
       GROUP BY zip
