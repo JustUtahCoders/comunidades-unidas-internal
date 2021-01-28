@@ -1,6 +1,9 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
 const { checkValid, nullableValidDate } = require("../utils/validation-utils");
 const mysql = require("mysql");
+const _ = require("lodash");
+
+let zipToCounty = null;
 
 app.get(`/api/reports/client-zipcodes`, (req, res) => {
   const validationErrors = checkValid(
@@ -18,19 +21,21 @@ app.get(`/api/reports/client-zipcodes`, (req, res) => {
 
   const sql = mysql.format(
     `
-      SELECT zip, COUNT(*) clientCount
-      FROM (
-        SELECT clientId, MAX(contactInformation.dateAdded) latestDateAdded, zip
-        FROM contactInformation
-        JOIN clients ON clients.id = contactInformation.clientId
-        WHERE clients.isDeleted = false
-        GROUP BY clientId
-      ) latestZips
+      SELECT contactInformation.zip, COUNT(*) clientCount
+      FROM
+        contactInformation JOIN (
+          SELECT MAX(contactInformation.dateAdded) latestDateAdded, contactInformation.clientId
+          FROM contactInformation
+          GROUP BY clientId
+        ) latestContactInfo ON contactInformation.dateAdded = latestContactInfo.latestDateAdded
+      JOIN clients ON clients.id = contactInformation.clientId
+      WHERE clients.isDeleted = false AND clients.dateAdded BETWEEN ? AND ?
       GROUP BY zip
+      ORDER BY clientCount DESC
       ;
         `,
 
-    [startDate, endDate, startDate, endDate]
+    [startDate, endDate]
   );
 
   pool.query(sql, (err, results) => {
@@ -38,8 +43,20 @@ app.get(`/api/reports/client-zipcodes`, (req, res) => {
       return databaseError(req, res, err);
     }
 
+    if (!zipToCounty) {
+      loadZipToCount();
+    }
+
+    const zipsByCounty = _.groupBy(results, (item) => {
+      if (item.zip) {
+        return zipToCounty[item.zip] || "(Unknown County)";
+      } else {
+        return "(Missing Zip)";
+      }
+    });
+
     res.send({
-      results,
+      zipsByCounty,
       totalClients: results.reduce((acc, item) => acc + item.clientCount, 0),
       totalZipCodes: results.length,
       reportParameters: {
@@ -49,3 +66,11 @@ app.get(`/api/reports/client-zipcodes`, (req, res) => {
     });
   });
 });
+
+function loadZipToCount() {
+  zipToCounty = {};
+  const zipcodeCounties = require("./zipcode-counties.json");
+  zipcodeCounties.forEach((item) => {
+    zipToCounty[item.zip_code] = `${item.county} County, ${item.state}`;
+  });
+}

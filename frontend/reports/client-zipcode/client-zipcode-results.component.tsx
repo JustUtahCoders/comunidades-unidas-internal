@@ -2,8 +2,10 @@ import React from "react";
 import { useReportsApi } from "../shared/use-reports-api";
 import BasicTableReport from "../shared/basic-table-report.component";
 import dayjs from "dayjs";
-import { uniq } from "lodash-es";
-import { capitalize } from "../shared/report.helpers";
+import CollapsibleTableRows, {
+  ToggleCollapseButton,
+} from "../shared/collapsible-table-rows.component";
+import { sumBy } from "lodash-es";
 
 export default function ClientZipcodeResults(props) {
   const { isLoading, data, error } = useReportsApi(
@@ -56,19 +58,40 @@ export default function ClientZipcodeResults(props) {
       <BasicTableReport
         headerRows={
           <tr>
-            <th>Zipcode</th>
+            <th>County</th>
+            <th>Zip</th>
             <th>Client Count</th>
           </tr>
         }
         contentRows={
           <>
             {data &&
-              data.results.map((result) => (
-                <tr key={result.zip || "No Zip"}>
-                  <td>{result.zip || "(No Zip)"}</td>
-                  <td>{result.clientCount}</td>
-                </tr>
-              ))}
+              Object.keys(data.zipsByCounty).map((county) => {
+                const zips = data.zipsByCounty[county];
+                const countyTotal = sumBy(zips, "clientCount");
+
+                return (
+                  <CollapsibleTableRows
+                    key={county}
+                    collapsibleRows={zips.map((zip) => (
+                      <tr key={zip.zip}>
+                        <td>{"\u2014"}</td>
+                        <td>{zip.zip || "Unknown"}</td>
+                        <td>{zip.clientCount}</td>
+                      </tr>
+                    ))}
+                    everpresentRow={
+                      <tr>
+                        <td>{county}</td>
+                        <td>
+                          <ToggleCollapseButton />
+                        </td>
+                        <td>{countyTotal}</td>
+                      </tr>
+                    }
+                  />
+                );
+              })}
           </>
         }
       />
