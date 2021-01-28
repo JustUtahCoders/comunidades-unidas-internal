@@ -42,11 +42,18 @@ export default function ClientZipcodeResults(props) {
                   : "\u2014"}
               </td>
             </tr>
+            <tr>
+              <th>Total Clients</th>
+              <td>{data.totalClients}</td>
+            </tr>
+            <tr>
+              <th>Distinct Zip Codes</th>
+              <td>{data.totalZipCodes}</td>
+            </tr>
           </>
         }
       />
       <BasicTableReport
-        title={`Clients by Zipcode`}
         headerRows={
           <tr>
             <th>Zipcode</th>
@@ -57,7 +64,7 @@ export default function ClientZipcodeResults(props) {
           <>
             {data &&
               data.results.map((result) => (
-                <tr>
+                <tr key={result.zip || "No Zip"}>
                   <td>{result.zip || "(No Zip)"}</td>
                   <td>{result.clientCount}</td>
                 </tr>

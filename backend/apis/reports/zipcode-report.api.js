@@ -18,18 +18,14 @@ app.get(`/api/reports/client-zipcodes`, (req, res) => {
 
   const sql = mysql.format(
     `
-      SELECT zip, COUNT(*) as clientCount
-      FROM clients
-        INNER JOIN (
-          SELECT * FROM contactInformation innerContactInformation
-          JOIN (
-            SELECT clientId latestClientId,
-              MAX(dateAdded) latestDateAdded
-              FROM contactInformation
-            GROUP BY clientId
-            ) latestContactInformation ON latestContactInformation.latestDateAdded = innerContactInformation.dateAdded
-            ) contactInfo ON contactInfo.clientId = clients.id
-            GROUP BY zip ORDER BY clientCount DESC;
+      SELECT zip, COUNT(*) clientCount
+      FROM (
+        SELECT clientId, MAX(dateAdded) latestDateAdded, zip
+        FROM contactInformation
+        GROUP BY clientId
+      ) latestZips
+      GROUP BY zip
+      ;
         `,
 
     [startDate, endDate, startDate, endDate]
@@ -42,6 +38,8 @@ app.get(`/api/reports/client-zipcodes`, (req, res) => {
 
     res.send({
       results,
+      totalClients: results.reduce((acc, item) => acc + item.clientCount, 0),
+      totalZipCodes: results.length,
       reportParameters: {
         start: req.query.start || null,
         end: req.query.end || null,
