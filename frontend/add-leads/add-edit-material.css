@@ -5,13 +5,11 @@
 }
 
 .deleteButton {
-  color: red;
-  cursor: pointer;
+  color: var(--medium-red);
 }
 
 .saveButton {
-  color: blue;
-  cursor: pointer;
+  color: var(--medium-blue);
 }
 
 .cancelEditButtons {

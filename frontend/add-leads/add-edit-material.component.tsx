@@ -1,8 +1,8 @@
 import { useCss } from "kremling";
 import React from "react";
-import css from "./add-edit-materialEntry.css";
+import css from "./add-edit-material.css";
 
-export default function MaterialEntry({
+export default function AddEditMaterial({
   materialProp,
   handleDelete,
   handleEdit,
@@ -14,9 +14,8 @@ export default function MaterialEntry({
     setMaterial(materialProp);
   }, []);
 
-  function OnValueChange(evt) {
-    material.name = evt.target.value;
-    setMaterial(material);
+  function onValueChange(evt) {
+    setMaterial({ ...material, name: evt.target.value });
   }
 
   function onSave() {
@@ -25,28 +24,24 @@ export default function MaterialEntry({
   }
 
   return (
-    <div key={material.id} {...useCss(css)} className="container">
+    <div {...useCss(css)} className="container">
       {editing ? (
-        <input defaultValue={material.name} onChange={OnValueChange} />
+        <input value={material.name} onChange={onValueChange} />
       ) : (
         <label>{material.name}</label>
       )}
-      {editing ? (
+      {editing && (
         <button
           className="deleteButton"
           onClick={() => handleDelete(material.id)}
         >
           Delete
         </button>
-      ) : (
-        ""
       )}
-      {editing ? (
+      {editing && (
         <button className="saveButton" onClick={onSave}>
           Save
         </button>
-      ) : (
-        ""
       )}
 
       {editing ? (

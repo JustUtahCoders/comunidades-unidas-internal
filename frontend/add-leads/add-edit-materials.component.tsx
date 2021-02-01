@@ -2,7 +2,8 @@ import { useCss } from "kremling";
 import React from "react";
 import css from "./add-edit-materials.css";
 import easyFetch from "../util/easy-fetch";
-import MaterialEntry from "./add-edit-materialEntry.component";
+import AddEditMaterial from "./add-edit-material.component";
+import { handlePromiseError } from "../util/error-helpers";
 
 export default function AddEditMaterials({
   addMaterial,
@@ -11,27 +12,79 @@ export default function AddEditMaterials({
   materials,
 }) {
   const [material, setMaterial] = React.useState({ name: "" });
+  const [isCreating, setIsCreating] = React.useState(false);
+  const [materialToDelete, setMaterialToDelete] = React.useState(false);
+  const [materialToUpdate, setMaterialToUpdate] = React.useState<
+    false | FullMaterial
+  >(false);
+
+  React.useEffect(() => {
+    if (isCreating) {
+      const abortController = new AbortController();
+      easyFetch(`/api/materials`, {
+        signal: abortController.signal,
+        method: "POST",
+        body: material,
+      })
+        .then((data) => {
+          addMaterial(data);
+          setMaterial({ name: "" });
+        })
+        .catch(handlePromiseError)
+        .finally(() => {
+          setIsCreating(false);
+        });
+
+      return () => abortController.abort();
+    }
+  }, [isCreating]);
+
+  React.useEffect(() => {
+    if (materialToDelete) {
+      const ac = new AbortController();
+      easyFetch(`/api/materials/${materialToDelete}`, {
+        method: "DELETE",
+        signal: ac.signal,
+      })
+        .then(() => {
+          deleteMaterial(materialToDelete);
+        })
+        .catch(handlePromiseError)
+        .finally(() => {
+          setMaterialToDelete(false);
+        });
+
+      return () => {
+        ac.abort();
+      };
+    }
+  }, [materialToDelete]);
+
+  React.useEffect(() => {
+    if (materialToUpdate) {
+      const ac = new AbortController();
+      easyFetch(`/api/materials/${materialToUpdate.id}`, {
+        method: "PATCH",
+        signal: ac.signal,
+        body: materialToUpdate,
+      })
+        .then(() => {
+          editMaterial(materialToUpdate);
+        })
+        .catch(handlePromiseError)
+        .finally(() => {
+          setMaterialToUpdate(false);
+        });
+
+      return () => {
+        ac.abort();
+      };
+    }
+  }, [materialToUpdate]);
 
   function handleSubmit(evt) {
     evt.preventDefault();
-
-    const abortController = new AbortController();
-    easyFetch(`/api/materials`, {
-      signal: abortController.signal,
-      method: "POST",
-      body: material,
-    })
-      .then((data) => {
-        addMaterial(data);
-        setMaterial({ name: "" });
-      })
-      .catch((err) => {
-        setTimeout(() => {
-          throw err;
-        });
-      });
-
-    return () => abortController.abort();
+    setIsCreating(true);
   }
 
   function handleChange(evt) {
@@ -39,51 +92,18 @@ export default function AddEditMaterials({
   }
 
   function handleDelete(materialId) {
-    const ac = new AbortController();
-    easyFetch(`/api/materials/${materialId}`, {
-      method: "DELETE",
-      signal: ac.signal,
-    })
-      .then(() => {
-        deleteMaterial(materialId);
-      })
-      .catch((err) => {
-        setTimeout(() => {
-          throw err;
-        });
-      });
-
-    return () => {
-      ac.abort();
-    };
+    setMaterialToDelete(materialId);
   }
 
   function handleEdit(material) {
-    const ac = new AbortController();
-    easyFetch(`/api/materials/${material.id}`, {
-      method: "PATCH",
-      signal: ac.signal,
-      body: material,
-    })
-      .then(() => {
-        editMaterial(material);
-      })
-      .catch((err) => {
-        setTimeout(() => {
-          throw err;
-        });
-      });
-
-    return () => {
-      ac.abort();
-    };
+    setMaterialToUpdate(material);
   }
 
   return (
     <div {...useCss(css)}>
       {materials.map((m) => {
         return (
-          <MaterialEntry
+          <AddEditMaterial
             key={m.id}
             materialProp={m}
             handleDelete={handleDelete}
@@ -108,3 +128,8 @@ export default function AddEditMaterials({
     </div>
   );
 }
+
+type FullMaterial = {
+  id: number;
+  name: string;
+};
