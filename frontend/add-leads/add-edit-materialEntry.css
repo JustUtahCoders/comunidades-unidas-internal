@@ -15,12 +15,6 @@
 }
 
 .cancelEditButtons {
-  /* position: relative; 
- left: 6em;
- padding: 8px;
- margin: 1px; 
- cursor: pointer; */
-
   display: flex;
   justify-content: flex-end;
 }
