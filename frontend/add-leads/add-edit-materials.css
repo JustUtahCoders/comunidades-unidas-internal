@@ -1,0 +1,18 @@
+.horizontal {
+  display: flex;
+  padding: 2rem, 2rem, 2rem, 0;
+}
+
+.delete {
+  padding: 10px;
+}
+
+.longer {
+  width: 400px;
+}
+
+.editAddButton {
+  margin-left: 1rem;
+  padding-right: 1em;
+  padding-left: 1em;
+}

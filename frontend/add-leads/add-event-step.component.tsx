@@ -5,6 +5,9 @@ import imgSrc from "../../icons/148705-essential-collection/svg/map-location.svg
 import dayjs from "dayjs";
 import easyFetch from "../util/easy-fetch";
 import { mediaDesktop } from "../styleguide.component";
+import Modal from "../util/modal.component";
+import AddEditMaterials from "./add-edit-materials.component";
+import { handlePromiseError } from "../util/error-helpers";
 
 export default function AddEventStep(props: AddEventStepProps) {
   const scope = useCss(css);
@@ -22,6 +25,19 @@ export default function AddEventStep(props: AddEventStepProps) {
   const [existingEventId, setExistingEventId] = React.useState<ExistingEventId>(
     ""
   );
+  const [materials, setMaterials] = React.useState([]);
+  const [materialDistributed, setMaterialDistributed] = React.useState([]);
+  const [showMaterials, setShowMaterials] = React.useState(false);
+
+  React.useEffect(() => {
+    const ac = new AbortController();
+    easyFetch(`/api/materials`, { signal: ac.signal })
+      .then(setMaterials)
+      .catch(handlePromiseError);
+    return () => {
+      ac.abort();
+    };
+  }, []);
 
   React.useEffect(() => {
     const abortController = new AbortController();
@@ -54,6 +70,7 @@ export default function AddEventStep(props: AddEventStepProps) {
           eventName,
           eventLocation,
           totalAttendance,
+          materialsDistributed: materialDistributed,
         },
       })
         .then((event) => {
@@ -118,8 +135,38 @@ export default function AddEventStep(props: AddEventStepProps) {
         </div>
         {inputs()}
       </form>
+      {showMaterials && (
+        <Modal headerText="Edit Materials" close={closeShowMaterials}>
+          <AddEditMaterials
+            addMaterial={addMaterial}
+            deleteMaterial={deleteMaterial}
+            editMaterial={editMaterial}
+            materials={materials}
+          />
+        </Modal>
+      )}
     </>
   );
+
+  function addMaterial(material) {
+    setMaterials([...materials, material]);
+  }
+
+  function deleteMaterial(materialId) {
+    setMaterials(materials.filter((m) => m.id !== materialId));
+  }
+
+  function editMaterial(material) {
+    const updateMaterial = materials.map((m) => {
+      if (m.id === material.id) return material;
+      return m;
+    });
+    setMaterials(updateMaterial);
+  }
+
+  function closeShowMaterials() {
+    setShowMaterials(false);
+  }
 
   function inputs() {
     if (eventType === EventType.newEvent) {
@@ -212,6 +259,62 @@ export default function AddEventStep(props: AddEventStepProps) {
             min={1}
           />
         </div>
+        <div>
+          <label>Materials:</label>
+          <div>
+            {materials.map((material) => {
+              const materialDist = materialDistributed.find(
+                (m) => m.materialId === material.id
+              );
+              const isChecked = Boolean(materialDist);
+              return (
+                <div key={material.id} className="event-material">
+                  <input
+                    type="checkbox"
+                    id={`Material-${material.id}`}
+                    name="materials"
+                    onChange={handleChange}
+                    value={material.id}
+                    checked={isChecked}
+                  ></input>
+                  <label htmlFor={`Material-${material.id}`}>
+                    {material.name}
+                  </label>
+                  {isChecked && (
+                    <input
+                      type="number"
+                      placeholder="Quantity"
+                      min={0}
+                      value={materialDist.quantityDistributed}
+                      onChange={quantityChanged}
+                    />
+                  )}
+                </div>
+              );
+              function quantityChanged(evt) {
+                const newMaterialsDistributed = materialDistributed.map((m) => {
+                  if (m.materialId === material.id) {
+                    return {
+                      materialId: material.id,
+                      quantityDistributed: Number(evt.target.value),
+                    };
+                  } else {
+                    return m;
+                  }
+                });
+                setMaterialDistributed(newMaterialsDistributed);
+              }
+            })}
+
+            <button
+              className="secondary"
+              type="button"
+              onClick={() => setShowMaterials(true)}
+            >
+              Edit Materials
+            </button>
+          </div>
+        </div>
         <div className="actions">
           <button className="primary" type="submit" disabled={createNewEvent}>
             Create event
@@ -221,8 +324,25 @@ export default function AddEventStep(props: AddEventStepProps) {
     );
   }
 
+  function handleChange(evt) {
+    const materialId = Number(evt.target.value);
+    if (
+      materialDistributed.some((material) => material.materialId === materialId)
+    ) {
+      const filteredMaterials = materialDistributed.filter(
+        (material) => material.materialId !== materialId
+      );
+      setMaterialDistributed(filteredMaterials);
+    } else {
+      const newMaterial = { materialId: materialId, quantityDistributed: 0 };
+      setMaterialDistributed([...materialDistributed, newMaterial]);
+    }
+    console.log("All Materials", materialDistributed);
+  }
+
   function handleSubmit(evt) {
     evt.preventDefault();
+    debugger;
     switch (eventType) {
       case EventType.newEvent:
         setCreateNewEvent(true);
@@ -249,6 +369,10 @@ const css = `
   justify-content: center;
   align-items: center;
   margin: 2.4rem auto 0 auto;
+}
+
+& .event-material {
+  padding: .8rem 0;
 }
 
 ${mediaDesktop} {
