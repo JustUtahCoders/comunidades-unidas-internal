@@ -102,8 +102,7 @@ export default function AddEditMaterials({
           autoFocus
         />
         <button className="editAddButton primary" type="submit">
-          {" "}
-          Add{" "}
+          Add
         </button>
       </form>
     </div>

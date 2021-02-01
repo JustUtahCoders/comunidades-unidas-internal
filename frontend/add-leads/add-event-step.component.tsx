@@ -337,12 +337,10 @@ export default function AddEventStep(props: AddEventStepProps) {
       const newMaterial = { materialId: materialId, quantityDistributed: 0 };
       setMaterialDistributed([...materialDistributed, newMaterial]);
     }
-    console.log("All Materials", materialDistributed);
   }
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    debugger;
     switch (eventType) {
       case EventType.newEvent:
         setCreateNewEvent(true);

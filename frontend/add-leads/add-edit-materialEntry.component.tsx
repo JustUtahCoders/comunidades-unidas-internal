@@ -54,7 +54,6 @@ export default function MaterialEntry({
           className="cancelEditButtons"
           onClick={() => setEditing(!editing)}
         >
-          {" "}
           Cancel
         </button>
       ) : (
