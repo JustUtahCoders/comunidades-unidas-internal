@@ -238,6 +238,17 @@ body {
 & .clickable:hover {
   background-color: var(--medium-gray) !important;
 }
+
+& .reminder {
+  font-size: 1.35rem;
+  font-style: italic;
+  line-height: 2rem;
+  color: var(--brand-color);
+  border: rgba(255, 0, 255, 0.35) 1px solid;
+  border-radius: 0.4rem;
+  padding: 1rem 2rem 1rem 1rem;
+  background-color: rgba(255, 0, 0, .05);
+}
 `;
 
 type Color = string;

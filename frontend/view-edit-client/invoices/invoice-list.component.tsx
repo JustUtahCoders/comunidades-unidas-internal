@@ -7,9 +7,9 @@ import { CUService } from "../../add-client/services.component";
 import { statusColor } from "./change-invoice-status.component";
 import ViewInvoice from "./view-invoice.component";
 import { InvoiceStatus } from "./client-invoices.component";
-import queryString, { stringify, stringifyUrl } from "query-string";
+import queryString from "query-string";
 
-export default function ClientInvoiceList(props: ClientInvoiceListProps) {
+export default function InvoiceList(props: InvoiceListProps) {
   const query = queryString.parse(window.location.search);
   const [
     initialInvoicePreview,
@@ -37,6 +37,7 @@ export default function ClientInvoiceList(props: ClientInvoiceListProps) {
                   close();
                 }}
                 refetchInvoices={props.refetchInvoices}
+                isDetached={props.isDetached}
               />
             )}
           />
@@ -67,9 +68,10 @@ function status(invoice: FullInvoice) {
   );
 }
 
-type ClientInvoiceListProps = {
+type InvoiceListProps = {
   invoices: FullInvoice[];
   client: SingleClient;
   services: CUService[];
   refetchInvoices(): any;
+  isDetached?: boolean;
 };

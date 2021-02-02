@@ -4,10 +4,9 @@ import { FullInvoice } from "../invoices/edit-invoice.component";
 import { SingleClient } from "../view-client.component";
 import Chip from "../../util/chips/chip.component";
 import { padStart } from "lodash-es";
-import Modal from "../../util/modal.component";
 import ViewPayment from "./view-payment.component";
 
-function ClientPaymentsList(props: ClientPaymentsListProps) {
+function PaymentsList(props: ClientPaymentsListProps) {
   return (
     <>
       {props.payments.map((payment) => (
@@ -53,4 +52,4 @@ type ClientPaymentsListProps = {
   refetchPayments(): any;
 };
 
-export default ClientPaymentsList;
+export default PaymentsList;

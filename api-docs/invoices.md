@@ -112,6 +112,64 @@ GET /api/clients/:clientId/invoices?tags=immigration
 ]
 ```
 
+## Get detached invoices
+
+Detached invoices refer to invoices not associated with a client
+
+### Request
+
+```
+GET /api/detached-invoices
+```
+
+### Response
+
+```json
+[
+  {
+    "id": 123,
+    "invoiceNumber": "1003",
+    "invoiceDate": "2020-10-01",
+    "lineItems": [
+      {
+        "serviceId": 1,
+        "name": "DACA",
+        "description": "Prepared the documents",
+        "quantity": 1,
+        "rate": 40
+      }
+    ],
+    "clientNote": "Client note",
+    "totalCharged": 30,
+    "totalPaid": 12.55,
+    "status": "draft|open|completed|closed",
+    "payments": [
+      {
+        "paymentId": 2434,
+        "paymentAmount": 10,
+        "amountTowardsInvoice": 8
+      }
+    ],
+    "clients": [45, 23],
+    "redacted": false,
+    "createdBy": {
+      "userId": 123,
+      "firstName": "Shigeru",
+      "lastName": "Miyamoto",
+      "fullName": "Shigeru Miyamoto",
+      "timestamp": "2019-05-06T06:00:00.000Z"
+    },
+    "lastUpdatedBy": {
+      "userId": 1,
+      "firstName": "Joel",
+      "lastName": "Denning",
+      "fullName": "Joel Denning",
+      "timestamp": "2019-05-06T06:00:00.000Z"
+    }
+  }
+]
+```
+
 ## Create invoice
 
 ### Request

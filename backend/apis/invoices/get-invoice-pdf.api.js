@@ -362,7 +362,7 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
             otherTop + lineHeight
           );
           doc.text(
-            ` $${invoice.totalCharged.toFixed(2).toLocaleString()}`,
+            ` $${(invoice.totalCharged || 0).toFixed(2).toLocaleString()}`,
             col5Left,
             otherTop + lineHeight * 2
           );

@@ -22,6 +22,7 @@ const {
   nullableValidDate,
   nullableValidTags,
   nullableValidString,
+  nullableValidId,
 } = require("../utils/validation-utils");
 const { uniq } = require("lodash");
 const {
@@ -51,7 +52,7 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
           const lineItem = lineItems[index];
           const errs = checkValid(
             lineItem,
-            validId("serviceId"),
+            nullableValidId("serviceId"),
             nonEmptyString("name"),
             nullableValidString("description"),
             validInteger("quantity"),

@@ -102,6 +102,7 @@ export default function CreateInvoice(props: CreateInvoiceProps) {
           services={props.services}
           ref={editInvoiceRef}
           isEditing={false}
+          isDetached={props.isDetached}
         />
       </Modal>
     );
@@ -126,6 +127,7 @@ type CreateInvoiceProps = {
   client: SingleClient;
   services: CUService[];
   refetchInvoices(): any;
+  isDetached?: boolean;
 };
 
 enum SaveStatus {

@@ -69,9 +69,11 @@ FROM invoices
     t.foreignId = invoices.id
     AND t.foreignTable = 'invoices'
   )
-WHERE invoices.id IN (
+  <% if (!detachedInvoices) { %>
+  WHERE invoices.id IN (
     SELECT invoiceId
     FROM invoiceClients
     WHERE invoiceClients.clientId = ?
   )
+  <% } %>
 GROUP BY invoices.id;
