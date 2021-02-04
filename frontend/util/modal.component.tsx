@@ -8,6 +8,9 @@ export default function Modal(props: ModalProps) {
   const scope = useCss(css);
   const [containerEl, setContainerEl] = React.useState<HTMLDivElement>(null);
 
+  const shouldShowFooter =
+    props.tertiaryText || props.secondaryText || props.primaryText;
+
   React.useEffect(() => {
     const el = document.createElement("div");
     el.id = "modal";
@@ -41,38 +44,42 @@ export default function Modal(props: ModalProps) {
           </div>
         </div>
         <div className="modal-body">{props.children}</div>
-        <div className="modal-footer">
-          <div>
-            {props.tertiaryText && (
-              <button
-                className="secondary"
-                type="button"
-                onClick={props.tertiaryAction}
-              >
-                {props.tertiaryText}
-              </button>
-            )}
+        {shouldShowFooter && (
+          <div className="modal-footer">
+            <div>
+              {props.tertiaryText && (
+                <button
+                  className="secondary"
+                  type="button"
+                  onClick={props.tertiaryAction}
+                >
+                  {props.tertiaryText}
+                </button>
+              )}
+            </div>
+            <div>
+              {props.secondaryText && (
+                <button
+                  className="secondary"
+                  type="button"
+                  onClick={props.secondaryAction}
+                >
+                  {props.secondaryText}
+                </button>
+              )}
+              {props.primaryText && (
+                <button
+                  className="primary"
+                  type={props.primarySubmit ? "submit" : "button"}
+                  disabled={props.primaryDisabled}
+                  onClick={props.primarySubmit ? noop : props.primaryAction}
+                >
+                  {props.primaryText}
+                </button>
+              )}
+            </div>
           </div>
-          <div>
-            {props.secondaryText && (
-              <button
-                className="secondary"
-                type="button"
-                onClick={props.secondaryAction}
-              >
-                {props.secondaryText}
-              </button>
-            )}
-            <button
-              className="primary"
-              type={props.primarySubmit ? "submit" : "button"}
-              disabled={props.primaryDisabled}
-              onClick={props.primarySubmit ? noop : props.primaryAction}
-            >
-              {props.primaryText}
-            </button>
-          </div>
-        </div>
+        )}
       </div>
     </Styleguide>
   );
@@ -176,8 +183,8 @@ ${mediaDesktop} {
 type ModalProps = {
   headerText: string;
   close(): any;
-  primaryText: string;
-  primaryAction(arg?: any): any;
+  primaryText?: string;
+  primaryAction?(arg?: any): any;
   primarySubmit?: boolean;
   primaryDisabled?: boolean;
   secondaryText?: string;
