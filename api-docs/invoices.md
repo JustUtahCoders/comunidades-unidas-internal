@@ -444,3 +444,53 @@ GET /api/payments/:paymentId/receipts?tags=immigration
 ### Response
 
 A PDF document, with correct content-type and content-disposition headers for browser download.
+
+## Get detached payments
+
+Detached payments are payments not associated with a CU client.
+
+### Request
+
+```
+GET /api/detached-payments?tags=immigration
+```
+
+### Response
+
+```json
+[
+  {
+    "id": 1,
+    "paymentDate": "2020-10-01T00:00:00Z",
+    "invoices": [
+      {
+        "invoiceId": 1,
+        "amount": 10
+      },
+      {
+        "invoiceId": 2,
+        "amount": 10
+      }
+    ],
+    "paymentAmount": 20,
+    "paymentType": "cash|credit|debit|check|other",
+    "payerClientIds": [23, 76],
+    "payerName": "Some payer name",
+    "redacted": false,
+    "createdBy": {
+      "userId": 123,
+      "firstName": "Shigeru",
+      "lastName": "Miyamoto",
+      "fullName": "Shigeru Miyamoto",
+      "timestamp": "2019-05-06T06:00:00.000Z"
+    },
+    "lastUpdatedBy": {
+      "userId": 1,
+      "firstName": "Joel",
+      "lastName": "Denning",
+      "fullName": "Joel Denning",
+      "timestamp": "2019-05-06T06:00:00.000Z"
+    }
+  }
+]
+```
