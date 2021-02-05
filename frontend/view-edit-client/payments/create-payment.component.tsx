@@ -16,7 +16,7 @@ import { UserModeContext, UserMode } from "../../util/user-mode.context";
 
 export default function CreatePayment(props: CreatePaymentProps) {
   const [payment, setPayment] = React.useState<FullPayment>(
-    emptyPayment(props.client.id)
+    emptyPayment(props.client?.id)
   );
   const [step, setStep] = React.useState<Step>(Step.checkInvoices);
   const StepComponent = StepComponents[step];
@@ -73,6 +73,7 @@ export default function CreatePayment(props: CreatePaymentProps) {
         proceed={proceed}
         invoices={props.clientInvoices}
         client={props.client}
+        isDetached={props.isDetached}
       />
     );
   } else {
@@ -94,6 +95,7 @@ export default function CreatePayment(props: CreatePaymentProps) {
           proceed={proceed}
           invoices={props.clientInvoices}
           client={props.client}
+          isDetached={props.isDetached}
         />
       </Modal>
     );
@@ -171,8 +173,9 @@ function emptyPayment(initialClientId: number): FullPayment {
     invoices: [],
     paymentAmount: 0,
     paymentType: PaymentType.credit,
-    payerClientIds: [initialClientId],
+    payerClientIds: initialClientId ? [initialClientId] : [],
     redacted: false,
+    payerName: null,
   };
 }
 
@@ -181,6 +184,7 @@ type CreatePaymentProps = {
   clientInvoices: FullInvoice[];
   close(): any;
   refetchPayments(): any;
+  isDetached?: boolean;
 };
 
 enum Step {
@@ -217,4 +221,5 @@ export type CreatePaymentStepProps = {
   edit?: boolean;
   refetchPayments?(): any;
   client: SingleClient;
+  isDetached?: boolean;
 };

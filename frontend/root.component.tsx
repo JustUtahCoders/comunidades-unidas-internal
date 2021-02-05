@@ -49,6 +49,9 @@ const ConvertLead = React.lazy(
 const ProgramsAndServices = React.lazy(
   () => import("./programs-and-services/programs-and-services.component")
 );
+const DetachedInvoices = React.lazy(
+  () => import("./view-edit-client/invoices/detached-invoices.component")
+);
 
 export default function Root() {
   return (
@@ -81,6 +84,7 @@ export default function Root() {
                 <ProgramsAndServices path="programs-and-services" />
                 <Partners path="partners" />
                 <UserPermissions path="user-permissions" />
+                <DetachedInvoices path="invoices" />
               </Router>
             </React.Suspense>
           </Navbars>

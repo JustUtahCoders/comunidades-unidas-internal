@@ -103,6 +103,7 @@ export default function EditFullPayment(props: EditFullPaymentProps) {
           client={props.client}
           invoices={props.invoices}
           edit
+          isDetached={props.isDetached}
         />
         <CreatePaymentSelectInvoices
           payment={modifiedPayment}
@@ -110,6 +111,7 @@ export default function EditFullPayment(props: EditFullPaymentProps) {
           client={props.client}
           invoices={props.invoices}
           edit
+          isDetached={props.isDetached}
         />
       </>
     </Modal>
@@ -133,4 +135,5 @@ type EditFullPaymentProps = {
   goBack(): any;
   paymentEdited(): any;
   close(): any;
+  isDetached?: boolean;
 };

@@ -8,6 +8,7 @@ SELECT invoices.id,
   invoices.addedBy,
   invoices.dateModified,
   invoices.modifiedBy,
+  invoices.billTo,
   addedUser.id addedUserId,
   addedUser.firstName addedFirstName,
   addedUser.lastName addedLastName,
@@ -69,9 +70,13 @@ FROM invoices
     t.foreignId = invoices.id
     AND t.foreignTable = 'invoices'
   )
-WHERE invoices.id IN (
+  <% if (detachedInvoices) { %>
+  WHERE invoiceClients.clientId IS NULL AND invoices.totalCharged > 0
+  <% } else { %>
+  WHERE invoices.id IN (
     SELECT invoiceId
     FROM invoiceClients
     WHERE invoiceClients.clientId = ?
   )
+  <% } %>
 GROUP BY invoices.id;

@@ -44,6 +44,7 @@ export default function ViewPayment(props: CreatePaymentStepProps) {
         invoices={props.invoices}
         goBack={cancelEdit}
         client={props.client}
+        isDetached={props.isDetached}
       />
     );
   }
@@ -81,7 +82,8 @@ export default function ViewPayment(props: CreatePaymentStepProps) {
   }
 
   function downloadReceipt() {
-    window.open(`${previewUrl}?download=true`, "_blank");
+    const conjunction = previewUrl.includes("?") ? "&" : "?";
+    window.open(`${previewUrl}${conjunction}download=true`, "_blank");
   }
 
   function editPayment() {

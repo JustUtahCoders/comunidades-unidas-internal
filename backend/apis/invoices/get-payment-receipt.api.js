@@ -144,7 +144,9 @@ app.get("/api/payments/:paymentId/receipts", (req, res) => {
         const payerLeft = 340;
         doc.font(palatino);
         doc.text("Paid By:", payerLeft, topLine);
-        doc.text("Client ID:", payerLeft, topLine + lineHeight);
+        if (client) {
+          doc.text("Client ID:", payerLeft, topLine + lineHeight);
+        }
         doc.text("Payment Date:", payerLeft, topLine + lineHeight * 2);
         doc.text("Payment #:", payerLeft, topLine + lineHeight * 3);
         doc.text("Payment Amount:", payerLeft, topLine + lineHeight * 4);
@@ -213,6 +215,17 @@ app.get("/api/payments/:paymentId/receipts", (req, res) => {
             String(client.id),
             pageWidth - pageMargin - doc.widthOfString(String(client.id)),
             topLine + lineHeight,
+            {
+              align: "right",
+              lineBreak: false,
+            }
+          );
+        } else {
+          const payerName = payment.payerName || "";
+          doc.text(
+            payerName,
+            pageWidth - pageMargin - doc.widthOfString(payerName),
+            topLine,
             {
               align: "right",
               lineBreak: false,

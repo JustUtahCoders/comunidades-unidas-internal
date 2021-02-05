@@ -187,6 +187,8 @@ require("./apis/invoices/get-client-payments.api");
 require("./apis/invoices/get-invoice-payments.api");
 require("./apis/invoices/get-payment-receipt.api");
 require("./apis/invoices/get-invoice-pdf.api");
+require("./apis/invoices/get-detached-invoices.api");
+require("./apis/invoices/get-detached-payments.api");
 
 require("./apis/partners/create-partner.api");
 require("./apis/partners/get-partner-list.api");

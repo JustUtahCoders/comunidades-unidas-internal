@@ -62,10 +62,10 @@ export default function ViewInvoice(props: ViewInvoiceProps) {
   React.useEffect(() => {
     const ac = new AbortController();
     const clientIds = invoice.clients.filter(
-      (item) => item !== props.client.id
+      (item) => item !== props.client?.id
     );
 
-    if (clientIds.length > 1) {
+    if (clientIds.length > 0) {
       easyFetch(`/api/clients-by-id?clientId=${clientIds.join("&clientId=")}`, {
         signal: ac.signal,
       })
@@ -123,6 +123,7 @@ export default function ViewInvoice(props: ViewInvoiceProps) {
           services={services}
           clients={[client, ...extraClients]}
           isEditing
+          isDetached={props.isDetached}
         />
       ) : (
         <object
@@ -169,4 +170,5 @@ type ViewInvoiceProps = {
   services: CUService[];
   close(): any;
   refetchInvoices(): any;
+  isDetached?: boolean;
 };

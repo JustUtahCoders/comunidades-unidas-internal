@@ -7,14 +7,15 @@ const {
   nullableValidTags,
 } = require("../utils/validation-utils");
 const path = require("path");
-const fs = require("fs");
-const rawGetSql = fs.readFileSync(
-  path.join(__dirname, "get-client-invoices.sql"),
-  "utf-8"
-);
 const { sanitizeTags, validTagsList } = require("../tags/tag.utils");
+const ejs = require("ejs");
 
-app.get("/api/clients/:clientId/invoices", (req, res) => {
+const rawGetSqlPromise = ejs.renderFile(
+  path.resolve(__dirname, "./get-client-invoices.sql"),
+  { detachedInvoices: false }
+);
+
+app.get("/api/clients/:clientId/invoices", async (req, res) => {
   const clientId = req.params.clientId;
   const user = req.session.passport.user;
 
@@ -30,7 +31,8 @@ app.get("/api/clients/:clientId/invoices", (req, res) => {
   const tags = sanitizeTags(req.query.tags);
   const redactedTags = validTagsList.filter((t) => !tags.includes(t));
 
-  const getSql = mysql.format(rawGetSql, [clientId]);
+  const rawGetSql = await rawGetSqlPromise;
+  const getSql = mysql.format(rawGetSql, [clientId, clientId]);
 
   pool.query(getSql, (err, result) => {
     if (err) {

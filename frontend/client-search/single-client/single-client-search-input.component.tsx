@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import { SingleClient } from "../../view-edit-client/view-client.component";
 
 const SingleClientSearchInput = React.forwardRef<
-  React.MutableRefObject<SingleClientSearchInputRef>,
+  SingleClientSearchInputRef,
   SingleClientSearchInputProps
 >(function SingleClientSearchInput(
   {
@@ -36,7 +36,10 @@ const SingleClientSearchInput = React.forwardRef<
   }, [state.clientId]);
 
   React.useEffect(() => {
-    if (debouncedClientName.trim().length > 0) {
+    if (
+      debouncedClientName.trim().length > 0 &&
+      (!initialClient || debouncedClientName !== initialClient.fullName)
+    ) {
       const abortController = new AbortController();
 
       const queryParamName = isNaN(Number(state.clientName)) ? "name" : "id";
@@ -120,6 +123,8 @@ const SingleClientSearchInput = React.forwardRef<
                 onClick={() =>
                   dispatch({
                     type: "setClient",
+                    // @ts-ignore
+                    client: potentialClient,
                     clientId: potentialClient.id,
                     clientName: potentialClient.fullName,
                   })
@@ -148,6 +153,8 @@ const SingleClientSearchInput = React.forwardRef<
       evt.preventDefault();
       dispatch({
         type: "setClient",
+        // @ts-ignore
+        client: state.potentialClients[selectedIndex],
         clientId: state.potentialClients[selectedIndex].id,
         clientName: state.potentialClients[selectedIndex].fullName,
       });
@@ -173,6 +180,7 @@ const SingleClientSearchInput = React.forwardRef<
       clientName: initialClient ? initialClient.fullName : "",
       potentialClients: [],
       client: initialClient ? initialClient : null,
+      clientId: initialClient ? initialClient.id : null,
     };
   }
 });
@@ -218,6 +226,7 @@ function reducer(
     case "setClient":
       return {
         ...state,
+        client: action.client,
         clientId: action.clientId,
         clientName: action.clientName,
       };
@@ -270,6 +279,7 @@ type ResetAction = {
 
 type SetClientAction = {
   type: "setClient";
+  client: SingleClient;
   clientName: string;
   clientId: number;
 };

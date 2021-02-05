@@ -45,12 +45,28 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
   return (
     <div {...useCss(css)}>
       <div className="header">
-        <div className="clients input-block">
-          <MultiClientSelect
-            initialClients={props.clients || []}
-            ref={clientRef}
-          />
-        </div>
+        {props.isDetached ? (
+          <div className="clients input-block">
+            <label htmlFor="detached-client-name">Bill To:</label>
+            <input
+              type="text"
+              value={modifiedInvoice.billTo || ""}
+              onChange={(evt) =>
+                setModifiedInvoice({
+                  ...modifiedInvoice,
+                  billTo: evt.target.value,
+                })
+              }
+            />
+          </div>
+        ) : (
+          <div className="clients input-block">
+            <MultiClientSelect
+              initialClients={props.clients || []}
+              ref={clientRef}
+            />
+          </div>
+        )}
         <div className="input-block">
           <label htmlFor="invoice-number">Invoice #</label>
           <input
@@ -294,9 +310,11 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
   function getInvoiceToSave() {
     const lineItems = modifiedInvoice.lineItems
       .concat(newLineItems)
+      .filter((li) => li.name && li.rate && li.quantity)
       .map((li) => ({ ...li, rate: Number(li.rate) }));
-    // @ts-ignore
-    const clientIds = clientRef.current.getClients();
+    const clientIds = props.isDetached
+      ? []
+      : clientRef.current.getClients().map((c) => c.id);
     const result = {
       ...modifiedInvoice,
       lineItems,
@@ -408,6 +426,7 @@ type EditInvoiceProps = {
   clients?: SingleClient[];
   services: CUService[];
   isEditing: boolean;
+  isDetached?: boolean;
 };
 
 export type LineItem = {
@@ -444,4 +463,5 @@ export type FullInvoice = {
   payments: Array<InvoicePayment>;
   clients: Array<number>;
   redacted: boolean;
+  billTo: null | string;
 };

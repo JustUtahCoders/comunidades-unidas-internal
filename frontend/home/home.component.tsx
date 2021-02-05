@@ -11,6 +11,7 @@ import reportsUrl from "../../icons/148705-essential-collection/svg/volume-contr
 import addLeadsUrl from "../../icons/148705-essential-collection/svg/windows-3.svg";
 import eventListUrl from "../../icons/148705-essential-collection/svg/calendar-1.svg";
 import adminUrl from "../../icons/148705-essential-collection/svg/settings-1.svg";
+import invoicesUrl from "../../icons/148705-essential-collection/svg/price-tag.svg";
 import { useCss } from "kremling";
 
 export default function Home(props: HomeProps) {
@@ -73,6 +74,12 @@ export default function Home(props: HomeProps) {
           title="Reports"
           link="reports"
           alt="Dial showing Low to High"
+        />
+        <HomeCard
+          iconUrl={invoicesUrl}
+          title="Invoices"
+          link="invoices"
+          alt="Price tag"
         />
         <HomeCard
           iconUrl={reportIssueUrl}

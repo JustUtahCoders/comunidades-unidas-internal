@@ -61,6 +61,10 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
             return databaseError(err);
           }
 
+          if (!client) {
+            client = [];
+          }
+
           const doc = new PDFDocument();
           res.status(200);
           res.set("Content-Type", "application/pdf");
@@ -150,99 +154,109 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
           doc.font(palatino);
           doc.text("Bill To:", payerLeft, topLine);
 
-          if (client) {
-            client.forEach((item, index) => {
-              const billTo = responseFullName(item.firstName, item.lastName);
-              doc.text(
-                billTo,
-                pageWidth - pageMargin - doc.widthOfString(billTo),
-                topLine + lineHeight * index,
-                {
-                  lineBreak: false,
-                }
-              );
-            });
-            doc.text(
-              "Client ID:",
-              payerLeft,
-              topLine + lineHeight * client.length
-            );
-            doc.text(
-              "Invoice Number:",
-              payerLeft,
-              topLine + lineHeight * (client.length + 1)
-            );
-            doc.text(
-              "Invoice Date:",
-              payerLeft,
-              topLine + lineHeight * (client.length + 2)
-            );
-            doc.text(
-              "Invoice Amount:",
-              payerLeft,
-              topLine + lineHeight * (client.length + 3)
-            );
-            doc.text(
-              "Invoice Status:",
-              payerLeft,
-              topLine + lineHeight * (client.length + 4)
-            );
-          }
+          const billToRows = client.length + (invoice.billTo ? 1 : 0);
 
-          if (client) {
-            const ids = client.map((item) => item.id).join(", ");
+          client.forEach((item, index) => {
+            const billTo = responseFullName(item.firstName, item.lastName);
             doc.text(
-              ids,
-              pageWidth - pageMargin - doc.widthOfString(ids),
+              billTo,
+              pageWidth - pageMargin - doc.widthOfString(billTo),
+              topLine + lineHeight * index,
+              {
+                lineBreak: false,
+              }
+            );
+          });
+
+          if (invoice.billTo) {
+            doc.text(
+              invoice.billTo,
+              pageWidth - pageMargin - doc.widthOfString(invoice.billTo),
               topLine + lineHeight * client.length,
               {
                 lineBreak: false,
               }
             );
+          }
 
+          if (client.length > 0) {
             doc.text(
-              invoice.invoiceNumber,
-              pageWidth - pageMargin - doc.widthOfString(invoice.invoiceNumber),
-              topLine + lineHeight * (client.length + 1),
-              {
-                lineBreak: false,
-              }
-            );
-
-            const invoiceDate = dayjs(invoice.invoiceDate).format(
-              "MMM DD, YYYY"
-            );
-            doc.text(
-              invoiceDate,
-              pageWidth - pageMargin - doc.widthOfString(invoiceDate),
-              topLine + lineHeight * (client.length + 2),
-              {
-                lineBreak: false,
-              }
-            );
-
-            const amount = `$${
-              invoice.totalCharged ? invoice.totalCharged.toFixed(2) : "0.00"
-            }`;
-            doc.text(
-              amount,
-              pageWidth - pageMargin - doc.widthOfString(amount),
-              topLine + lineHeight * (client.length + 3),
-              {
-                lineBreak: false,
-              }
-            );
-
-            const status = capitalize(invoice.status);
-            doc.text(
-              status,
-              pageWidth - pageMargin - doc.widthOfString(status),
-              topLine + lineHeight * (client.length + 4),
-              {
-                lineBreak: false,
-              }
+              "Client ID:",
+              payerLeft,
+              topLine + lineHeight * client.length
             );
           }
+          doc.text(
+            "Invoice Number:",
+            payerLeft,
+            topLine + lineHeight * (billToRows + 1)
+          );
+          doc.text(
+            "Invoice Date:",
+            payerLeft,
+            topLine + lineHeight * (billToRows + 2)
+          );
+          doc.text(
+            "Invoice Amount:",
+            payerLeft,
+            topLine + lineHeight * (billToRows + 3)
+          );
+          doc.text(
+            "Invoice Status:",
+            payerLeft,
+            topLine + lineHeight * (billToRows + 4)
+          );
+
+          const ids = client.map((item) => item.id).join(", ");
+          doc.text(
+            ids,
+            pageWidth - pageMargin - doc.widthOfString(ids),
+            topLine + lineHeight * client.length,
+            {
+              lineBreak: false,
+            }
+          );
+
+          doc.text(
+            invoice.invoiceNumber,
+            pageWidth - pageMargin - doc.widthOfString(invoice.invoiceNumber),
+            topLine + lineHeight * (billToRows + 1),
+            {
+              lineBreak: false,
+            }
+          );
+
+          const invoiceDate = dayjs(invoice.invoiceDate).format("MMM DD, YYYY");
+          doc.text(
+            invoiceDate,
+            pageWidth - pageMargin - doc.widthOfString(invoiceDate),
+            topLine + lineHeight * (billToRows + 2),
+            {
+              lineBreak: false,
+            }
+          );
+
+          const amount = `$${
+            invoice.totalCharged ? invoice.totalCharged.toFixed(2) : "0.00"
+          }`;
+          doc.text(
+            amount,
+            pageWidth - pageMargin - doc.widthOfString(amount),
+            topLine + lineHeight * (billToRows + 3),
+            {
+              lineBreak: false,
+            }
+          );
+
+          const status = capitalize(invoice.status);
+          doc.text(
+            status,
+            pageWidth - pageMargin - doc.widthOfString(status),
+            topLine + lineHeight * (billToRows + 4),
+            {
+              lineBreak: false,
+            }
+          );
 
           // Table
 
@@ -362,7 +376,7 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
             otherTop + lineHeight
           );
           doc.text(
-            ` $${invoice.totalCharged.toFixed(2).toLocaleString()}`,
+            ` $${(invoice.totalCharged || 0).toFixed(2).toLocaleString()}`,
             col5Left,
             otherTop + lineHeight * 2
           );

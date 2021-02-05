@@ -1,6 +1,6 @@
 SELECT
   payments.id, payments.paymentDate, payments.paymentAmount, payments.paymentType,
-  payments.donationId, payments.dateAdded, payments.dateModified,
+  payments.donationId, payments.dateAdded, payments.dateModified, payments.payerName,
   addedUser.firstName addedFirstName, addedUser.lastName addedLastName,
   modifiedUser.firstName modifiedFirstName, modifiedUser.lastName modifiedLastName,
   donations.id donationId, donations.donationAmount donationAmount,
@@ -30,7 +30,11 @@ SELECT
   LEFT JOIN invoiceClients ON invoiceClients.invoiceId = invoicePayments.invoiceId
   LEFT JOIN tags ON (tags.foreignId = payments.id AND tags.foreignTable = 'payments')
 WHERE
+<% if (detachedPayments) { %>
+  invoiceClients.clientId IS NULL
+<% } else { %>
   (paymentClients.clientId = ? OR invoiceClients.clientId = ?)
+<% } %>
   AND
   payments.isDeleted = false
 GROUP BY payments.id

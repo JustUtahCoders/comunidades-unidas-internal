@@ -15,6 +15,7 @@ const {
   validDate,
   validCurrency,
   nullableValidCurrency,
+  nullableNonEmptyString,
 } = require("../utils/validation-utils");
 const { checkValidPaymentRequestIds } = require("./payment-utils");
 const {
@@ -45,6 +46,7 @@ app.post("/api/payments", (req, res) => {
     validCurrency("paymentAmount"),
     validEnum("paymentType", "cash", "credit", "debit", "check", "other"),
     validArray("payerClientIds", validId),
+    nullableNonEmptyString("payerName"),
     nullableValidCurrency("donationAmount")
   );
 
@@ -89,9 +91,9 @@ app.post("/api/payments", (req, res) => {
       insertSql += mysql.format(
         `
       INSERT INTO payments
-      (paymentDate, paymentAmount, paymentType, addedBy, modifiedBy, donationId)
+      (paymentDate, paymentAmount, paymentType, payerName, addedBy, modifiedBy, donationId)
       VALUES
-      (?, ?, ?, ?, ?, @donationId);
+      (?, ?, ?, ?, ?, ?, @donationId);
 
       SET @paymentId := LAST_INSERT_ID();
 
@@ -137,6 +139,7 @@ app.post("/api/payments", (req, res) => {
           req.body.paymentDate,
           req.body.paymentAmount,
           req.body.paymentType,
+          req.body.payerName || null,
           user.id,
           user.id,
         ]

@@ -31,6 +31,7 @@ exports.formatResponseInvoice = function formatResponseInvoice({
     clientNote: redact ? null : invoice.clientNote,
     totalCharged: redact ? null : invoice.totalCharged,
     status: invoice.status,
+    billTo: invoice.billTo || null,
     redacted: redact,
     createdBy: responseUser(createdByUser, invoice.dateAdded),
     modifiedBy: responseUser(modifiedByUser, invoice.dateModified),

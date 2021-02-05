@@ -1,13 +1,13 @@
 import React from "react";
 import easyFetch from "../../util/easy-fetch";
+import InvoiceHome from "./invoice-home.component";
 import { FullInvoice } from "./edit-invoice.component";
 import { FullPayment } from "../payments/edit-payment.component";
-import { UserModeContext, UserMode } from "../../util/user-mode.context";
-import { SingleClient } from "../view-client.component";
-import InvoiceHome from "./invoice-home.component";
 import { CUService } from "../../add-client/services.component";
+import PageHeader from "../../page-header.component";
+import { UserModeContext, UserMode } from "../../util/user-mode.context";
 
-export default function ClientInvoices(props: ClientInvoicesProps) {
+export default function DetachedInvoices(props: DetachedInvoicesProps) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const { userMode } = React.useContext(UserModeContext);
   const tagsQuery =
@@ -16,7 +16,7 @@ export default function ClientInvoices(props: ClientInvoicesProps) {
   React.useEffect(() => {
     if (state.invoiceStatus === ApiStatus.shouldLoad) {
       const ac = new AbortController();
-      easyFetch(`/api/clients/${props.clientId}/invoices${tagsQuery}`, {
+      easyFetch(`/api/detached-invoices${tagsQuery}`, {
         signal: ac.signal,
       }).then(
         (data) => {
@@ -39,12 +39,25 @@ export default function ClientInvoices(props: ClientInvoicesProps) {
         ac.abort();
       };
     }
-  }, [state.invoiceStatus, tagsQuery]);
+  }, [state.invoiceStatus]);
+
+  React.useEffect(() => {
+    const ac = new AbortController();
+    easyFetch(`/api/services`).then(
+      (data) =>
+        dispatch({ type: ActionTypes.setServices, services: data.services }),
+      (err) => {
+        setTimeout(() => {
+          throw err;
+        });
+      }
+    );
+  }, []);
 
   React.useEffect(() => {
     if (state.paymentStatus === ApiStatus.shouldLoad) {
       const ac = new AbortController();
-      easyFetch(`/api/clients/${props.clientId}/payments${tagsQuery}`, {
+      easyFetch(`/api/detached-payments${tagsQuery}`, {
         signal: ac.signal,
       }).then(
         (data) => {
@@ -69,36 +82,20 @@ export default function ClientInvoices(props: ClientInvoicesProps) {
     }
   }, [state.paymentStatus, tagsQuery]);
 
-  React.useEffect(() => {
-    const ac = new AbortController();
-    easyFetch(`/api/services`).then(
-      (data) =>
-        dispatch({ type: ActionTypes.setServices, services: data.services }),
-      (err) => {
-        setTimeout(() => {
-          throw err;
-        });
-      }
-    );
-  }, []);
-
-  React.useEffect(() => {
-    dispatch({
-      type: ActionTypes.userModeChanged,
-    });
-  }, [userMode]);
-
   return (
-    <InvoiceHome
-      invoiceStatus={state.invoiceStatus}
-      invoices={state.invoices}
-      payments={state.payments}
-      paymentStatus={state.paymentStatus}
-      client={props.client}
-      refetchInvoices={refetchInvoices}
-      refetchPayments={refetchPayments}
-      services={state.services}
-    />
+    <>
+      <PageHeader title="Invoices" />
+      <InvoiceHome
+        invoiceStatus={state.invoiceStatus}
+        invoices={state.invoices}
+        payments={state.payments}
+        paymentStatus={state.paymentStatus}
+        refetchInvoices={refetchInvoices}
+        refetchPayments={refetchPayments}
+        services={state.services}
+        isDetached
+      />
+    </>
   );
 
   function refetchInvoices() {
@@ -155,21 +152,8 @@ function reducer(state: State, action: Action): State {
         paymentStatus: ApiStatus.shouldLoad,
         invoiceStatus: ApiStatus.shouldLoad,
       };
-    case ActionTypes.userModeChanged:
-      return {
-        ...state,
-        paymentStatus: ApiStatus.shouldLoad,
-        invoiceStatus: ApiStatus.shouldLoad,
-      };
   }
 }
-
-type ClientInvoicesProps = {
-  path: string;
-  clientId: string;
-  client: SingleClient;
-  navigate?: (path) => any;
-};
 
 enum ActionTypes {
   newInvoices = "newInvoices",
@@ -213,10 +197,6 @@ type FetchPayments = {
   type: ActionTypes.fetchPayments;
 };
 
-type UserModeChanged = {
-  type: ActionTypes.userModeChanged;
-};
-
 type Action =
   | NewInvoices
   | InvoiceError
@@ -224,15 +204,7 @@ type Action =
   | PaymentsError
   | SetServices
   | FetchInvoices
-  | FetchPayments
-  | UserModeChanged;
-
-enum ApiStatus {
-  shouldLoad = "shouldLoad",
-  loading = "loading",
-  loaded = "loaded",
-  error = "error",
-}
+  | FetchPayments;
 
 type State = {
   invoices: Array<FullInvoice>;
@@ -242,12 +214,16 @@ type State = {
   services: CUService[];
 };
 
-export enum InvoiceStatus {
-  draft = "draft",
-  open = "open",
-  completed = "completed",
-  closed = "closed",
+enum ApiStatus {
+  shouldLoad = "shouldLoad",
+  loading = "loading",
+  loaded = "loaded",
+  error = "error",
 }
+
+type DetachedInvoicesProps = {
+  path?: string;
+};
 
 const initialState: State = {
   invoiceStatus: ApiStatus.shouldLoad,

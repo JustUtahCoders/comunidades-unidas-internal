@@ -22,6 +22,7 @@ const {
   nullableValidDate,
   nullableValidTags,
   nullableValidString,
+  nullableValidId,
 } = require("../utils/validation-utils");
 const { uniq } = require("lodash");
 const {
@@ -46,12 +47,13 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
       nullableValidCurrency("totalCharged"),
       nullableValidEnum("status", "draft", "open", "completed", "closed"),
       nullableValidArray("clients", validId),
+      nullableNonEmptyString("billTo"),
       nullableValidArray("lineItems", (index) => {
         return (lineItems) => {
           const lineItem = lineItems[index];
           const errs = checkValid(
             lineItem,
-            validId("serviceId"),
+            nullableValidId("serviceId"),
             nonEmptyString("name"),
             nullableValidString("description"),
             validInteger("quantity"),
@@ -118,7 +120,7 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
       UPDATE invoices
       SET
         invoiceNumber = ?, invoiceDate = ?, clientNote = ?, totalCharged = ?,
-        status = ?, modifiedBy = ?
+        status = ?, billTo = ?, modifiedBy = ?
       WHERE id = ?;
     `,
       [
@@ -127,6 +129,7 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
         newInvoice.clientNote,
         newInvoice.totalCharged,
         newInvoice.status,
+        newInvoice.billTo,
         user.id,
         invoiceId,
       ]

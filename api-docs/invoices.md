@@ -27,6 +27,7 @@ GET /api/invoices/:invoiceId?tags=immigration
   "clientNote": "Client note",
   "totalCharged": 30,
   "totalPaid": 12.55,
+  "billTo": "Other Name to Bill To",
   "status": "draft|open|completed|closed",
   "payments": [
     {
@@ -84,6 +85,66 @@ GET /api/clients/:clientId/invoices?tags=immigration
     "clientNote": "Client note",
     "totalCharged": 30,
     "totalPaid": 12.55,
+    "billTo": "Other Name to Bill To",
+    "status": "draft|open|completed|closed",
+    "payments": [
+      {
+        "paymentId": 2434,
+        "paymentAmount": 10,
+        "amountTowardsInvoice": 8
+      }
+    ],
+    "clients": [45, 23],
+    "redacted": false,
+    "createdBy": {
+      "userId": 123,
+      "firstName": "Shigeru",
+      "lastName": "Miyamoto",
+      "fullName": "Shigeru Miyamoto",
+      "timestamp": "2019-05-06T06:00:00.000Z"
+    },
+    "lastUpdatedBy": {
+      "userId": 1,
+      "firstName": "Joel",
+      "lastName": "Denning",
+      "fullName": "Joel Denning",
+      "timestamp": "2019-05-06T06:00:00.000Z"
+    }
+  }
+]
+```
+
+## Get detached invoices
+
+Detached invoices refer to invoices not associated with a client
+
+### Request
+
+```
+GET /api/detached-invoices
+```
+
+### Response
+
+```json
+[
+  {
+    "id": 123,
+    "invoiceNumber": "1003",
+    "invoiceDate": "2020-10-01",
+    "lineItems": [
+      {
+        "serviceId": 1,
+        "name": "DACA",
+        "description": "Prepared the documents",
+        "quantity": 1,
+        "rate": 40
+      }
+    ],
+    "clientNote": "Client note",
+    "totalCharged": 30,
+    "totalPaid": 12.55,
+    "billTo": "Other Name to Bill To",
     "status": "draft|open|completed|closed",
     "payments": [
       {
@@ -133,6 +194,7 @@ POST /api/invoices?tags=immigration
   "clientNote": "",
   "totalCharged": 0,
   "totalPaid": 0,
+  "billTo": null,
   "status": "draft",
   "payments": [],
   "clients": [],
@@ -179,6 +241,7 @@ PATCH /api/invoices/:invoiceId?tags=immigration
   ],
   "clientNote": "",
   "totalCharged": 0,
+  "billTo": "Other Bill To Name",
   "status": "draft",
   "payments": [
     {
@@ -236,6 +299,7 @@ GET /api/clients/:clientId/payments?tags=immigration
     "paymentAmount": 20,
     "paymentType": "cash|credit|debit|check|other",
     "payerClientIds": [23, 76],
+    "payerName": "Some payer name",
     "redacted": false,
     "createdBy": {
       "userId": 123,
@@ -279,6 +343,7 @@ GET /api/invoices/:invoiceId/payments?tags=immigration
     "paymentAmount": 20,
     "paymentType": "cash|credit|debit|check|other",
     "payerClientIds": [23, 76],
+    "payerName": "Some payer name",
     "donationId": 4543,
     "donationAmount": 21,
     "redacted": false,
@@ -320,7 +385,8 @@ POST /api/payments?tags=immigration
   "paymentAmount": 20,
   "paymentType": "cash|credit|debit|check|other",
   "donationAmount": 10,
-  "payerClientIds": [23, 76]
+  "payerClientIds": [23, 76],
+  "payerName": "Some payer name"
 }
 ```
 
@@ -348,7 +414,8 @@ PATCH /api/payments/:paymentId?tags=immigration
   "paymentAmount": 20,
   "paymentType": "cash|credit|debit|check|other",
   "donationAmount": 10,
-  "payerClientIds": [23, 76]
+  "payerClientIds": [23, 76],
+  "payerName": "Some payer name"
 }
 ```
 
