@@ -20,6 +20,7 @@ import adminSettingsUrl from "../../icons/148705-essential-collection/svg/settin
 import expandUrl from "../../icons/148705-essential-collection/svg/fast-forward.svg";
 import collapseUrl from "../../icons/148705-essential-collection/svg/rewind.svg";
 import loginUrl from "../../icons/148705-essential-collection/svg/login.svg";
+import invoicesUrl from "../../icons/148705-essential-collection/svg/price-tag.svg";
 
 export default function Sidebar(props: SidebarProps) {
   const scope = useCss(css);
@@ -158,6 +159,17 @@ export default function Sidebar(props: SidebarProps) {
             >
               <img className="collapsed" src={eventListUrl} alt="Events List" />
               <div className="expanded">Events List</div>
+            </Link>
+          </li>
+          <li title="Invoices">
+            <Link
+              to="invoices"
+              className="nav-link"
+              onClick={maybeHideSidebar}
+              getProps={maybeActiveLink}
+            >
+              <img className="collapsed" src={invoicesUrl} alt="Invoices" />
+              <div className="expanded">Invoices</div>
             </Link>
           </li>
           <li title="Programs and Services">

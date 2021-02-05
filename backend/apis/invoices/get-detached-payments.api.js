@@ -12,15 +12,13 @@ const ejs = require("ejs");
 
 const rawGetSqlPromise = ejs.renderFile(
   path.join(__dirname, "./get-client-payments.sql"),
-  { detachedPayments: false }
+  { detachedPayments: true }
 );
 
-app.get("/api/clients/:clientId/payments", async (req, res) => {
+app.get("/api/detached-payments", async (req, res) => {
   const user = req.session.passport.user;
-  const clientId = req.params.clientId;
 
   const validationErrors = [
-    ...checkValid(req.params, validId("clientId")),
     ...checkValid(req.query, nullableValidTags("tags", user.permissions)),
   ];
 
@@ -28,11 +26,11 @@ app.get("/api/clients/:clientId/payments", async (req, res) => {
     return invalidRequest(res, validationErrors);
   }
 
+  const rawGetSql = await rawGetSqlPromise;
   const tags = sanitizeTags(req.query.tags);
   const redactedTags = validTagsList.filter((t) => !tags.includes(t));
 
-  const rawGetSql = await rawGetSqlPromise;
-  const getSql = mysql.format(rawGetSql, [clientId, clientId]);
+  const getSql = mysql.format(rawGetSql, []);
 
   pool.query(getSql, (err, result) => {
     if (err) {

@@ -65,7 +65,7 @@ export default function ViewInvoice(props: ViewInvoiceProps) {
       (item) => item !== props.client?.id
     );
 
-    if (clientIds.length > 1) {
+    if (clientIds.length > 0) {
       easyFetch(`/api/clients-by-id?clientId=${clientIds.join("&clientId=")}`, {
         signal: ac.signal,
       })

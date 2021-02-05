@@ -19,6 +19,7 @@ const {
   nullableValidCurrency,
   nullableValidTags,
   nullableValidInteger,
+  nullableNonEmptyString,
 } = require("../utils/validation-utils");
 const { checkValidPaymentRequestIds } = require("./payment-utils");
 const { sumBy } = require("lodash");
@@ -59,7 +60,8 @@ app.patch("/api/payments/:paymentId", (req, res) => {
         "check",
         "other"
       ),
-      nullableValidArray("payerClientIds", validId)
+      nullableValidArray("payerClientIds", validId),
+      nullableNonEmptyString("payerName")
     ),
     ...checkValid(req.query, nullableValidTags("tags", user.permissions)),
   ];
@@ -114,7 +116,7 @@ app.patch("/api/payments/:paymentId", (req, res) => {
         let insertSql = mysql.format(
           `
         UPDATE payments SET
-          paymentDate = ?, paymentAmount = ?, paymentType = ?, modifiedBy = ?
+          paymentDate = ?, paymentAmount = ?, paymentType = ?, payerName = ?, modifiedBy = ?
           WHERE id = ?
         ;
 
@@ -124,6 +126,7 @@ app.patch("/api/payments/:paymentId", (req, res) => {
             newPayment.paymentDate,
             newPayment.paymentAmount,
             newPayment.paymentType,
+            newPayment.payerName,
             user.id,
             newPayment.id,
           ]

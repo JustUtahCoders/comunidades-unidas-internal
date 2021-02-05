@@ -61,6 +61,7 @@ export default function InvoiceHome(props: InvoiceHomeProps) {
             clientInvoices={props.invoices}
             close={() => dispatch({ type: ActionTypes.cancelCreatePayment })}
             refetchPayments={props.refetchPayments}
+            isDetached={props.isDetached}
           />
         )}
       </div>
@@ -114,6 +115,7 @@ export default function InvoiceHome(props: InvoiceHomeProps) {
               invoices={props.invoices}
               payments={props.payments}
               refetchPayments={props.refetchPayments}
+              isDetached={props.isDetached}
             />
           );
         }

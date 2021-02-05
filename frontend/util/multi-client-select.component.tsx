@@ -1,8 +1,5 @@
-import { maybe } from "kremling";
-import { cloneDeep } from "lodash-es";
-import React, { createRef, useEffect } from "react";
+import React from "react";
 import SingleClientSearchInput from "../client-search/single-client/single-client-search-input.component";
-import CUProgramInputs from "../programs-and-services/cu-program-inputs.component";
 import { SingleClient } from "../view-edit-client/view-client.component";
 import CloseIconButton from "./close-icon-button.component";
 
@@ -16,7 +13,7 @@ const MultiClientSelect = React.forwardRef<
       return clients;
     },
   }));
-  const clientRefs = React.useRef([]);
+  const clientRefs = React.useRef<SingleClient[]>([]);
 
   React.useEffect(() => {
     clientRefs.current = clientRefs.current.slice(0, clients.length);
@@ -31,13 +28,16 @@ const MultiClientSelect = React.forwardRef<
   return (
     <div>
       {clients.map((client, idx) => (
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex" }} key={client?.id || idx}>
           <SingleClientSearchInput
-            ref={(person) => (clientRefs.current[idx] = person)}
+            ref={(state) => {
+              if (state) {
+                clientRefs.current[idx] = state.client;
+              }
+            }}
             clientChanged={() => {
               let newArr = [...clients];
-              // @ts-ignore
-              newArr[idx] = clientRefs.current[idx].clientId;
+              newArr[idx] = clientRefs.current[idx];
               setClients(newArr);
             }}
             initialClient={client}
@@ -52,7 +52,9 @@ const MultiClientSelect = React.forwardRef<
         className="secondary"
         onClick={(e) => {
           e.preventDefault();
-          setClients([...clients, props.initialClients[0]]);
+          const newClient =
+            clients.length === 0 ? props.initialClients[0] : null;
+          setClients([...clients, newClient]);
         }}
       >
         Add client

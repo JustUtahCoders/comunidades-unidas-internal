@@ -7,6 +7,9 @@ import { humanReadablePaymentType } from "../edit-payment.component";
 export default function CreatePaymentConfirmation(
   props: CreatePaymentStepProps
 ) {
+  const payerName = props.isDetached
+    ? props.payment.payerName
+    : props.client.fullName;
   return (
     <div style={{ marginBottom: "2.4rem" }}>
       <BasicTableReport
@@ -16,7 +19,7 @@ export default function CreatePaymentConfirmation(
           <>
             <tr>
               <th>Payer</th>
-              <td>{props.client.fullName}</td>
+              <td>{payerName}</td>
             </tr>
             <tr>
               <th>Date</th>

@@ -29,6 +29,7 @@ function PaymentsList(props: ClientPaymentsListProps) {
               proceed={close}
               setPayment={null}
               refetchPayments={props.refetchPayments}
+              isDetached={props.isDetached}
             />
           )}
         />
@@ -50,6 +51,7 @@ type ClientPaymentsListProps = {
   payments: FullPayment[];
   client: SingleClient;
   refetchPayments(): any;
+  isDetached?: boolean;
 };
 
 export default PaymentsList;

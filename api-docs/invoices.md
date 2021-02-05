@@ -27,6 +27,7 @@ GET /api/invoices/:invoiceId?tags=immigration
   "clientNote": "Client note",
   "totalCharged": 30,
   "totalPaid": 12.55,
+  "billTo": "Other Name to Bill To",
   "status": "draft|open|completed|closed",
   "payments": [
     {
@@ -84,6 +85,7 @@ GET /api/clients/:clientId/invoices?tags=immigration
     "clientNote": "Client note",
     "totalCharged": 30,
     "totalPaid": 12.55,
+    "billTo": "Other Name to Bill To",
     "status": "draft|open|completed|closed",
     "payments": [
       {
@@ -142,6 +144,7 @@ GET /api/detached-invoices
     "clientNote": "Client note",
     "totalCharged": 30,
     "totalPaid": 12.55,
+    "billTo": "Other Name to Bill To",
     "status": "draft|open|completed|closed",
     "payments": [
       {
@@ -191,6 +194,7 @@ POST /api/invoices?tags=immigration
   "clientNote": "",
   "totalCharged": 0,
   "totalPaid": 0,
+  "billTo": null,
   "status": "draft",
   "payments": [],
   "clients": [],
@@ -237,6 +241,7 @@ PATCH /api/invoices/:invoiceId?tags=immigration
   ],
   "clientNote": "",
   "totalCharged": 0,
+  "billTo": "Other Bill To Name",
   "status": "draft",
   "payments": [
     {
@@ -294,6 +299,7 @@ GET /api/clients/:clientId/payments?tags=immigration
     "paymentAmount": 20,
     "paymentType": "cash|credit|debit|check|other",
     "payerClientIds": [23, 76],
+    "payerName": "Some payer name",
     "redacted": false,
     "createdBy": {
       "userId": 123,
@@ -337,6 +343,7 @@ GET /api/invoices/:invoiceId/payments?tags=immigration
     "paymentAmount": 20,
     "paymentType": "cash|credit|debit|check|other",
     "payerClientIds": [23, 76],
+    "payerName": "Some payer name",
     "donationId": 4543,
     "donationAmount": 21,
     "redacted": false,
@@ -378,7 +385,8 @@ POST /api/payments?tags=immigration
   "paymentAmount": 20,
   "paymentType": "cash|credit|debit|check|other",
   "donationAmount": 10,
-  "payerClientIds": [23, 76]
+  "payerClientIds": [23, 76],
+  "payerName": "Some payer name"
 }
 ```
 
@@ -406,7 +414,8 @@ PATCH /api/payments/:paymentId?tags=immigration
   "paymentAmount": 20,
   "paymentType": "cash|credit|debit|check|other",
   "donationAmount": 10,
-  "payerClientIds": [23, 76]
+  "payerClientIds": [23, 76],
+  "payerName": "Some payer name"
 }
 ```
 

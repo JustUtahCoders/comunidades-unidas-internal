@@ -48,7 +48,16 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
         {props.isDetached ? (
           <div className="clients input-block">
             <label htmlFor="detached-client-name">Bill To:</label>
-            <input type="text" placeholder="Name" />
+            <input
+              type="text"
+              value={modifiedInvoice.billTo || ""}
+              onChange={(evt) =>
+                setModifiedInvoice({
+                  ...modifiedInvoice,
+                  billTo: evt.target.value,
+                })
+              }
+            />
           </div>
         ) : (
           <div className="clients input-block">
@@ -303,8 +312,9 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
       .concat(newLineItems)
       .filter((li) => li.name && li.rate && li.quantity)
       .map((li) => ({ ...li, rate: Number(li.rate) }));
-    // @ts-ignore
-    const clientIds = props.isDetached ? [] : clientRef.current.getClients();
+    const clientIds = props.isDetached
+      ? []
+      : clientRef.current.getClients().map((c) => c.id);
     const result = {
       ...modifiedInvoice,
       lineItems,
@@ -453,4 +463,5 @@ export type FullInvoice = {
   payments: Array<InvoicePayment>;
   clients: Array<number>;
   redacted: boolean;
+  billTo: null | string;
 };

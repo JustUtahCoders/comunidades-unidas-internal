@@ -73,43 +73,47 @@ export default function CreatePaymentSelectInvoices(
                 </tr>
               </thead>
               <tbody>
-                {invoiceRows.map((invoice) => {
-                  const invoicePayment = props.payment.invoices.find(
-                    (i) => i.invoiceId === invoice.id
-                  );
+                {invoiceRows
+                  .filter((invoice) => invoice.totalCharged)
+                  .map((invoice) => {
+                    const invoicePayment = props.payment.invoices.find(
+                      (i) => i.invoiceId === invoice.id
+                    );
 
-                  return (
-                    <tr key={invoice.id}>
-                      <td>
-                        <input
-                          type="checkbox"
-                          checked={Boolean(invoicePayment)}
-                          onChange={(evt) => toggleCheckInvoice(evt, invoice)}
-                        />
-                      </td>
-                      <td>{invoice.invoiceNumber}</td>
-                      <td>${invoice.totalCharged.toFixed(2)}</td>
-                      <td>
-                        $
-                        {(
-                          invoice.totalCharged -
-                          sumBy(invoice.payments, "amountTowardsInvoice")
-                        ).toFixed(2)}
-                      </td>
-                      <td>
-                        <input
-                          type="number"
-                          min="0.01"
-                          step="0.01"
-                          placeholder="$0.00"
-                          value={invoicePayment ? invoicePayment.amount : ""}
-                          onChange={(evt) => updatePaymentAmount(evt, invoice)}
-                          onBlur={() => handleBlur(invoice, invoicePayment)}
-                        />
-                      </td>
-                    </tr>
-                  );
-                })}
+                    return (
+                      <tr key={invoice.id}>
+                        <td>
+                          <input
+                            type="checkbox"
+                            checked={Boolean(invoicePayment)}
+                            onChange={(evt) => toggleCheckInvoice(evt, invoice)}
+                          />
+                        </td>
+                        <td>{invoice.invoiceNumber}</td>
+                        <td>${invoice.totalCharged.toFixed(2)}</td>
+                        <td>
+                          $
+                          {(
+                            invoice.totalCharged -
+                            sumBy(invoice.payments, "amountTowardsInvoice")
+                          ).toFixed(2)}
+                        </td>
+                        <td>
+                          <input
+                            type="number"
+                            min="0.01"
+                            step="0.01"
+                            placeholder="$0.00"
+                            value={invoicePayment ? invoicePayment.amount : ""}
+                            onChange={(evt) =>
+                              updatePaymentAmount(evt, invoice)
+                            }
+                            onBlur={() => handleBlur(invoice, invoicePayment)}
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </div>

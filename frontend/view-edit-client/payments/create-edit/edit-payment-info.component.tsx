@@ -26,15 +26,25 @@ export default function EditPaymentInfo(props: CreatePaymentStepProps) {
       className={always("container").maybe("edit", props.edit)}
     >
       <div className="question">Who made the payment?</div>
-      <SingleClientSearchInput
-        autoFocus
-        initialClient={props.client}
-        ref={clientRef}
-      />
-      <button type="button" className="unstyled link add-payer">
-        Add another payer
-      </button>
+      {!props.isDetached && (
+        <SingleClientSearchInput
+          autoFocus
+          initialClient={props.client}
+          ref={clientRef}
+        />
+      )}
       <div {...useCss(css)} className="inputs">
+        {props.isDetached && (
+          <div>
+            <label htmlFor="payer-name">Payer name:</label>
+            <input
+              id="payer-name"
+              type="text"
+              value={props.payment.payerName || ""}
+              onChange={updateField("payerName")}
+            />
+          </div>
+        )}
         <div>
           <label htmlFor="payment-date">Payment Date:</label>
           <input

@@ -54,33 +54,33 @@ export default function DetachedInvoices(props: DetachedInvoicesProps) {
     );
   }, []);
 
-  // React.useEffect(() => {
-  //   if (state.paymentStatus === ApiStatus.shouldLoad) {
-  //     const ac = new AbortController();
-  //     easyFetch(`/api/clients/${props.clientId}/payments${tagsQuery}`, {
-  //       signal: ac.signal,
-  //     }).then(
-  //       (data) => {
-  //         dispatch({
-  //           type: ActionTypes.newPayments,
-  //           payments: data.payments,
-  //         });
-  //       },
-  //       (err) => {
-  //         dispatch({
-  //           type: ActionTypes.paymentsError,
-  //         });
-  //         setTimeout(() => {
-  //           throw err;
-  //         });
-  //       }
-  //     );
+  React.useEffect(() => {
+    if (state.paymentStatus === ApiStatus.shouldLoad) {
+      const ac = new AbortController();
+      easyFetch(`/api/detached-payments${tagsQuery}`, {
+        signal: ac.signal,
+      }).then(
+        (data) => {
+          dispatch({
+            type: ActionTypes.newPayments,
+            payments: data.payments,
+          });
+        },
+        (err) => {
+          dispatch({
+            type: ActionTypes.paymentsError,
+          });
+          setTimeout(() => {
+            throw err;
+          });
+        }
+      );
 
-  //     return () => {
-  //       ac.abort();
-  //     };
-  //   }
-  // }, [state.paymentStatus, tagsQuery]);
+      return () => {
+        ac.abort();
+      };
+    }
+  }, [state.paymentStatus, tagsQuery]);
 
   return (
     <>

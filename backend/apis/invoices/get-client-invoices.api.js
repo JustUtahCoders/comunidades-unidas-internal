@@ -12,7 +12,7 @@ const ejs = require("ejs");
 
 const rawGetSqlPromise = ejs.renderFile(
   path.resolve(__dirname, "./get-client-invoices.sql"),
-  { detachedInvoices: true }
+  { detachedInvoices: false }
 );
 
 app.get("/api/clients/:clientId/invoices", async (req, res) => {

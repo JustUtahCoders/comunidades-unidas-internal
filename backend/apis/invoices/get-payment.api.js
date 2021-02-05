@@ -58,7 +58,7 @@ function getFullPaymentById({ paymentId, redactedTags }, errBack) {
     `
     SELECT
       payments.id, payments.paymentDate, payments.paymentAmount, payments.paymentType,
-      payments.donationId, payments.dateAdded, payments.dateModified,
+      payments.donationId, payments.payerName, payments.dateAdded, payments.dateModified,
       addedUser.firstName addedFirstName, addedUser.lastName addedLastName,
       modifiedUser.firstName modifiedFirstName, modifiedUser.lastName modifiedLastName,
       donations.donationAmount donationAmount

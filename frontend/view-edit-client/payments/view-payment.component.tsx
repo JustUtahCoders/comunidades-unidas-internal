@@ -44,6 +44,7 @@ export default function ViewPayment(props: CreatePaymentStepProps) {
         invoices={props.invoices}
         goBack={cancelEdit}
         client={props.client}
+        isDetached={props.isDetached}
       />
     );
   }
