@@ -17,5 +17,6 @@
     "noEmit": true
   },
   "include": ["frontend/**/*"],
+  "exclude": ["frontend/**/*.test.tsx"],
   "files": ["frontend/custom.d.ts"]
 }

@@ -2,7 +2,7 @@ const CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin;
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
-const ManifestPlugin = require("webpack-manifest-plugin");
+const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
 
@@ -16,7 +16,7 @@ module.exports = (env, argv) => ({
     path: __dirname + "/static",
     publicPath: process.env.PUBLIC_PATH || "/static/",
   },
-  devtool: "sourcemap",
+  devtool: "source-map",
   module: {
     rules: [
       {
@@ -47,9 +47,7 @@ module.exports = (env, argv) => ({
   },
   devServer: {
     historyApiFallback: true,
-    index: "index.html",
     port: 9018,
-    publicPath: "http://localhost:9018/",
   },
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js"],
@@ -65,13 +63,13 @@ module.exports = (env, argv) => ({
     new BundleAnalyzerPlugin({
       analyzerMode: env && env.analyze ? "server" : "disabled",
     }),
-    new ManifestPlugin(),
+    new WebpackManifestPlugin(),
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify(argv.mode || "production"),
     }),
   ],
   optimization: {
-    namedChunks: true,
+    chunkIds: "named",
     minimize: argv.mode === "production",
     minimizer: [
       new TerserPlugin({
