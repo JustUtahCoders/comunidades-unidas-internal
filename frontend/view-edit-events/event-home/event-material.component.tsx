@@ -17,7 +17,7 @@ export default function EventMaterial(props) {
   }
 
   return (
-    <div {...useCss(css)} className="parent">
+    <div {...useCss(css)}>
       {props.materials.map((material) => {
         const materialDist = props.materialDistributed.find(
           (m) => m.materialId === material.id
@@ -46,7 +46,6 @@ export default function EventMaterial(props) {
             )}
           </div>
         );
-
         function quantityChanged(evt) {
           const newMaterialsDistributed = props.materialDistributed.map((m) => {
             if (m.materialId === material.id) {

@@ -9,10 +9,12 @@ import Modal from "../../util/modal.component";
 import { SingleEvent } from "../view-event.component";
 import EventMaterial from "./event-material.component";
 import EventSection from "./event-section.component";
+import { useCss } from "kremling";
 
 export default function ViewEditEventMaterials(
   props: ViewEditEventMaterialsProps
 ) {
+  const scope = useCss(css);
   const [isEditing, setIsEditing] = React.useState(false);
   const [isSaving, setIsSaving] = React.useState(false);
   const [materialsDistributed, setMaterialsDistributed] = React.useState([]);
@@ -103,7 +105,8 @@ export default function ViewEditEventMaterials(
         <h5>(No materials distributed)</h5>
       )}
 
-      <div style={{ marginTop: "1.6rem" }}>
+      {/* style={{ marginTop: "1.6rem" }} */}
+      <div className="editButton" {...scope}>
         {isEditing ? (
           <>
             <button className="secondary" onClick={() => setIsEditing(false)}>
@@ -157,3 +160,9 @@ type ViewEditEventMaterialsProps = {
   event: SingleEvent;
   eventUpdated(event: SingleEvent): void;
 };
+
+const css = `
+ .editButton {
+  margin-top: 1.6rem;
+}
+`;
