@@ -105,10 +105,12 @@ export default function AgesAndGendersResults(props) {
                 <tr key={gender}>
                   <th>{"\u2014"}</th>
                   <th>{capitalize(gender)}</th>
-                  <td>{data.clients.allAges[gender].toLocaleString()}</td>
+                  <td>
+                    {(data.clients.allAges[gender] || 0).toLocaleString()}
+                  </td>
                   {ageGroups.map((ageGroup) => (
                     <td key={ageGroup}>
-                      {data.clients[ageGroup][gender].toLocaleString()}
+                      {(data.clients[ageGroup][gender] || 0).toLocaleString()}
                     </td>
                   ))}
                 </tr>
@@ -124,7 +126,7 @@ export default function AgesAndGendersResults(props) {
                   <td>{data.totals.numLeads.toLocaleString()}</td>
                   {ageGroups.map((ageGroup) => (
                     <td key={ageGroup}>
-                      {data.leads.allGenders[ageGroup].toLocaleString()}
+                      {(data.leads.allGenders[ageGroup] || 0).toLocaleString()}
                     </td>
                   ))}
                 </tr>
@@ -133,10 +135,10 @@ export default function AgesAndGendersResults(props) {
                 <tr key={gender}>
                   <th>{"\u2014"}</th>
                   <th>{capitalize(gender)}</th>
-                  <td>{data.leads.allAges[gender].toLocaleString()}</td>
+                  <td>{(data.leads.allAges[gender] || 0).toLocaleString()}</td>
                   {ageGroups.map((ageGroup) => (
                     <td key={ageGroup}>
-                      {data.leads[ageGroup][gender].toLocaleString()}
+                      {(data.leads[ageGroup][gender] || 0).toLocaleString()}
                     </td>
                   ))}
                 </tr>
@@ -159,7 +161,7 @@ export default function AgesAndGendersResults(props) {
                 </td>
                 {ageGroups.map((ageGroup) => (
                   <td key={ageGroup}>
-                    {data.totals.ages[ageGroup].toLocaleString()}
+                    {(data.totals.ages[ageGroup] || 0).toLocaleString()}
                   </td>
                 ))}
               </tr>
@@ -168,12 +170,12 @@ export default function AgesAndGendersResults(props) {
               <tr>
                 <th>{"\u2014"}</th>
                 <th>{capitalize(gender)}</th>
-                <td>{data.totals.genders[gender].toLocaleString()}</td>
+                <td>{(data.totals.genders[gender] || 0).toLocaleString()}</td>
                 {ageGroups.map((ageGroup) => (
                   <td key={ageGroup}>
                     {(
-                      data.clients[ageGroup][gender] +
-                      data.leads[ageGroup][gender]
+                      (data.clients[ageGroup][gender] || 0) +
+                      (data.leads[ageGroup][gender] || 0)
                     ).toLocaleString()}
                   </td>
                 ))}
