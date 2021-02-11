@@ -52,11 +52,7 @@ export default function ViewEditEventMaterials(
           showGrowl({ type: GrowlType.success, message: "Event was updated." });
           setIsEditing(false);
         })
-        .catch((err) => {
-          setTimeout(() => {
-            throw err;
-          });
-        })
+        .catch(handlePromiseError)
         .finally(() => {
           setIsSaving(false);
         });
@@ -71,14 +67,12 @@ export default function ViewEditEventMaterials(
     <EventSection title="Materials Distributed">
       {props.event.materialsDistributed.length > 0 ? (
         isEditing ? (
-          <div>
-            <EventMaterial
-              materials={materials}
-              materialDistributed={materialsDistributed}
-              setMaterialDistributed={setMaterialsDistributed}
-              setShowMaterials={setShowMaterials}
-            />
-          </div>
+          <EventMaterial
+            materials={materials}
+            materialDistributed={materialsDistributed}
+            setMaterialDistributed={setMaterialsDistributed}
+            setShowMaterials={setShowMaterials}
+          />
         ) : (
           <BasicTableReport
             headerRows={
@@ -105,7 +99,6 @@ export default function ViewEditEventMaterials(
         <h5>(No materials distributed)</h5>
       )}
 
-      {/* style={{ marginTop: "1.6rem" }} */}
       <div className="editButton" {...scope}>
         {isEditing ? (
           <>
@@ -162,7 +155,7 @@ type ViewEditEventMaterialsProps = {
 };
 
 const css = `
- .editButton {
+ & .editButton {
   margin-top: 1.6rem;
 }
 `;
