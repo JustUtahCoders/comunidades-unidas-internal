@@ -8,6 +8,7 @@ import { mediaDesktop } from "../styleguide.component";
 import Modal from "../util/modal.component";
 import AddEditMaterials from "./add-edit-materials.component";
 import { handlePromiseError } from "../util/error-helpers";
+import EventMaterial from "../view-edit-events/event-home/event-material.component";
 
 export default function AddEventStep(props: AddEventStepProps) {
   const scope = useCss(css);
@@ -262,57 +263,12 @@ export default function AddEventStep(props: AddEventStepProps) {
         <div>
           <label>Materials:</label>
           <div>
-            {materials.map((material) => {
-              const materialDist = materialDistributed.find(
-                (m) => m.materialId === material.id
-              );
-              const isChecked = Boolean(materialDist);
-              return (
-                <div key={material.id} className="event-material">
-                  <input
-                    type="checkbox"
-                    id={`Material-${material.id}`}
-                    name="materials"
-                    onChange={handleChange}
-                    value={material.id}
-                    checked={isChecked}
-                  ></input>
-                  <label htmlFor={`Material-${material.id}`}>
-                    {material.name}
-                  </label>
-                  {isChecked && (
-                    <input
-                      type="number"
-                      placeholder="Quantity"
-                      min={0}
-                      value={materialDist.quantityDistributed}
-                      onChange={quantityChanged}
-                    />
-                  )}
-                </div>
-              );
-              function quantityChanged(evt) {
-                const newMaterialsDistributed = materialDistributed.map((m) => {
-                  if (m.materialId === material.id) {
-                    return {
-                      materialId: material.id,
-                      quantityDistributed: Number(evt.target.value),
-                    };
-                  } else {
-                    return m;
-                  }
-                });
-                setMaterialDistributed(newMaterialsDistributed);
-              }
-            })}
-
-            <button
-              className="secondary"
-              type="button"
-              onClick={() => setShowMaterials(true)}
-            >
-              Edit Materials
-            </button>
+            <EventMaterial
+              materials={materials}
+              materialDistributed={materialDistributed}
+              setMaterialDistributed={setMaterialDistributed}
+              setShowMaterials={setShowMaterials}
+            />
           </div>
         </div>
         <div className="actions">
@@ -322,21 +278,6 @@ export default function AddEventStep(props: AddEventStepProps) {
         </div>
       </>
     );
-  }
-
-  function handleChange(evt) {
-    const materialId = Number(evt.target.value);
-    if (
-      materialDistributed.some((material) => material.materialId === materialId)
-    ) {
-      const filteredMaterials = materialDistributed.filter(
-        (material) => material.materialId !== materialId
-      );
-      setMaterialDistributed(filteredMaterials);
-    } else {
-      const newMaterial = { materialId: materialId, quantityDistributed: 0 };
-      setMaterialDistributed([...materialDistributed, newMaterial]);
-    }
   }
 
   function handleSubmit(evt) {
