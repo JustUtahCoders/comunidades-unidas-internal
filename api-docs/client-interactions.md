@@ -29,6 +29,12 @@ GET /api/clients/:id/interactions/:id?tags=immigration
   "location": "CUOffice",
   "isDeleted": false,
   "redacted": false,
+  "customQuestions": [
+    {
+      "questionId": 123,
+      "answer": 6
+    }
+  ],
   "createdBy": {
     "userId": 1,
     "firstName": "Joel",
@@ -65,7 +71,13 @@ POST /api/clients/:id/interactions?tags=immigration
   "description": "Appointment setup with financial coach. Client would like to save up enough for a down payment on a car better suited for their work.",
   "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
-  "location": "CUOffice"
+  "location": "CUOffice",
+  "customQuestions": [
+    {
+      "questionId": 123,
+      "answer": 6
+    }
+  ]
 }
 ```
 
@@ -89,6 +101,12 @@ POST /api/clients/:id/interactions?tags=immigration
   "location": "CUOffice",
   "isDeleted": false,
   "redacted": false,
+  "customQuestions": [
+    {
+      "questionId": 123,
+      "answer": 6
+    }
+  ],
   "createdBy": {
     "userId": 1,
     "firstName": "Joel",
@@ -121,7 +139,13 @@ PATCH /api/clients/:id/interactions/:id
   "description": "Application successfully filled out. Decision pending.",
   "dateOfInteraction": "2019-05-06",
   "duration": "1:00:00",
-  "location": null
+  "location": null,
+  "customQuestions": [
+    {
+      "questionId": 123,
+      "answer": 6
+    }
+  ]
 }
 ```
 
