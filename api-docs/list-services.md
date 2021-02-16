@@ -28,7 +28,14 @@ GET /api/services?includeInactive=false
       "defaultInteractionType": "inPerson",
       "defaultInteractionLocation": "CUOffice",
       "defaultInteractionDuration": "03:00:00",
-      "isActive": true
+      "isActive": true,
+      "customQuestions": [
+        {
+          "id": 1,
+          "type": "text|number|boolean|select|date",
+          "label": "When did you first arrive to the United States?"
+        }
+      ]
     },
     {
       "id": 2,
@@ -42,7 +49,28 @@ GET /api/services?includeInactive=false
       "defaultInteractionType": "inPerson",
       "defaultInteractionLocation": "CUOffice",
       "defaultInteractionDuration": "03:00:00",
-      "isActive": true
+      "isActive": true,
+      "customQuestions": [
+        {
+          "id": 2,
+          "type": "select",
+          "label": "What is your relationship to this person?",
+          "options": [
+            {
+              "name": "Spouse",
+              "value": "spouse"
+            },
+            {
+              "name": "Sibling",
+              "value": "sibling"
+            },
+            {
+              "name": "Child",
+              "value": "child"
+            }
+          ]
+        }
+      ]
     }
   ],
   "programs": [
