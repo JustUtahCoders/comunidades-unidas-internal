@@ -41,6 +41,7 @@ app.get("/api/leads/:leadId/referrals", (req, res) => {
               id: row.id,
               partnerServiceId: row.partnerServiceId,
               partnerServiceName: row.partnerServiceName,
+              partnerPhone: row.partnerPhone,
               partnerName: row.partnerName,
               referralDate: row.referralDate,
               dateAdded: row.dateAdded,

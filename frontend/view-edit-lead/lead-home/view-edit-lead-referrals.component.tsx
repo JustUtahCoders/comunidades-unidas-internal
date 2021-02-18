@@ -9,6 +9,7 @@ import { handlePromiseError } from "../../util/error-helpers";
 import { SingleLead } from "../view-lead.component";
 import LeadSection from "./lead-section.component";
 import css from "./view-edit-lead-referrals.css";
+import { formatPhone } from "../../util/formatters";
 
 export default function ViewEditLeadReferrals(
   props: ViewEditLeadReferralsProps
@@ -81,6 +82,7 @@ export default function ViewEditLeadReferrals(
           <thead>
             <tr>
               <th>Partner</th>
+              <th>Phone</th>
               <th>Service</th>
               <th>Date</th>
             </tr>
@@ -89,6 +91,7 @@ export default function ViewEditLeadReferrals(
             {referrals.map((referral, i) => (
               <tr key={i}>
                 <td>{referral.partnerName}</td>
+                <td>{formatPhone(referral.partnerPhone)}</td>
                 <td>{referral.partnerServiceName}</td>
                 <td>{dayjs(referral.referralDate).format("MMM D, YYYY")}</td>
               </tr>
