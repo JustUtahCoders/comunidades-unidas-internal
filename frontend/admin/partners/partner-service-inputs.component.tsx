@@ -2,6 +2,7 @@ import { useCss } from "kremling";
 import React, { FormEvent } from "react";
 import { NewPartnerService, Partner } from "./partners.component";
 import css from "./partner-inputs.css";
+import { formatPhone } from "../../util/formatters";
 
 export default function PartnerServiceInputs(props: PartnerServiceInputs) {
   return (
@@ -18,7 +19,7 @@ export default function PartnerServiceInputs(props: PartnerServiceInputs) {
             </option>
             {props.partners.map((partner) => (
               <option key={partner.id} value={partner.id}>
-                {partner.name}
+                {partner.name + " " + formatPhone(partner.phone)}
               </option>
             ))}
           </select>

@@ -1,7 +1,7 @@
 SELECT
   leadReferrals.id, leadReferrals.dateAdded, leadReferrals.referralDate,
   leadReferrals.partnerServiceId, partnerServices.name partnerServiceName,
-  partners.name partnerName
+  partners.name partnerName, partners.phone partnerPhone
 FROM
   leadReferrals
   JOIN
