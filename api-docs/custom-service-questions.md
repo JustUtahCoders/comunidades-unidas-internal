@@ -19,11 +19,13 @@ Notes:
 ```json
 [
   {
+    "id": 1,
     "type": "number",
     "label": "How many people were on the SNAP application?",
     "serviceId": 10
   },
   {
+    "id": 2,
     "type": "boolean",
     "label": "Was this a first time DACA application?",
     "serviceId": 12
