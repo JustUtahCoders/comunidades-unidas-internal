@@ -68,8 +68,6 @@ app.post(`/api/bulk-texts`, (req, res) => {
       : listLeadsQuery(req.query);
   const finalQuery = clientQuery + leadsQuery;
 
-  console.log(finalQuery);
-
   pool.query(finalQuery, (err, result) => {
     if (err) {
       return databaseError(req, res, err);
