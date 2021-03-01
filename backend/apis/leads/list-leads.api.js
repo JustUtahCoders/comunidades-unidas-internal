@@ -113,6 +113,8 @@ function validateListLeadsQuery(query) {
     "sortField",
     "sortOrder",
     "status",
+    "personType",
+    "name",
   ];
 
   const validationErrors = checkValid(
@@ -132,7 +134,8 @@ function validateListLeadsQuery(query) {
       "dateOfSignUp"
     ),
     nullableValidEnum("sortOrder", "asc", "desc"),
-    nullableValidEnum("status", "active", "inactive", "convertedToClient")
+    nullableValidEnum("status", "active", "inactive", "convertedToClient"),
+    nullableNonEmptyString("name")
   );
 
   if (query.programInterest && query.serviceInterest) {

@@ -12,6 +12,9 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
   const [checkingSms, setCheckingSms] = React.useState(false);
   const [sendingTexts, setSendingTexts] = React.useState(false);
   const [smsBody, setSmsBody] = React.useState("");
+  const [personType, setPersonType] = React.useState<PersonType>(
+    PersonType.bothClientsAndLeads
+  );
   const scope = useCss(css);
 
   const primaryActions = {
@@ -47,10 +50,15 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
     if (checkingSms) {
       const abortController = new AbortController();
 
-      easyFetch(`/api/check-bulk-texts${window.location.search}`, {
-        method: "POST",
-        signal: abortController.signal,
-      }).then((data) => {
+      easyFetch(
+        `/api/check-bulk-texts${window.location.search}${personTypeQuery(
+          personType
+        )}`,
+        {
+          method: "POST",
+          signal: abortController.signal,
+        }
+      ).then((data) => {
         setSmsCheck(data);
         setCheckingSms(false);
       });
@@ -59,19 +67,24 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
         abortController.abort();
       };
     }
-  }, [checkingSms]);
+  }, [checkingSms, personType]);
 
   React.useEffect(() => {
     if (sendingTexts) {
       const abortController = new AbortController();
 
-      easyFetch(`/api/bulk-texts${window.location.search}`, {
-        method: "POST",
-        signal: abortController.signal,
-        body: {
-          smsBody,
-        },
-      })
+      easyFetch(
+        `/api/bulk-texts${window.location.search}${personTypeQuery(
+          personType
+        )}`,
+        {
+          method: "POST",
+          signal: abortController.signal,
+          body: {
+            smsBody,
+          },
+        }
+      )
         .then((data) => {
           setSendingTexts(false);
           showGrowl({
@@ -104,6 +117,8 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
           : primaryText[step]
       }
       primaryAction={primaryActions[step]}
+      secondaryText={previousSteps[step] ? "Back" : null}
+      secondaryAction={() => setStep(previousSteps[step])}
     >
       <div {...scope}>{content(step)}</div>
     </Modal>
@@ -114,7 +129,6 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
       case Step.intro:
         return (
           <>
-            <p>Bulk text messages are sent to both clients and leads.</p>
             <p>
               You can choose which people receive the text message by doing an
               Advanced Search. The clients and leads who will receive the text
@@ -139,7 +153,24 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
         delete queryValues.page;
         return (
           <>
-            <p>Does the following Advanced Search look correct?</p>
+            <label htmlFor="text-client-type">
+              Who do you want to send the texts to?
+            </label>
+            <div className="person-type-select">
+              <select
+                id="text-client-type"
+                value={personType}
+                onChange={(evt) =>
+                  setPersonType(evt.target.value as PersonType)
+                }
+              >
+                <option value={PersonType.bothClientsAndLeads}>
+                  Clients And Leads
+                </option>
+                <option value={PersonType.onlyClients}>Only Clients</option>
+                <option value={PersonType.onlyLeads}>Only Leads</option>
+              </select>
+            </div>
             {Object.keys(queryValues).length > 0 ? (
               <table>
                 <thead>
@@ -161,7 +192,9 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
                 </tbody>
               </table>
             ) : (
-              <p className="warning-all">All clients and leads are selected</p>
+              <p className="warning-all">
+                All {selectedPersonTypes()} are selected
+              </p>
             )}
           </>
         );
@@ -249,6 +282,28 @@ export default function BulkSmsModal(props: BulkSmsModalProps) {
         throw Error();
     }
   }
+
+  function selectedPersonTypes() {
+    switch (personType) {
+      case PersonType.bothClientsAndLeads:
+        return "clients and leads";
+      case PersonType.onlyClients:
+        return "clients";
+      case PersonType.onlyLeads:
+        return "leads";
+    }
+  }
+}
+
+function personTypeQuery(personType) {
+  switch (personType) {
+    case PersonType.bothClientsAndLeads:
+      return "";
+    case PersonType.onlyClients:
+      return "&personType=client";
+    case PersonType.onlyLeads:
+      return "&personType=lead";
+  }
 }
 
 type BulkSmsModalProps = {
@@ -263,6 +318,13 @@ enum Step {
   previewMessage = "previewMessage",
   confirmation = "confirmation",
 }
+
+const previousSteps = {
+  [Step.query]: Step.intro,
+  [Step.previewRecipients]: Step.query,
+  [Step.draft]: Step.previewRecipients,
+  [Step.previewMessage]: Step.draft,
+};
 
 const headerText = {
   [Step.intro]: "Send a bulk text (SMS)",
@@ -319,4 +381,14 @@ const css = `
 & .preview-message {
   font-style: italic;
 }
+
+& .person-type-select {
+  margin: .4rem 0 1.6rem 0;
+}
 `;
+
+enum PersonType {
+  bothClientsAndLeads = "bothClientsAndLeads",
+  onlyClients = "onlyClients",
+  onlyLeads = "onlyLeads",
+}
