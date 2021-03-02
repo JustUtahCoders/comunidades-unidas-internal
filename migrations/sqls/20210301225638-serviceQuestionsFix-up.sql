@@ -1,0 +1,1 @@
+ALTER TABLE customServiceQuestions ADD column isDeleted boolean NOT NULL DEFAULT false;
