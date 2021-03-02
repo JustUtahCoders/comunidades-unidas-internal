@@ -11,7 +11,9 @@ const {
 const fs = require("fs");
 const path = require("path");
 
-const getSql = fs.readFileSync(path.resolve(__dirname, "./get-custom-service-question.sql"));
+const getSql = fs.readFileSync(
+  path.resolve(__dirname, "./get-custom-service-question.sql")
+);
 
 app.post("/api/custom-service-questions", (req, res, next) => {
   const authError = checkUserRole(req, "Administrator");
@@ -23,26 +25,28 @@ app.post("/api/custom-service-questions", (req, res, next) => {
   const validationErrors = checkValid(
     req.body,
     nonEmptyString("label"),
-    validEnum("type","text", "number", "select", "boolean", "date"),
+    validEnum("type", "text", "number", "select", "boolean", "date"),
     validId("serviceId"),
     nullableValidArray("options", (index) => {
       return (options) => {
         const errs = checkValid(
           options[index],
           nonEmptyString("name"),
-          nonEmptyString("value"),
+          nonEmptyString("value")
         );
         return errs.length > 0 ? errs : null;
       };
-    }),
+    })
   );
   if (req.body.type === "select") {
     if (!req.body.options) {
-      validationErrors.push("Cannot create a select question without options")
+      validationErrors.push("Cannot create a select question without options");
     }
   } else {
     if (req.body.options) {
-      validationErrors.push("Cannot provide options unless question type is select")
+      validationErrors.push(
+        "Cannot provide options unless question type is select"
+      );
     }
   }
 
@@ -51,7 +55,7 @@ app.post("/api/custom-service-questions", (req, res, next) => {
   }
 
   const query = mysql.format(
-            `
+    `
       INSERT INTO customServiceQuestions 
       ( serviceId, label, type ) 
       values(?,?,?);
@@ -70,33 +74,30 @@ app.post("/api/custom-service-questions", (req, res, next) => {
             [i.name, i.value]
           )
         )
-      .join("\n")}
+        .join("\n")}
         `,
     [req.body.serviceId, req.body.label, req.body.type]
-  )
+  );
 
   pool.query(query, (err, result) => {
     if (err) {
       return databaseError(req, res, err);
     }
     const questionId = result[0].insertId;
-    getServiceQuestion(
-      { id: questionId },
-      (err, serviceQuestion) => {
-        if (err) {
-          return databaseError(req, res, err);
-        }
-        res.send(serviceQuestion)
+    getServiceQuestion({ id: questionId }, (err, serviceQuestion) => {
+      if (err) {
+        return databaseError(req, res, err);
       }
-    );
+      res.send(serviceQuestion);
+    });
   });
 });
 
 function getServiceQuestion({ id, isDeleted = false }, errBack) {
   const query = mysql.format(getSql, [id, isDeleted, id]);
   pool.query(query, (err, result) => {
-    const questionResult = result[0]
-    const optionResult = result[1]
+    const questionResult = result[0];
+    const optionResult = result[1];
 
     if (err) {
       return errBack(err, null);
@@ -109,18 +110,18 @@ function getServiceQuestion({ id, isDeleted = false }, errBack) {
         label: serviceQuestion.label,
         type: serviceQuestion.type,
         serviceId: serviceQuestion.serviceId,
-        options: optionResult.map(option => {
+        options: optionResult.map((option) => {
           return {
             id: option.id,
             name: option.name,
-            value: option.value
-          }
-        })
-      }
+            value: option.value,
+          };
+        }),
+      };
       if (finalQuestion.type !== "select") {
-        delete finalQuestion.options
+        delete finalQuestion.options;
       }
-      errBack(null,finalQuestion);
+      errBack(null, finalQuestion);
     }
   });
 }
