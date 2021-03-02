@@ -239,6 +239,8 @@ function validateClientListQuery(query) {
     "sortOrder",
     "wantsSMS",
     "zip",
+    "personType",
+    "name",
   ];
   const result = [
     ...checkValid(
@@ -257,7 +259,8 @@ function validateClientListQuery(query) {
       nullableValidEnum("sortField", "id", "firstName", "lastName", "birthday"),
       nullableValidEnum("sortOrder", "asc", "desc"),
       nullableNonEmptyString("zip"),
-      nullableValidBoolean("wantsSMS")
+      nullableValidBoolean("wantsSMS"),
+      nullableNonEmptyString("name")
     ),
     query.programInterest && query.serviceInterest
       ? `You may only provide one of the following query params: 'programInterest' or 'serviceInterest'`
