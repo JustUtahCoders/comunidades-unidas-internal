@@ -202,6 +202,9 @@ require("./apis/leads/referrals/add-lead-referral.api");
 require("./apis/users/list-users.api");
 require("./apis/users/patch-user.api");
 
+require("./apis/custom-service-questions/create-custom-service-question.api");
+
+
 require("./apis/default-404.api.js");
 require("./index-html.js");
 
