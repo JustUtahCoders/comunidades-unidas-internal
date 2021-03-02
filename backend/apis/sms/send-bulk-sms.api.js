@@ -55,12 +55,15 @@ app.post(`/api/bulk-texts`, (req, res) => {
   // Pagination doesn't apply to sending a bulk text
   delete req.query.page;
 
+  const includeClients = req.query.personType !== "lead";
+  const includeLeads = req.query.personType !== "client";
+
   const clientQuery =
-    clientValidationErrors.extraKeys.length > 0
+    clientValidationErrors.extraKeys.length > 0 || !includeClients
       ? "SELECT * FROM clients WHERE false; SELECT 0;"
       : clientListQuery(req.query);
   const leadsQuery =
-    leadValidationErrors.extraKeys.length > 0
+    leadValidationErrors.extraKeys.length > 0 || !includeLeads
       ? "SELECT * FROM leads WHERE false; SELECT 0;"
       : listLeadsQuery(req.query);
   const finalQuery = clientQuery + leadsQuery;
