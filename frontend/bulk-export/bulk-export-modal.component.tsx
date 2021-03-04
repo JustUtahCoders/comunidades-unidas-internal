@@ -1,26 +1,48 @@
 import React from "react";
 import Modal from "../util/modal.component";
 import { CsvDataService } from "../util/export-to-csv.component";
-import easyFetch from "../util/easy-fetch";
-import { showGrowl, GrowlType } from "../growls/growls.component";
-import { useCss } from "kremling";
-import queryString from "query-string";
-import { startCase, entries } from "lodash-es";
+
+// Hard-coded data in the format exportToCsv is expecting
+const testData = [
+  {
+    firstName: "Celica",
+    lastName: "McMichel",
+    phone: "8012220394",
+    address: "147 Main street, Salt Lake City, UT 32231",
+  },
+  {
+    firstName: "John",
+    lastName: "Paul",
+    phone: "8290020302",
+    address: "147 Main street, Salt Lake City, UT 32231",
+  },
+  {
+    firstName: "Jack",
+    lastName: "Johnson",
+    phone: "9203929303",
+    address: "147 Main street, Salt Lake City, UT 32231",
+  },
+];
 
 export default function BulkExportModal(props: BulkExportModalProps) {
   const [clientsSelected, setClientsSelected] = React.useState(
     Object.keys(props.selectedClients).length
   );
+
+  /*
+  // This doesn't include the address the client is looking for
+  // but I was passing it into CSVDataService.exportToCsv
   const [clients, setClients] = React.useState([props.selectedClients]);
+  */
 
   return (
     <Modal
       close={props.close}
       headerText={headerText}
       primaryText={"Export"}
-      primaryAction={() =>
-        CsvDataService.exportToCsv("exported-clients.csv", clients)
-      }
+      primaryAction={() => {
+        CsvDataService.exportToCsv("exported-clients.csv", testData);
+      }}
       secondaryText={"Close"}
       secondaryAction={props.close}
     >

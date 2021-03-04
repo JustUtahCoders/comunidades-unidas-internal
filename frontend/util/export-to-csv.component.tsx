@@ -1,5 +1,4 @@
 // from https://codeburst.io/export-objects-array-as-csv-using-typescript-643bf4f794d9
-//
 
 export class CsvDataService {
   static exportToCsv(filename: string, rows: object[]) {
@@ -46,5 +45,13 @@ export class CsvDataService {
         document.body.removeChild(link);
       }
     }
+  }
+
+  static reformatData(clients: Array<Object>[]) {
+    const result = [];
+    for (let i in clients) {
+      result.push([i, clients[i]]);
+    }
+    return result;
   }
 }
