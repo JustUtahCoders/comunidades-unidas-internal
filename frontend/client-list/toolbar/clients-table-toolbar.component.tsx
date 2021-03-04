@@ -10,11 +10,13 @@ import DropDownMenuModal from "../../util/dropdown-menu-modal.component";
 import DeleteBulkClientModal from "./delete-bulk-client-modal.component";
 import Modal from "../../util/modal.component";
 import BulkSmsModal from "../../bulk-sms/bulk-sms-modal.component";
+import BulkExportModal from "../../bulk-export/bulk-export-modal.component";
 
 const BulkActionModals = {
   bulkDelete: DeleteBulkClientModal,
   noClients: NoClients,
   bulkSms: BulkSmsModal,
+  bulkExport: BulkExportModal,
 };
 
 export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
@@ -32,6 +34,7 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
         <div className="left">
           <DropDownMenuModal>
             <li onClick={() => openModal("bulkSms")}>Bulk text (SMS)</li>
+            <li onClick={() => openModal("bulkExport")}>Bulk export (CSV)</li>
             <li onClick={() => openModal("bulkDelete")}>Delete clients</li>
           </DropDownMenuModal>
           {Modal && (
