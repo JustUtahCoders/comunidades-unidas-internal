@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { useCss } from "kremling";
 import React from "react";
 import { FullPartner } from "../admin/partners/partners.component";
+import { formatPhone } from "../util/formatters";
 import { Referral } from "../view-edit-client/interactions/single-interaction-slat.component";
 import css from "./referral-inputs.css";
 
@@ -38,7 +39,9 @@ const ReferralInputs = React.forwardRef<ReferralInputRef, ReferralInputProps>(
         <div>
           {props.partners.map((partner) => (
             <div key={partner.id}>
-              <h4>{partner.name}</h4>
+              <h4>
+                {partner.name} {partner.phone && formatPhone(partner.phone)}
+              </h4>
               {partner.services.map((service) => (
                 <div key={service.id}>
                   <label>
