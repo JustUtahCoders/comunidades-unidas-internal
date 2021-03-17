@@ -22,6 +22,10 @@ app.get("/api/services", (req, res, next) => {
     FROM services JOIN programs WHERE services.programId = programs.id;
 
     SELECT * FROM programs;
+
+    SELECT * FROM customServiceQuestions;
+
+    select name, value from customServiceQuestionOptions;
   `);
 
   pool.query(getServices, (err, results) => {
@@ -30,6 +34,9 @@ app.get("/api/services", (req, res, next) => {
     }
 
     const [services, programs] = results;
+    // console.log("*********SERVICES", services)
+    // console.log("*********PROGRAMS", programs)
+    console.log("*********PROGRAMS", results);
 
     const programMap = programs.reduce((acc, program) => {
       acc[program.id] = program;
@@ -62,3 +69,36 @@ app.get("/api/services", (req, res, next) => {
     });
   });
 });
+
+// function getServiceQuestion({ id, isDeleted = false }, errBack) {
+//   const query = mysql.format(getSql, [id, isDeleted, id]);
+//   pool.query(query, (err, result) => {
+//     const questionResult = result[0];
+//     const optionResult = result[1];
+
+//     if (err) {
+//       return errBack(err, null);
+//     } else if (questionResult.length === 0) {
+//       errBack(null, 404);
+//     } else {
+//       const serviceQuestion = questionResult[0];
+//       const finalQuestion = {
+//         id: serviceQuestion.id,
+//         label: serviceQuestion.label,
+//         type: serviceQuestion.type,
+//         serviceId: serviceQuestion.serviceId,
+//         options: optionResult.map((option) => {
+//           return {
+//             id: option.id,
+//             name: option.name,
+//             value: option.value,
+//           };
+//         }),
+//       };
+//       if (finalQuestion.type !== "select") {
+//         delete finalQuestion.options;
+//       }
+//       errBack(null, finalQuestion);
+//     }
+//   });
+// }
