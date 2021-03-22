@@ -324,7 +324,7 @@ const css = `
   }
 
   & .leads-table.advanced-search th {
-    top: 47.5;
+    top: 45rem;
   }
 
   & .leads-table th button {
