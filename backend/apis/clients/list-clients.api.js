@@ -53,6 +53,9 @@ app.get("/api/clients", (req, res, next) => {
         lastName: row.lastName,
         fullName: responseFullName(row.firstName, row.lastName),
         birthday: responseDateWithoutTime(row.birthday),
+        address: row.address,
+        city: row.city,
+        state: row.state,
         zip: row.zip,
         phone: row.primaryPhone,
         email: row.email,
@@ -184,7 +187,7 @@ function clientListQuery(query, pageNum, pageSize) {
     SELECT SQL_CALC_FOUND_ROWS
       cl.id, cl.firstName, cl.lastName, cl.birthday, cl.isDeleted, ct.email, ct.textMessages,
       ct.zip, ct.primaryPhone, cl.addedBy as addedById, us.firstName as addedByFirstName,
-      us.lastname as addedByLastName, cl.dateAdded
+      us.lastname as addedByLastName, cl.dateAdded, ct.address, ct.city, ct.state
     FROM 
       clients cl 
     JOIN
