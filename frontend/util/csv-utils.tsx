@@ -2,7 +2,13 @@ export function exportToCsv(options: CsvOptions) {
   let dataUrl = `data:text/csv;charset=utf-8,`;
   dataUrl += options.columnNames.join(",");
   options.data.forEach((row) => {
-    dataUrl += "\n" + options.columnNames.map((c) => row[c]).join(",");
+    dataUrl +=
+      "\n" +
+      options.columnNames
+        .map((c) =>
+          typeof row[c] === "string" ? row[c].replace(/#/g, "No.") : row[c]
+        )
+        .join(",");
   });
 
   const link = document.createElement("a");
