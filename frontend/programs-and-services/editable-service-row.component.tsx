@@ -16,7 +16,9 @@ export default function EditableServiceRow(
   const [modifiedService, setModifiedService] = React.useState<CUService>(
     cloneDeep(props.service)
   );
-  const [isSaving, setIsSaving] = React.useState(false);
+  const [isSaving, setIsSaving] = React.useState<
+    boolean | ((serviceId: number, ac: AbortController) => Promise<any>)
+  >(false);
   const formRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -29,23 +31,30 @@ export default function EditableServiceRow(
           ...modifiedService,
           isActive: Boolean(modifiedService.isActive),
         },
-      }).then(
-        () => {
-          showGrowl({
-            message: "Service was updated",
-            type: GrowlType.success,
-          });
-          props.refetch();
-          setShowingModal(false);
-          setIsSaving(false);
-        },
-        (err) => {
-          setTimeout(() => {
-            throw err;
-          });
-          setIsSaving(false);
-        }
-      );
+      })
+        .then(() => {
+          return (isSaving as (
+            serviceId: number,
+            ac: AbortController
+          ) => Promise<any>)(props.service.id, abortController);
+        })
+        .then(
+          () => {
+            showGrowl({
+              message: "Service was updated",
+              type: GrowlType.success,
+            });
+            props.refetch();
+            setShowingModal(false);
+            setIsSaving(false);
+          },
+          (err) => {
+            setTimeout(() => {
+              throw err;
+            });
+            setIsSaving(false);
+          }
+        );
 
       return () => {
         abortController.abort();
@@ -85,9 +94,9 @@ export default function EditableServiceRow(
     </>
   );
 
-  function handleSubmit(evt) {
-    evt.preventDefault();
-    setIsSaving(true);
+  function handleSubmit(evt, saveQuestions) {
+    evt.preventDefault(saveQuestions);
+    setIsSaving(() => saveQuestions);
   }
 
   function close() {

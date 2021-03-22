@@ -43,6 +43,17 @@ export default function ProgramsAndServices(props) {
         signal: abortController.signal,
       }).then(
         (data) => {
+          const chronicDiseaseScreeningsService = data.services.find(
+            (service) => service.id === 8
+          );
+          chronicDiseaseScreeningsService.customQuestions = [
+            {
+              id: 1,
+              label: "How many people on the SNAP application?",
+              type: "number",
+              serviceId: 8,
+            },
+          ];
           const groupedServices = groupBy(data.services, "programId");
           setPrograms(data.programs);
           setServices(groupedServices);
