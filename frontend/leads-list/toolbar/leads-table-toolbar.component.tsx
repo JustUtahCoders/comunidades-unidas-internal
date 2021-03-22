@@ -10,11 +10,13 @@ import DropDownMenuModal from "../../util/dropdown-menu-modal.component";
 import Modal from "../../util/modal.component";
 import DeleteBulkLeadsModal from "./delete-bulk-leads-modal.component";
 import BulkSmsModal from "../../bulk-sms/bulk-sms-modal.component";
+import ExportLeadListToCsv from "./export-lead-list-to-csv.component";
 
 const BulkActionModals = {
   bulkDelete: DeleteBulkLeadsModal,
   noLeads: NoLeads,
   bulkSms: BulkSmsModal,
+  exportToCsv: ExportLeadListToCsv,
 };
 
 export default function LeadsTableToolbar(props: LeadsTableToolbarProps) {
@@ -33,9 +35,14 @@ export default function LeadsTableToolbar(props: LeadsTableToolbarProps) {
           <DropDownMenuModal>
             <li onClick={() => openModal("bulkSms")}>Bulk text (SMS)</li>
             <li onClick={() => openModal("bulkDelete")}>Delete leads</li>
+            <li onClick={() => openModal("exportToCsv")}>Export Leads List</li>
           </DropDownMenuModal>
           {Modal && (
-            <Modal close={closeModal} selectedLeads={props.selectedLeads} />
+            <Modal
+              close={closeModal}
+              selectedLeads={props.selectedLeads}
+              lastPage={lastPage}
+            />
           )}
           <LeadSearchInput
             autoFocus
@@ -105,7 +112,10 @@ export default function LeadsTableToolbar(props: LeadsTableToolbarProps) {
   }
 
   function openModal(name) {
-    if (Object.keys(props.selectedLeads).length === 0 && name !== "bulkSms") {
+    if (
+      Object.keys(props.selectedLeads).length === 0 &&
+      name === "bulkDelete"
+    ) {
       setModal("noLeads");
     } else {
       setModal(name);

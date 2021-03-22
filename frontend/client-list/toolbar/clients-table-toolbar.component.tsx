@@ -10,11 +10,13 @@ import DropDownMenuModal from "../../util/dropdown-menu-modal.component";
 import DeleteBulkClientModal from "./delete-bulk-client-modal.component";
 import Modal from "../../util/modal.component";
 import BulkSmsModal from "../../bulk-sms/bulk-sms-modal.component";
+import ExportClientListCsv from "./export-client-list-csv.component";
 
 const BulkActionModals = {
   bulkDelete: DeleteBulkClientModal,
   noClients: NoClients,
   bulkSms: BulkSmsModal,
+  exportCsv: ExportClientListCsv,
 };
 
 export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
@@ -33,9 +35,14 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
           <DropDownMenuModal>
             <li onClick={() => openModal("bulkSms")}>Bulk text (SMS)</li>
             <li onClick={() => openModal("bulkDelete")}>Delete clients</li>
+            <li onClick={() => openModal("exportCsv")}>Export Client List</li>
           </DropDownMenuModal>
           {Modal && (
-            <Modal close={closeModal} selectedClients={props.selectedClients} />
+            <Modal
+              close={closeModal}
+              selectedClients={props.selectedClients}
+              lastPage={lastPage}
+            />
           )}
           <ClientSearchInput
             autoFocus
@@ -96,7 +103,10 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
   }
 
   function openModal(name) {
-    if (Object.keys(props.selectedClients).length === 0 && name !== "bulkSms") {
+    if (
+      Object.keys(props.selectedClients).length === 0 &&
+      name === "bulkDelete"
+    ) {
       setModal("noClients");
     } else {
       setModal(name);
