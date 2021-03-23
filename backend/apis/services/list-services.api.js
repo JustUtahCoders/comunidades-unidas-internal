@@ -19,7 +19,7 @@ app.get("/api/services", (req, res, next) => {
   const includeInactive = req.query.includeInactive === "true";
 
   const getServices = mysql.format(`
-    SELECT * FROM services WHERE isActive = true;
+    SELECT * FROM services;
 
     SELECT * FROM customServiceQuestions where isDeleted = false;
 
