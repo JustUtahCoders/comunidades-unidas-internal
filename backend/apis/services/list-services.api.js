@@ -4,6 +4,7 @@ const {
   checkValid,
   nullableValidBoolean,
 } = require("../utils/validation-utils");
+const _ = require("lodash");
 
 app.get("/api/services", (req, res, next) => {
   const validationErrors = checkValid(
@@ -18,8 +19,11 @@ app.get("/api/services", (req, res, next) => {
   const includeInactive = req.query.includeInactive === "true";
 
   const getServices = mysql.format(`
-    SELECT *, services.id AS serviceId, programs.id AS programId
-    FROM services JOIN programs WHERE services.programId = programs.id;
+    SELECT * FROM services;
+
+    SELECT * FROM customServiceQuestions where isDeleted = false;
+
+    SELECT * FROM customServiceQuestionOptions;
 
     SELECT * FROM programs;
   `);
@@ -29,18 +33,36 @@ app.get("/api/services", (req, res, next) => {
       return databaseError(req, res, err);
     }
 
-    const [services, programs] = results;
+    const [
+      services,
+      customServiceQuestions,
+      customServiceQuestionOptions,
+      programs,
+    ] = results;
 
     const programMap = programs.reduce((acc, program) => {
       acc[program.id] = program;
       return acc;
     }, {});
 
+    const groupedCustomQuestions = _.groupBy(
+      customServiceQuestions,
+      "serviceId"
+    );
+    const groupedCustomQuestionOptions = _.groupBy(
+      customServiceQuestionOptions,
+      "questionId"
+    );
+
+    customServiceQuestions.forEach((q) => {
+      q.options = groupedCustomQuestionOptions[String(q.id)];
+    });
+
     res.send({
       services: services
         .filter((s) => (includeInactive ? true : s.isActive))
         .map((s) => ({
-          id: s.serviceId,
+          id: s.id,
           serviceName: s.serviceName,
           serviceDescription: s.serviceDesc,
           programId: s.programId,
@@ -52,6 +74,7 @@ app.get("/api/services", (req, res, next) => {
           defaultInteractionLocation: s.defaultInteractionLocation,
           defaultInteractionDuration: s.defaultInteractionDuration,
           isActive: Boolean(s.isActive),
+          questions: groupedCustomQuestions[s.id],
         })),
       programs: programs.map((p) => ({
         id: p.id,
