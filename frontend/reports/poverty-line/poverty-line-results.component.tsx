@@ -43,24 +43,23 @@ export default function PovertyLineResults(props) {
               </td>
             </tr>
           ))}
-          <tr>
-            <th>All zips and clients</th>
-            <td>
-              {sum(
-                values(data.results.clientsBelowPovertyLine)
-              ).toLocaleString()}
-            </td>
-            <td>{data.results.totalClients.toLocaleString()}</td>
-            <td>
-              {formatPercentage(
-                sum(values(data.results.clientsBelowPovertyLine)),
-                data.results.totalClients
-              )}
-            </td>
-          </tr>
         </>
       }
-      footerRows={null}
+      footerRows={
+        <tr>
+          <th>All zips and clients</th>
+          <td>
+            {sum(values(data.results.clientsBelowPovertyLine)).toLocaleString()}
+          </td>
+          <td>{data.results.totalClients.toLocaleString()}</td>
+          <td>
+            {formatPercentage(
+              sum(values(data.results.clientsBelowPovertyLine)),
+              data.results.totalClients
+            )}
+          </td>
+        </tr>
+      }
       notes={[
         `All clients are counted in this report - even if their income is listed as 0`,
         `Poverty line formula: $${data.reportParameters.costFirstPerson.toLocaleString()} + (householdSize * $${data.reportParameters.costAdditionalPerson.toLocaleString()})`,
