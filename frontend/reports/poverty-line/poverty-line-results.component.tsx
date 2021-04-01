@@ -2,77 +2,71 @@ import React from "react";
 import { useReportsApi } from "../shared/use-reports-api";
 import BasicTableReport from "../shared/basic-table-report.component";
 import { formatPercentage } from "../shared/report.helpers";
+import { sum, values } from "lodash-es";
 
 export default function PovertyLineResults(props) {
   const { isLoading, data, error } = useReportsApi(
     `/api/reports/poverty-lines`
   );
 
+  if (isLoading) {
+    return <div>"Loading..."</div>;
+  }
+
   return (
     <BasicTableReport
-      title={`Poverty Line ${
-        data ? data.reportParameters.povertyLineYear : ""
-      }`}
+      title={`Poverty Line ${data.reportParameters.povertyLineYear}`}
       headerRows={
         <tr>
-          <th>Statistic</th>
-          <th>Client count</th>
+          <th>Zip</th>
+          <th>Clients below Poverty Line</th>
+          <th>Total Clients</th>
           <th>Percentage</th>
         </tr>
       }
       contentRows={
         <>
-          <tr>
-            <th>All clients</th>
-            <td>{data && data.results.totalClients}</td>
-            <td>100%</td>
-          </tr>
-          <tr>
-            <th>Clients above poverty line</th>
-            <td>
-              {data &&
-                data.results.totalClients -
-                  data.results.clientsBelowPovertyLine}
-            </td>
-            <td>
-              {data &&
-                formatPercentage(
-                  data.results.totalClients -
-                    data.results.clientsBelowPovertyLine,
-                  data.results.totalClients
+          {Object.keys(data.results.clientsByZip).map((zip) => (
+            <tr key={zip || "(Unknown)"}>
+              <th>{zip || "(Unknown)"}</th>
+              <td>
+                {(
+                  data.results.clientsBelowPovertyLine[zip] || 0
+                ).toLocaleString()}
+              </td>
+              <td>{data.results.clientsByZip[zip].toLocaleString()}</td>
+              <td>
+                {formatPercentage(
+                  data.results.clientsBelowPovertyLine[zip] || 0,
+                  data.results.clientsByZip[zip]
                 )}
-            </td>
-          </tr>
+              </td>
+            </tr>
+          ))}
           <tr>
-            <th>Below $200 annual income</th>
-            <td>{data && data.results.clientsBelow200DollarsAnnually}</td>
+            <th>All zips and clients</th>
             <td>
-              {data &&
-                formatPercentage(
-                  data.results.clientsBelow200DollarsAnnually,
-                  data.results.totalClients
-                )}
+              {sum(
+                values(data.results.clientsBelowPovertyLine)
+              ).toLocaleString()}
+            </td>
+            <td>{data.results.totalClients.toLocaleString()}</td>
+            <td>
+              {formatPercentage(
+                sum(values(data.results.clientsBelowPovertyLine)),
+                data.results.totalClients
+              )}
             </td>
           </tr>
         </>
       }
-      footerRows={
-        <>
-          <tr>
-            <th>Below poverty line</th>
-            <td>{data && data.results.clientsBelowPovertyLine}</td>
-            <td>
-              {data &&
-                formatPercentage(
-                  data.results.clientsBelowPovertyLine,
-                  data.results.totalClients
-                )}
-            </td>
-          </tr>
-        </>
-      }
+      footerRows={null}
       notes={[
-        `The below $200 annually column is included in the poverty line total.`,
+        `All clients are counted in this report - even if their income is listed as 0`,
+        `Poverty line formula: $${data.reportParameters.costFirstPerson.toLocaleString()} + (householdSize * $${data.reportParameters.costAdditionalPerson.toLocaleString()})`,
+        <a target="_blank" href={data.reportParameters.povertyLineInfo}>
+          More information about the Poverty Line
+        </a>,
       ]}
     />
   );
