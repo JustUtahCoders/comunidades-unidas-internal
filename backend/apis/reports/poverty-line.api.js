@@ -15,6 +15,10 @@ const povertyLines = {
     firstPerson: 12760,
     additionalPerson: 4480,
   },
+  2021: {
+    firstPerson: 12880,
+    additionalPerson: 4540,
+  },
 };
 
 app.get(`/api/reports/poverty-lines`, (req, res) => {
@@ -33,24 +37,50 @@ app.get(`/api/reports/poverty-lines`, (req, res) => {
     );
   }
 
+  const { firstPerson, additionalPerson } = povertyLines[year];
+
   const sql = mysql.format(
     `
       SELECT COUNT(*) numClients from clients WHERE isDeleted = false;
 
-      ${povertyLineQuery(year)}
-
-      -- bad data check
-      SELECT COUNT(*) total
+      SELECT COUNT(*) belowPovertyLine, contactInfo.zip
       FROM
         (
           SELECT MAX(dateAdded) latestDateAdded, clientId FROM demographics GROUP BY clientId
         ) latestDems
         JOIN demographics ON latestDems.latestDateAdded = demographics.dateAdded
-        JOIN clients ON clients.id = demographics.id
+        JOIN clients ON clients.id = demographics.clientId
+        JOIN (
+          SELECT *
+          FROM
+            contactInformation innerContactInformation
+            JOIN (
+              SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
+              FROM contactInformation GROUP BY clientId
+            ) latestContactInformation
+            ON latestContactInformation.latestDateAdded = innerContactInformation.dateAdded
+        ) contactInfo ON contactInfo.clientId = clients.id
       WHERE
-        demographics.householdIncome < 200
+        clients.isDeleted = false
         AND
-        clients.isDeleted = false;
+        demographics.householdIncome <= (${firstPerson} + ${additionalPerson} * (houseHoldSize - 1))
+      GROUP BY contactInfo.zip
+      ;
+
+      SELECT zip, COUNT(*) numClients
+      FROM (
+        SELECT *
+        FROM
+          contactInformation innerContactInformation
+          JOIN (
+            SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
+            FROM contactInformation GROUP BY clientId
+          ) latestContactInformation
+          ON latestContactInformation.latestDateAdded = innerContactInformation.dateAdded
+      ) contactInfo
+      JOIN clients ON clients.id = contactInfo.clientId
+      WHERE clients.isDeleted = false
+      GROUP BY zip
       ;
     `,
     []
@@ -61,13 +91,23 @@ app.get(`/api/reports/poverty-lines`, (req, res) => {
       return databaseError(req, res, err);
     }
 
-    const [resultTotal, resultsYear, badDataResults] = result;
+    const [resultTotal, resultsYear, zipResults] = result;
+
+    const clientsBelowPovertyLine = {};
+    resultsYear.forEach((yearResult) => {
+      clientsBelowPovertyLine[yearResult.zip] = yearResult.belowPovertyLine;
+    });
+
+    const clientsByZip = {};
+    zipResults.forEach((result) => {
+      clientsByZip[result.zip] = result.numClients;
+    });
 
     res.send({
       results: {
         totalClients: resultTotal[0].numClients,
-        clientsBelowPovertyLine: resultsYear[0].belowPovertyLine,
-        clientsBelow200DollarsAnnually: badDataResults[0].total,
+        clientsBelowPovertyLine,
+        clientsByZip,
       },
       reportParameters: {
         povertyLineYear: year,
@@ -79,22 +119,3 @@ app.get(`/api/reports/poverty-lines`, (req, res) => {
     });
   });
 });
-
-function povertyLineQuery(year) {
-  const { firstPerson, additionalPerson } = povertyLines[year];
-
-  return `
-    SELECT COUNT(*) belowPovertyLine
-    FROM
-      (
-        SELECT MAX(dateAdded) latestDateAdded, clientId FROM demographics GROUP BY clientId
-      ) latestDems
-      JOIN demographics ON latestDems.latestDateAdded = demographics.dateAdded
-      JOIN clients ON clients.id = demographics.clientId
-    WHERE
-      clients.isDeleted = false
-      AND
-      demographics.householdIncome <= (${firstPerson} + ${additionalPerson} * (houseHoldSize - 1))
-    ;
-  `;
-}

@@ -17,8 +17,8 @@ export default function BasicTableReport(props: BasicTableReportProps) {
         <>
           <h3>How to read this report</h3>
           <ul className="notes">
-            {props.notes.map((note) => (
-              <li key={note}>{note}</li>
+            {props.notes.map((note, i) => (
+              <li key={typeof note === "string" ? note : i}>{note}</li>
             ))}
           </ul>
         </>
@@ -95,5 +95,5 @@ type BasicTableReportProps = {
   headerRows: JSX.Element | JSX.Element[];
   contentRows: JSX.Element | JSX.Element[];
   footerRows?: JSX.Element | JSX.Element[];
-  notes?: string[];
+  notes?: (string | JSX.Element)[];
 };
