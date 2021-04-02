@@ -9,10 +9,12 @@ const {
   validTime,
   validInteger,
   nullableValidTags,
+  nullableValidArray,
 } = require("../../utils/validation-utils");
 const { getInteraction } = require("./client-interaction.utils");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 const { insertTagsQuery, sanitizeTags } = require("../../tags/tag.utils.js");
+const _ = require("lodash");
 
 app.post("/api/clients/:clientId/interactions", (req, res) => {
   const user = req.session.passport.user;
@@ -34,7 +36,16 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
       nullableNonEmptyString("description"),
       validDate("dateOfInteraction"),
       validTime("duration"),
-      validEnum("location", "CUOffice", "consulateOffice", "communityEvent")
+      validEnum("location", "CUOffice", "consulateOffice", "communityEvent"),
+      nullableValidArray("customQuestions", (index) => {
+        return (customQuestions) => {
+          if (_.isNil(customQuestions[index].answer)) {
+            return [
+              `customQuestions[${index}].answer must not be null or undefined`,
+            ];
+          }
+        };
+      })
     ),
   ];
 
@@ -71,6 +82,23 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
         (?, ?, ?, ?, ?, ?, ?, ?);
 
         SET @interactionId := LAST_INSERT_ID();
+
+        ${(req.body.customQuestions || [])
+          .map((i) =>
+            mysql.format(
+              `
+            INSERT INTO clientInteractionCustomAnswers
+            (questionId, answer, interactionId)
+            VALUES
+            (?,?, @interactionId);
+      `,
+              [
+                i.questionId,
+                _.isNumber(i.answer) ? i.answer : JSON.stringify(i.answer),
+              ]
+            )
+          )
+          .join("\n")}
 
         ${insertActivityLogQuery({
           clientId: req.params.clientId,

@@ -10,7 +10,7 @@ const {
   notFound,
 } = require("../../../server");
 
-function createResponseInteractionObject(log, redact) {
+function createResponseInteractionObject(log, customQuestionAnswers, redact) {
   return {
     id: log.id,
     serviceId: redact ? null : log.serviceId,
@@ -21,6 +21,12 @@ function createResponseInteractionObject(log, redact) {
     isDeleted: Boolean(log.isDeleted),
     location: log.location,
     redacted: Boolean(redact),
+    customQuestions: customQuestionAnswers.map((question) => {
+      return {
+        questionId: question.questionId,
+        answer: JSON.parse(question.answer),
+      };
+    }),
     createdBy: {
       userId: log.createdById,
       firstName: log.createdByFirstName,
@@ -68,13 +74,15 @@ exports.getInteraction = function getInteraction(
       )
       ORDER BY l.dateAdded DESC;
 
+      SELECT questionId, answer FROM clientInteractionCustomAnswers WHERE interactionId = ?;
+      
       SELECT tags.tag
       FROM tags
       WHERE tags.foreignId = ? AND tags.foreignTable = 'clientInteractions' AND tags.tag IN (${
         redactedTags.length > 0 ? redactedTags.map(() => "?").join(", ") : `123`
       });
     `,
-    [interactionId, interactionId].concat(redactedTags)
+    [interactionId, interactionId, interactionId].concat(redactedTags)
   );
 
   pool.query(sql, (err, result) => {
@@ -86,7 +94,11 @@ exports.getInteraction = function getInteraction(
       return;
     }
 
-    const [interactionResult, tagResult] = result;
+    const [
+      interactionResult,
+      clientInteractionCustomAnswers,
+      tagResult,
+    ] = result;
 
     if (interactionResult.length === 0) {
       errBack((req, res) => {
@@ -113,7 +125,11 @@ exports.getInteraction = function getInteraction(
 
     errBack(
       null,
-      createResponseInteractionObject(row, redact),
+      createResponseInteractionObject(
+        row,
+        clientInteractionCustomAnswers,
+        redact
+      ),
       row.serviceName
     );
   });
