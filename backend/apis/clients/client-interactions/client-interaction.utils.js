@@ -10,7 +10,7 @@ const {
   notFound,
 } = require("../../../server");
 
-function createResponseInteractionObject(log, customquestionAnswers, redact) {
+function createResponseInteractionObject(log, customQuestionAnswers, redact) {
   return {
     id: log.id,
     serviceId: redact ? null : log.serviceId,
@@ -21,7 +21,7 @@ function createResponseInteractionObject(log, customquestionAnswers, redact) {
     isDeleted: Boolean(log.isDeleted),
     location: log.location,
     redacted: Boolean(redact),
-    customQuestions: customquestionAnswers.map((question) => {
+    customQuestions: customQuestionAnswers.map((question) => {
       return {
         questionId: question.questionId,
         answer: JSON.parse(question.answer),
