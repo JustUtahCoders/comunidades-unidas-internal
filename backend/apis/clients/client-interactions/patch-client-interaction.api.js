@@ -9,6 +9,7 @@ const {
   nullableValidDate,
   nullableValidTime,
   nullableValidTags,
+  nullableValidArray,
 } = require("../../utils/validation-utils");
 const { atLeastOne } = require("../../utils/patch-utils");
 const { getInteraction } = require("./client-interaction.utils");
@@ -18,6 +19,7 @@ const {
   insertTags,
   insertTagsQuery,
 } = require("../../tags/tag.utils");
+const _ = require("lodash");
 
 app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
   const validationErrors = [
@@ -33,6 +35,15 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
         "oneOnOneLightTouch",
         "consultation"
       ),
+      nullableValidArray("customQuestions", (index) => {
+        return (customQuestions) => {
+          if (_.isNil(customQuestions[index].answer)) {
+            return [
+              `customQuestions[${index}].answer must not be null or undefined`,
+            ];
+          }
+        };
+      }),
       nullableNonEmptyString("description"),
       nullableValidDate("dateOfInteraction"),
       nullableValidTime("duration"),
@@ -43,6 +54,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
         "communityEvent"
       )
     ),
+
     ...checkValid(
       req.query,
       nullableValidTags("tags", req.session.passport.user.permissions)
@@ -61,6 +73,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
     "duration",
     "location"
   );
+
   const shouldUpdateLog = atLeastOne(req.body, "description");
 
   if (!shouldUpdateInteraction && !shouldUpdateLog) {
@@ -96,6 +109,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
               duration = ?,
               location = ?,
               modifiedBy = ?
+              
             WHERE id = ?;
           `,
               [
@@ -188,6 +202,26 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
             )
           );
         }
+
+        req.body.customQuestions.map((question) => {
+          queries.push(
+            mysql.format(
+              `
+                UPDATE clientInteractionCustomAnswers 
+                SET clientInteractionCustomAnswers.questionId = ?, 
+                clientInteractionCustomAnswers.answer = ? 
+                WHERE clientInteractionCustomAnswers.id = ?;
+                `,
+              [
+                question.questionId,
+                _.isNumber(question.answer)
+                  ? question.answer
+                  : JSON.stringify(question.answer),
+                question.id,
+              ]
+            )
+          );
+        });
 
         const sql = queries.join("\n");
 
