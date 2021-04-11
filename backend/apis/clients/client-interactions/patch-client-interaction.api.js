@@ -203,25 +203,32 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
           );
         }
 
-        req.body.customQuestions.map((question) => {
-          queries.push(
-            mysql.format(
-              `
-                UPDATE clientInteractionCustomAnswers 
-                SET clientInteractionCustomAnswers.questionId = ?, 
-                clientInteractionCustomAnswers.answer = ? 
-                WHERE clientInteractionCustomAnswers.id = ?;
-                `,
-              [
-                question.questionId,
-                _.isNumber(question.answer)
-                  ? question.answer
-                  : JSON.stringify(question.answer),
-                question.id,
-              ]
-            )
+        if (req.body.hasOwnProperty("customQuestions")) {
+          const deleteQuery = mysql.format(
+            `
+            DELETE from clientInteractionCustomAnswers where interactionId = ?;
+            `,
+            [req.params.interactionId]
           );
-        });
+          queries.push(deleteQuery);
+          const createCustomAnswerQueries = req.body.customQuestions.map(
+            (question) =>
+              mysql.format(
+                mysql.format(`
+                        INSERT INTO clientInteractionCustomAnswers (questionId, answer, interactionId) 
+                        VALUES(?,?,?);
+            `),
+                [
+                  question.questionId,
+                  _.isNumber(question.answer)
+                    ? question.answer
+                    : JSON.stringify(question.answer),
+                  req.params.interactionId,
+                ]
+              )
+          );
+          queries.push(...createCustomAnswerQueries);
+        }
 
         const sql = queries.join("\n");
 
