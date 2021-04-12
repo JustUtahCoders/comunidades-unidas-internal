@@ -88,4 +88,5 @@ const emptyService: CUService = {
   defaultLineItemDescription: null,
   defaultLineItemName: null,
   defaultLineItemRate: null,
+  questions: [],
 };

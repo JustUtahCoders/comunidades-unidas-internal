@@ -117,6 +117,28 @@ export type CUService = {
   defaultInteractionType: InteractionType;
   defaultInteractionLocation: InteractionLocation;
   defaultInteractionDuration: string;
+  questions: CUCustomQuestion[];
+};
+
+export type CUCustomQuestion = {
+  id: number;
+  label: string;
+  serviceId: number;
+  type: CUCustomQuestionType;
+  options: CUCustomQuestionOption[] | null;
+};
+
+export enum CUCustomQuestionType {
+  text = "text",
+  number = "number",
+  select = "select",
+  boolean = "boolean",
+  date = "date",
+}
+
+export type CUCustomQuestionOption = {
+  name: string;
+  value: string;
 };
 
 export type CUProgram = {

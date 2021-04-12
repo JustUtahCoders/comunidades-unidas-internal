@@ -18,6 +18,16 @@ export default function Modal(props: ModalProps) {
     setContainerEl(el);
   }, []);
 
+  React.useEffect(() => {
+    document.body.classList.add("scroll-lock");
+    document.querySelector("html").classList.add("scroll-lock");
+
+    return () => {
+      document.body.classList.remove("scroll-lock");
+      document.querySelector("html").classList.remove("scroll-lock");
+    };
+  });
+
   if (!containerEl) {
     return null;
   }

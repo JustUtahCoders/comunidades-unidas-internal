@@ -1,7 +1,11 @@
 import React from "react";
 import Modal from "../util/modal.component";
-import { cloneDeep } from "lodash-es";
-import { CUService, CUProgram } from "../add-client/services.component";
+import { cloneDeep, difference, differenceBy } from "lodash-es";
+import {
+  CUService,
+  CUProgram,
+  CUCustomQuestion,
+} from "../add-client/services.component";
 import { maybe, useCss } from "kremling";
 import easyFetch from "../util/easy-fetch";
 import { showGrowl, GrowlType } from "../growls/growls.component";
@@ -22,14 +26,49 @@ export default function EditableServiceRow(
   React.useEffect(() => {
     if (isSaving) {
       const abortController = new AbortController();
-      easyFetch(`/api/services/${props.service.id}`, {
-        method: "PATCH",
-        signal: abortController.signal,
-        body: {
-          ...modifiedService,
-          isActive: Boolean(modifiedService.isActive),
-        },
-      }).then(
+
+      const deletedQuestions = differenceBy(
+        props.service.questions,
+        modifiedService.questions,
+        "id"
+      );
+      const addedQuestions = modifiedService.questions.filter((q) =>
+        String(q.id).startsWith("new-")
+      );
+      const modifiedQuestions = differenceBy(
+        modifiedService.questions,
+        deletedQuestions,
+        addedQuestions,
+        "id"
+      );
+
+      Promise.all([
+        easyFetch(`/api/services/${props.service.id}`, {
+          method: "PATCH",
+          signal: abortController.signal,
+          body: {
+            ...modifiedService,
+            isActive: Boolean(modifiedService.isActive),
+          },
+        }),
+        ...deletedQuestions.map((q) =>
+          easyFetch(`/api/custom-service-questions/${q.id}`, {
+            method: "DELETE",
+          })
+        ),
+        ...addedQuestions.map((q) =>
+          easyFetch(`/api/custom-service-questions`, {
+            method: "POST",
+            body: q,
+          })
+        ),
+        ...modifiedQuestions.map((q) =>
+          easyFetch(`/api/custom-service-questions/${q.id}`, {
+            method: "PATCH",
+            body: q,
+          })
+        ),
+      ]).then(
         () => {
           showGrowl({
             message: "Service was updated",
