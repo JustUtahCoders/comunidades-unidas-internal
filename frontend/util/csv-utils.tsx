@@ -20,7 +20,7 @@ export function exportToCsv(options: CsvOptions) {
   document.body.removeChild(link);
 }
 
-interface CsvOptions {
+export interface CsvOptions {
   data: any[];
   columnNames: string[];
   fileName: string;

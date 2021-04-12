@@ -7,6 +7,7 @@ import { capitalize } from "../shared/report.helpers";
 import CollapsibleTableRows, {
   ToggleCollapseButton,
 } from "../shared/collapsible-table-rows.component";
+import { CsvOptions } from "../../util/csv-utils";
 
 export default function AgesAndGendersResults(props) {
   const { isLoading, data, error } = useReportsApi(
@@ -74,6 +75,7 @@ export default function AgesAndGendersResults(props) {
       />
       <BasicTableReport
         title="Ages and Genders"
+        getCsvOptions={getCsvOptions}
         headerRows={
           <tr>
             <th>Client/Lead</th>
@@ -189,4 +191,36 @@ export default function AgesAndGendersResults(props) {
       />
     </>
   );
+
+  function getCsvOptions(): Promise<CsvOptions> {
+    const allClientsRow = {
+      "Client / Lead": "Client",
+      Gender: "All",
+      Total: data.totals.numClients,
+    };
+
+    ageGroups.forEach((ageGroup) => {
+      allClientsRow[ageGroup] = data.clients.allGenders[ageGroup];
+    });
+
+    const clientRows = uniqueGenders.map((gender) => {
+      const row = {
+        "Client / Lead": "Client",
+        Gender: gender,
+        Total: data.clients.allAges[gender] || 0,
+      };
+
+      ageGroups.forEach((ageGroup) => {
+        row[ageGroup] = data.clients.allGenders[ageGroup];
+      });
+
+      return row;
+    });
+
+    return Promise.resolve({
+      columnNames: ["Client / Lead", "Gender", "Total", ...ageGroups],
+      data: [allClientsRow, ...clientRows],
+      fileName: "Ages_And_Genders.csv",
+    });
+  }
 }
