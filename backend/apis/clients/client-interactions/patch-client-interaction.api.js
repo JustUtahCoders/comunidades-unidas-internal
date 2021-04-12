@@ -214,10 +214,10 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
           const createCustomAnswerQueries = req.body.customQuestions.map(
             (question) =>
               mysql.format(
-                mysql.format(`
+                `
                         INSERT INTO clientInteractionCustomAnswers (questionId, answer, interactionId) 
                         VALUES(?,?,?);
-            `),
+            `,
                 [
                   question.questionId,
                   _.isNumber(question.answer)
