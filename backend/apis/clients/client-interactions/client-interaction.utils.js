@@ -23,6 +23,7 @@ function createResponseInteractionObject(log, customQuestionAnswers, redact) {
     redacted: Boolean(redact),
     customQuestions: customQuestionAnswers.map((question) => {
       return {
+        id: question.id,
         questionId: question.questionId,
         answer: JSON.parse(question.answer),
       };
@@ -74,7 +75,7 @@ exports.getInteraction = function getInteraction(
       )
       ORDER BY l.dateAdded DESC;
 
-      SELECT questionId, answer FROM clientInteractionCustomAnswers WHERE interactionId = ?;
+      SELECT questionId, answer, id FROM clientInteractionCustomAnswers WHERE interactionId = ?;
       
       SELECT tags.tag
       FROM tags

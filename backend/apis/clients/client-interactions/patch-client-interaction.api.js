@@ -9,6 +9,7 @@ const {
   nullableValidDate,
   nullableValidTime,
   nullableValidTags,
+  nullableValidArray,
 } = require("../../utils/validation-utils");
 const { atLeastOne } = require("../../utils/patch-utils");
 const { getInteraction } = require("./client-interaction.utils");
@@ -18,6 +19,7 @@ const {
   insertTags,
   insertTagsQuery,
 } = require("../../tags/tag.utils");
+const _ = require("lodash");
 
 app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
   const validationErrors = [
@@ -33,6 +35,15 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
         "oneOnOneLightTouch",
         "consultation"
       ),
+      nullableValidArray("customQuestions", (index) => {
+        return (customQuestions) => {
+          if (_.isNil(customQuestions[index].answer)) {
+            return [
+              `customQuestions[${index}].answer must not be null or undefined`,
+            ];
+          }
+        };
+      }),
       nullableNonEmptyString("description"),
       nullableValidDate("dateOfInteraction"),
       nullableValidTime("duration"),
@@ -43,6 +54,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
         "communityEvent"
       )
     ),
+
     ...checkValid(
       req.query,
       nullableValidTags("tags", req.session.passport.user.permissions)
@@ -61,6 +73,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
     "duration",
     "location"
   );
+
   const shouldUpdateLog = atLeastOne(req.body, "description");
 
   if (!shouldUpdateInteraction && !shouldUpdateLog) {
@@ -96,6 +109,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
               duration = ?,
               location = ?,
               modifiedBy = ?
+              
             WHERE id = ?;
           `,
               [
@@ -187,6 +201,33 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
               [existingInteraction.id]
             )
           );
+        }
+
+        if (req.body.hasOwnProperty("customQuestions")) {
+          const deleteQuery = mysql.format(
+            `
+            DELETE from clientInteractionCustomAnswers where interactionId = ?;
+            `,
+            [req.params.interactionId]
+          );
+          queries.push(deleteQuery);
+          const createCustomAnswerQueries = req.body.customQuestions.map(
+            (question) =>
+              mysql.format(
+                `
+                        INSERT INTO clientInteractionCustomAnswers (questionId, answer, interactionId) 
+                        VALUES(?,?,?);
+            `,
+                [
+                  question.questionId,
+                  _.isNumber(question.answer)
+                    ? question.answer
+                    : JSON.stringify(question.answer),
+                  req.params.interactionId,
+                ]
+              )
+          );
+          queries.push(...createCustomAnswerQueries);
         }
 
         const sql = queries.join("\n");
