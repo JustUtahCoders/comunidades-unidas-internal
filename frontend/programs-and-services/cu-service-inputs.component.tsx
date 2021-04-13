@@ -213,6 +213,7 @@ export default function CUServiceInputs(props: CUServiceInputsProps) {
         setQuestions={(questions) =>
           props.setService({ ...props.service, questions })
         }
+        serviceId={props.service.id}
       />
     </form>
   );

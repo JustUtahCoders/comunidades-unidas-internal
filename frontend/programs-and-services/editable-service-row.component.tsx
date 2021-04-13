@@ -10,6 +10,7 @@ import { maybe, useCss } from "kremling";
 import easyFetch from "../util/easy-fetch";
 import { showGrowl, GrowlType } from "../growls/growls.component";
 import CUServiceInputs from "./cu-service-inputs.component";
+import { sanitizeCustomServiceQuestionRequest } from "./custom-question-inputs.component";
 
 export default function EditableServiceRow(
   props: EditableProgramServiceRowProps
@@ -59,13 +60,13 @@ export default function EditableServiceRow(
         ...addedQuestions.map((q) =>
           easyFetch(`/api/custom-service-questions`, {
             method: "POST",
-            body: q,
+            body: sanitizeCustomServiceQuestionRequest(q),
           })
         ),
         ...modifiedQuestions.map((q) =>
           easyFetch(`/api/custom-service-questions/${q.id}`, {
             method: "PATCH",
-            body: q,
+            body: sanitizeCustomServiceQuestionRequest(q),
           })
         ),
       ]).then(
