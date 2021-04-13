@@ -162,7 +162,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
             )
 
             UPDATE clientLogs
-            SET idOfUpdatedLog = LAST_INSERT_ID()
+            SET idOfUpdatedLog = @logId
             WHERE id = (SELECT id FROM oldLog);
           `,
               [existingInteraction.id]
@@ -195,7 +195,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
             )
 
             UPDATE clientLogs
-            SET idOfUpdatedLog = LAST_INSERT_ID()
+            SET idOfUpdatedLog = @logId
             WHERE id = (SELECT id FROM oldLog);
           `,
               [existingInteraction.id]
@@ -208,22 +208,22 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
             `
             DELETE from clientInteractionCustomAnswers where interactionId = ?;
             `,
-            [req.params.interactionId]
+            [interactionId]
           );
           queries.push(deleteQuery);
           const createCustomAnswerQueries = req.body.customQuestions.map(
             (question) =>
               mysql.format(
                 `
-                        INSERT INTO clientInteractionCustomAnswers (questionId, answer, interactionId) 
-                        VALUES(?,?,?);
+                  INSERT INTO clientInteractionCustomAnswers (questionId, answer, interactionId) 
+                  VALUES(?,?,?);
             `,
                 [
                   question.questionId,
                   _.isNumber(question.answer)
                     ? question.answer
                     : JSON.stringify(question.answer),
-                  req.params.interactionId,
+                  interactionId,
                 ]
               )
           );
