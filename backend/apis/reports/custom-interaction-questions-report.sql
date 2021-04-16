@@ -15,4 +15,5 @@ FROM
 WHERE
   questionId = ?
   AND clientInteractions.dateOfInteraction BETWEEN ? AND ?
+  AND clientInteractions.isDeleted = false
 ;

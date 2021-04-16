@@ -69,7 +69,6 @@ app.get("/api/reports/custom-interaction-questions", (req, res) => {
 
     const now = dayjs();
 
-    console.log(questionResult.type);
     switch (questionResult.type) {
       case "number":
         summaryColumns = ["Metric", "Value"];
