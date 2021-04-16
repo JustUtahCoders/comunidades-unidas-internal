@@ -226,7 +226,7 @@ function getInitialState(): ApiState {
   let sortOrder = queryParams.sortOrder as SortOrder;
 
   if (!Object.values(SortOrder).includes(sortOrder)) {
-    sortOrder = SortOrder.ascending;
+    sortOrder = SortOrder.descending;
   }
 
   const search = { ...queryParams };
