@@ -10,7 +10,7 @@ import css from "./custom-question-inputs.css";
 
 let newId = 0;
 
-const humanReadableInputTypes = {
+export const humanReadableCustomQuestionTypes = {
   [CUCustomQuestionType.boolean]: "Yes / No",
   [CUCustomQuestionType.select]: "Multiple Choice",
 };
@@ -107,7 +107,7 @@ function Question(props: QuestionProps) {
           {keys(CUCustomQuestionType).map((questionType) => (
             <option value={questionType} key={questionType}>
               {capitalize(
-                humanReadableInputTypes[questionType] || questionType
+                humanReadableCustomQuestionTypes[questionType] || questionType
               )}
             </option>
           ))}
