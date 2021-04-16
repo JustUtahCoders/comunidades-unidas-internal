@@ -3,7 +3,6 @@ import queryString from "query-string";
 import easyFetch from "../util/easy-fetch";
 import { useFullWidth } from "../navbar/use-full-width.hook";
 import PageHeader from "../page-header.component";
-import ReportIssue from "../report-issue/report-issue.component";
 import EventTableToolbar from "./event-table-toolbar.component";
 import EventTable from "./event-table.component";
 

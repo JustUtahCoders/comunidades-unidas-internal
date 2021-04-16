@@ -3,6 +3,7 @@ import { useQueryParamState } from "../../util/use-query-param-state.hook";
 import { Link } from "@reach/router";
 import easyFetch from "../../util/easy-fetch";
 import { handlePromiseError } from "../../util/error-helpers";
+import { groupBy } from "lodash-es";
 
 export default function EnglishLevelsParams(props) {
   const [startDate, setStartDate] = useQueryParamState("start", "");
@@ -30,7 +31,17 @@ export default function EnglishLevelsParams(props) {
     };
   }, []);
 
-  const selectedService = services.find((s) => s.id === serviceId);
+  const groupedServices = groupBy(services, "programName");
+
+  const selectedService = services.find((s) => s.id === Number(serviceId));
+
+  const hasQuestions = selectedService && selectedService.questions.length > 0;
+
+  useEffect(() => {
+    if (selectedService && selectedService.questions.length > 0) {
+      setQuestionId(String(selectedService.questions[0].id));
+    }
+  }, [selectedService]);
 
   return (
     <>
@@ -41,14 +52,18 @@ export default function EnglishLevelsParams(props) {
           value={serviceId}
           onChange={(evt) => setServiceId(evt.target.value)}
         >
-          {services.map((service) => (
-            <option value={service.id} key={service.id}>
-              {service.serviceName}
-            </option>
+          {Object.keys(groupedServices).map((programName) => (
+            <optgroup label={programName} key={programName}>
+              {groupedServices[programName].map((service) => (
+                <option value={service.id} key={service.id}>
+                  {service.serviceName}
+                </option>
+              ))}
+            </optgroup>
           ))}
         </select>
       </div>
-      {selectedService ? (
+      {hasQuestions ? (
         <div className="report-input">
           <label htmlFor="custom-question">Question</label>
           <select
@@ -64,7 +79,7 @@ export default function EnglishLevelsParams(props) {
           </select>
         </div>
       ) : (
-        <p>This service has no Custom Questions</p>
+        <div className="report-input">This service has no Custom Questions</div>
       )}
       <div className="report-input">
         <label htmlFor="start-date">Start date:</label>
@@ -84,14 +99,16 @@ export default function EnglishLevelsParams(props) {
           onChange={(evt) => setEndDate(evt.target.value)}
         />
       </div>
-      <div className="actions">
-        <Link
-          className="primary button"
-          to={`${window.location.pathname}/results${window.location.search}`}
-        >
-          Run report
-        </Link>
-      </div>
+      {hasQuestions && (
+        <div className="actions">
+          <Link
+            className="primary button"
+            to={`${window.location.pathname}/results${window.location.search}`}
+          >
+            Run report
+          </Link>
+        </div>
+      )}
     </>
   );
 }

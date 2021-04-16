@@ -1,4 +1,5 @@
 import { Link } from "@reach/router";
+import { isBoolean } from "lodash-es";
 import React from "react";
 import { humanReadableCustomQuestionTypes } from "../../programs-and-services/custom-question-inputs.component";
 import BasicTableReport from "../shared/basic-table-report.component";
@@ -24,25 +25,42 @@ export default function CustomInteractionQuestionResults(props) {
         title={`Custom Interaction Questions`}
         headerRows={
           <tr>
-            <th>Service</th>
-            <th>Question</th>
-            <th>Question Type</th>
+            <th>Report Parameter</th>
+            <th>Value</th>
           </tr>
         }
         contentRows={
-          <tr>
-            <td>{data.reportParameters.serviceName}</td>
-            <td>{data.reportParameters.questionName}</td>
-            <td>
-              {humanReadableCustomQuestionTypes[
-                data.reportParameters.questionType
-              ] || capitalize(data.reportParameters.questionType)}
-            </td>
-          </tr>
+          <>
+            <tr>
+              <th>Service Name</th>
+              <td>{data.reportParameters.serviceName}</td>
+            </tr>
+            <tr>
+              <th>Question Name</th>
+              <td>{data.reportParameters.questionName}</td>
+            </tr>
+            <tr>
+              <th>Question Type</th>
+              <td>
+                {humanReadableCustomQuestionTypes[
+                  data.reportParameters.questionType
+                ] || capitalize(data.reportParameters.questionType)}
+              </td>
+            </tr>
+            <tr>
+              <th>Interaction Start Date</th>
+              <td>{data.reportParameters.start || "\u2014"}</td>
+            </tr>
+            <tr>
+              <th>Interaction End Date</th>
+              <td>{data.reportParameters.end || "\u2014"}</td>
+            </tr>
+          </>
         }
       />
       {data.summary.columns.length > 0 && (
         <BasicTableReport
+          title="Summary"
           headerRows={
             <tr>
               {data.summary.columns.map((c) => (
@@ -51,15 +69,20 @@ export default function CustomInteractionQuestionResults(props) {
             </tr>
           }
           contentRows={
-            <tr>
-              {data.summary.rows.map((r, i) => (
-                <td key={i}>{r}</td>
+            <>
+              {data.summary.rows.map((row, i) => (
+                <tr key={i}>
+                  {row.map((val, j) => (
+                    <td key={j}>{val}</td>
+                  ))}
+                </tr>
               ))}
-            </tr>
+            </>
           }
         />
       )}
       <BasicTableReport
+        title="Answers"
         headerRows={
           <tr>
             <th>Client ID</th>
@@ -73,7 +96,9 @@ export default function CustomInteractionQuestionResults(props) {
                 <td>
                   <Link to={`/clients/${a.clientId}`}>{a.clientId}</Link>
                 </td>
-                <td>{a.answer}</td>
+                <td>
+                  {isBoolean(a.answer) ? (a.answer ? "Yes" : "No") : a.answer}
+                </td>
               </tr>
             ))}
           </>
