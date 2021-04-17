@@ -4,10 +4,10 @@ import { Link } from "@reach/router";
 import easyFetch from "../../util/easy-fetch";
 import { handlePromiseError } from "../../util/error-helpers";
 import { groupBy } from "lodash-es";
+import DatePresetInputs from "../shared/date-preset-inputs.component";
+import { useForceUpdate } from "../../util/use-force-update";
 
 export default function EnglishLevelsParams(props) {
-  const [startDate, setStartDate] = useQueryParamState("start", "");
-  const [endDate, setEndDate] = useQueryParamState("end", "");
   const [serviceId, setServiceId] = useQueryParamState("serviceId", "");
   const [services, setServices] = useState([]);
   const [questionId, setQuestionId] = useQueryParamState("questionId", "");
@@ -81,24 +81,7 @@ export default function EnglishLevelsParams(props) {
       ) : (
         <div className="report-input">This service has no Custom Questions</div>
       )}
-      <div className="report-input">
-        <label htmlFor="start-date">Start date:</label>
-        <input
-          id="start-date"
-          type="date"
-          value={startDate}
-          onChange={(evt) => setStartDate(evt.target.value)}
-        />
-      </div>
-      <div className="report-input">
-        <label htmlFor="end-date">End date:</label>
-        <input
-          id="end-date"
-          type="date"
-          value={endDate}
-          onChange={(evt) => setEndDate(evt.target.value)}
-        />
-      </div>
+      <DatePresetInputs forceUpdate={useForceUpdate()} />
       {hasQuestions && (
         <div className="actions">
           <Link
