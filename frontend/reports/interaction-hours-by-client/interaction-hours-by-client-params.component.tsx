@@ -5,6 +5,8 @@ import {
   secondsToHours,
   secondsToRemainderMinutes,
 } from "../../util/time-duration-helpers";
+import DatePresetInputs from "../shared/date-preset-inputs.component";
+import { useForceUpdate } from "../../util/use-force-update";
 
 const sixHoursInSeconds = 21600;
 const tenHoursInSeconds = 10 * 60 * 60;
@@ -25,9 +27,6 @@ export default function InteractionHoursByClientParams(props) {
     "maxInclusive",
     "false"
   );
-
-  const [startDate, setStartDate] = useQueryParamState("start", "");
-  const [endDate, setEndDate] = useQueryParamState("end", "");
 
   const hasMinSeconds = (minInteractionSeconds as string).trim().length > 0;
   const hasMaxSeconds = (maxInteractionsSeconds as string).trim().length > 0;
@@ -184,24 +183,7 @@ export default function InteractionHoursByClientParams(props) {
           </div>
         </>
       )}
-      <div className="report-input">
-        <label htmlFor="start-date">Start date:</label>
-        <input
-          id="start-date"
-          type="date"
-          value={startDate}
-          onChange={(evt) => setStartDate(evt.target.value)}
-        />
-      </div>
-      <div className="report-input">
-        <label htmlFor="end-date">End date:</label>
-        <input
-          id="end-date"
-          type="date"
-          value={endDate}
-          onChange={(evt) => setEndDate(evt.target.value)}
-        />
-      </div>
+      <DatePresetInputs forceUpdate={useForceUpdate()} />
       <div className="actions">
         <Link
           className="primary button"

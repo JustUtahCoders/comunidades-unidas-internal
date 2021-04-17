@@ -54,9 +54,7 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
           WHERE
             isDeleted = false
             AND
-            dateOfInteraction >= ?
-            AND
-            dateOfInteraction <= ?
+            dateOfInteraction BETWEEN ? AND ?
           GROUP BY clientId
         ) clientHours
         ON clients.id = clientHours.clientId
