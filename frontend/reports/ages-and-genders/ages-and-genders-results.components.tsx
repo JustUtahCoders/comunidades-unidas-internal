@@ -199,10 +199,6 @@ export default function AgesAndGendersResults(props) {
       Total: data.totals.numClients,
     };
 
-    ageGroups.forEach((ageGroup) => {
-      allClientsRow[ageGroup] = data.clients.allGenders[ageGroup];
-    });
-
     const clientRows = uniqueGenders.map((gender) => {
       const row = {
         "Client / Lead": "Client",
@@ -211,7 +207,51 @@ export default function AgesAndGendersResults(props) {
       };
 
       ageGroups.forEach((ageGroup) => {
-        row[ageGroup] = data.clients.allGenders[ageGroup];
+        row[ageGroup] = data.clients[ageGroup][gender];
+        allClientsRow[ageGroup] = data.clients.allGenders[ageGroup];
+      });
+
+      return row;
+    });
+
+    const allLeadRow = {
+      "Client / Lead": "Lead",
+      Gender: "All",
+      Total: data.totals.numLeads,
+    };
+
+    const leadRows = uniqueGenders.map((gender) => {
+      const row = {
+        "Client / Lead": "Lead",
+        Gender: gender,
+        Total: data.leads.allAges[gender] || 0,
+      };
+
+      ageGroups.forEach((ageGroup) => {
+        row[ageGroup] = data.leads[ageGroup][gender];
+        allLeadRow[ageGroup] = data.leads.allGenders[ageGroup];
+      });
+
+      return row;
+    });
+
+    const allRow = {
+      "Client / Lead": "All",
+      Gender: "All",
+      Total: data.totals.numLeads + data.totals.numClients,
+    };
+
+    const allRows = uniqueGenders.map((gender) => {
+      const row = {
+        "Client / Lead": "All",
+        Gender: gender,
+        Total: data.totals.genders[gender] || 0,
+      };
+
+      ageGroups.forEach((ageGroup) => {
+        row[ageGroup] =
+          data.clients[ageGroup][gender] + data.leads[ageGroup][gender];
+        allRow[ageGroup] = data.totals.ages[ageGroup];
       });
 
       return row;
@@ -219,7 +259,14 @@ export default function AgesAndGendersResults(props) {
 
     return Promise.resolve({
       columnNames: ["Client / Lead", "Gender", "Total", ...ageGroups],
-      data: [allClientsRow, ...clientRows],
+      data: [
+        allClientsRow,
+        ...clientRows,
+        allLeadRow,
+        ...leadRows,
+        allRow,
+        ...allRows,
+      ],
       fileName: "Ages_And_Genders.csv",
     });
   }

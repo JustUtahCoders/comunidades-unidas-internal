@@ -96,13 +96,21 @@ export default function ClientSourcesResults(props) {
   );
 
   function getCsvOptions(): Promise<CsvOptions> {
+    const allRow = {
+      Source: "Total",
+      "Client Count": totalClients,
+      Percentage: "100%",
+    };
+
     return Promise.resolve({
       columnNames: ["Source", "Client Count", "Percentage"],
-      data: sortedSources.map((source) => ({
-        Source: clientSources[source[0]] || source[0],
-        "Client Count": source[1],
-        Percentage: formatPercentage(source[1], totalClients),
-      })),
+      data: sortedSources
+        .map((source) => ({
+          Source: clientSources[source[0]] || source[0],
+          "Client Count": source[1],
+          Percentage: formatPercentage(source[1], totalClients),
+        }))
+        .concat(allRow),
       fileName: "Client_Sources.csv",
     });
   }
