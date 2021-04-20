@@ -41,6 +41,7 @@ export default function ClientList(props: ClientListProps) {
         refetchClients={refetchClients}
         advancedSearchOpen={advancedSearchOpen}
         setAdvancedSearchOpen={setAdvancedSearchOpen}
+        initialSearchValue={apiState.search}
       />
       <ClientsTable
         clients={apiState.apiData.clients}
@@ -230,6 +231,13 @@ function useFrontendUrlParams(apiState, dispatchApiState) {
       document.title,
       window.location.pathname + "?" + queryParams
     );
+
+    if (apiState.status !== ApiStateStatus.uninitialized) {
+      localStorage.setItem(
+        "client-search",
+        queryString.stringify(apiState.search)
+      );
+    }
   }, [apiState]);
 }
 
@@ -364,7 +372,10 @@ export type ClientListClient = {
 };
 
 function getInitialState(): ApiState {
-  const queryParams = queryString.parse(window.location.search);
+  const queryParams = {
+    ...queryString.parse(localStorage.getItem("client-search") || ""),
+    ...queryString.parse(window.location.search),
+  };
 
   let page = null;
 
