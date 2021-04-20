@@ -114,7 +114,7 @@ function clientListQuery(query, pageNum, pageSize) {
       ? `IN (SELECT id FROM services WHERE programId = ?)`
       : "= ?";
     whereClause += `
-      AND (SELECT COUNT(*) FROM intakeServices WHERE intakeDataId = intakeDId AND intakeServices.serviceId ${serviceId}) > 0
+      AND (SELECT COUNT(*) FROM intakeServices WHERE intakeDataId = intakeD.Id AND intakeServices.serviceId ${serviceId}) > 0
     `;
     whereClauseValues.push(query.programInterest || query.serviceInterest);
   }

@@ -47,7 +47,7 @@ export default function ClientsTableToolbar(props: ClientsTableToolbarProps) {
           <ClientSearchInput
             autoFocus
             performSearch={performSearch}
-            initialValueFromQueryParams
+            initialSearchValue={props.initialSearchValue}
             disabled={props.fetchingClient}
             advancedSearchRef={advancedSearchRef}
             advancedSearchOpen={props.advancedSearchOpen}
@@ -200,6 +200,7 @@ type ClientsTableToolbarProps = {
   setSelectedClients: (selectedClients: SelectedClients) => any;
   refetchClients: () => any;
   advancedSearchOpen: boolean;
+  initialSearchValue: SearchParseValues;
   setAdvancedSearchOpen: Dispatch<SetStateAction<boolean>>;
 };
 
