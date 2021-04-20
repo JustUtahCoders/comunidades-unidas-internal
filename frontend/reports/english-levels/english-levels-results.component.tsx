@@ -4,6 +4,7 @@ import BasicTableReport from "../shared/basic-table-report.component";
 import dayjs from "dayjs";
 import { formatPercentage, capitalize } from "../shared/report.helpers";
 import { sum, values } from "lodash-es";
+import { CsvOptions } from "../../util/csv-utils";
 
 export default function EnglishLevelsResults(props) {
   const { isLoading, data, error } = useReportsApi(
@@ -55,6 +56,7 @@ export default function EnglishLevelsResults(props) {
       />
       <BasicTableReport
         title="Self Reported Client English Levels"
+        getCsvOptions={getCsvOptions}
         headerRows={
           <tr>
             <th>English Level</th>
@@ -92,6 +94,30 @@ export default function EnglishLevelsResults(props) {
       />
     </div>
   );
+
+  function getCsvOptions(): Promise<CsvOptions> {
+    const allRow = {
+      "English Level": "Total",
+      "Client Count": totalClients.toLocaleString(),
+      Percentage: "100%",
+    };
+
+    return Promise.resolve({
+      columnNames: ["English Level", "Client Count", "Percentage"],
+      data: Object.keys(data.englishLevels)
+        .sort(englishLevelComparator)
+        .map((englishLevel) => ({
+          "English Level": capitalize(englishLevel),
+          "Client Count": data.englishLevels[englishLevel].toLocaleString(),
+          Percentage: formatPercentage(
+            data.englishLevels[englishLevel].toLocaleString(),
+            totalClients
+          ),
+        }))
+        .concat(allRow),
+      fileName: "English_Levels.csv",
+    });
+  }
 }
 
 const scores = {
