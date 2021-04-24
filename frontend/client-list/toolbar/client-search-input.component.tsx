@@ -174,17 +174,10 @@ export default function ClientSearchInput(props: ClientSearchInputProps) {
   }
 
   function getInitialSearch(searchFields): Search {
-    let value: string;
-    if (props.initialValueFromQueryParams) {
-      searchFields;
-      value = deserializeSearch(searchFields);
-    } else {
-      value = props.initialValue || "";
-    }
-
+    const parseResult = parseSearch(searchFields, "", props.initialSearchValue);
     return {
-      value,
-      parseResult: parseSearch(searchFields, value),
+      value: serializeSearch(searchFields, parseResult.parse),
+      parseResult,
     };
   }
 
@@ -300,8 +293,7 @@ type NewAdvancedValueAction = {
 };
 
 type ClientSearchInputProps = {
-  initialValue?: string;
-  initialValueFromQueryParams?: boolean;
+  initialSearchValue: SearchParseValues;
   autoFocus?: boolean;
   performSearch(parseResult: SearchParseValues): any;
   disabled: boolean;

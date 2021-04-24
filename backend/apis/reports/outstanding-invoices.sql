@@ -17,20 +17,11 @@ FROM
   LEFT JOIN payments ON invoicePayments.paymentId = payments.id
   LEFT JOIN invoiceClients ON invoiceClients.invoiceId = invoices.id
   JOIN clients ON clients.id = invoiceClients.clientId
-  JOIN (
-    SELECT *
-    FROM
-      contactInformation innerContactInformation
-      JOIN (
-        SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
-        FROM contactInformation GROUP BY clientId
-      ) latestContactInformation
-      ON latestContactInformation.latestDateAdded = innerContactInformation.dateAdded
-  ) contactInfo ON contactInfo.clientId = clients.id
+  JOIN latestContactInformation contactInfo ON contactInfo.clientId = clients.id
 WHERE
   (invoices.status = 'open' OR invoices.status = 'completed')
   AND
-  (invoices.invoiceDate >= ? AND invoices.invoiceDate <= ?)
+  (invoices.invoiceDate BETWEEN ? AND ?)
   AND
   (payments.isDeleted IS NULL OR payments.isDeleted = false)
 GROUP BY invoices.id

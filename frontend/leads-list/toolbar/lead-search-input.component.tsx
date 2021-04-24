@@ -14,8 +14,8 @@ const searchFields = {
   id: "Lead ID",
   zip: "ZIP Code",
   phone: "Phone",
-  program: "Interest",
-  service: "Interest",
+  programInterest: "Interest",
+  serviceInterest: "Interest",
   event: "Event Attended",
   leadStatus: "Lead Status",
 };
@@ -95,8 +95,8 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
               {Object.entries(searchFields)
                 .filter(
                   ([fieldKey]) =>
-                    fieldKey !== "program" &&
-                    fieldKey !== "service" &&
+                    fieldKey !== "programInterest" &&
+                    fieldKey !== "serviceInterest" &&
                     fieldKey !== "leadStatus"
                 )
                 .map(([fieldKey, fieldName]) =>
@@ -217,19 +217,11 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
   }
 
   function getInitialSearch(searchFields): Search {
-    let value: string;
-    if (props.initialValueFromQueryParams) {
-      value = deserializeSearch(searchFields);
-    } else {
-      value = props.initialValue || "";
-    }
-
-    const result = {
-      value,
-      parseResult: parseSearch(searchFields, value),
+    const parseResult = parseSearch(searchFields, "", props.initialSearchValue);
+    return {
+      value: serializeSearch(searchFields, parseResult.parse),
+      parseResult,
     };
-
-    return result;
   }
 
   function handleSubmit(evt) {
@@ -265,9 +257,9 @@ function searchReducer(state: Search, action: SearchAction): Search {
       const newVal = {
         [action.fieldKey]: action.value,
       };
-      if (action.fieldKey === "program") {
+      if (action.fieldKey === "programInterest") {
         newVal.service = null;
-      } else if (action.fieldKey === "service") {
+      } else if (action.fieldKey === "serviceInterest") {
         newVal.program = null;
       }
       parseResult = parseSearch(searchFields, action.currentSearch, newVal);
@@ -344,8 +336,7 @@ type NewAdvancedValueAction = {
 };
 
 type LeadSearchInputProps = {
-  initialValue?: string;
-  initialValueFromQueryParams?: boolean;
+  initialSearchValue: SearchParseValues;
   autoFocus?: boolean;
   performSearch(parseResult: SearchParseValues): any;
   disabled: boolean;

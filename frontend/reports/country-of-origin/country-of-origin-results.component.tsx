@@ -2,7 +2,7 @@ import React from "react";
 import { useReportsApi } from "../shared/use-reports-api";
 import BasicTableReport from "../shared/basic-table-report.component";
 import dayjs from "dayjs";
-import { formatPercentage, capitalize } from "../shared/report.helpers";
+import { formatPercentage } from "../shared/report.helpers";
 import { sum, values, entries } from "lodash-es";
 import { countryCodeToName } from "../../util/country-select.component";
 import { CsvOptions } from "../../util/csv-utils";

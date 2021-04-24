@@ -4,6 +4,7 @@ import Modal from "../util/modal.component";
 import CUServiceInputs from "./cu-service-inputs.component";
 import easyFetch from "../util/easy-fetch";
 import { showGrowl, GrowlType } from "../growls/growls.component";
+import { sanitizeCustomServiceQuestionRequest } from "./custom-question-inputs.component";
 
 export default function CreateNewServiceModal(
   props: CreateNewServiceModalProps
@@ -15,6 +16,7 @@ export default function CreateNewServiceModal(
   React.useEffect(() => {
     if (isSaving) {
       const abortController = new AbortController();
+
       easyFetch(`/api/services`, {
         signal: abortController.signal,
         method: "POST",
@@ -25,6 +27,19 @@ export default function CreateNewServiceModal(
           isActive: service.isActive,
         },
       })
+        .then((data) => {
+          return Promise.all(
+            service.questions.map((q) =>
+              easyFetch(`/api/custom-service-questions`, {
+                method: "POST",
+                body: sanitizeCustomServiceQuestionRequest({
+                  ...q,
+                  serviceId: data.service.id,
+                }),
+              })
+            )
+          );
+        })
         .then(() => {
           setIsSaving(false);
           props.refetch();
@@ -88,4 +103,5 @@ const emptyService: CUService = {
   defaultLineItemDescription: null,
   defaultLineItemName: null,
   defaultLineItemRate: null,
+  questions: [],
 };

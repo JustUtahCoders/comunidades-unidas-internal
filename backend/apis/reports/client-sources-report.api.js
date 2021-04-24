@@ -18,17 +18,14 @@ app.get(`/api/reports/client-sources`, (req, res) => {
 
   const sql = mysql.format(
     `
-      SELECT COUNT(*) total, intakeData.clientSource
+      SELECT COUNT(*) total, latestIntakeData.clientSource
       FROM
-        (
-          SELECT MAX(dateAdded) latestDateAdded, dateOfIntake, clientId FROM intakeData GROUP BY clientId
-        ) latestIntakeData
-        JOIN intakeData ON latestIntakeData.latestDateAdded = intakeData.dateAdded
-        JOIN clients ON clients.id = intakeData.clientId
+        latestIntakeData
+        JOIN clients ON clients.id = latestIntakeData.clientId
       WHERE
         clients.isDeleted = false
         AND (latestIntakeData.dateOfIntake BETWEEN ? AND ?)
-      GROUP BY intakeData.clientSource
+      GROUP BY latestIntakeData.clientSource
       ORDER BY total DESC
       ;
     `,

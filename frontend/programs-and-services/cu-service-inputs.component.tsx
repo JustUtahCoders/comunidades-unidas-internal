@@ -9,6 +9,7 @@ import {
 import TimeDurationInput, {
   TimeDuration,
 } from "../util/time-duration-input.component";
+import CustomQuestionInputs from "./custom-question-inputs.component";
 
 export default function CUServiceInputs(props: CUServiceInputsProps) {
   const scope = useCss(css);
@@ -180,7 +181,7 @@ export default function CUServiceInputs(props: CUServiceInputsProps) {
         <label htmlFor="interaction-location">Interaction Location:</label>
         <select
           id="interaction-location"
-          value={props.service.defaultInteractionLocation}
+          value={props.service.defaultInteractionLocation || ""}
           onChange={(evt) => {
             props.setService({
               ...props.service,
@@ -207,6 +208,13 @@ export default function CUServiceInputs(props: CUServiceInputsProps) {
           }}
         />
       </div>
+      <CustomQuestionInputs
+        questions={props.service.questions}
+        setQuestions={(questions) =>
+          props.setService({ ...props.service, questions })
+        }
+        serviceId={props.service.id}
+      />
     </form>
   );
 }

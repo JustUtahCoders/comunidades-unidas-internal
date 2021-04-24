@@ -1,0 +1,17 @@
+.remove {
+  color: red;
+  margin-left: 1.6rem;
+}
+
+.questionLabel {
+  margin: 1.6rem;
+  width: 50%;
+}
+
+.option {
+  margin-left: 4.8rem;
+}
+
+.addQuestion {
+  margin-top: 3.2rem;
+}

@@ -18,21 +18,15 @@ app.get(`/api/reports/countries-of-origin`, (req, res) => {
 
   const sql = mysql.format(
     `
-      SELECT COUNT(*) total, demographics.countryOfOrigin
+      SELECT COUNT(*) total, latestDemographics.countryOfOrigin
       FROM
-        (
-          SELECT MAX(dateAdded) latestDateAdded, id FROM demographics GROUP BY clientId
-        ) latestDems
-        JOIN demographics ON latestDems.id = demographics.id
-        JOIN clients ON clients.id = demographics.clientId
-        JOIN
-        (
-          SELECT MAX(dateAdded) latestDateAdded, dateOfIntake, clientId FROM intakeData GROUP BY clientId
-        ) latestIntake ON latestIntake.clientId = clients.id
+        latestDemographics
+        JOIN clients ON clients.id = latestDemographics.clientId
+        JOIN latestIntakeData ON latestIntakeData.clientId = clients.id
       WHERE
         clients.isDeleted = false
         AND (dateOfIntake BETWEEN ? AND ?)
-      GROUP BY demographics.countryOfOrigin
+      GROUP BY latestDemographics.countryOfOrigin
       ORDER BY total DESC
       ;
     `,
