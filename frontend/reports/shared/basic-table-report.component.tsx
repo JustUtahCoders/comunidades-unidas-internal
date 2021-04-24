@@ -1,13 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useCss } from "kremling";
+import { CsvOptions, exportToCsv } from "../../util/csv-utils";
 
 export default function BasicTableReport(props: BasicTableReportProps) {
   const scope = useCss(css);
+  const [isExporting, setIsExporting] = useState(false);
+
+  useEffect(() => {
+    if (isExporting) {
+      props.getCsvOptions().then((csvOptions: CsvOptions) => {
+        exportToCsv(csvOptions);
+      });
+    }
+  }, [isExporting]);
 
   return (
     <div className="report" {...scope}>
       {props.title && <h2>{props.title}</h2>}
       {props.subtitle && <div>{props.subtitle}</div>}
+      {props.getCsvOptions && (
+        <button className="secondary" onClick={() => setIsExporting(true)}>
+          Export To CSV
+        </button>
+      )}
       <table style={props.tableStyle}>
         <thead>{props.headerRows}</thead>
         <tbody>{props.contentRows}</tbody>
@@ -96,4 +111,5 @@ type BasicTableReportProps = {
   contentRows: JSX.Element | JSX.Element[];
   footerRows?: JSX.Element | JSX.Element[];
   notes?: (string | JSX.Element)[];
+  getCsvOptions?(): Promise<CsvOptions>;
 };

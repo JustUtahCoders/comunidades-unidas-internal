@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { formatPercentage, capitalize } from "../shared/report.helpers";
 import { sum, values, entries } from "lodash-es";
 import { clientSources } from "../../add-client/form-inputs/client-source-inputs.component";
+import { CsvOptions } from "../../util/csv-utils";
 
 export default function ClientSourcesResults(props) {
   const { isLoading, data, error } = useReportsApi(
@@ -62,6 +63,7 @@ export default function ClientSourcesResults(props) {
       />
       <BasicTableReport
         title="Client Sources"
+        getCsvOptions={getCsvOptions}
         headerRows={
           <tr>
             <th>Source</th>
@@ -92,4 +94,24 @@ export default function ClientSourcesResults(props) {
       />
     </>
   );
+
+  function getCsvOptions(): Promise<CsvOptions> {
+    const allRow = {
+      Source: "Total",
+      "Client Count": totalClients,
+      Percentage: "100%",
+    };
+
+    return Promise.resolve({
+      columnNames: ["Source", "Client Count", "Percentage"],
+      data: sortedSources
+        .map((source) => ({
+          Source: clientSources[source[0]] || source[0],
+          "Client Count": source[1],
+          Percentage: formatPercentage(source[1], totalClients),
+        }))
+        .concat(allRow),
+      fileName: "Client_Sources.csv",
+    });
+  }
 }

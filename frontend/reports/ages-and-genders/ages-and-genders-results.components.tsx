@@ -7,6 +7,7 @@ import { capitalize } from "../shared/report.helpers";
 import CollapsibleTableRows, {
   ToggleCollapseButton,
 } from "../shared/collapsible-table-rows.component";
+import { CsvOptions } from "../../util/csv-utils";
 
 export default function AgesAndGendersResults(props) {
   const { isLoading, data, error } = useReportsApi(
@@ -74,6 +75,7 @@ export default function AgesAndGendersResults(props) {
       />
       <BasicTableReport
         title="Ages and Genders"
+        getCsvOptions={getCsvOptions}
         headerRows={
           <tr>
             <th>Client/Lead</th>
@@ -189,4 +191,83 @@ export default function AgesAndGendersResults(props) {
       />
     </>
   );
+
+  function getCsvOptions(): Promise<CsvOptions> {
+    const allClientsRow = {
+      "Client / Lead": "Client",
+      Gender: "All",
+      Total: data.totals.numClients,
+    };
+
+    const clientRows = uniqueGenders.map((gender) => {
+      const row = {
+        "Client / Lead": "Client",
+        Gender: gender,
+        Total: data.clients.allAges[gender] || 0,
+      };
+
+      ageGroups.forEach((ageGroup) => {
+        row[ageGroup] = data.clients[ageGroup][gender];
+        allClientsRow[ageGroup] = data.clients.allGenders[ageGroup];
+      });
+
+      return row;
+    });
+
+    const allLeadRow = {
+      "Client / Lead": "Lead",
+      Gender: "All",
+      Total: data.totals.numLeads,
+    };
+
+    const leadRows = uniqueGenders.map((gender) => {
+      const row = {
+        "Client / Lead": "Lead",
+        Gender: gender,
+        Total: data.leads.allAges[gender] || 0,
+      };
+
+      ageGroups.forEach((ageGroup) => {
+        row[ageGroup] = data.leads[ageGroup][gender];
+        allLeadRow[ageGroup] = data.leads.allGenders[ageGroup];
+      });
+
+      return row;
+    });
+
+    const allRow = {
+      "Client / Lead": "All",
+      Gender: "All",
+      Total: data.totals.numLeads + data.totals.numClients,
+    };
+
+    const allRows = uniqueGenders.map((gender) => {
+      const row = {
+        "Client / Lead": "All",
+        Gender: gender,
+        Total: data.totals.genders[gender] || 0,
+      };
+
+      ageGroups.forEach((ageGroup) => {
+        row[ageGroup] =
+          data.clients[ageGroup][gender] + data.leads[ageGroup][gender];
+        allRow[ageGroup] = data.totals.ages[ageGroup];
+      });
+
+      return row;
+    });
+
+    return Promise.resolve({
+      columnNames: ["Client / Lead", "Gender", "Total", ...ageGroups],
+      data: [
+        allClientsRow,
+        ...clientRows,
+        allLeadRow,
+        ...leadRows,
+        allRow,
+        ...allRows,
+      ],
+      fileName: "Ages_And_Genders.csv",
+    });
+  }
 }
