@@ -45,39 +45,18 @@ app.get(`/api/reports/poverty-lines`, (req, res) => {
 
       SELECT COUNT(*) belowPovertyLine, contactInfo.zip
       FROM
-        (
-          SELECT MAX(dateAdded) latestDateAdded, clientId FROM demographics GROUP BY clientId
-        ) latestDems
-        JOIN demographics ON latestDems.latestDateAdded = demographics.dateAdded
-        JOIN clients ON clients.id = demographics.clientId
-        JOIN (
-          SELECT *
-          FROM
-            contactInformation innerContactInformation
-            JOIN (
-              SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
-              FROM contactInformation GROUP BY clientId
-            ) latestContactInformation
-            ON latestContactInformation.latestDateAdded = innerContactInformation.dateAdded
-        ) contactInfo ON contactInfo.clientId = clients.id
+        latestDemographics
+        JOIN clients ON clients.id = latestDemographics.clientId
+        JOIN latestContactInformation contactInfo ON contactInfo.clientId = clients.id
       WHERE
         clients.isDeleted = false
         AND
-        demographics.householdIncome <= (${firstPerson} + ${additionalPerson} * (houseHoldSize - 1))
+        latestDemographics.householdIncome <= (${firstPerson} + ${additionalPerson} * (houseHoldSize - 1))
       GROUP BY contactInfo.zip
       ;
 
       SELECT zip, COUNT(*) numClients
-      FROM (
-        SELECT *
-        FROM
-          contactInformation innerContactInformation
-          JOIN (
-            SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
-            FROM contactInformation GROUP BY clientId
-          ) latestContactInformation
-          ON latestContactInformation.latestDateAdded = innerContactInformation.dateAdded
-      ) contactInfo
+      FROM latestContactInformation contactInfo
       JOIN clients ON clients.id = contactInfo.clientId
       WHERE clients.isDeleted = false
       GROUP BY zip

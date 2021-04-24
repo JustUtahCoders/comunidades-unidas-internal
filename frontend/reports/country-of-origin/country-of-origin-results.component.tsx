@@ -2,9 +2,10 @@ import React from "react";
 import { useReportsApi } from "../shared/use-reports-api";
 import BasicTableReport from "../shared/basic-table-report.component";
 import dayjs from "dayjs";
-import { formatPercentage, capitalize } from "../shared/report.helpers";
+import { formatPercentage } from "../shared/report.helpers";
 import { sum, values, entries } from "lodash-es";
 import { countryCodeToName } from "../../util/country-select.component";
+
 export default function CountriesOfOriginResults(props) {
   const { isLoading, data, error } = useReportsApi(
     `/api/reports/countries-of-origin`
@@ -14,8 +15,12 @@ export default function CountriesOfOriginResults(props) {
     return <div>Loading</div>;
   }
 
+  if (error) {
+    throw error;
+  }
+
   const totalClients = sum(values(data.countriesOfOrigin));
-  const unknownClients = data.countriesOfOrigin.Unknown;
+  const unknownClients = data.countriesOfOrigin.Unknown || 0;
   const totalKnownOriginClients = totalClients - unknownClients;
 
   const sortedCountries = entries<number>(data.countriesOfOrigin).sort(
@@ -48,11 +53,11 @@ export default function CountriesOfOriginResults(props) {
               </td>
             </tr>
             <tr>
-              <td>Known</td>
+              <td>Known Countries</td>
               <td>{totalKnownOriginClients}</td>
             </tr>
             <tr>
-              <td>Unknown</td>
+              <td>Unknown Countries</td>
               <td>{unknownClients}</td>
             </tr>
           </>

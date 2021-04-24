@@ -34,11 +34,7 @@ app.get(`/api/reports/ages-and-genders`, (req, res) => {
           WHERE clients.isDeleted = false
         ) ages
         JOIN
-        (
-          SELECT MAX(dateAdded) latestDateAdded, dateOfIntake, clientId
-          FROM intakeData
-          GROUP BY clientId
-        ) latestIntake ON latestIntake.clientId = ages.id
+        latestIntakeData latestIntake ON latestIntake.clientId = ages.id
       WHERE (dateOfIntake BETWEEN ? AND ?)
       GROUP BY ageRange, gender
       ORDER BY ageRange ASC

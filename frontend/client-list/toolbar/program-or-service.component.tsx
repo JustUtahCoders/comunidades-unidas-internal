@@ -28,6 +28,14 @@ export default function ProgramOrService({
     ? `programEnd${parseSuffix}`
     : `serviceEnd${parseSuffix}`;
 
+  useEffect(() => {
+    if (programOrService === "program" + parseSuffix) {
+      updateAdvancedSearch("service" + parseSuffix, "");
+    } else {
+      updateAdvancedSearch("program" + parseSuffix, "");
+    }
+  }, [programOrService]);
+
   return (
     <>
       <div id={"advanced-search-program-or-service"}>{label}:</div>
