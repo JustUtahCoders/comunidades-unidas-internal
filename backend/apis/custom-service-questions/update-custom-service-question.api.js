@@ -98,7 +98,7 @@ app.patch("/api/custom-service-questions/:questionId", (req, res, next) => {
     ]);
 
     queries.push(updateQuery);
-    if (req.body.hasOwnProperty("options")) {
+    if (req.body.type === "select") {
       const deleteQuery = mysql.format(deleteOptionSql, [questionId]);
       queries.push(deleteQuery);
       const createOptionQueries = req.body.options.map((option) =>

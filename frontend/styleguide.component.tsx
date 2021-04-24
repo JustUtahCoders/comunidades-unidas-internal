@@ -249,6 +249,11 @@ body {
   padding: 1rem 2rem 1rem 1rem;
   background-color: rgba(255, 0, 0, .05);
 }
+
+html.scroll-lock,
+body.scroll-lock {
+  overflow: hidden;
+}
 `;
 
 type Color = string;

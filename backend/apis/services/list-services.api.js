@@ -55,7 +55,7 @@ app.get("/api/services", (req, res, next) => {
     );
 
     customServiceQuestions.forEach((q) => {
-      q.options = groupedCustomQuestionOptions[String(q.id)];
+      q.options = groupedCustomQuestionOptions[q.id];
     });
 
     res.send({
@@ -74,7 +74,13 @@ app.get("/api/services", (req, res, next) => {
           defaultInteractionLocation: s.defaultInteractionLocation,
           defaultInteractionDuration: s.defaultInteractionDuration,
           isActive: Boolean(s.isActive),
-          questions: groupedCustomQuestions[s.id],
+          questions: (groupedCustomQuestions[s.id] || []).map((q) => ({
+            id: q.id,
+            label: q.label,
+            serviceId: q.serviceId,
+            type: q.type,
+            options: q.options,
+          })),
         })),
       programs: programs.map((p) => ({
         id: p.id,

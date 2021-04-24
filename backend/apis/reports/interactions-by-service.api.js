@@ -28,7 +28,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
         (
           SELECT COUNT(*) totalInteractions, serviceId
           FROM clientInteractions
-          WHERE isDeleted = false AND dateOfInteraction >= ? AND dateOfInteraction <= ?
+          WHERE isDeleted = false AND (dateOfInteraction BETWEEN ? AND ?)
           GROUP BY serviceId
         ) numInteractions
         ON services.id = numInteractions.serviceId
@@ -40,7 +40,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       FROM
         clientInteractions
         JOIN clients ON clients.id = clientInteractions.clientId
-      WHERE clientInteractions.isDeleted = false AND clients.isDeleted = false AND clientInteractions.dateOfInteraction >= ? AND clientInteractions.dateOfInteraction <= ?
+      WHERE clientInteractions.isDeleted = false AND clients.isDeleted = false AND (clientInteractions.dateOfInteraction BETWEEN ? AND ?)
       GROUP BY clientInteractions.serviceId;
 
       -- num clients per program
@@ -49,7 +49,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
         clientInteractions
         JOIN clients ON clients.id = clientInteractions.clientId
         JOIN services ON services.id = clientInteractions.serviceId
-      WHERE clientInteractions.isDeleted = false AND clients.isDeleted = false AND clientInteractions.dateOfInteraction >= ? AND clientInteractions.dateOfInteraction <= ?
+      WHERE clientInteractions.isDeleted = false AND clients.isDeleted = false AND (clientInteractions.dateOfInteraction BETWEEN ? AND ?)
       GROUP BY services.programId;
 
       -- num hours per service
@@ -63,8 +63,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
           WHERE
             clientInteractions.isDeleted = false
             AND clients.isDeleted = false
-            AND clientInteractions.dateOfInteraction >= ?
-            AND clientInteractions.dateOfInteraction <= ?
+            AND (clientInteractions.dateOfInteraction BETWEEN ? AND ?)
           GROUP BY serviceId
         ) clientHours
         ON services.id = clientHours.serviceId
@@ -77,15 +76,13 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
         FROM clientInteractions
         JOIN clients ON clients.id = clientInteractions.clientId
         WHERE clients.isDeleted = false
-        AND clientInteractions.dateOfInteraction >= ?
-        AND clientInteractions.dateOfInteraction <= ?
+        AND (clientInteractions.dateOfInteraction BETWEEN ? AND ?)
         UNION
         SELECT DISTINCT clientId
         FROM followUps
         JOIN clients ON clients.id = followUps.clientId
         WHERE clients.isDeleted = false
-        AND followUps.dateOfContact >= ?
-        AND followUps.dateOfContact <= ?
+        AND (followUps.dateOfContact BETWEEN ? AND ?)
       ) totalClients;
 
       -- num of FOLLOW UP hours by service between selected dates
@@ -97,8 +94,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
           JOIN clients ON clients.id = followUps.clientId
           JOIN followUpServices ON followUpServices.followUpId = followUps.id
         WHERE clients.isDeleted = false
-          AND dateOfContact >= ?
-          AND dateOfContact <= ?
+          AND (dateOfContact BETWEEN ? AND ?)
         GROUP BY followUpServices.serviceId
       ) clientHours
       ON services.id = clientHours.serviceId
@@ -107,8 +103,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       -- unspecified follow ups (unassociated with a program) between selected dates
       SELECT id, TIME_TO_SEC(duration) followUpSeconds
       FROM followUps
-      WHERE dateOfContact >= ?
-        AND dateOfContact <= ?
+      WHERE (dateOfContact BETWEEN ? AND ?)
         AND id NOT IN
           (SELECT followUpId 
           FROM followUpServices)
@@ -117,8 +112,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       -- all follow ups, including those not associated with a program, between selected dates
       SELECT COUNT(*) totalFollowUps, SUM(TIME_TO_SEC(duration)) totalFollowUpSeconds
       FROM followUps
-      WHERE dateOfContact >= ?
-        AND dateOfContact <= ?
+      WHERE (dateOfContact BETWEEN ? AND ?)
       ;
 
       -- num of follow ups per service
@@ -130,7 +124,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
           SELECT COUNT(*) totalFollowUps, serviceId, followUpId
           FROM followUpServices
           JOIN followUps ON followUps.id = followUpId
-          WHERE followUps.dateOfContact >= ? AND followUps.dateOfContact <= ?
+          WHERE (followUps.dateOfContact BETWEEN ? AND ?)
           GROUP BY serviceId
         ) numFollowUps
       ON services.id = numFollowUps.serviceId
@@ -144,7 +138,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
         JOIN clients ON clients.id = followUps.clientId
         JOIN followUpServices ON followUpServices.followUpId = followUps.id
         JOIN services ON services.id = followUpServices.serviceId
-      WHERE clients.isDeleted = false AND followUps.dateOfContact >= ? AND followUps.dateOfContact <= ?
+      WHERE clients.isDeleted = false AND (followUps.dateOfContact BETWEEN ? AND ?)
       GROUP BY services.programId;
 
       -- num of clients for follow ups per service
@@ -153,8 +147,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
       JOIN clients ON clients.id = followUps.clientId
       JOIN followUpServices ON followUps.id = followUpServices.followUpId
       WHERE clients.isDeleted = false
-        AND followUps.dateOfContact >= ?
-        AND followUps.dateOfContact <= ?
+        AND (followUps.dateOfContact BETWEEN ? AND ?)
       GROUP BY followUpServices.serviceId;
     `,
     [

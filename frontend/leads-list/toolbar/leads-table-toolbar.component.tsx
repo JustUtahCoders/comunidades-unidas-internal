@@ -47,13 +47,13 @@ export default function LeadsTableToolbar(props: LeadsTableToolbarProps) {
           <LeadSearchInput
             autoFocus
             performSearch={performSearch}
-            initialValueFromQueryParams
             disabled={props.fetchingLead}
             advancedSearchRef={advancedSearchRef}
             programData={props.programData}
             events={props.events}
             showingAdvancedSearch={props.showingAdvancedSearch}
             setShowingAdvancedSearch={props.setShowingAdvancedSearch}
+            initialSearchValue={props.initialSearchValue}
           />
         </div>
         {lastPage !== 0 && (
@@ -184,6 +184,7 @@ type LeadsTableToolbarProps = {
   events: Array<any>;
   showingAdvancedSearch: boolean;
   setShowingAdvancedSearch(boolean): any;
+  initialSearchValue: SearchParseValues;
 };
 
 function NoLeads(props) {

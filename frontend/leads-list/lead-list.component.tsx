@@ -77,6 +77,7 @@ export default function LeadList(props: LeadListProps) {
         events={events}
         showingAdvancedSearch={showingAdvancedSearch}
         setShowingAdvancedSearch={setShowingAdvancedSearch}
+        initialSearchValue={apiState.search}
       />
       <LeadsTable
         leads={apiState.apiData.leads}
@@ -267,11 +268,21 @@ function useFrontendUrlParams(apiState, dispatchApiState) {
       document.title,
       window.location.pathname + "?" + queryParams
     );
+
+    if (apiState.status !== ApiStateStatus.uninitialized) {
+      localStorage.setItem(
+        "lead-search",
+        queryString.stringify(apiState.search)
+      );
+    }
   }, [apiState]);
 }
 
 function getInitialState(): ApiState {
-  const queryParams = queryString.parse(window.location.search);
+  const queryParams = {
+    ...queryString.parse(localStorage.getItem("lead-search") || ""),
+    ...queryString.parse(window.location.search),
+  };
 
   let page = null;
 
