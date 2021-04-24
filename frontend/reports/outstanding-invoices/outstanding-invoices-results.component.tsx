@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { formatPhone } from "../../util/formatters";
 import { Link } from "@reach/router";
 import { UserModeContext, UserMode } from "../../util/user-mode.context";
+import { CsvOptions } from "../../util/csv-utils";
 
 export default function InteractionHoursByClientResults(props) {
   const { userMode } = React.useContext(UserModeContext);
@@ -63,6 +64,7 @@ export default function InteractionHoursByClientResults(props) {
       <div style={{ position: "relative" }}>
         <BasicTableReport
           title="Summary"
+          getCsvOptions={getCsvOptions}
           headerRows={
             <tr>
               <th></th>
@@ -216,5 +218,57 @@ export default function InteractionHoursByClientResults(props) {
     } else {
       return `$${num.toFixed(2)}`;
     }
+  }
+
+  function getCsvOptions(): Promise<CsvOptions> {
+    const allOutstanding = {
+      "---": "Outstanding Invoices",
+      "Total Charged": "$".concat(outstandingSummary.totalCharged.toFixed(2)),
+      "Total Paid": "$".concat(outstandingSummary.totalPaid.toFixed(2)),
+      "Outstanding Balance": "$".concat(
+        (
+          outstandingSummary.totalCharged - outstandingSummary.totalPaid
+        ).toFixed(2)
+      ),
+    };
+    const allCompleted = {
+      "---": "Completed Invoices",
+      "Total Charged": "$".concat(completedSummary.totalCharged.toFixed(2)),
+      "Total Paid": "$".concat(completedSummary.totalPaid.toFixed(2)),
+      "Outstanding Balance": "$".concat(
+        (completedSummary.totalCharged - completedSummary.totalPaid).toFixed(2)
+      ),
+    };
+
+    const Total = {
+      "---": "Total",
+      "Total Charged": "$".concat(
+        (
+          completedSummary.totalCharged + outstandingSummary.totalCharged
+        ).toFixed(2)
+      ),
+      "Total Paid": "$".concat(
+        (completedSummary.totalPaid + outstandingSummary.totalPaid).toFixed(2)
+      ),
+      "Outstanding Balance": "$".concat(
+        (
+          completedSummary.totalCharged +
+          outstandingSummary.totalCharged -
+          completedSummary.totalPaid -
+          outstandingSummary.totalPaid
+        ).toFixed(2)
+      ),
+    };
+
+    return Promise.resolve({
+      columnNames: [
+        "---",
+        "Total Charged",
+        "Total Paid",
+        "Outstanding Balance",
+      ],
+      data: [allOutstanding, allCompleted, Total],
+      fileName: "OutStanding_Invoices.csv",
+    });
   }
 }
