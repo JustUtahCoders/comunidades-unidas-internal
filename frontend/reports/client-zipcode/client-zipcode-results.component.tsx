@@ -6,6 +6,7 @@ import CollapsibleTableRows, {
   ToggleCollapseButton,
 } from "../shared/collapsible-table-rows.component";
 import { sumBy } from "lodash-es";
+import { CsvOptions } from "../../util/csv-utils";
 
 export default function ClientZipcodeResults(props) {
   const { isLoading, data, error } = useReportsApi(
@@ -56,6 +57,7 @@ export default function ClientZipcodeResults(props) {
         }
       />
       <BasicTableReport
+        getCsvOptions={getCsvOptions}
         headerRows={
           <tr>
             <th>County</th>
@@ -68,7 +70,9 @@ export default function ClientZipcodeResults(props) {
             {data &&
               Object.keys(data.zipsByCounty).map((county) => {
                 const zips = data.zipsByCounty[county];
+                console.log("%%%%%%%%%%%%%%%%%", zips);
                 const countyTotal = sumBy(zips, "clientCount");
+                console.log("**************", countyTotal);
 
                 return (
                   <CollapsibleTableRows
@@ -97,4 +101,18 @@ export default function ClientZipcodeResults(props) {
       />
     </>
   );
+
+  function getCsvOptions(): Promise<CsvOptions> {
+    // const allCountyRow = {
+    //   "English Level": "Total",
+    //   "Client Count": totalClients.toLocaleString(),
+    //   Percentage: "100%",
+    // };
+
+    return Promise.resolve({
+      columnNames: ["County", "Zip", "Client Count"],
+      data: [],
+      fileName: "Client_Zipcode.csv",
+    });
+  }
 }
