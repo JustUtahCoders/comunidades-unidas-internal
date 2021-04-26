@@ -5,6 +5,7 @@ import CollapsibleTableRows, {
   ToggleCollapseButton,
   ToggleAllButton,
 } from "../shared/collapsible-table-rows.component";
+import { CsvOptions } from "../../util/csv-utils";
 
 export default function ServiceInterestsResults(props) {
   const { isLoading, data, error } = useReportsApi(
@@ -36,6 +37,7 @@ export default function ServiceInterestsResults(props) {
       tableStyle={{ width: "100%" }}
       title={`Interest in C.U. Programs and Services${dateRangeString}`}
       subtitle={`*For clients, the intake date is used for this report. For leads, the signup date is used.`}
+      getCsvOptions={getCsvOptions}
       headerRows={
         <tr>
           <th>Program</th>
@@ -70,4 +72,36 @@ export default function ServiceInterestsResults(props) {
       footerRows={null}
     />
   );
+
+  function getCsvOptions(): Promise<CsvOptions> {
+    const interestResults = [];
+    data.programs.map((program) => {
+      interestResults.push({
+        Program: program.programName,
+        Service: "All",
+        "Clients interested": program.clientsInterested.toLocaleString(),
+        "Leads interested": program.leadsInterested.toLocaleString(),
+      });
+
+      groupedServices[program.programId].map((service) => {
+        interestResults.push({
+          Program: program.programName,
+          Service: service.serviceName,
+          "Clients interested": service.clientsInterested.toLocaleString(),
+          "Leads interested": service.leadsInterested.toLocaleString(),
+        });
+      });
+    });
+
+    return Promise.resolve({
+      columnNames: [
+        "Program",
+        "Service",
+        "Clients interested",
+        "Leads interested",
+      ],
+      data: [...interestResults],
+      fileName: `Service_Interestsdate${dateRangeString}.csv`,
+    });
+  }
 }

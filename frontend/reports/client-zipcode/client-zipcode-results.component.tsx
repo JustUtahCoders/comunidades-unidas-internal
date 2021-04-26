@@ -70,9 +70,7 @@ export default function ClientZipcodeResults(props) {
             {data &&
               Object.keys(data.zipsByCounty).map((county) => {
                 const zips = data.zipsByCounty[county];
-                console.log("%%%%%%%%%%%%%%%%%", zips);
                 const countyTotal = sumBy(zips, "clientCount");
-                console.log("**************", countyTotal);
 
                 return (
                   <CollapsibleTableRows
@@ -103,15 +101,28 @@ export default function ClientZipcodeResults(props) {
   );
 
   function getCsvOptions(): Promise<CsvOptions> {
-    // const allCountyRow = {
-    //   "English Level": "Total",
-    //   "Client Count": totalClients.toLocaleString(),
-    //   Percentage: "100%",
-    // };
+    const countyZips = [];
+    Object.keys(data.zipsByCounty).map((county) => {
+      const zips = data.zipsByCounty[county];
+
+      countyZips.push({
+        County: `"${county}"`,
+        Zip: "All",
+        "Client Count": sumBy(zips, "clientCount"),
+      });
+
+      zips.forEach((zip) => {
+        countyZips.push({
+          County: `"${county}"`,
+          Zip: zip.zip,
+          "Client Count": zip.clientCount,
+        });
+      });
+    });
 
     return Promise.resolve({
       columnNames: ["County", "Zip", "Client Count"],
-      data: [],
+      data: [...countyZips],
       fileName: "Client_Zipcode.csv",
     });
   }

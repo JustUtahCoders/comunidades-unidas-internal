@@ -106,7 +106,7 @@ export default function PovertyLineResults(props) {
           ),
         }))
         .concat(allRow),
-      fileName: "Poverty_Line.csv",
+      fileName: `Poverty_Line_${data.reportParameters.povertyLineYear}.csv`,
     });
   }
 }
