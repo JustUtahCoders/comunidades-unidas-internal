@@ -54,22 +54,11 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
           WHERE
             isDeleted = false
             AND
-            dateOfInteraction >= ?
-            AND
-            dateOfInteraction <= ?
+            dateOfInteraction BETWEEN ? AND ?
           GROUP BY clientId
         ) clientHours
         ON clients.id = clientHours.clientId
-        INNER JOIN (
-          SELECT *
-          FROM
-            contactInformation innerContactInformation
-            JOIN (
-              SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
-              FROM contactInformation GROUP BY clientId
-            ) latestContactInformation
-            ON latestContactInformation.latestDateAdded = innerContactInformation.dateAdded
-        ) contactInfo ON contactInfo.clientId = clients.id
+        INNER JOIN latestContactInformation contactInfo ON contactInfo.clientId = clients.id
       WHERE
         clientHours.totalInteractionSeconds >${minInclusive ? "=" : ""} ?
         AND clientHours.totalInteractionSeconds <${maxInclusive ? "=" : ""} ?

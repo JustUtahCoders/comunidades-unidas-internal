@@ -29,22 +29,12 @@ app.get(`/api/reports/service-interests`, (req, res) => {
       SELECT programs.programName, services.serviceName, COUNT(*) clientsInterested, intakeServices.serviceId, services.id serviceId, programs.id programId
       FROM
         intakeServices
-        JOIN (
-          SELECT intakeData.id, intakeData.clientId, intakeData.dateOfIntake
-          FROM
-          intakeData
-          JOIN
-          (
-            SELECT MAX(dateAdded) latestDateAdded, clientId FROM intakeData GROUP BY clientId
-          ) latestIntakeData
-          ON intakeData.dateAdded = latestIntakeData.latestDateAdded AND latestIntakeData.clientId = intakeData.clientId
-        ) latestIntakes
-        ON intakeServices.intakeDataId = latestIntakes.id
+        JOIN latestIntakeData latestIntakes ON intakeServices.intakeDataId = latestIntakes.id
         JOIN clients ON clients.id = latestIntakes.clientId
         JOIN services ON services.id = intakeServices.serviceId
         JOIN programs ON programs.id = services.programId
       WHERE
-        clients.isDeleted = false AND latestIntakes.dateOfIntake >= ? AND latestIntakes.dateOfIntake <= ?
+        clients.isDeleted = false AND (latestIntakes.dateOfIntake BETWEEN ? AND ?)
       GROUP BY intakeServices.serviceId
       ;
 
@@ -54,22 +44,12 @@ app.get(`/api/reports/service-interests`, (req, res) => {
         SELECT DISTINCT programs.id programId, clients.id clientId, programs.programName
         FROM
           intakeServices
-          JOIN (
-            SELECT intakeData.id, intakeData.clientId, intakeData.dateOfIntake
-            FROM
-            intakeData
-            JOIN
-            (
-              SELECT MAX(dateAdded) latestDateAdded, clientId FROM intakeData GROUP BY clientId
-            ) latestIntakeData
-            ON intakeData.dateAdded = latestIntakeData.latestDateAdded AND latestIntakeData.clientId = intakeData.clientId
-          ) latestIntakes
-          ON intakeServices.intakeDataId = latestIntakes.id
+          JOIN latestIntakeData latestIntakes ON intakeServices.intakeDataId = latestIntakes.id
           JOIN clients ON clients.id = latestIntakes.clientId
           JOIN services ON services.id = intakeServices.serviceId
           JOIN programs ON programs.id = services.programId
         WHERE
-          clients.isDeleted = false AND latestIntakes.dateOfIntake >= ? AND latestIntakes.dateOfIntake <= ?
+          clients.isDeleted = false AND (latestIntakes.dateOfIntake BETWEEN ? AND ?)
       ) programInterests
       GROUP BY programId
       ;
@@ -82,7 +62,7 @@ app.get(`/api/reports/service-interests`, (req, res) => {
         JOIN services ON services.id = leadServices.serviceId
         JOIN programs ON programs.id = services.programId
       WHERE
-        leads.isDeleted = false AND leads.dateOfSignUp >= ? AND leads.dateOfSignUp <= ?
+        leads.isDeleted = false AND (leads.dateOfSignUp BETWEEN ? AND ?)
       GROUP BY serviceId
       ;
 
@@ -96,7 +76,7 @@ app.get(`/api/reports/service-interests`, (req, res) => {
           JOIN services ON services.id = leadServices.serviceId
           JOIN programs ON programs.id = services.programId
         WHERE
-          leads.isDeleted = false AND leads.dateOfSignUp >= ? AND leads.dateOfSignUp <= ?
+          leads.isDeleted = false AND (leads.dateOfSignUp BETWEEN ? AND ?)
       ) programInterests
       GROUP BY programId
       ;

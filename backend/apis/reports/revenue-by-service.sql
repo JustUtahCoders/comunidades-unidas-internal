@@ -21,8 +21,7 @@ FROM
   LEFT JOIN invoiceLineItems ON invoiceLineItems.invoiceId = invoices.id
 WHERE
   invoiceLineItems.serviceId IS NOT NULL
-  AND invoices.invoiceDate >= ?
-  AND invoices.invoiceDate <= ?
+  AND (invoices.invoiceDate BETWEEN ? AND ?)
   AND payments.isDeleted = false
 GROUP BY payments.id
 ;
@@ -34,7 +33,7 @@ FROM invoicePayments
   JOIN invoices ON invoicePayments.invoiceId = invoices.id
   JOIN payments on invoicePayments.paymentId = payments.id
 WHERE
-  invoices.invoiceDate >= ? AND invoices.invoiceDate <= ?
+  (invoices.invoiceDate BETWEEN ? AND ?)
   AND payments.isDeleted = false
 ;
 

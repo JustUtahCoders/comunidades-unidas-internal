@@ -1,5 +1,9 @@
 import React, { useEffect, useImperativeHandle } from "react";
-import { CUService } from "../../add-client/services.component";
+import {
+  CUCustomQuestion,
+  CUCustomQuestionType,
+  CUService,
+} from "../../add-client/services.component";
 import {
   InteractionInputsRef,
   InteractionInputsProps,
@@ -16,6 +20,19 @@ import FullRichTextEditorComponent from "../../rich-text/full-rich-text-editor.c
 import easyFetch from "../../util/easy-fetch";
 import { getTagsQuery } from "./add-client-interaction.component";
 import { CUObjectAudit } from "../invoices/edit-invoice.component";
+import CustomNumber from "./custom-question-inputs/custom-number";
+import CustomText from "./custom-question-inputs/custom-text";
+import CustomBoolean from "./custom-question-inputs/custom-boolean";
+import CustomDate from "./custom-question-inputs/custom-date";
+import CustomSelect from "./custom-question-inputs/custom-select";
+
+const CustomQuestionInputs = {
+  [CUCustomQuestionType.number]: CustomNumber,
+  [CUCustomQuestionType.text]: CustomText,
+  [CUCustomQuestionType.boolean]: CustomBoolean,
+  [CUCustomQuestionType.date]: CustomDate,
+  [CUCustomQuestionType.select]: CustomSelect,
+};
 
 const ServiceInteractionInputs = React.forwardRef<
   InteractionInputsRef,
@@ -63,6 +80,8 @@ const ServiceInteractionInputs = React.forwardRef<
     delete groupedServices.Immigration;
   }
 
+  const customQuestionRefs = React.useRef({});
+
   useImperativeHandle(ref, () => ({
     save(signal, options = {}) {
       let description = descrRef.current.getHTML();
@@ -77,6 +96,10 @@ const ServiceInteractionInputs = React.forwardRef<
         duration: duration.stringValue,
         location: selectedLocation,
         description,
+        customQuestions: selectedService.questions.map((q) => {
+          const ref = customQuestionRefs.current[q.id];
+          return ref.getAnswer();
+        }),
       };
 
       const apiPath = options.edit
@@ -236,6 +259,31 @@ const ServiceInteractionInputs = React.forwardRef<
           </select>
         </>
       )}
+      {selectedService &&
+        selectedService.questions.map((question) => {
+          const Input = CustomQuestionInputs[question.type];
+          const initialAnswer = props.initialInteraction
+            ? props.initialInteraction.customQuestions.find(
+                (q) => q.questionId === question.id
+              )
+            : null;
+
+          return (
+            <React.Fragment key={question.id}>
+              <label
+                htmlFor={`question-${props.interactionIndex}-${question.id}`}
+              >
+                {question.label}
+              </label>
+              {/* @ts-ignore */}
+              <Input
+                ref={(r) => (customQuestionRefs.current[question.id] = r)}
+                question={question}
+                initialAnswer={initialAnswer ? initialAnswer.answer : null}
+              />
+            </React.Fragment>
+          );
+        })}
       <label id={`interaction-description-${props.interactionIndex}`}>
         Description:
       </label>
@@ -261,4 +309,25 @@ export type ClientInteraction = {
   serviceId: number;
   createdBy: CUObjectAudit;
   lastUpdatedBy: CUObjectAudit;
+  customQuestions: AnsweredCustomQuestion[];
+};
+
+export type AnsweredCustomQuestion = {
+  id: number;
+  questionId: number;
+  answer: number | string | boolean;
+};
+
+export type CustomQuestionInputProps = {
+  question: CUCustomQuestion;
+  initialAnswer: string | number | boolean;
+};
+
+export type CustomQuestionInputRef = {
+  getAnswer(): ClientInteractionCustomQuestionAnswer;
+};
+
+export type ClientInteractionCustomQuestionAnswer = {
+  questionId: number;
+  answer: string | number | boolean;
 };

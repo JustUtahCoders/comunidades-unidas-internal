@@ -23,12 +23,8 @@ app.get(`/api/reports/client-zipcodes`, (req, res) => {
     `
       SELECT contactInformation.zip, COUNT(*) clientCount
       FROM
-        contactInformation JOIN (
-          SELECT MAX(contactInformation.id) id
-          FROM contactInformation
-          GROUP BY clientId
-        ) latestContactInfo ON contactInformation.id = latestContactInfo.id
-      JOIN clients ON clients.id = contactInformation.clientId
+        latestContactInformation contactInformation
+        JOIN clients ON clients.id = contactInformation.clientId
       WHERE clients.isDeleted = false AND clients.dateAdded BETWEEN ? AND ?
       GROUP BY zip
       ORDER BY clientCount DESC

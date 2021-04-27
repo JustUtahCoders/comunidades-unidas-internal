@@ -18,21 +18,15 @@ app.get(`/api/reports/english-levels`, (req, res) => {
 
   const sql = mysql.format(
     `
-      SELECT COUNT(*) total, demographics.englishProficiency
+      SELECT COUNT(*) total, latestDemographics.englishProficiency
       FROM
-        (
-          SELECT MAX(dateAdded) latestDateAdded, clientId FROM demographics GROUP BY clientId
-        ) latestDems
-        JOIN demographics ON latestDems.latestDateAdded = demographics.dateAdded
-        JOIN clients ON clients.id = demographics.clientId
-        JOIN
-        (
-          SELECT MAX(dateAdded) latestDateAdded, dateOfIntake, clientId FROM intakeData GROUP BY clientId
-        ) latestIntake ON latestIntake.clientId = clients.id
+        latestDemographics 
+        JOIN clients ON clients.id = latestDemographics.clientId
+        JOIN latestIntakeData latestIntake ON latestIntake.clientId = clients.id
       WHERE
         clients.isDeleted = false
         AND (dateOfIntake BETWEEN ? AND ?)
-      GROUP BY demographics.englishProficiency
+      GROUP BY latestDemographics.englishProficiency
       ;
     `,
     [startDate, endDate]
@@ -47,7 +41,7 @@ app.get(`/api/reports/english-levels`, (req, res) => {
 
     res.send({
       englishLevels: englishLevels.reduce((acc, level) => {
-        acc[level.englishProficiency] = level.total;
+        acc[level.englishProficiency || "Unknown"] = level.total;
         return acc;
       }, {}),
       reportParameters: {

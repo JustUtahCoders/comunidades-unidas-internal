@@ -108,23 +108,13 @@ function clientListQuery(query, pageNum, pageSize) {
   if (query.programInterest || query.serviceInterest) {
     joinIntakeServices = `
       JOIN 
-      (
-        SELECT id intakeDId, clientId
-        FROM
-          intakeData innerIntakeD
-          JOIN
-          (
-            SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
-            FROM intakeData GROUP BY clientId
-          ) latestIntakeD
-          ON latestIntakeD.latestDateAdded = innerIntakeD.dateAdded AND latestIntakeD.latestClientId = innerIntakeD.clientId
-      ) intakeD ON cl.id = intakeD.clientId
+      latestIntakeData intakeD ON cl.id = intakeD.clientId
     `;
     const serviceId = query.programInterest
       ? `IN (SELECT id FROM services WHERE programId = ?)`
       : "= ?";
     whereClause += `
-      AND (SELECT COUNT(*) FROM intakeServices WHERE intakeDataId = intakeDId AND intakeServices.serviceId ${serviceId}) > 0
+      AND (SELECT COUNT(*) FROM intakeServices WHERE intakeDataId = intakeD.Id AND intakeServices.serviceId ${serviceId}) > 0
     `;
     whereClauseValues.push(query.programInterest || query.serviceInterest);
   }
@@ -191,17 +181,7 @@ function clientListQuery(query, pageNum, pageSize) {
     FROM 
       clients cl 
     JOIN
-      (
-        SELECT *
-        FROM
-          contactInformation innerCt
-          JOIN
-          (
-            SELECT clientId latestClientId, MAX(dateAdded) latestDateAdded
-            FROM contactInformation GROUP BY clientId
-          ) latestCt
-          ON latestCt.latestDateAdded = innerCt.dateAdded AND latestCt.latestClientId = innerCt.clientId
-      ) ct ON cl.id = ct.clientId
+      latestContactInformation ct ON cl.id = ct.clientId
     JOIN
       users us ON cl.addedBy = us.id 
     ${joinIntakeServices}

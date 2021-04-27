@@ -28,6 +28,8 @@ import RevenueByServiceParams from "./revenue-by-service/revenue-by-service-para
 import RevenueByServiceResults from "./revenue-by-service/revenue-by-service-results.component";
 import ReferralsByServiceParams from "./referrals-by-service/referrals-by-service-params.component";
 import ReferralsByServiceResults from "./referrals-by-service/referrals-by-service-results.component";
+import CustomInteractionQuestionParams from "./custom-interaction-questions/custom-interaction-questions-params.component";
+import CustomInteractionQuestionResults from "./custom-interaction-questions/custom-interaction-questions-results.component";
 
 export default function Reports(props: ReportsProps) {
   useFullWidth();
@@ -102,6 +104,11 @@ export default function Reports(props: ReportsProps) {
               title="Referrals By Service"
             />
             <ReferralsByServiceResults path="referrals-by-service/results" />
+            <CustomInteractionQuestionParams
+              path="custom-interaction-questions"
+              title="Custom Interaction Questions"
+            />
+            <CustomInteractionQuestionResults path="custom-interaction-questions/results" />
           </Router>
         </SelectReport>
       </div>

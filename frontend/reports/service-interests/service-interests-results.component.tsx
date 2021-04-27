@@ -58,7 +58,7 @@ export default function ServiceInterestsResults(props) {
             </tr>
           }
           collapsibleRows={groupedServices[program.programId].map((service) => (
-            <tr key={service.id}>
+            <tr key={service.serviceId}>
               <td>{"\u2014"}</td>
               <th>{service.serviceName}</th>
               <td>{service.clientsInterested.toLocaleString()}</td>
