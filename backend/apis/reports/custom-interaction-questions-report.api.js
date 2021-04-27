@@ -35,7 +35,7 @@ app.get("/api/reports/custom-interaction-questions", (req, res) => {
   }
 
   const startDate = req.query.start || defaultStart;
-  const endDate = req.query.start || defaultEnd;
+  const endDate = req.query.end || defaultEnd;
 
   const formattedSql = mysql.format(sql, [
     req.query.questionId,
@@ -144,7 +144,6 @@ app.get("/api/reports/custom-interaction-questions", (req, res) => {
         summaryRows = [];
         break;
     }
-
     res.send({
       summary: {
         columns: summaryColumns,
