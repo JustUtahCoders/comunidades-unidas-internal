@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { formatPercentage } from "../shared/report.helpers";
 import { sum, values, entries } from "lodash-es";
 import { countryCodeToName } from "../../util/country-select.component";
+import { CsvOptions } from "../../util/csv-utils";
 
 export default function CountriesOfOriginResults(props) {
   const { isLoading, data, error } = useReportsApi(
@@ -71,6 +72,7 @@ export default function CountriesOfOriginResults(props) {
       />
       <BasicTableReport
         title="Country breakdown"
+        getCsvOptions={getCsvOptions}
         headerRows={
           <tr>
             <th>Country</th>
@@ -105,4 +107,25 @@ export default function CountriesOfOriginResults(props) {
       />
     </>
   );
+
+  function getCsvOptions(): Promise<CsvOptions> {
+    const allRow = {
+      Country: "Total",
+      "Client count": totalClients.toLocaleString(),
+      Percentage: "100%",
+    };
+
+    return Promise.resolve({
+      columnNames: ["Country", "Client count", "Percentage"],
+      data: sortedCountries
+        .filter((c) => c[0] !== "Unknown")
+        .map((country) => ({
+          Country: countryCodeToName[country[0]] || country[0],
+          "Client count": country[1].toLocaleString(),
+          Percentage: formatPercentage(country[1], totalKnownOriginClients),
+        }))
+        .concat(allRow),
+      fileName: "Country_Of_Origin.csv",
+    });
+  }
 }

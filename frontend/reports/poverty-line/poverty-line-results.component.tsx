@@ -3,6 +3,7 @@ import { useReportsApi } from "../shared/use-reports-api";
 import BasicTableReport from "../shared/basic-table-report.component";
 import { formatPercentage } from "../shared/report.helpers";
 import { sum, values } from "lodash-es";
+import { CsvOptions } from "../../util/csv-utils";
 
 export default function PovertyLineResults(props) {
   const { isLoading, data, error } = useReportsApi(
@@ -16,6 +17,7 @@ export default function PovertyLineResults(props) {
   return (
     <BasicTableReport
       title={`Poverty Line ${data.reportParameters.povertyLineYear}`}
+      getCsvOptions={getCsvOptions}
       headerRows={
         <tr>
           <th>Zip</th>
@@ -70,4 +72,41 @@ export default function PovertyLineResults(props) {
       ]}
     />
   );
+
+  function getCsvOptions(): Promise<CsvOptions> {
+    const allRow = {
+      Zip: "All zips and clients",
+      "Clients below Poverty Line": sum(
+        values(data.results.clientsBelowPovertyLine)
+      ).toLocaleString(),
+      "Total Clients": data.results.totalClients.toLocaleString(),
+      Percentage: formatPercentage(
+        sum(values(data.results.clientsBelowPovertyLine)),
+        data.results.totalClients
+      ),
+    };
+
+    return Promise.resolve({
+      columnNames: [
+        "Zip",
+        "Clients below Poverty Line",
+        "Total Clients",
+        "Percentage",
+      ],
+      data: Object.keys(data.results.clientsByZip)
+        .map((zip) => ({
+          Zip: zip,
+          "Clients below Poverty Line": (
+            data.results.clientsBelowPovertyLine[zip] || 0
+          ).toLocaleString(),
+          "Total Clients": data.results.clientsByZip[zip].toLocaleString(),
+          Percentage: formatPercentage(
+            data.results.clientsBelowPovertyLine[zip] || 0,
+            data.results.clientsByZip[zip]
+          ),
+        }))
+        .concat(allRow),
+      fileName: `Poverty_Line_${data.reportParameters.povertyLineYear}.csv`,
+    });
+  }
 }
