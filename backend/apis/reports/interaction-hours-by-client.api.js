@@ -9,7 +9,8 @@ const { responseFullName } = require("../utils/transform-utils");
 const mysql = require("mysql");
 const { toDuration } = require("./report-helpers");
 
-const pageSize = 100;
+// change this before pushin*******
+const pageSize = 1;
 const sixHoursInSeconds = 6 * 60 * 60;
 const tenThousandHoursInSeconds = 10000 * 60 * 60;
 

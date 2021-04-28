@@ -3,12 +3,20 @@ import easyFetch from "../../util/easy-fetch";
 
 export function useReportsApi(url: string, extraQuery: string = "") {
   const [afterFirstMount, setAfterFirstMount] = React.useState(false);
-  const [state, dispatch] = React.useReducer(reducer, initialState);
-  const extraQueryPrefix = window.location.search.length > 1 ? "&" : "?";
-  const fullUrl = url + window.location.search + extraQueryPrefix + extraQuery;
+  const [state, dispatch] = React.useReducer(reducer, getInitialState());
 
   React.useEffect(() => {
     setAfterFirstMount(true);
+  });
+
+  React.useEffect(() => {
+    const fullUrl = getFullUrl();
+    if (fullUrl !== state.fullUrl) {
+      dispatch({
+        type: "new-url",
+        fullUrl,
+      });
+    }
   });
 
   React.useEffect(() => {
@@ -17,7 +25,7 @@ export function useReportsApi(url: string, extraQuery: string = "") {
 
       const abortController = new AbortController();
 
-      easyFetch(fullUrl, { signal: abortController.signal }).then(
+      easyFetch(state.fullUrl, { signal: abortController.signal }).then(
         (data) => {
           dispatch({ type: "newData", data });
         },
@@ -33,30 +41,51 @@ export function useReportsApi(url: string, extraQuery: string = "") {
         abortController.abort();
       };
     }
-  }, [fullUrl, afterFirstMount]);
+  }, [state.fullUrl, afterFirstMount]);
 
   return state;
-}
 
-const initialState = { isLoading: true, error: null, data: null };
+  function getFullUrl() {
+    const extraQueryPrefix = window.location.search.length > 1 ? "&" : "?";
+    const fullUrl =
+      url + window.location.search + extraQueryPrefix + extraQuery;
+    return fullUrl;
+  }
 
-function reducer(state, action) {
-  switch (action.type) {
-    case "reset":
-      return initialState;
-    case "newData":
-      return {
-        isLoading: false,
-        error: null,
-        data: action.data,
-      };
-    case "error":
-      return {
-        isLoading: false,
-        error: action.err,
-        data: null,
-      };
-    default:
-      throw Error();
+  function getInitialState() {
+    return {
+      isLoading: true,
+      error: null,
+      data: null,
+      fullUrl: getFullUrl(),
+    };
+  }
+
+  function reducer(state, action) {
+    switch (action.type) {
+      case "reset":
+        return getInitialState();
+      case "newData":
+        return {
+          ...state,
+          isLoading: false,
+          error: null,
+          data: action.data,
+        };
+      case "error":
+        return {
+          ...state,
+          isLoading: false,
+          error: action.err,
+          data: null,
+        };
+      case "new-url":
+        return {
+          ...state,
+          fullUrl: action.fullUrl,
+        };
+      default:
+        throw Error();
+    }
   }
 }
