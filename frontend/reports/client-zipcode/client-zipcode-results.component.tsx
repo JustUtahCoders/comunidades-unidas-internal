@@ -6,6 +6,7 @@ import CollapsibleTableRows, {
   ToggleCollapseButton,
 } from "../shared/collapsible-table-rows.component";
 import { sumBy } from "lodash-es";
+import { CsvOptions } from "../../util/csv-utils";
 
 export default function ClientZipcodeResults(props) {
   const { isLoading, data, error } = useReportsApi(
@@ -56,6 +57,7 @@ export default function ClientZipcodeResults(props) {
         }
       />
       <BasicTableReport
+        getCsvOptions={getCsvOptions}
         headerRows={
           <tr>
             <th>County</th>
@@ -97,4 +99,31 @@ export default function ClientZipcodeResults(props) {
       />
     </>
   );
+
+  function getCsvOptions(): Promise<CsvOptions> {
+    const countyZips = [];
+    Object.keys(data.zipsByCounty).forEach((county) => {
+      const zips = data.zipsByCounty[county];
+
+      countyZips.push({
+        County: `"${county}"`,
+        Zip: "All",
+        "Client Count": sumBy(zips, "clientCount"),
+      });
+
+      zips.forEach((zip) => {
+        countyZips.push({
+          County: `"${county}"`,
+          Zip: zip.zip,
+          "Client Count": zip.clientCount,
+        });
+      });
+    });
+
+    return Promise.resolve({
+      columnNames: ["County", "Zip", "Client Count"],
+      data: [...countyZips],
+      fileName: "Client_Zipcode.csv",
+    });
+  }
 }
