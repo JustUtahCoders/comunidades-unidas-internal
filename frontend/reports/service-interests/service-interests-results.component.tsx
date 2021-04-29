@@ -75,7 +75,7 @@ export default function ServiceInterestsResults(props) {
 
   function getCsvOptions(): Promise<CsvOptions> {
     const interestResults = [];
-    data.programs.map((program) => {
+    data.programs.forEach((program) => {
       interestResults.push({
         Program: program.programName,
         Service: "All",
@@ -83,7 +83,7 @@ export default function ServiceInterestsResults(props) {
         "Leads interested": program.leadsInterested.toLocaleString(),
       });
 
-      groupedServices[program.programId].map((service) => {
+      groupedServices[program.programId].forEach((service) => {
         interestResults.push({
           Program: program.programName,
           Service: service.serviceName,

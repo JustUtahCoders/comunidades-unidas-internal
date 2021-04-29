@@ -102,7 +102,7 @@ export default function ClientZipcodeResults(props) {
 
   function getCsvOptions(): Promise<CsvOptions> {
     const countyZips = [];
-    Object.keys(data.zipsByCounty).map((county) => {
+    Object.keys(data.zipsByCounty).forEach((county) => {
       const zips = data.zipsByCounty[county];
 
       countyZips.push({
