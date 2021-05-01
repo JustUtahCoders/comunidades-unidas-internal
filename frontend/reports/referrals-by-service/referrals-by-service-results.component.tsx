@@ -7,6 +7,7 @@ import CollapsibleTableRows, {
   ToggleAllButton,
 } from "../shared/collapsible-table-rows.component";
 import dayjs from "dayjs";
+import { CsvOptions } from "../../util/csv-utils";
 
 export default function InteractionsByService(props) {
   const { isLoading, data, error } = useReportsApi(
@@ -53,6 +54,7 @@ export default function InteractionsByService(props) {
         }
       />
       <BasicTableReport
+        getCsvOptions={getCsvOptions}
         tableStyle={{ width: "100%" }}
         headerRows={
           <tr>
@@ -108,6 +110,53 @@ export default function InteractionsByService(props) {
       />
     </>
   );
+
+  function getCsvOptions(): Promise<CsvOptions> {
+    const allRow = {
+      Partner: "All Partners",
+      Service: "--",
+      "Client Referrals": clientsTotal.toLocaleString(),
+      "Lead Referrals": leadsTotal.toLocaleString(),
+      "Total Referrals": grandTotal.toLocaleString(),
+    };
+
+    const referralsService = [];
+    data.partners.map((partner) => {
+      referralsService.push({
+        Partner: `"${partner.partnerName}"`,
+        Service: "All",
+        "Client Referrals": partner.clientReferralCount.toLocaleString(),
+        "Lead Referrals": partner.leadReferralCount.toLocaleString(),
+        "Total Referrals": (
+          partner.leadReferralCount + partner.clientReferralCount
+        ).toLocaleString(),
+      });
+
+      partner.services.map((service) => {
+        referralsService.push({
+          Partner: `"${partner.partnerName}"`,
+          Service: service.partnerServiceName,
+          "Client Referrals": service.clientReferralCount.toLocaleString(),
+          "Lead Referrals": service.leadReferralCount.toLocaleString(),
+          "Total Referrals": (
+            service.leadReferralCount + service.clientReferralCount
+          ).toLocaleString(),
+        });
+      });
+    });
+
+    return Promise.resolve({
+      columnNames: [
+        "Partner",
+        "Service",
+        "Client Referrals",
+        "Lead Referrals",
+        "Total Referrals",
+      ],
+      data: [...referralsService].concat(allRow),
+      fileName: "Referrals_By_Service.csv",
+    });
+  }
 }
 
 function calcClientsTotal(partners) {
