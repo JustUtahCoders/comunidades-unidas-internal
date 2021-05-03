@@ -5,6 +5,7 @@ import { humanReadableCustomQuestionTypes } from "../../programs-and-services/cu
 import BasicTableReport from "../shared/basic-table-report.component";
 import { capitalize } from "../shared/report.helpers";
 import { useReportsApi } from "../shared/use-reports-api";
+import { CsvOptions } from "../../util/csv-utils";
 
 export default function CustomInteractionQuestionResults(props) {
   const { isLoading, data, error } = useReportsApi(
@@ -83,6 +84,7 @@ export default function CustomInteractionQuestionResults(props) {
       )}
       <BasicTableReport
         title="Answers"
+        getCsvOptions={getCsvOptions}
         headerRows={
           <tr>
             <th>Client ID</th>
@@ -106,4 +108,15 @@ export default function CustomInteractionQuestionResults(props) {
       />
     </>
   );
+
+  function getCsvOptions(): Promise<CsvOptions> {
+    return Promise.resolve({
+      columnNames: ["Client ID", "Answer"],
+      data: data.clientAnswers.map((a, i) => ({
+        "Client ID": a.clientId,
+        Answer: isBoolean(a.answer) ? (a.answer ? "Yes" : "No") : a.answer,
+      })),
+      fileName: "Custom_Interaction_Questions.csv",
+    });
+  }
 }
