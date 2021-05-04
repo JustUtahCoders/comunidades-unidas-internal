@@ -211,7 +211,6 @@ export default function InteractionHoursByClientResults(props) {
         return page.clients;
       })
     );
-    console.log("Page data-----", flatData);
 
     return {
       columnNames: [
