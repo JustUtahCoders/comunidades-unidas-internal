@@ -212,6 +212,7 @@ export default function InteractionHoursByClientResults(props) {
       })
     );
     console.log("Page data-----", flatData);
+
     return {
       columnNames: [
         "id",
@@ -220,15 +221,13 @@ export default function InteractionHoursByClientResults(props) {
         "Number of interactions",
         "Number of hours",
       ],
-      data: flatten(
-        pageData.map((page) => ({
-          id: page.id,
-          Name: page.fullName,
-          Phone: page.primaryPhone,
-          "Number of interactions": page.numInteractions,
-          "Number of hours": page.totalInteractionSeconds,
-        }))
-      ),
+      data: flatData.map((client) => ({
+        id: client.id,
+        Name: `${client.firstName} ${client.lastName}`,
+        Phone: formatPhone(client.primaryPhone),
+        "Number of interactions": client.numInteractions,
+        "Number of hours": displayDuration(client.totalDuration),
+      })),
       fileName: `Interaction_Hours_By_Client.csv`,
     };
   }
