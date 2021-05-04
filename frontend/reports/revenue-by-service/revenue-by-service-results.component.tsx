@@ -7,6 +7,7 @@ import CollapsibleTableRows, {
 } from "../shared/collapsible-table-rows.component";
 import dayjs from "dayjs";
 import { sumBy } from "lodash-es";
+import { CsvOptions } from "../../util/csv-utils";
 
 export default function InteractionsByService(props) {
   const { isLoading, data, error } = useReportsApi(
@@ -110,6 +111,7 @@ export default function InteractionsByService(props) {
         }
       />
       <BasicTableReport
+        getCsvOptions={getCsvOptions}
         tableStyle={{ width: "100%" }}
         headerRows={
           <tr>
@@ -153,4 +155,35 @@ export default function InteractionsByService(props) {
       />
     </>
   );
+
+  function getCsvOptions(): Promise<CsvOptions> {
+    const allRow = {
+      Program: "All programs",
+      Service: "--",
+      Revenue: "$".concat(allProgramsGrandTotal.toFixed(2)),
+    };
+
+    const revenueService = [];
+    data.programTotals.map((program) => {
+      revenueService.push({
+        Program: `"${program.programName}"`,
+        Service: "All",
+        Revenue: "$".concat(program.totalPaid.toFixed(2)),
+      });
+
+      groupedServices[program.programId].map((service) => {
+        revenueService.push({
+          Program: `"${program.programName}"`,
+          Service: service.serviceName,
+          Revenue: "$".concat(service.totalPaid.toFixed(2)),
+        });
+      });
+    });
+
+    return Promise.resolve({
+      columnNames: ["Program", "Service", "Revenue"],
+      data: [...revenueService, allRow],
+      fileName: "Revenue_By_Service.csv",
+    });
+  }
 }

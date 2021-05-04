@@ -8,6 +8,7 @@ import CollapsibleTableRows, {
 } from "../shared/collapsible-table-rows.component";
 import dayjs from "dayjs";
 import { sumBy, values } from "lodash-es";
+import { CsvOptions } from "../../util/csv-utils";
 
 export default function InteractionsByService(props) {
   const { isLoading, data, error } = useReportsApi(
@@ -102,6 +103,7 @@ export default function InteractionsByService(props) {
     <>
       <BasicTableReport
         title="Interactions By Program and Service"
+        getCsvOptions={() => getCsvOptions(data)}
         headerRows={
           <tr>
             <th>Parameter</th>
@@ -162,4 +164,72 @@ export default function InteractionsByService(props) {
       />
     </>
   );
+
+  function getCsvOptions(data): Promise<CsvOptions> {
+    const allPrograms = {
+      Program: "All programs",
+      Service: "---",
+      "Client Count": data.grandTotal.numClients.toLocaleString(),
+      "Interaction Count": data.grandTotal.numInteractions,
+      "Interaction Hours": `"${formatDuration(data.grandTotal.totalDuration)}"`,
+      "Follow-up Count": data.grandTotal.numFollowUps,
+      "Follow-up Hours": formatDuration(data.grandTotal.allFollowUpDuration),
+    };
+
+    const unspecified = {
+      Program: "Unspecified",
+      Service: "---",
+      "Client Count": "---",
+      "Interaction Count": "---",
+      "Interaction Hours": "---",
+      "Follow-up Count": data.unspecifiedFollowUpTotals.numFollowUps.toLocaleString(),
+      "Follow-up Hours": formatDuration(
+        data.unspecifiedFollowUpTotals.totalDuration
+      ),
+    };
+
+    const interactionService = [];
+    data.programs.map((program) => {
+      const followUpProgram = data.followUpProgramTotals.find(
+        (followUpProgram) => program.programId === followUpProgram.programId
+      );
+
+      interactionService.push({
+        Program: `"${program.programName}"`,
+        Service: "All",
+        "Client Count": program.numClients.toLocaleString(),
+        "Interaction Count": program.numInteractions.toLocaleString(),
+        "Interaction Hours": `"${formatDuration(program.totalDuration)}"`,
+        "Follow-up Count": followUpProgram.numFollowUps.toLocaleString(),
+        "Follow-up Hours": formatDuration(followUpProgram.totalDuration),
+      });
+
+      values(groupedServices[program.programId]).map((service) => {
+        interactionService.push({
+          Program: `"${program.programName}"`,
+          Service: service.serviceName,
+          "Client Count": service.numClients.toLocaleString(),
+          "Interaction Count": service.numInteractions.toLocaleString(),
+          "Interaction Hours": `"${formatDuration(service.totalDuration)}"`,
+          "Follow-up Count": service.numFollowUps.toLocaleString(),
+          "Follow-up Hours": formatDuration(service.totalFollowUpDuration),
+        });
+      });
+    });
+
+    return Promise.resolve({
+      columnNames: [
+        "Program",
+        "Service",
+        "Client Count",
+        "Interaction Count",
+        "Interaction Hours",
+        "Follow-up Count",
+        "Follow-up Hours",
+      ],
+      data: [...interactionService, unspecified, allPrograms],
+
+      fileName: "Interactoins_By_Service.csv",
+    });
+  }
 }
