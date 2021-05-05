@@ -12,9 +12,13 @@ import {
   secondsToHours,
   secondsToRemainderMinutes,
 } from "../../util/time-duration-helpers";
+import { CsvOptions } from "../../util/csv-utils";
+import queryString from "query-string";
+import easyFetch from "../../util/easy-fetch";
+import { flatten } from "lodash-es";
 
 export default function InteractionHoursByClientResults(props) {
-  const { isLoading, data, error } = useReportsApi(
+  const { isLoading, data, error, fullUrl } = useReportsApi(
     `/api/reports/interaction-hours-by-client`
   );
 
@@ -113,6 +117,7 @@ export default function InteractionHoursByClientResults(props) {
       <div className="clients-table-container">
         <BasicTableReport
           title="Clients"
+          getCsvOptions={getCsvOptions}
           headerRows={
             <tr>
               <th>ID</th>
@@ -187,6 +192,43 @@ export default function InteractionHoursByClientResults(props) {
 
   function goForward() {
     setPage(String(Number(page) + 1));
+  }
+
+  async function getCsvOptions(): Promise<CsvOptions> {
+    const fetchPromises = [];
+    const url = new URL(fullUrl, window.location.origin);
+    const query = queryString.parse(url.href);
+    delete query.page;
+    url.search = queryString.stringify(query);
+    const urlWithoutPage = url.href;
+
+    for (let i = 1; i <= data.pagination.numPages; i++) {
+      fetchPromises.push(easyFetch(urlWithoutPage + `&page=${i}`));
+    }
+    const pageData = await Promise.all(fetchPromises);
+    const flatData = flatten(
+      pageData.map((page) => {
+        return page.clients;
+      })
+    );
+
+    return {
+      columnNames: [
+        "id",
+        "Name",
+        "Phone",
+        "Number of interactions",
+        "Number of hours",
+      ],
+      data: flatData.map((client) => ({
+        id: client.id,
+        Name: `${client.firstName} ${client.lastName}`,
+        Phone: formatPhone(client.primaryPhone),
+        "Number of interactions": client.numInteractions,
+        "Number of hours": displayDuration(client.totalDuration),
+      })),
+      fileName: `Interaction_Hours_By_Client.csv`,
+    };
   }
 }
 
