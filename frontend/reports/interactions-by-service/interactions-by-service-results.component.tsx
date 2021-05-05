@@ -171,7 +171,7 @@ export default function InteractionsByService(props) {
       Service: "---",
       "Client Count": data.grandTotal.numClients.toLocaleString(),
       "Interaction Count": data.grandTotal.numInteractions,
-      "Interaction Hours": `"${formatDuration(data.grandTotal.totalDuration)}"`,
+      "Interaction Hours": `"${data.grandTotal.totalDuration}"`,
       "Follow-up Count": data.grandTotal.numFollowUps,
       "Follow-up Hours": formatDuration(data.grandTotal.allFollowUpDuration),
     };
