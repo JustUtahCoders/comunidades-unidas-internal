@@ -24,13 +24,7 @@ app.get("/api/client-duplicates", (req, res, next) => {
   if (req.query.birthday) {
     const birthDate = new Date(req.query.birthday);
     const year = birthDate.getUTCFullYear();
-    const month = birthDate.getUTCMonth() + 1;
-    values.push(
-      year - 3,
-      year + 3,
-      Math.max(1, month - 3),
-      Math.min(12, month + 3)
-    );
+    values.push(year - 10, year + 10);
   }
 
   values.push(req.query.firstName, req.query.lastName);
@@ -47,7 +41,7 @@ app.get("/api/client-duplicates", (req, res, next) => {
       req.query.birthday
         ? `
         AND
-        (YEAR(birthday) >= ? AND YEAR(birthday) <= ? AND MONTH(birthday) >= ? AND MONTH(birthday) <= ?)
+        (YEAR(birthday) >= ? AND YEAR(birthday) <= ?)
       `
         : ``
     }
