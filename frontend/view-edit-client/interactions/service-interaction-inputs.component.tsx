@@ -39,9 +39,7 @@ const ServiceInteractionInputs = React.forwardRef<
   InteractionInputsProps
 >((props, ref) => {
   const [selectedService, setSelectedService] = React.useState<CUService>(null);
-  const services = props.servicesResponse
-    ? props.servicesResponse.services
-    : [];
+  let services = props.servicesResponse ? props.servicesResponse.services : [];
   const groupedServices = groupBy(services, "programName");
   const [
     selectedInteractionType,
@@ -79,6 +77,11 @@ const ServiceInteractionInputs = React.forwardRef<
   if (userMode.userMode === UserMode.normal) {
     delete groupedServices.Immigration;
   }
+
+  services =
+    userMode.userMode === UserMode.normal
+      ? services.filter((s) => s.programName !== "Immigration")
+      : services;
 
   const customQuestionRefs = React.useRef({});
 
@@ -132,18 +135,27 @@ const ServiceInteractionInputs = React.forwardRef<
   }, [selectedInteractionType]);
 
   React.useEffect(() => {
-    if (props.servicesResponse && !selectedService) {
+    if (services.length > 0 && !selectedService) {
       const serviceId = props.initialInteraction
         ? props.initialInteraction.serviceId
         : null;
 
       setSelectedService(
-        serviceId
-          ? props.servicesResponse.services.find((s) => s.id === serviceId)
-          : props.servicesResponse.services[0]
+        serviceId ? services.find((s) => s.id === serviceId) : services[0]
       );
     }
-  }, [props.servicesResponse, selectedService]);
+  }, [services, selectedService, userMode]);
+
+  React.useEffect(() => {
+    if (
+      userMode.userMode === UserMode.normal &&
+      selectedService &&
+      selectedService.programName === "Immigration" &&
+      services.length > 0
+    ) {
+      setSelectedService(services[0]);
+    }
+  }, [userMode.userMode, selectedService]);
 
   React.useEffect(() => {
     if (!selectedService || props.initialInteraction) {
