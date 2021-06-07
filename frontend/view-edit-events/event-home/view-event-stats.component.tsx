@@ -1,5 +1,4 @@
 import React from "react";
-import { useCss } from "kremling";
 import { SingleEvent } from "../view-event.component";
 import EventSection from "./event-section.component";
 import BasicTableReport from "../../reports/shared/basic-table-report.component";
@@ -45,8 +44,8 @@ export default function ViewEventStats(props: ViewEventStatsProps) {
         footerRows={
           <tr>
             <td>All Event Attendees</td>
-            <td>&mdash;</td>
-            <td>&mdash;</td>
+            <td>{event.attendanceMale}</td>
+            <td>{event.attendanceFemale}</td>
             <td>{event.totalAttendance || 0}</td>
             <td>100%</td>
           </tr>

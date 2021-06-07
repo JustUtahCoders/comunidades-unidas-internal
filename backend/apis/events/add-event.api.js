@@ -16,7 +16,10 @@ app.post("/api/events", (req, res) => {
     nonEmptyString("eventName"),
     nonEmptyString("eventLocation"),
     validDate("eventDate"),
-    validInteger("totalAttendance"),
+    validInteger("attendanceMale"),
+    validInteger("attendanceFemale"),
+    validInteger("attendanceOther"),
+    validInteger("attendanceUnknown"),
     nullableValidArray("materialsDistributed", (index) => {
       return (materialsDistributed) => {
         const errs = checkValid(
@@ -41,11 +44,14 @@ app.post("/api/events", (req, res) => {
         eventName,
         eventLocation,
         eventDate,
-        totalAttendance,
+        attendanceMale,
+        attendanceFemale,
+        attendanceOther,
+        attendanceUnknown,
         addedBy,
         modifiedBy
       )
-      VALUES (?, ?, ?, ?, ?, ?);
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 
       SET @idOfEvent := LAST_INSERT_ID();
     `,
@@ -53,7 +59,10 @@ app.post("/api/events", (req, res) => {
       req.body.eventName,
       req.body.eventLocation,
       req.body.eventDate,
-      req.body.totalAttendance,
+      req.body.attendanceMale,
+      req.body.attendanceFemale,
+      req.body.attendanceOther,
+      req.body.attendanceUnknown,
       user.id,
       user.id,
     ]

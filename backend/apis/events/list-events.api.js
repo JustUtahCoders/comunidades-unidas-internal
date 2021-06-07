@@ -51,7 +51,10 @@ app.get("/api/events", (req, res, next) => {
 
   if (req.query.sortField) {
     const fieldPrefix =
-      req.query.sortField === "totalMaterialsDistributed" ? "" : "events.";
+      req.query.sortField === "totalMaterialsDistributed" ||
+      req.query.sortField === "totalAttendance"
+        ? ""
+        : "events.";
     columnsToOrder = `${fieldPrefix}${req.query.sortField} ${sortOrder}`;
   }
 
@@ -61,7 +64,7 @@ app.get("/api/events", (req, res, next) => {
       events.eventName,
       events.eventDate,
       events.eventLocation,
-      events.totalAttendance,
+      (events.attendanceMale + events.attendanceFemale + events.attendanceOther + events.attendanceUnknown) totalAttendance,
       events.isDeleted,
       events.dateAdded,
       events.dateModified,

@@ -14,11 +14,6 @@ const {
   nullableValidInteger,
   validInteger,
 } = require("../utils/validation-utils");
-const {
-  responseFullName,
-  responseBoolean,
-  responseDateWithoutTime,
-} = require("../utils/transform-utils");
 const { getEventById } = require("./get-event.api");
 const mysql = require("mysql");
 
@@ -29,7 +24,10 @@ app.patch("/api/events/:eventId", (req, res) => {
       nullableNonEmptyString("eventName"),
       nullableNonEmptyString("eventLocation"),
       nullableValidDate("eventDate"),
-      nullableValidInteger("totalAttendance"),
+      nullableValidInteger("attendanceMale"),
+      nullableValidInteger("attendanceFemale"),
+      nullableValidInteger("attendanceOther"),
+      nullableValidInteger("attendanceUnknown"),
       nullableValidArray("materialsDistributed", (index) => {
         return (materialsDistributed) => {
           const errs = checkValid(
@@ -60,14 +58,17 @@ app.patch("/api/events/:eventId", (req, res) => {
     let updateSql = mysql.format(
       `
       UPDATE events
-      SET eventName = ?, eventDate = ?, eventLocation = ?, totalAttendance = ?
+      SET eventName = ?, eventDate = ?, eventLocation = ?, attendanceMale = ?, attendanceFemale = ?, attendanceOther = ?, attendanceUnknown = ?
       WHERE id = ?;
     `,
       [
         updatedEvent.eventName,
         updatedEvent.eventDate,
         updatedEvent.eventLocation,
-        updatedEvent.totalAttendance,
+        updatedEvent.attendanceMale,
+        updatedEvent.attendanceFemale,
+        updatedEvent.attendanceOther,
+        updatedEvent.attendanceUnknown,
         eventId,
       ]
     );

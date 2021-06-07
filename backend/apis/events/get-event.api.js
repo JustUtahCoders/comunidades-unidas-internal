@@ -11,6 +11,7 @@ const {
   responseFullName,
   responseBoolean,
   responseDateWithoutTime,
+  defaultZero,
 } = require("../utils/transform-utils");
 const _ = require("lodash");
 
@@ -46,7 +47,10 @@ function getEventById(eventId, cbk, connection) {
         events.eventName,
         events.eventDate,
         events.eventLocation,
-        events.totalAttendance,
+        events.attendanceMale,
+        events.attendanceFemale,
+        events.attendanceOther,
+        events.attendanceUnknown,
         events.isDeleted,
         events.dateAdded,
         events.dateModified,
@@ -119,12 +123,24 @@ function getEventById(eventId, cbk, connection) {
       {}
     );
 
+    const attendanceMale = defaultZero(e.attendanceMale),
+      attendanceFemale = defaultZero(e.attendanceFemale),
+      attendanceOther = defaultZero(e.attendanceOther),
+      attendanceUnknown = defaultZero(e.attendanceUnknown);
+
+    const totalAttendance =
+      attendanceFemale + attendanceMale + attendanceOther + attendanceUnknown;
+
     const event = {
       id: e.eventId,
       eventName: e.eventName,
       eventDate: responseDateWithoutTime(e.eventDate),
       eventLocation: e.eventLocation,
-      totalAttendance: e.totalAttendance,
+      totalAttendance,
+      attendanceMale,
+      attendanceFemale,
+      attendanceOther,
+      attendanceUnknown,
       totalLeads: eventLeads.length,
       totalConvertedToClients: eventClients.length,
       leadGenders: leadGenderCounts,

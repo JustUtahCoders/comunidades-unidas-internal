@@ -9,26 +9,30 @@ export default function ViewEventStats(props: ViewEventStatsProps) {
 
   return (
     <EventSection title="Leads">
-      <BasicTableReport
-        headerRows={
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-          </tr>
-        }
-        contentRows={
-          <>
-            {leads.map((lead) => (
-              <tr>
-                <td>
-                  <Link to={`/leads/${lead.leadId}`}>{lead.leadId}</Link>
-                </td>
-                <td>{lead.fullName}</td>
-              </tr>
-            ))}
-          </>
-        }
-      />
+      {leads.length > 0 ? (
+        <BasicTableReport
+          headerRows={
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+            </tr>
+          }
+          contentRows={
+            <>
+              {leads.map((lead) => (
+                <tr>
+                  <td>
+                    <Link to={`/leads/${lead.leadId}`}>{lead.leadId}</Link>
+                  </td>
+                  <td>{lead.fullName}</td>
+                </tr>
+              ))}
+            </>
+          }
+        />
+      ) : (
+        <div>(No leads created from this event)</div>
+      )}
     </EventSection>
   );
 }

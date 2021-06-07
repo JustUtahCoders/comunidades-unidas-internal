@@ -116,6 +116,10 @@ export type SingleEvent = {
   eventName?: string;
   eventDate?: string;
   eventLocation?: string;
+  attendanceMale?: number;
+  attendanceFemale?: number;
+  attendanceOther?: number;
+  attendanceUnknown?: number;
   totalAttendance?: number;
   totalLeads?: number;
   totalConvertedToClients?: number;
