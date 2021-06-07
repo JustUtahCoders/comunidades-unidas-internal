@@ -221,9 +221,10 @@ export default function ViewEditEventInfo(props: ViewEditEventInfoProps) {
           <tr>
             <td>Total Attendance:</td>
             <td>
-              {modifiedEventInfo
+              {(modifiedEventInfo
                 ? modifiedEventInfo.totalAttendance
-                : event.totalAttendance}
+                : event.totalAttendance
+              ).toLocaleString()}
             </td>
           </tr>
         </tbody>
