@@ -20,7 +20,11 @@ GET /api/events/:id
   "eventName": "Heath Fair",
   "eventDate": "2019-09-16",
   "eventLocation": "Saint Marks",
-  "totalAttendance": 150,
+  "totalAttendance": 62,
+  "attendanceMale": 32,
+  "attendanceFemale": 28,
+  "attendanceOther": 2,
+  "attendanceUnknown": 0,
   "totalLeads": 15,
   "leadsConvertedToClients": 5,
   "materialsDistributed": [
@@ -163,7 +167,10 @@ POST /api/events
   "eventName": "Job Fair",
   "eventDate": "2019-09-24",
   "eventLocation": "Salt Lake City Library",
-  "totalAttendance": 150,
+  "attendanceMale": 32,
+  "attendanceFemale": 28,
+  "attendanceOther": 2,
+  "attendanceUnknown": 0,
   "materialsDistributed": [
     {
       "materialId": 1,
@@ -188,7 +195,10 @@ PATCH /api/events/:id
   "eventName": "Job Fair",
   "eventDate": "2019-09-24",
   "eventLocation": "Salt Lake City Library",
-  "totalAttendance": 150,
+  "attendanceMale": 32,
+  "attendanceFemale": 28,
+  "attendanceOther": 2,
+  "attendanceUnknown": 0,
   "materialsDistributed": [
     {
       "materialId": 1,

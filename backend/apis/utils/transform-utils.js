@@ -33,3 +33,11 @@ exports.responseUser = (user, timestamp) => {
     timestamp,
   };
 };
+
+exports.defaultZero = (val) => {
+  if (!isNaN(val)) {
+    return val;
+  } else {
+    return 0;
+  }
+};

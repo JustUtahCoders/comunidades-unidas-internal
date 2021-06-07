@@ -21,7 +21,10 @@ export default function AddEventStep(props: AddEventStepProps) {
   const [allEvents, setAllEvents] = React.useState([]);
   const [eventName, setEventName] = React.useState("");
   const [eventLocation, setEventLocation] = React.useState("");
-  const [totalAttendance, setTotalAttendance] = React.useState(1);
+  const [attendanceMale, setAttendanceMale] = React.useState(0);
+  const [attendanceFemale, setAttendanceFemale] = React.useState(0);
+  const [attendanceOther, setAttendanceOther] = React.useState(0);
+  const [attendanceUnknown, setAttendanceUnknown] = React.useState(0);
   const [createNewEvent, setCreateNewEvent] = React.useState(false);
   const [existingEventId, setExistingEventId] = React.useState<ExistingEventId>(
     ""
@@ -70,7 +73,10 @@ export default function AddEventStep(props: AddEventStepProps) {
           eventDate,
           eventName,
           eventLocation,
-          totalAttendance,
+          attendanceFemale,
+          attendanceMale,
+          attendanceOther,
+          attendanceUnknown,
           materialsDistributed: materialDistributed,
         },
       })
@@ -250,15 +256,59 @@ export default function AddEventStep(props: AddEventStepProps) {
           />
         </div>
         <div>
-          <label htmlFor="event-attendance">Attendees:</label>
+          <label htmlFor="event-attendance-female">Attendees (women):</label>
           <input
             id="event-attendance"
             type="number"
-            value={totalAttendance}
-            onChange={(evt) => setTotalAttendance(Number(evt.target.value))}
+            value={attendanceFemale}
+            onChange={(evt) => setAttendanceFemale(Number(evt.target.value))}
             required
-            min={1}
+            min={0}
           />
+        </div>
+        <div>
+          <label htmlFor="event-attendance-male">Attendees (men):</label>
+          <input
+            id="event-attendance"
+            type="number"
+            value={attendanceMale}
+            onChange={(evt) => setAttendanceMale(Number(evt.target.value))}
+            required
+            min={0}
+          />
+        </div>
+        <div>
+          <label htmlFor="event-attendance-other">Attendees (other):</label>
+          <input
+            id="event-attendance"
+            type="number"
+            value={attendanceOther}
+            onChange={(evt) => setAttendanceOther(Number(evt.target.value))}
+            required
+            min={0}
+          />
+        </div>
+        <div>
+          <label htmlFor="event-attendance-unknown">Attendees (unknown):</label>
+          <input
+            id="event-attendance"
+            type="number"
+            value={attendanceUnknown}
+            onChange={(evt) => setAttendanceUnknown(Number(evt.target.value))}
+            required
+            min={0}
+          />
+        </div>
+        <div>
+          <label>Total Attendance:</label>
+          <div>
+            {(
+              attendanceUnknown +
+              attendanceOther +
+              attendanceMale +
+              attendanceFemale
+            ).toLocaleString()}
+          </div>
         </div>
         <div>
           <label>Materials:</label>

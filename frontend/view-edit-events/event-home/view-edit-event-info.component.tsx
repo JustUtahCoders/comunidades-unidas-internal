@@ -29,7 +29,10 @@ export default function ViewEditEventInfo(props: ViewEditEventInfoProps) {
           eventName: modifiedEventInfo.eventName,
           eventLocation: modifiedEventInfo.eventLocation,
           eventDate: modifiedEventInfo.eventDate,
-          totalAttendance: modifiedEventInfo.totalAttendance,
+          attendanceMale: modifiedEventInfo.attendanceMale,
+          attendanceFemale: modifiedEventInfo.attendanceFemale,
+          attendanceOther: modifiedEventInfo.attendanceOther,
+          attendanceUnknown: modifiedEventInfo.attendanceUnknown,
         },
       })
         .then((updatedEvent) => {
@@ -51,6 +54,24 @@ export default function ViewEditEventInfo(props: ViewEditEventInfoProps) {
       };
     }
   }, [isSaving, modifiedEventInfo, props.eventUpdated]);
+
+  React.useEffect(() => {
+    if (modifiedEventInfo) {
+      setModifiedEventInfo({
+        ...modifiedEventInfo,
+        totalAttendance:
+          modifiedEventInfo.attendanceMale +
+          modifiedEventInfo.attendanceFemale +
+          modifiedEventInfo.attendanceOther +
+          modifiedEventInfo.attendanceUnknown,
+      });
+    }
+  }, [
+    modifiedEventInfo?.attendanceMale,
+    modifiedEventInfo?.attendanceFemale,
+    modifiedEventInfo?.attendanceOther,
+    modifiedEventInfo?.attendanceUnknown,
+  ]);
 
   return (
     <EventSection title="Event Information">
@@ -122,22 +143,87 @@ export default function ViewEditEventInfo(props: ViewEditEventInfoProps) {
             </td>
           </tr>
           <tr>
-            <td>Total Attendance:</td>
+            <td>Attendance (women):</td>
             <td>
               {isEditing ? (
                 <input
                   type="number"
-                  value={modifiedEventInfo.totalAttendance}
+                  value={modifiedEventInfo.attendanceFemale}
                   onChange={(evt) =>
                     setModifiedEventInfo({
                       ...modifiedEventInfo,
-                      totalAttendance: Number(evt.target.value),
+                      attendanceFemale: Number(evt.target.value),
                     })
                   }
                 />
               ) : (
-                event.totalAttendance
+                event.attendanceFemale
               )}
+            </td>
+          </tr>
+          <tr>
+            <td>Attendance (men):</td>
+            <td>
+              {isEditing ? (
+                <input
+                  type="number"
+                  value={modifiedEventInfo.attendanceMale}
+                  onChange={(evt) =>
+                    setModifiedEventInfo({
+                      ...modifiedEventInfo,
+                      attendanceMale: Number(evt.target.value),
+                    })
+                  }
+                />
+              ) : (
+                event.attendanceMale
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td>Attendance (other):</td>
+            <td>
+              {isEditing ? (
+                <input
+                  type="number"
+                  value={modifiedEventInfo.attendanceOther}
+                  onChange={(evt) =>
+                    setModifiedEventInfo({
+                      ...modifiedEventInfo,
+                      attendanceOther: Number(evt.target.value),
+                    })
+                  }
+                />
+              ) : (
+                event.attendanceOther
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td>Attendance (unknown):</td>
+            <td>
+              {isEditing ? (
+                <input
+                  type="number"
+                  value={modifiedEventInfo.attendanceUnknown}
+                  onChange={(evt) =>
+                    setModifiedEventInfo({
+                      ...modifiedEventInfo,
+                      attendanceUnknown: Number(evt.target.value),
+                    })
+                  }
+                />
+              ) : (
+                event.attendanceUnknown
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td>Total Attendance:</td>
+            <td>
+              {modifiedEventInfo
+                ? modifiedEventInfo.totalAttendance
+                : event.totalAttendance}
             </td>
           </tr>
         </tbody>
