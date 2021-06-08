@@ -1,5 +1,5 @@
 branch-defaults:
-  master:
+  main:
     environment: comunidades-unidas-prod-2
     group_suffix: null
 environment-defaults:

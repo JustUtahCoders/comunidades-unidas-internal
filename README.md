@@ -1,7 +1,5 @@
 # comunidades-unidas-internal
 
-[![Build Status](https://travis-ci.org/JustUtahCoders/comunidades-unidas-internal.svg?branch=master)](https://travis-ci.org/JustUtahCoders/comunidades-unidas-internal)
-
 The code for comunidades unidas internal website.
 
 This project uses Node + Express to interact with a MySQL Database and provide JSON APIs. The frontend is a React SPA that uses Typescript, babel, and webpack.
@@ -77,7 +75,7 @@ unset DATABASE_URL
 ## Deployments
 
 This project is hosted by [AWS Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/). To deploy the code,
-simply merge a pull request to master, which will automatically trigger a deployment via [Travis CI](https://travis-ci.org/).
+simply merge a pull request to main, which will automatically trigger a deployment via [Travis CI](https://travis-ci.org/).
 You can see all current and previous deployments at https://travis-ci.org/JustUtahCoders/comunidades-unidas-internal.
 
 ## Database Migrations
@@ -167,5 +165,5 @@ To provide someone with programmatic API access, perform the following steps:
 INSERT INTO programmaticUsers (username, password, userId, expirationDate) VALUES ('username', 'password', 1, '2020-10-05 00:00:00');
 ```
 
-6. Give the programmatic user the username and password. Tell them to read [this documentation](https://github.com/JustUtahCoders/comunidades-unidas-internal/tree/master/api-docs#how-to-use-your-api-key) on how to authenticate.
+6. Give the programmatic user the username and password. Tell them to read [this documentation](https://github.com/JustUtahCoders/comunidades-unidas-internal/tree/main/api-docs#how-to-use-your-api-key) on how to authenticate.
 7. Verify that the account works. Install [httpie](https://httpie.org/) and run the following command: `http https://database.cuutah.org/api/clients -a username:password` and verify you get a client list back.
