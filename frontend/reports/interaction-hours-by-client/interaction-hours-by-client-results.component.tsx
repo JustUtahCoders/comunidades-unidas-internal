@@ -18,12 +18,17 @@ import easyFetch from "../../util/easy-fetch";
 import { flatten } from "lodash-es";
 
 export default function InteractionHoursByClientResults(props) {
+  // We need to call useQueryParamState before useReportsApi so that the
+  // query params are correct in time for the first reports API fetch request
+  // to have the page param in it
+  // https://github.com/JustUtahCoders/comunidades-unidas-internal/issues/824
+  const [page, setPage] = useQueryParamState("page", "1");
+
   const { isLoading, data, error, fullUrl } = useReportsApi(
     `/api/reports/interaction-hours-by-client`
   );
 
   const scope = useCss(css);
-  const [page, setPage] = useQueryParamState("page", "1");
 
   if (isLoading) {
     return <div>Loading...</div>;
