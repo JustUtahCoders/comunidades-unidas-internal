@@ -168,6 +168,7 @@ require("./apis/reports/outstanding-invoices.api");
 require("./apis/reports/revenue-by-service.api");
 require("./apis/reports/referrals-by-service-report.api");
 require("./apis/reports/custom-interaction-questions-report.api");
+require("./apis/reports/events-report.api");
 
 require("./apis/clients/files/presigned-file-upload.api");
 require("./apis/clients/files/add-client-files.api");

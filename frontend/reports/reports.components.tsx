@@ -30,6 +30,8 @@ import ReferralsByServiceParams from "./referrals-by-service/referrals-by-servic
 import ReferralsByServiceResults from "./referrals-by-service/referrals-by-service-results.component";
 import CustomInteractionQuestionParams from "./custom-interaction-questions/custom-interaction-questions-params.component";
 import CustomInteractionQuestionResults from "./custom-interaction-questions/custom-interaction-questions-results.component";
+import EventAttendanceParams from "./event-attendance/event-attendance-params.component";
+import EventAttendanceResults from "./event-attendance/event-attendance-results.component";
 
 export default function Reports(props: ReportsProps) {
   useFullWidth();
@@ -109,6 +111,11 @@ export default function Reports(props: ReportsProps) {
               title="Custom Interaction Questions"
             />
             <CustomInteractionQuestionResults path="custom-interaction-questions/results" />
+            <EventAttendanceParams
+              path="event-attendance"
+              title="Event Attendance"
+            />
+            <EventAttendanceResults path="event-attendance/results" />
           </Router>
         </SelectReport>
       </div>
