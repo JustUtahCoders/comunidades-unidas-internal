@@ -21,7 +21,7 @@
     "typescript": "tsc"
   },
   "engines": {
-    "node": "14"
+    "node": ">=14"
   },
   "browserslist": [
     "last 5 Chrome major versions",
