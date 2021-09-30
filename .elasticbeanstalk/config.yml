@@ -1,13 +1,13 @@
 branch-defaults:
-  master:
-    environment: Comunidadesunidasinternalprod3-env
+  main:
+    environment: newprod
     group_suffix: null
 environment-defaults:
   comunidades-unidas-internal-prod:
     branch: null
     repository: null
 global:
-  application_name: comunidades-unidas-internal
+  application_name: comunidades-unidas-internal-prod4
   branch: null
   default_ec2_keyname: cukey-new
   default_platform: Node.js 16
