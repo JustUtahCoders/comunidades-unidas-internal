@@ -20,6 +20,9 @@
     "test": "jest",
     "typescript": "tsc"
   },
+  "engines": {
+    "node": ">=14"
+  },
   "browserslist": [
     "last 5 Chrome major versions",
     "last 3 Safari major versions",

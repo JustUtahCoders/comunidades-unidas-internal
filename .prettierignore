@@ -17,3 +17,5 @@ LICENSE
 *.yml.save
 migrations
 pnpm-lock.yaml
+*.sh
+.pnpm-debug.log
