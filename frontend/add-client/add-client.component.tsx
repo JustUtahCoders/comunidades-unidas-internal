@@ -47,6 +47,10 @@ export default function AddClient(props: AddClientProps) {
         setClientIntakeSettings(data.sections);
       })
       .catch(handlePromiseError);
+
+    return () => {
+      ac.abort();
+    };
   }, []);
 
   React.useEffect(() => {

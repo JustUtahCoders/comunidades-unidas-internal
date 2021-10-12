@@ -16,10 +16,7 @@
     ],
     "noEmit": true
   },
-  "include": [
-    "frontend/**/*",
-    "backend/apis/intake/put-client-intake-settings.api.js"
-  ],
+  "include": ["frontend/**/*"],
   "exclude": ["frontend/**/*.test.tsx"],
   "files": ["frontend/custom.d.ts"]
 }

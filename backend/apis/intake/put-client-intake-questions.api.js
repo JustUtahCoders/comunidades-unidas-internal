@@ -1,5 +1,11 @@
 const mysql = require("mysql");
-const { app, databaseError, pool, invalidRequest } = require("../../server");
+const {
+  app,
+  databaseError,
+  pool,
+  invalidRequest,
+  insufficientPrivileges,
+} = require("../../server");
 const {
   checkValid,
   validId,
@@ -8,8 +14,15 @@ const {
 } = require("../utils/validation-utils");
 const _ = require("lodash");
 const { validBoolean } = require("../utils/validation-utils.js");
+const { checkUserRole } = require("../utils/auth-utils");
 
 app.put("/api/client-intake-questions", (req, res) => {
+  const authError = checkUserRole(req, "Administrator");
+
+  if (authError) {
+    return insufficientPrivileges(res, authError);
+  }
+
   let validationErrors = [];
   if (!_.isPlainObject(req.body.sections)) {
     validationErrors.push(
