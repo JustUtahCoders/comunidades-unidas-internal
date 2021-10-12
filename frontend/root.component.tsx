@@ -8,9 +8,6 @@ import UserContext from "./util/user.context";
 import "form-request-submit-polyfill";
 import UserModeContext from "./util/user-mode.context";
 import Growls from "./growls/growls.component";
-import AdminSettings from "./admin/admin-settings.component";
-import Partners from "./admin/partners/partners.component";
-import UserPermissions from "./admin/user-permissions/user-permissions.component";
 
 const Home = React.lazy(() => import("./home/home.component"));
 const ReportIssue = React.lazy(
@@ -52,6 +49,18 @@ const ProgramsAndServices = React.lazy(
 const DetachedInvoices = React.lazy(
   () => import("./view-edit-client/invoices/detached-invoices.component")
 );
+const AdminSettings = React.lazy(
+  () => import("./admin/admin-settings.component")
+);
+const Partners = React.lazy(
+  () => import("./admin/partners/partners.component")
+);
+const UserPermissions = React.lazy(
+  () => import("./admin/user-permissions/user-permissions.component")
+);
+const ClientIntakeSettings = React.lazy(
+  () => import("./admin/intake/client-intake-settings.component")
+);
 
 export default function Root() {
   return (
@@ -85,6 +94,7 @@ export default function Root() {
                 <Partners path="partners" />
                 <UserPermissions path="user-permissions" />
                 <DetachedInvoices path="invoices" />
+                <ClientIntakeSettings path="client-intake-settings" />
               </Router>
             </React.Suspense>
           </Navbars>

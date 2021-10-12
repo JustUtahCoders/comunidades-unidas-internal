@@ -25,6 +25,7 @@ export default function ClientSource(props: StepComponentProps) {
           client={props.clientState}
           ref={inputsRef}
           isNewClient
+          clientIntakeSettings={props.clientIntakeSettings}
         />
         <div className="actions">
           <button

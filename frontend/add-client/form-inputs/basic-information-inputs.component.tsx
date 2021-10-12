@@ -1,5 +1,11 @@
 import React from "react";
 import { capitalize } from "lodash-es";
+import { ClientIntakeSettings } from "../../admin/intake/client-intake-settings.component";
+import {
+  QuestionRendererMap,
+  renderDynamicallyOrderedQuestions,
+} from "./dynamic-question-helpers";
+import { IntakeQuestion } from "../../admin/intake/intake-setting.component";
 
 export default function BasicInformationInputs(
   props: BasicInformationInputsProps
@@ -13,52 +19,88 @@ export default function BasicInformationInputs(
     props.client.gender || (props.isNewClient ? "female" : "unknown")
   );
 
+  const questionRenderers: QuestionRendererMap = {
+    firstName: renderFirstName,
+    lastName: renderLastName,
+    birthday: renderBirthday,
+    gender: renderGender,
+  };
+
   return (
     <form onSubmit={handleSubmit} autoComplete="off">
+      {renderDynamicallyOrderedQuestions(
+        props.clientIntakeSettings.basicInfo,
+        questionRenderers
+      )}
+      {props.children}
+    </form>
+  );
+
+  function renderFirstName(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>First Name</span>
+          <span>{question.label}</span>
           <input
             type="text"
             value={firstName}
             onChange={(evt) => setFirstName(evt.target.value)}
-            required
+            placeholder={question.placeholder || ""}
+            required={question.required}
             autoComplete="new-password"
             autoFocus
           />
         </label>
       </div>
+    );
+  }
+
+  function renderLastName(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>Last Name</span>
+          <span>{question.label}</span>
           <input
             type="text"
             value={lastName}
             onChange={(evt) => setLastName(evt.target.value)}
+            placeholder={question.placeholder || ""}
             autoComplete="new-password"
-            required
+            required={question.required}
           />
         </label>
       </div>
+    );
+  }
+
+  function renderBirthday(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>Birthday</span>
+          <span>{question.label}</span>
           <input
             type="date"
             value={birthday}
+            placeholder={question.placeholder || ""}
             onChange={(evt) => setBirthday(evt.target.value)}
-            required={props.client.birthday !== null}
+            required={question.required && props.client.birthday !== null}
           />
         </label>
       </div>
+    );
+  }
+
+  function renderGender(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>Gender</span>
+          <span>{question.label}</span>
           <select
             value={gender || "unknown"}
             onChange={(evt) => setGender(evt.target.value)}
             autoComplete="new-password"
-            required
+            required={question.required}
+            placeholder={question.placeholder || ""}
           >
             <option value="female">Female</option>
             <option value="male">Male</option>
@@ -69,9 +111,8 @@ export default function BasicInformationInputs(
           </select>
         </label>
       </div>
-      {props.children}
-    </form>
-  );
+    );
+  }
 
   function handleSubmit(evt) {
     return props.handleSubmit(evt, {
@@ -88,6 +129,7 @@ type BasicInformationInputsProps = {
   children: JSX.Element | JSX.Element[];
   handleSubmit(evt: Event, newState: BasicInfoClient);
   isNewClient: boolean;
+  clientIntakeSettings: ClientIntakeSettings;
 };
 
 type BasicInfoClient = {

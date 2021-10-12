@@ -10,6 +10,7 @@ import ContactInformationInputsComponent, {
 } from "../../add-client/form-inputs/contact-information-inputs.component";
 import easyFetch from "../../util/easy-fetch";
 import { formatPhone } from "../../util/formatters";
+import { ClientIntakeSettings } from "../../admin/intake/client-intake-settings.component";
 
 export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
   const { client } = props;
@@ -77,6 +78,7 @@ export default function ViewEditContactInfo(props: ViewEditContactInfoProps) {
           }}
           handleSubmit={handleSubmit}
           isNewClient={false}
+          clientIntakeSettings={props.clientIntakeSettings}
         >
           <div className="actions">
             <button
@@ -211,6 +213,7 @@ type ViewEditContactInfoProps = {
   clientUpdated?(newClient: SingleClient): void;
   auditSummary?: AuditSummary;
   editable?: boolean;
+  clientIntakeSettings: ClientIntakeSettings;
 };
 
 const css = `

@@ -31,7 +31,7 @@ export default function Confirm(props: StepComponentProps) {
         leadId = d.leadId;
       }
 
-      easyFetch("/api/clients", {
+      easyFetch("/api/clients?strict=false", {
         method: "POST",
         signal: abortController.signal,
         body: {
@@ -135,10 +135,26 @@ export default function Confirm(props: StepComponentProps) {
           {props.clientState.lastName} to database.
         </div>
       </div>
-      <ViewEditBasicInfo client={viewableClient} editable={false} />
-      <ViewEditContactInfo client={viewableClient} editable={false} />
-      <ViewEditDemographicsInfo client={viewableClient} editable={false} />
-      <ViewEditIntakeInfo client={viewableClient} editable={false} />
+      <ViewEditBasicInfo
+        client={viewableClient}
+        editable={false}
+        clientIntakeSettings={props.clientIntakeSettings}
+      />
+      <ViewEditContactInfo
+        client={viewableClient}
+        editable={false}
+        clientIntakeSettings={props.clientIntakeSettings}
+      />
+      <ViewEditDemographicsInfo
+        client={viewableClient}
+        editable={false}
+        clientIntakeSettings={props.clientIntakeSettings}
+      />
+      <ViewEditIntakeInfo
+        client={viewableClient}
+        editable={false}
+        clientIntakeSettings={props.clientIntakeSettings}
+      />
       <form onSubmit={handleSubmit}>
         <div className="actions">
           <button

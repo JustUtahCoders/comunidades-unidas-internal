@@ -6,6 +6,8 @@ export default function CountrySelect(props: CountrySelectProps) {
       value={props.country}
       onChange={(evt) => props.setCountry(evt.target.value)}
       autoFocus={props.autoFocus}
+      required={props.required}
+      placeholder={props.placeholder || ""}
     >
       <optgroup label="Most common countries">
         {Object.keys(mostCommonCountries).map((commonCountryCode) => (
@@ -290,4 +292,6 @@ type CountrySelectProps = {
   country: string;
   setCountry(country: string): void;
   autoFocus?: boolean;
+  required?: boolean;
+  placeholder?: string;
 };

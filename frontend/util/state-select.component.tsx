@@ -6,6 +6,8 @@ export default function StateSelect(props: StateSelectProps) {
     <select
       value={props.state}
       onChange={(evt) => props.setState(evt.target.value)}
+      placeholder={props.placeholder || ""}
+      required={props.required}
     >
       {statesArray.map((state) => (
         <option key={state.key} value={state.key}>
@@ -19,6 +21,8 @@ export default function StateSelect(props: StateSelectProps) {
 type StateSelectProps = {
   state: string;
   setState(state: string): void;
+  required?: boolean;
+  placeholder?: string;
 };
 
 export const stateNameToAbbreviation = {

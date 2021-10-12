@@ -5,7 +5,7 @@ export default function PhoneInput(props: PhoneInputProps) {
 
   return (
     <input
-      placeholder="801-111-1111"
+      placeholder={props.placeholder || "801-111-1111"}
       type="tel"
       value={unmaskedPhone}
       onChange={handleChange}
@@ -29,4 +29,5 @@ type PhoneInputProps = {
   setPhone(phone: string): void;
   autoFocus?: boolean;
   required?: boolean;
+  placeholder?: string;
 };

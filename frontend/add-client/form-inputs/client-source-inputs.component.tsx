@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useCss } from "kremling";
 import { ClientSources } from "../add-client.component";
+import { IntakeQuestion } from "../../admin/intake/intake-setting.component";
+import { renderDynamicallyOrderedQuestions } from "./dynamic-question-helpers";
+import { ClientIntakeSettings } from "../../admin/intake/client-intake-settings.component";
 
 export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
   function ClientSourceInputs(props: ClientSourceInputsProps, ref) {
@@ -24,18 +27,32 @@ export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
       }
     });
 
+    const questionRenderers = {
+      clientSource: renderClientSource,
+      couldVolunteer: renderCouldVolunteer,
+    };
+
     return (
-      <>
-        <div {...scope}>
+      <div {...scope}>
+        {renderDynamicallyOrderedQuestions(
+          props.clientIntakeSettings.intakeInfo,
+          questionRenderers,
+          ["dateOfIntake", "intakeServices"]
+        )}
+      </div>
+    );
+
+    function renderClientSource(question: IntakeQuestion) {
+      return (
+        <div>
           <label>
-            <span className="intake-span">
-              How did they hear about Comunidades Unidas
-            </span>
+            <span className="intake-span">{question.label}</span>
             <select
               value={clientSource || "unknown"}
               onChange={(evt) => setClientSource(evt.target.value)}
               autoFocus
-              required
+              required={question.required}
+              placeholder={question.placeholder}
             >
               {Object.keys(clientSources).map((clientSource) => (
                 <option key={clientSource} value={clientSource}>
@@ -45,11 +62,14 @@ export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
             </select>
           </label>
         </div>
-        <div {...scope}>
+      );
+    }
+
+    function renderCouldVolunteer(question: IntakeQuestion) {
+      return (
+        <div>
           <label>
-            <span className="intake-span">
-              Would they like to volunteer for Comunidades Unidas?
-            </span>
+            <span className="intake-span">{question.label}</span>
             <input
               type="checkbox"
               name="couldVolunteer"
@@ -58,8 +78,8 @@ export default React.forwardRef<ClientSourceRef, ClientSourceInputsProps>(
             />
           </label>
         </div>
-      </>
-    );
+      );
+    }
   }
 );
 
@@ -89,6 +109,7 @@ export const clientSources = {
 type ClientSourceInputsProps = {
   client: ClientSourceInputClient;
   isNewClient: boolean;
+  clientIntakeSettings: ClientIntakeSettings;
 };
 
 type ClientSourceInputClient = {

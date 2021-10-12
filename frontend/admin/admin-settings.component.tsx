@@ -4,6 +4,7 @@ import PageHeader from "../page-header.component";
 import programsServicesIcon from "../../icons/148705-essential-collection/svg/switch-4.svg";
 import partnersIcon from "../../icons/148705-essential-collection/svg/switch-5.svg";
 import usersIcon from "../../icons/148705-essential-collection/svg/users-1.svg";
+import file1Icon from "../../icons/148705-essential-collection/svg/file-1.svg";
 import css from "./admin-settings.css";
 import { useCss } from "kremling";
 
@@ -28,6 +29,12 @@ export default function AdminSettings(props) {
           title="User Permissions"
           link="/user-permissions"
           iconUrl={usersIcon}
+          alt="Person shadowed outline"
+        />
+        <HomeCard
+          title="Client Intake"
+          link="/client-intake-settings"
+          iconUrl={file1Icon}
           alt="Person shadowed outline"
         />
       </div>

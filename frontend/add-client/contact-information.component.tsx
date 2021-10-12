@@ -30,6 +30,7 @@ export default function ContactInformation(props: StepComponentProps) {
         ref={contactInfoRef}
         showDateOfIntake={true}
         isNewClient={true}
+        clientIntakeSettings={props.clientIntakeSettings}
       >
         <div className="actions">
           <button type="button" className="secondary" onClick={goBack}>

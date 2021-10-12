@@ -9,7 +9,7 @@ To get the questions in the intake form, call the following api:
 ### Request
 
 ```
-GET /api/intake-form-questions
+GET /api/intake-questions
 ```
 
 ### Response
@@ -17,7 +17,16 @@ GET /api/intake-form-questions
 ```json
 {
   "sections": {
-    "basicInfo": [],
+    "basicInfo": [
+      {
+        "type": "builtin",
+        "section": "basicInfo",
+        "key": "firstName",
+        "label": "First Name",
+        "placeholder": "Jane Doe",
+        "required": true
+      }
+    ],
     "contactInfo": [],
     "demographicInfo": [],
     "source": [],
