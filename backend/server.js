@@ -208,6 +208,9 @@ require("./apis/custom-service-questions/create-custom-service-question.api");
 require("./apis/custom-service-questions/update-custom-service-question.api");
 require("./apis/custom-service-questions/delete-custom-service-question.api");
 
+require("./apis/intake/get-client-intake-questions.api.js");
+require("./apis/intake/put-client-intake-questions.api.js");
+
 require("./apis/default-404.api.js");
 require("./index-html.js");
 

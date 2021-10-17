@@ -53,6 +53,7 @@ export default function CityInput(props: CityInputProps) {
         ref={inputRef}
         autoComplete="new-password"
         onFocus={() => setSelectedIndex(0)}
+        placeholder={props.placeholder || ""}
         onKeyDown={onKeyDown}
       />
       {renderPopup()}
@@ -126,6 +127,7 @@ type CityInputProps = {
   setCity(city: string): any;
   nextInputRef: React.RefObject<any>;
   required: boolean;
+  placeholder?: string;
 };
 
 const css = `

@@ -5,6 +5,9 @@ import StateSelect from "../../util/state-select.component";
 import CityInput from "../../util/city-input.component";
 import { capitalize, isEmpty } from "lodash-es";
 import emailValidator from "email-validator";
+import { renderDynamicallyOrderedQuestions } from "./dynamic-question-helpers";
+import { ClientIntakeSettings } from "../../admin/intake/client-intake-settings.component";
+import { IntakeQuestion } from "../../admin/intake/intake-setting.component";
 
 export default React.forwardRef(function ContactInformationInputs(
   props: ContactInformationInputsProps,
@@ -54,35 +57,33 @@ export default React.forwardRef(function ContactInformationInputs(
     };
   });
 
+  const questionRenderers = {
+    dateOfIntake: renderDateOfIntake,
+    phone: renderPhone,
+    smsConsent: renderSmsConsent,
+    "homeAddress.city": renderCity,
+    "homeAddress.street": renderStreet,
+    "homeAddress.zip": renderZip,
+    "homeAddress.state": renderState,
+    email: renderEmail,
+    housingStatus: renderHousingStatus,
+  };
+
   return (
     <form onSubmit={props.handleSubmit} autoComplete="new-password">
-      {props.showDateOfIntake && (
-        <div>
-          <label>
-            <span>Date of Intake</span>
-            <input
-              type="date"
-              name="dateOfIntake"
-              value={dateOfIntake}
-              onChange={(evt) => setDateOfIntake(evt.target.value)}
-              autoFocus
-            />
-          </label>
-        </div>
+      {renderDynamicallyOrderedQuestions(
+        props.clientIntakeSettings.contactInfo,
+        questionRenderers
       )}
+      {props.children}
+    </form>
+  );
+
+  function renderSmsConsent(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>Phone number</span>
-          <PhoneInput
-            phone={phone}
-            setPhone={setPhone}
-            required={props.isNewClient}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          <span>Wants text messages</span>
+          <span>{question.label}</span>
           <input
             type="checkbox"
             name="smsConsent"
@@ -92,70 +93,110 @@ export default React.forwardRef(function ContactInformationInputs(
           />
         </label>
       </div>
+    );
+  }
+
+  function renderEmail(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>Email</span>
+          <span>{question.label}</span>
           <input
             ref={emailRef}
             type="email"
             value={email}
+            placeholder={question.placeholder || ""}
+            required={question.required}
             onChange={(evt) => setEmail(evt.target.value)}
             autoComplete="new-password"
           />
         </label>
       </div>
+    );
+  }
+
+  function renderStreet(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>Street Address</span>
+          <span>{question.label}</span>
           <input
             type="text"
             value={streetAddress}
             onChange={(evt) => setStreetAddress(evt.target.value)}
-            required={props.isNewClient}
-            placeholder="1211 W. 3200 S."
+            required={question.required && props.isNewClient}
+            placeholder={question.placeholder}
             autoComplete="new-password"
           />
         </label>
       </div>
+    );
+  }
+
+  function renderCity(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>City</span>
+          <span>{question.label}</span>
           <CityInput
             state={state}
             city={city}
             setCity={setCity}
             nextInputRef={zipRef}
-            required={props.isNewClient}
+            placeholder={question.placeholder}
+            required={question.required && props.isNewClient}
           />
         </label>
       </div>
+    );
+  }
+
+  function renderState(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>State</span>
-          <StateSelect state={state} setState={setState} />
+          <span>{question.label}</span>
+          <StateSelect
+            state={state}
+            setState={setState}
+            required={question.required}
+            placeholder={question.placeholder}
+          />
         </label>
       </div>
+    );
+  }
+
+  function renderZip(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>ZIP Code</span>
+          <span>{question.label}</span>
           <input
             ref={zipRef}
             type="text"
             value={zip}
             onChange={(evt) => setZip(evt.target.value)}
             autoComplete="new-password"
-            required={props.isNewClient}
+            placeholder={question.placeholder || ""}
+            required={question.required && props.isNewClient}
           />
         </label>
       </div>
+    );
+  }
+
+  function renderHousingStatus(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>Rent or Own:</span>
+          <span>{question.label}</span>
           <select
             value={housing || "unknown"}
             name="housing"
             onChange={(evt) => setHousing(evt.target.value)}
-            required
+            required={question.required}
+            placeholder={question.placeholder || ""}
           >
             {Object.keys(HousingStatuses).map((key) => (
               <option value={key} key={key}>
@@ -165,9 +206,45 @@ export default React.forwardRef(function ContactInformationInputs(
           </select>
         </label>
       </div>
-      {props.children}
-    </form>
-  );
+    );
+  }
+
+  function renderPhone(question: IntakeQuestion) {
+    return (
+      <div>
+        <label>
+          <span>{question.label}</span>
+          <PhoneInput
+            phone={phone}
+            setPhone={setPhone}
+            required={question.required && props.isNewClient}
+            placeholder={question.placeholder || ""}
+          />
+        </label>
+      </div>
+    );
+  }
+
+  function renderDateOfIntake(question: IntakeQuestion) {
+    return (
+      props.showDateOfIntake && (
+        <div>
+          <label>
+            <span>{question.label}</span>
+            <input
+              type="date"
+              name="dateOfIntake"
+              value={dateOfIntake}
+              onChange={(evt) => setDateOfIntake(evt.target.value)}
+              placeholder={question.placeholder || ""}
+              required={question.required}
+              autoFocus
+            />
+          </label>
+        </div>
+      )
+    );
+  }
 
   function getData(): ContactInformationFormClient {
     const data: ContactInformationFormClient = {
@@ -209,6 +286,7 @@ type ContactInformationInputsProps = {
   children: JSX.Element | JSX.Element[];
   showDateOfIntake?: boolean;
   isNewClient: boolean;
+  clientIntakeSettings: ClientIntakeSettings;
 };
 
 export type ContactInformationFormClient = {

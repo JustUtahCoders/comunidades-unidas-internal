@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import CountrySelect from "../../util/country-select.component";
 import CurrencyInput from "../../util/currency-input.component";
 import { isEmpty } from "lodash-es";
+import { renderDynamicallyOrderedQuestions } from "./dynamic-question-helpers";
+import { ClientIntakeSettings } from "../../admin/intake/client-intake-settings.component";
+import { IntakeQuestion } from "../../admin/intake/intake-setting.component";
 
 export default function DemographicInformationInputs(
   props: DemographicInformationInputsProps
@@ -94,16 +97,45 @@ export default function DemographicInformationInputs(
       juvenileDependents === "" ? null : Number(juvenileDependents),
   };
 
+  const questionRenderers = {
+    civilStatus: renderCivilStatus,
+    householdIncome: renderHouseholdIncome,
+    householdSize: renderHouseholdSize,
+    dependents: renderJuvenileDependents,
+    eligibleToVote: renderEligibleToVote,
+    registeredToVote: renderRegisterToVote,
+    isStudent: renderIsStudent,
+    currentlyEmployed: renderCurrentlyEmployed,
+    employmentSector: renderEmploymentSector,
+    payInterval: renderPayInterval,
+    weeklyEmployedHours: renderAvgWeeklyHoursWorked,
+    countryOfOrigin: renderCountryOfOrigin,
+    dateOfUSArrival: renderDateOfUSArrival,
+    homeLanguage: renderHomeLanguage,
+    englishProficiency: renderEnglishLevel,
+  };
+
   return (
     <form onSubmit={handleSubmit} autoComplete="new-password">
+      {renderDynamicallyOrderedQuestions(
+        props.clientIntakeSettings.demographicInfo,
+        questionRenderers
+      )}
+      {props.children(demographicInfo)}
+    </form>
+  );
+
+  function renderCivilStatus(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>Civil status</span>
+          <span>{question.label}</span>
           <select
             value={civilStatus}
             name="civilStatus"
             onChange={(evt) => setCivilStatus(CivilStatus[evt.target.value])}
-            required
+            required={question.required}
+            placeholder={question.placeholder}
             autoFocus
           >
             {Object.keys(civilStatuses).map((statusKey) => (
@@ -114,47 +146,68 @@ export default function DemographicInformationInputs(
           </select>
         </label>
       </div>
+    );
+  }
+
+  function renderHouseholdIncome(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>Approximate annual income</span>
+          <span>{question.label}</span>
           <CurrencyInput
             setDollars={setHouseholdIncome}
             initialValue={householdIncome}
-            required={props.isNewClient}
+            required={question.required && props.isNewClient}
+            placeholder={question.placeholder}
           />
         </label>
       </div>
+    );
+  }
+
+  function renderHouseholdSize(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>Household size dependent on listed income</span>
+          <span>{question.label}</span>
           <input
             type="number"
             value={householdSize}
             onChange={(evt) => setHouseholdSize(Number(evt.target.value))}
-            required={props.isNewClient}
-            placeholder="Unknown"
+            required={question.required && props.isNewClient}
+            placeholder={question.placeholder}
             min={1}
             max={30}
           />
         </label>
       </div>
+    );
+  }
+
+  function renderJuvenileDependents(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>Number household dependents under age 18</span>
+          <span>{question.label}</span>
           <input
             type="number"
             value={juvenileDependents}
             onChange={(evt) => setJuvenileDependents(Number(evt.target.value))}
-            required={props.isNewClient}
-            placeholder="Unknown"
+            required={question.required && props.isNewClient}
+            placeholder={question.placeholder}
             min={0}
             max={30}
           />
         </label>
       </div>
+    );
+  }
+
+  function renderEligibleToVote(question: IntakeQuestion) {
+    return (
       <div>
         <div role="group" aria-labelledby="is-eligible-to-vote">
-          <span id="is-eligible-to-vote">Is the client eligible to vote?</span>
+          <span id="is-eligible-to-vote">{question.label}</span>
           <div className="radio-options">
             <div>
               <label>
@@ -201,12 +254,15 @@ export default function DemographicInformationInputs(
           </div>
         </div>
       </div>
-      {eligibleToVote ? (
+    );
+  }
+
+  function renderRegisterToVote(question: IntakeQuestion) {
+    return (
+      eligibleToVote && (
         <div>
           <div role="group" aria-labelledby="desire-to-register-vote">
-            <span id="desire-to-register-vote">
-              Would they like to register to vote?
-            </span>
+            <span id="desire-to-register-vote">{question.label}</span>
             <div className="radio-options">
               <div>
                 <label>
@@ -235,12 +291,15 @@ export default function DemographicInformationInputs(
             </div>
           </div>
         </div>
-      ) : (
-        <div />
-      )}
+      )
+    );
+  }
+
+  function renderIsStudent(question: IntakeQuestion) {
+    return (
       <div>
         <div role="group" aria-labelledby="is-student">
-          <span id="is-student">Are they a student?</span>
+          <span id="is-student">{question.label}</span>
           <div className="radio-options">
             <div>
               <label>
@@ -281,9 +340,14 @@ export default function DemographicInformationInputs(
           </div>
         </div>
       </div>
+    );
+  }
+
+  function renderCurrentlyEmployed(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>Currently employed?</span>
+          <span>{question.label}</span>
           <select
             value={currentlyEmployed}
             name="currentlyEmployed"
@@ -295,7 +359,8 @@ export default function DemographicInformationInputs(
                 setWeeklyEmployedHours(WeeklyEmployedHours["0-20"]);
               }
             }}
-            required
+            required={question.required}
+            placeholder={question.placeholder}
           >
             <option value="yes">Yes</option>
             <option value="no">No</option>
@@ -304,16 +369,22 @@ export default function DemographicInformationInputs(
           </select>
         </label>
       </div>
-      {currentlyEmployed == "yes" && (
+    );
+  }
+
+  function renderEmploymentSector(question: IntakeQuestion) {
+    return (
+      currentlyEmployed == "yes" && (
         <>
           <div>
             <label>
-              <span>Employment sector</span>
+              <span>{question.label}</span>
               <select
                 value={employmentSector}
                 name="employmentSector"
                 onChange={(evt) => setEmploymentSector(evt.target.value)}
-                required
+                required={question.required}
+                placeholder={question.placeholder}
               >
                 {Object.keys(employmentSectors).map((sectorValue) => (
                   <option key={sectorValue} value={sectorValue}>
@@ -331,109 +402,148 @@ export default function DemographicInformationInputs(
                   type="text"
                   value={empSectorExplain}
                   onChange={(evt) => setEmpSectorExplain(evt.target.value)}
-                  required
+                  required={question.required}
                 />
               </label>
             </div>
           )}
-          <div>
-            <label>
-              <span>Pay interval</span>
-              <select
-                required
-                value={payInterval}
-                onChange={(evt) =>
-                  setPayInterval(PayInterval[evt.target.value])
-                }
-              >
-                {Object.keys(payIntervals).map((payIntervalName) => (
-                  <option key={payIntervalName} value={payIntervalName}>
-                    {payIntervals[payIntervalName]}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <div>
-            <label>
-              <span>Average weekly hours worked</span>
-              <select
-                required
-                onChange={(evt) =>
-                  setWeeklyEmployedHours(WeeklyEmployedHours[evt.target.value])
-                }
-                value={weeklyEmployedHours}
-              >
-                {Object.keys(WeeklyEmployedHours).map((weeklyHour) => (
-                  <option key={weeklyHour} value={weeklyHour}>
-                    {WeeklyEmployedHours[weeklyHour]}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
         </>
-      )}
+      )
+    );
+  }
+
+  function renderPayInterval(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>Country of origin</span>
+          <span>{question.label}</span>
+          <select
+            required={question.required}
+            placeholder={question.placeholder}
+            value={payInterval}
+            onChange={(evt) => setPayInterval(PayInterval[evt.target.value])}
+          >
+            {Object.keys(payIntervals).map((payIntervalName) => (
+              <option key={payIntervalName} value={payIntervalName}>
+                {payIntervals[payIntervalName]}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+    );
+  }
+
+  function renderAvgWeeklyHoursWorked(question: IntakeQuestion) {
+    return (
+      <div>
+        <label>
+          <span>{question.label}</span>
+          <select
+            required={question.required}
+            placeholder={question.placeholder}
+            onChange={(evt) =>
+              setWeeklyEmployedHours(WeeklyEmployedHours[evt.target.value])
+            }
+            value={weeklyEmployedHours}
+          >
+            {Object.keys(WeeklyEmployedHours).map((weeklyHour) => (
+              <option key={weeklyHour} value={weeklyHour}>
+                {WeeklyEmployedHours[weeklyHour]}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+    );
+  }
+
+  function renderCountryOfOrigin(question: IntakeQuestion) {
+    return (
+      <div>
+        <label>
+          <span>{question.label}</span>
           <CountrySelect
             country={countryOfOrigin}
             setCountry={setCountryOfOrigin}
+            required={question.required}
+            placeholder={question.placeholder}
           />
         </label>
       </div>
-      {countryOfOrigin !== "US" && (
+    );
+  }
+
+  function renderDateOfUSArrival(question: IntakeQuestion) {
+    return (
+      countryOfOrigin !== "US" && (
         <div>
           <label>
-            <span>Approximate date of U.S. arrival</span>
+            <span>{question.label}</span>
             <input
               type={
                 window.navigator.userAgent.toLowerCase().includes("firefox")
                   ? "date"
                   : "month"
               }
+              required={question.required}
+              placeholder={question.placeholder}
               value={dateOfUSArrival}
               onChange={(evt) => setDateOfUSArrival(evt.target.value)}
             />
           </label>
         </div>
-      )}
-      <div>
-        <label>
-          <span>Primary language in home</span>
-          <select
-            required
-            name="homeLanguage"
-            value={homeLanguage}
-            onChange={(evt) => setHomeLanguage(evt.target.value)}
-          >
-            {Object.keys(languageOptions).map((value) => (
-              <option key={value} value={value}>
-                {languageOptions[value]}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-      {homeLanguage === "other" && (
+      )
+    );
+  }
+
+  function renderHomeLanguage(question: IntakeQuestion) {
+    return (
+      <>
         <div>
           <label>
-            <span>Other language</span>
-            <input
-              required
-              type="text"
-              value={otherLanguage}
-              onChange={(evt) => setOtherLanguage(evt.target.value)}
-            />
+            <span>{question.label}</span>
+            <select
+              required={question.required}
+              name="homeLanguage"
+              value={homeLanguage}
+              placeholder={question.placeholder}
+              onChange={(evt) => setHomeLanguage(evt.target.value)}
+            >
+              {Object.keys(languageOptions).map((value) => (
+                <option key={value} value={value}>
+                  {languageOptions[value]}
+                </option>
+              ))}
+            </select>
           </label>
         </div>
-      )}
+        {homeLanguage === "other" && (
+          <div>
+            <label>
+              <span>Other language</span>
+              <input
+                required={question.required}
+                placeholder="Portuguese"
+                type="text"
+                value={otherLanguage}
+                onChange={(evt) => setOtherLanguage(evt.target.value)}
+              />
+            </label>
+          </div>
+        )}
+      </>
+    );
+  }
+
+  function renderEnglishLevel(question: IntakeQuestion) {
+    return (
       <div>
         <label>
-          <span>English skill level</span>
+          <span>{question.label}</span>
           <select
-            required
+            required={question.required}
+            placeholder={question.placeholder}
             value={englishLevel}
             onChange={(evt) => setEnglishLevel(evt.target.value)}
           >
@@ -445,9 +555,8 @@ export default function DemographicInformationInputs(
           </select>
         </label>
       </div>
-      {props.children(demographicInfo)}
-    </form>
-  );
+    );
+  }
 
   function handleSubmit(evt) {
     props.onSubmit(evt, demographicInfo);
@@ -544,6 +653,7 @@ type DemographicInformationInputsProps = {
     demographicInfo: DemographicInformationClient
   ): JSX.Element | JSX.Element[];
   isNewClient: boolean;
+  clientIntakeSettings: ClientIntakeSettings;
 };
 
 export type DemographicInformationClient = {

@@ -16,6 +16,7 @@ import DemographicInformationInputs, {
 import easyFetch from "../../util/easy-fetch";
 import { isNumber } from "lodash-es";
 import dayjs from "dayjs";
+import { ClientIntakeSettings } from "../../admin/intake/client-intake-settings.component";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -65,6 +66,7 @@ export default function ViewEditDemographicsInfo(
           client={getDemographicsClient()}
           onSubmit={handleSubmit}
           isNewClient={false}
+          clientIntakeSettings={props.clientIntakeSettings}
         >
           {(demographicsInfo) => (
             <div className="actions">
@@ -336,6 +338,7 @@ type ViewEditDemographicsInfoProps = {
   clientUpdated?(client: SingleClient): void;
   auditSummary?: AuditSummary;
   editable?: boolean;
+  clientIntakeSettings: ClientIntakeSettings;
 };
 
 type UpdateAction = {

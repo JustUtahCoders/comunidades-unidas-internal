@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import BasicInformationInputs from "../../add-client/form-inputs/basic-information-inputs.component";
 import easyFetch from "../../util/easy-fetch";
 import { capitalize } from "lodash-es";
+import { ClientIntakeSettings } from "../../admin/intake/client-intake-settings.component";
 
 export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
   const [editing, setEditing] = React.useState(false);
@@ -46,6 +47,7 @@ export default function ViewEditBasicInfo(props: ViewEditBasicInfoProps) {
           }}
           handleSubmit={handleSubmit}
           isNewClient={false}
+          clientIntakeSettings={props.clientIntakeSettings}
         >
           <div className="actions">
             <button
@@ -126,4 +128,5 @@ type ViewEditBasicInfoProps = {
   clientUpdated?(client: SingleClient): void;
   auditSummary?: AuditSummary;
   editable?: boolean;
+  clientIntakeSettings: ClientIntakeSettings;
 };

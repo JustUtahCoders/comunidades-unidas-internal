@@ -27,6 +27,7 @@ export default function DemographicInformation(props: StepComponentProps) {
         client={props.clientState}
         onSubmit={handleSubmit}
         isNewClient
+        clientIntakeSettings={props.clientIntakeSettings}
       >
         {(demographicInfo) => (
           <div className="actions">

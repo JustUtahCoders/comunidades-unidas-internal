@@ -21,6 +21,8 @@ import { IntakeService } from "../util/services-inputs.component";
 import { LeadStatus, SingleLead } from "../view-edit-lead/view-lead.component";
 import easyFetch from "../util/easy-fetch";
 import { leadToClientState } from "../view-edit-lead/convert-lead-to-client.component";
+import { ClientIntakeSettings } from "../admin/intake/client-intake-settings.component";
+import { handlePromiseError } from "../util/error-helpers";
 
 export default function AddClient(props: AddClientProps) {
   const scope = useCss(css);
@@ -32,7 +34,24 @@ export default function AddClient(props: AddClientProps) {
   const [duplicateWarning, setDuplicateWarning] = useState<DuplicateWarning>(
     null
   );
+  const [clientIntakeSettings, setClientIntakeSettings] = React.useState(null);
   const StepComponent = stepComponents[step];
+
+  React.useEffect(() => {
+    const ac = new AbortController();
+
+    easyFetch(`/api/client-intake-questions`, {
+      signal: ac.signal,
+    })
+      .then((data) => {
+        setClientIntakeSettings(data.sections);
+      })
+      .catch(handlePromiseError);
+
+    return () => {
+      ac.abort();
+    };
+  }, []);
 
   React.useEffect(() => {
     if (clientState.leadId) {
@@ -56,6 +75,10 @@ export default function AddClient(props: AddClientProps) {
     }
   }, [clientState.leadId]);
 
+  if (!clientIntakeSettings) {
+    return <div {...scope}>Loading...</div>;
+  }
+
   return (
     <div {...scope}>
       <PageHeader title="Add a new client" />
@@ -74,6 +97,7 @@ export default function AddClient(props: AddClientProps) {
               goBack={goBack}
               reset={reset}
               showDuplicateWarning={showDuplicateWarning}
+              clientIntakeSettings={clientIntakeSettings}
             />
           )}
         </div>
@@ -185,6 +209,7 @@ export type StepComponentProps = {
   goBack(Step, newClientState?): void;
   reset(): void;
   showDuplicateWarning(DuplicateWarning): void;
+  clientIntakeSettings: ClientIntakeSettings;
 };
 
 export type DuplicateWarning = {

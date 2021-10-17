@@ -11,6 +11,7 @@ import IntakeServicesInputs from "../../util/services-inputs.component";
 import checkedUrl from "../../../icons/148705-essential-collection/svg/checked-1.svg";
 import closeUrl from "../../../icons/148705-essential-collection/svg/close.svg";
 import { useCss } from "kremling";
+import { ClientIntakeSettings } from "../../admin/intake/client-intake-settings.component";
 
 export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
   const { client } = props;
@@ -75,6 +76,7 @@ export default function ViewEditIntakeInfo(props: ViewEditIntakeInfoProps) {
               couldVolunteer: client.couldVolunteer,
             }}
             isNewClient={false}
+            clientIntakeSettings={props.clientIntakeSettings}
           />
           <div>
             <label className="intake-services-label">
@@ -239,4 +241,5 @@ type ViewEditIntakeInfoProps = {
   clientUpdated?(client: SingleClient): void;
   auditSummary?: AuditSummary;
   editable?: boolean;
+  clientIntakeSettings: ClientIntakeSettings;
 };
