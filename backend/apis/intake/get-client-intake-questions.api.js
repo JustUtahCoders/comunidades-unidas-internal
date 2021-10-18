@@ -16,12 +16,6 @@ const sql = fs.readFileSync(
 );
 
 app.get("/api/client-intake-questions", (req, res, next) => {
-  const authError = checkUserRole(req, "Administrator");
-
-  if (authError) {
-    return insufficientPrivileges(res, authError);
-  }
-
   pool.query(mysql.format(sql, []), (err, result) => {
     if (err) {
       return databaseError(req, res, err);
