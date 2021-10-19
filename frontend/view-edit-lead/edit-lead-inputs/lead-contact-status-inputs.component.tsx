@@ -54,6 +54,8 @@ export default function LeadContactStatusInputs(
           >
             <option value="">Select a status</option>
             <option value="active">Active</option>
+            <option value="contacted">Contacted</option>
+            <option value="inProgress">In Progress</option>
             <option value="inactive">Inactive</option>
             <option value="convertedToClient" disabled>
               Converted to client
@@ -160,7 +162,11 @@ export default function LeadContactStatusInputs(
     evt.preventDefault();
     if (!thirdContactAttempt && secondContactAttempt && firstContactAttempt) {
       setThirdContactAttempt(dateformat(now, "mm/dd/yyyy hh:MM TT"));
-      if (leadStatus === "active") {
+      if (
+        leadStatus === "active" ||
+        leadStatus === "contacted" ||
+        leadStatus === "inProgress"
+      ) {
         setLeadStatus("inactive");
       }
       if (!inactivityReason) {

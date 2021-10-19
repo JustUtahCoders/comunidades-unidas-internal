@@ -168,6 +168,8 @@ export type SingleLead = {
 
 export enum LeadStatus {
   active = "active",
+  contacted = "contacted",
+  inProgress = "inProgress",
   inactive = "inactive",
   convertedToClient = "convertedToClient",
 }

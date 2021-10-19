@@ -68,7 +68,7 @@ GET /api/leads/:id
 
 **_Notes_**
 
-- `leadStatus` is an enum with the possible values of `active`, `inactive`, and `convertedToClient`.
+- `leadStatus` is an enum with the possible values of `active`, `inactive`, `contacted`, `inProgress`, and `convertedToClient`.
 - `inactivityReason` is an enum with the possible values of `doNotCallRequest`, `threeAttemptsNoResponse`, `wrongNumber`, `noLongerInterested`, and `relocated`.
 - `eventSources` is an array of integer event ids
 - `gender` is an enum with possible values of `female`, `male`, `transgender`, `nonbinary`, `other`.

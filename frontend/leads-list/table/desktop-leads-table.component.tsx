@@ -77,6 +77,7 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
               </button>
             </th>
             <th>Status</th>
+            <th>Calls</th>
             <th>Interests</th>
           </tr>
         </thead>
@@ -86,7 +87,7 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
         >
           {props.leads.length === 0 && !props.fetchingLeads ? (
             <tr className="empty-state">
-              <td colSpan={8}>
+              <td colSpan={9}>
                 <div>
                   <img src={targetImg} alt="No leads" title="No leads" />
                   <p>No leads match the search criteria</p>
@@ -167,6 +168,11 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
                       )}
                     </Link>
                   </td>
+                  <td className="calls-cell">
+                    <Link to={`/leads/${lead.id}`} className="unstyled">
+                      {numCalls(lead.contactStage)}
+                    </Link>
+                  </td>
                   <td className="interests-cell">
                     <Link to={`/leads/${lead.id}`} className="unstyled">
                       <LeadServicesCell
@@ -189,6 +195,14 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
       return {
         color: "#000000",
       };
+    } else if (leadStatus === "contacted") {
+      return {
+        color: "var(--medium-blue)",
+      };
+    } else if (leadStatus === "inProgress") {
+      return {
+        color: "var(--dark-green)",
+      };
     } else if (leadStatus === "inactive") {
       return {
         color: "#B30000",
@@ -208,26 +222,6 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
   ) {
     if (leadStatus === "convertedToClient") {
       return `Client #${clientId}`;
-    } else if (leadStatus === "active") {
-      if (contactStage.first === null) {
-        return "0 calls";
-      } else if (contactStage.second === null) {
-        return (
-          <span title={dateformat(contactStage.first, "m/d/yyyy")}>1 call</span>
-        );
-      } else if (contactStage.third === null) {
-        return (
-          <span title={dateformat(contactStage.second, "m/d/yyyy")}>
-            2 calls
-          </span>
-        );
-      } else {
-        return (
-          <span title={dateformat(contactStage.third, "m/d/yyyy")}>
-            3 calls
-          </span>
-        );
-      }
     } else if (leadStatus === "inactive") {
       switch (inactivityReason) {
         case "doNotCallRequest":
@@ -244,7 +238,25 @@ export default function DesktopLeadsTable(props: LeadsTableProps) {
           return "Inactive";
       }
     } else {
-      return "Unknown";
+      return startCase(leadStatus);
+    }
+  }
+
+  function numCalls(contactStage) {
+    if (contactStage.first === null) {
+      return "0 calls";
+    } else if (contactStage.second === null) {
+      return (
+        <span title={dateformat(contactStage.first, "m/d/yyyy")}>1 call</span>
+      );
+    } else if (contactStage.third === null) {
+      return (
+        <span title={dateformat(contactStage.second, "m/d/yyyy")}>2 calls</span>
+      );
+    } else {
+      return (
+        <span title={dateformat(contactStage.third, "m/d/yyyy")}>3 calls</span>
+      );
     }
   }
 
@@ -409,6 +421,10 @@ const css = `
 
   & .capitalize {
     text-transform: capitalize;
+  }
+
+  & .calls-cell {
+    max-width: 10rem;
   }
 
   & .status-cell {
