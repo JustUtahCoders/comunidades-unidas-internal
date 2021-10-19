@@ -4,6 +4,7 @@ import easyFetch from "../../util/easy-fetch";
 import { SingleLead } from "../view-lead.component";
 import LeadSection from "./lead-section.component";
 import LeadContactStatusInputs from "../edit-lead-inputs/lead-contact-status-inputs.component";
+import { startCase } from "lodash";
 
 export default function ViewEditLeadContactStatus(
   props: ViewEditLeadContactStatusProps
@@ -81,7 +82,7 @@ export default function ViewEditLeadContactStatus(
               </tr>
               <tr>
                 <td>Current Status:</td>
-                <td>{lead.leadStatus}</td>
+                <td>{startCase(lead.leadStatus)}</td>
               </tr>
               <tr>
                 <td>First Contact Attempt:</td>

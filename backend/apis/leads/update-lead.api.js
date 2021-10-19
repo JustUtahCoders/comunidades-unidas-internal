@@ -29,7 +29,14 @@ app.patch("/api/leads/:id", (req, res, next) => {
   const bodyValidationErrors = checkValid(
     req.body,
     nullableValidDate("dateOfSignUp"),
-    nullableValidEnum("leadStatus", "active", "inactive", "convertedToClient"),
+    nullableValidEnum(
+      "leadStatus",
+      "active",
+      "inactive",
+      "contacted",
+      "inProgress",
+      "convertedToClient"
+    ),
     nullableValidDate("firstContactStatus"),
     nullableValidDate("secondContactStatus"),
     nullableValidDate("thirdContactStatus"),
@@ -130,7 +137,11 @@ app.patch("/api/leads/:id", (req, res, next) => {
     if (leadContactStatusChanged) {
       let newInactivityReason = fullLead.inactivityReason;
 
-      if (fullLead.leadStatus === "active") {
+      if (
+        fullLead.leadStatus === "active" ||
+        fullLead.leadStatus === "contacted" ||
+        fullLead === "inProgress"
+      ) {
         newInactivityReason = null;
       }
 

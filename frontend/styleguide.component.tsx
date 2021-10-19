@@ -32,6 +32,7 @@ const css = `
   --immigration-color: #1165b8;
   --medium-blue: #1165b8;
   --medium-red: rgba(184, 17, 17, 1);
+  --dark-green: darkgreen;
 }
 
 body {

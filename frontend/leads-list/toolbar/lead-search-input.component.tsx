@@ -141,49 +141,17 @@ export default function LeadSearchInput(props: LeadSearchInputProps) {
               />
               <div>Status:</div>
               <div>
-                <label>
-                  <input
-                    type="radio"
-                    name="lead-status"
-                    value=""
-                    checked={!search.parseResult.parse.leadStatus}
-                    onChange={updateLeadStatus}
-                  />
-                  <span>All</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="lead-status"
-                    value="active"
-                    checked={search.parseResult.parse.leadStatus === "active"}
-                    onChange={updateLeadStatus}
-                  />
-                  <span>Active</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="lead-status"
-                    value="inactive"
-                    checked={search.parseResult.parse.leadStatus === "inactive"}
-                    onChange={updateLeadStatus}
-                  />
-                  <span>Inactive</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="lead-status"
-                    value="convertedToClient"
-                    checked={
-                      search.parseResult.parse.leadStatus ===
-                      "convertedToClient"
-                    }
-                    onChange={updateLeadStatus}
-                  />
-                  <span>Converted To Client</span>
-                </label>
+                <select
+                  value={search.parseResult.parse.leadStatus}
+                  onChange={updateLeadStatus}
+                >
+                  <option value="">All Leads</option>
+                  <option value="active">Active</option>
+                  <option value="contacted">Contacted</option>
+                  <option value="inProgress">In Progress</option>
+                  <option value="inactive">Inactive</option>
+                  <option value="convertedToClient">Converted To Client</option>
+                </select>
               </div>
             </div>
             <button
