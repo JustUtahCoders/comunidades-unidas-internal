@@ -12,7 +12,6 @@ import { formatPhone } from "../../util/formatters";
 import LeadServicesCell from "./lead-services-cell.component";
 import targetImg from "../../../icons/148705-essential-collection/svg/target.svg";
 import { startCase } from "lodash-es";
-import { LeadStatus } from "../../view-edit-lead/view-lead.component";
 
 export default function DesktopLeadsTable(props: LeadsTableProps) {
   const scope = useCss(css);
