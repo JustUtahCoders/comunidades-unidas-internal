@@ -1,5 +1,5 @@
 import React from "react";
-import { capitalize } from "lodash-es";
+import { startCase } from "lodash-es";
 import { ClientIntakeSettings } from "../../admin/intake/client-intake-settings.component";
 import {
   QuestionRendererMap,
@@ -116,8 +116,8 @@ export default function BasicInformationInputs(
 
   function handleSubmit(evt) {
     return props.handleSubmit(evt, {
-      firstName: capitalize(firstName.trim()),
-      lastName: capitalize(lastName.trim()),
+      firstName: startCase(firstName.trim()),
+      lastName: startCase(lastName.trim()),
       gender: gender === "unknown" ? null : gender,
       birthday: birthday === "" ? null : birthday,
     });
