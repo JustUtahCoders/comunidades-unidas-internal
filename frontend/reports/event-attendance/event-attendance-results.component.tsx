@@ -49,6 +49,22 @@ export default function EventAttendanceResults(props) {
               <td>Total Attendance</td>
               <td>{data.totalAttendance.toLocaleString()}</td>
             </tr>
+            <tr style={{ backgroundColor: "#F1D7AC" }}>
+              <td>Male</td>
+              <td>{data.attendanceMale.toLocaleString()}</td>
+            </tr>
+            <tr style={{ backgroundColor: "#F1D7AC" }}>
+              <td>Female</td>
+              <td>{data.attendanceFemale.toLocaleString()}</td>
+            </tr>
+            <tr style={{ backgroundColor: "#F1D7AC" }}>
+              <td>Other</td>
+              <td>{data.attendanceOther.toLocaleString()}</td>
+            </tr>
+            <tr style={{ backgroundColor: "#F1D7AC" }}>
+              <td>Unknown</td>
+              <td>{data.attendanceUnknown.toLocaleString()}</td>
+            </tr>
             <tr>
               <td>Materials Distributed</td>
               <td>{data.materialsDistributed.toLocaleString()}</td>
