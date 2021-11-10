@@ -5,6 +5,7 @@ import { useFullWidth } from "../navbar/use-full-width.hook";
 import PageHeader from "../page-header.component";
 import EventTableToolbar from "./event-table-toolbar.component";
 import EventTable from "./event-table.component";
+import { useAlwaysValidPage } from "../util/use-always-valid-page";
 
 export default function EventList(props: EventListProps) {
   useFullWidth(true);
@@ -15,7 +16,7 @@ export default function EventList(props: EventListProps) {
     getInitialState
   );
 
-  useAlwaysValidPage(apiState, dispatchApiState);
+  useAlwaysValidPage(apiState, ApiStateStatus, ActionTypes, dispatchApiState);
   useEventsApi(apiState, dispatchApiState);
   useFrontendUrlParams(apiState, dispatchApiState);
 
@@ -140,42 +141,6 @@ function useEventsApi(apiState, dispatchApiState) {
         });
 
       return () => abortController.abort();
-    }
-  }, [apiState]);
-}
-
-function useAlwaysValidPage(apiState, dispatchApiState) {
-  React.useEffect(() => {
-    if (apiState.status !== ApiStateStatus.fetched) {
-      return;
-    }
-
-    const lastPage = Math.ceil(
-      apiState.apiData.pagination.numEvents /
-        apiState.apiData.pagination.pageSize
-    );
-
-    let newPage;
-
-    if (
-      typeof apiState.page !== "number" ||
-      isNaN(apiState.page) ||
-      isNaN(lastPage)
-    ) {
-      newPage = 1;
-    } else if (apiState.page <= 0) {
-      newPage = 1;
-    } else if (lastPage === 0) {
-      newPage = 1;
-    } else if (apiState.page > lastPage) {
-      newPage = lastPage;
-    }
-
-    if (newPage && newPage !== apiState.page) {
-      dispatchApiState({
-        type: ActionTypes.newPage,
-        page: newPage,
-      });
     }
   }, [apiState]);
 }
