@@ -49,6 +49,10 @@ app.get("/api/reports/events", (req, res) => {
     res.send({
       numEvents: results[0].numEvents || 0,
       totalAttendance: results[0].totalAttendance || 0,
+      attendanceMale: results[0].attendanceMale || 0,
+      attendanceFemale: results[0].attendanceFemale || 0,
+      attendanceOther: results[0].attendanceOther || 0,
+      attendanceUnknown: results[0].attendanceUnknown || 0,
       materialsDistributed: results[0].materialsDistributed || 0,
       reportParameters: {
         start: startDate,
