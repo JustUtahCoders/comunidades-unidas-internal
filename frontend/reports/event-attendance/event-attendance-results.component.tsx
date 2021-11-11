@@ -2,9 +2,39 @@ import React from "react";
 import { useReportsApi } from "../shared/use-reports-api";
 import BasicTableReport from "../shared/basic-table-report.component";
 import dayjs from "dayjs";
+import { Link } from "@reach/router";
+import { formatPhone } from "../../util/formatters";
+import backIcon from "../../../icons/148705-essential-collection/svg/back.svg";
+import nextIcon from "../../../icons/148705-essential-collection/svg/next.svg";
 
 export default function EventAttendanceResults(props) {
   const { isLoading, data, error } = useReportsApi(`/api/reports/events`);
+
+  const clients = [
+    {
+      id: 0,
+      firstName: "John",
+      lastName: "Adams",
+    },
+    {
+      id: 1,
+      firstName: "Sally",
+      lastName: "Jones",
+    },
+  ];
+
+  const leads = [
+    {
+      id: 0,
+      firstName: "Darth",
+      lastName: "Vader",
+    },
+    {
+      id: 1,
+      firstName: "Indiana",
+      lastName: "Jones",
+    },
+  ];
 
   if (!data) {
     return <div>Loading</div>;
@@ -69,9 +99,124 @@ export default function EventAttendanceResults(props) {
               <td>Materials Distributed</td>
               <td>{data.materialsDistributed.toLocaleString()}</td>
             </tr>
+
+            {/*<div className="clients-table-container">*/}
+            {/*  <BasicTableReport*/}
+            {/*    title="Clients"*/}
+            {/*    // getCsvOptions={}*/}
+            {/*    headerRows={*/}
+            {/*      <tr>*/}
+            {/*        <th>ID</th>*/}
+            {/*        <th>Name</th>*/}
+            {/*        <th>Phone</th>*/}
+            {/*        <th># of interactions</th>*/}
+            {/*        <th># of hours</th>*/}
+            {/*      </tr>*/}
+            {/*    }*/}
+            {/*    contentRows={*/}
+            {/*      <>*/}
+            {/*        {data.clients.map((client) => (*/}
+            {/*          <tr key={client.id}>*/}
+            {/*            <td>*/}
+            {/*              <Link to={`/clients/${client.id}`}>{client.id}</Link>*/}
+            {/*            </td>*/}
+            {/*            <td>*/}
+            {/*              {client.firstName} {client.lastName}*/}
+            {/*            </td>*/}
+            {/*            <td>{formatPhone(client.primaryPhone)}</td>*/}
+            {/*            <td>{client.numInteractions}</td>*/}
+            {/*            /!* <td>{displayDuration(client.totalDuration)}</td> *!/*/}
+            {/*          </tr>*/}
+            {/*        ))}*/}
+            {/*      </>*/}
+            {/*    }*/}
+            {/*  />*/}
+            {/*  <div className="pagination">*/}
+            {/*    <div>*/}
+            {/*      {(data.pagination.currentPage - 1) * data.pagination.pageSize + 1} -{" "}*/}
+            {/*      {Math.min(*/}
+            {/*        data.pagination.currentPage * data.pagination.pageSize,*/}
+            {/*        data.pagination.numClients*/}
+            {/*      )}{" "}*/}
+            {/*      of {data.pagination.numClients.toLocaleString()}*/}
+            {/*    </div>*/}
+            {/*    <button*/}
+            {/*      className="icon"*/}
+            {/*      // onClick={goBack}*/}
+            {/*      // disabled={Number(page) === 1}*/}
+            {/*    >*/}
+            {/*      <img*/}
+            {/*        src={backIcon}*/}
+            {/*        alt="Go back one page"*/}
+            {/*        title="Go back one page"*/}
+            {/*      />*/}
+            {/*    </button>*/}
+            {/*    <button*/}
+            {/*      className="icon"*/}
+            {/*      onClick={goForward}*/}
+            {/*      disabled={Number(page) === data.pagination.numPages}*/}
+            {/*    >*/}
+            {/*      <img*/}
+            {/*        src={nextIcon}*/}
+            {/*        alt="Go forward one page"*/}
+            {/*        title="Go forward one page"*/}
+            {/*      />*/}
+            {/*    </button>*/}
+            {/*  </div>*/}
+            {/*</div>*/}
           </>
         }
       />
+      <div className="clients-table-container">
+        <BasicTableReport
+          title="Clients Attended"
+          headerRows={
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+            </tr>
+          }
+          contentRows={
+            <>
+              {clients.map((client) => (
+                <tr key={client.id}>
+                  <td>
+                    <Link to={`/clients/${client.id}`}>{client.id}</Link>
+                  </td>
+                  <td>
+                    {client.firstName} {client.lastName}
+                  </td>
+                </tr>
+              ))}
+            </>
+          }
+        />
+      </div>
+      <div className="clients-table-container">
+        <BasicTableReport
+          title="Leads Attended"
+          headerRows={
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+            </tr>
+          }
+          contentRows={
+            <>
+              {leads.map((lead) => (
+                <tr key={lead.id}>
+                  <td>
+                    <Link to={`/clients/${lead.id}`}>{lead.id}</Link>
+                  </td>
+                  <td>
+                    {lead.firstName} {lead.lastName}
+                  </td>
+                </tr>
+              ))}
+            </>
+          }
+        />
+      </div>
     </>
   );
 }
