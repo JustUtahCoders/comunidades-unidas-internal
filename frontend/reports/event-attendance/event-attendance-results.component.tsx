@@ -169,31 +169,6 @@ export default function EventAttendanceResults(props) {
       />
       <div className="clients-table-container">
         <BasicTableReport
-          title="Clients Attended"
-          headerRows={
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-            </tr>
-          }
-          contentRows={
-            <>
-              {clients.map((client) => (
-                <tr key={client.id}>
-                  <td>
-                    <Link to={`/clients/${client.id}`}>{client.id}</Link>
-                  </td>
-                  <td>
-                    {client.firstName} {client.lastName}
-                  </td>
-                </tr>
-              ))}
-            </>
-          }
-        />
-      </div>
-      <div className="clients-table-container">
-        <BasicTableReport
           title="Leads Attended"
           headerRows={
             <tr>
@@ -206,7 +181,7 @@ export default function EventAttendanceResults(props) {
               {leads.map((lead) => (
                 <tr key={lead.id}>
                   <td>
-                    <Link to={`/clients/${lead.id}`}>{lead.id}</Link>
+                    <Link to={`/leads/${lead.id}`}>{lead.id}</Link>
                   </td>
                   <td>
                     {lead.firstName} {lead.lastName}
