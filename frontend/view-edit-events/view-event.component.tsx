@@ -35,10 +35,7 @@ export default function ViewEvent(props: ViewEventProps) {
 
   return (
     <>
-      <PageHeader
-        title={getHeaderTitle()}
-        withSecondaryNav={event ? true : false}
-      />
+      <PageHeader title={getHeaderTitle()} withSecondaryNav={!!event} />
       {event && (
         <StickySecondaryNav>
           <div className="nav-container" {...scope}>
