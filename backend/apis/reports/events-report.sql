@@ -1,10 +1,13 @@
 SELECT
   COUNT(*) numEvents,
-  SUM(attendanceMale) attendanceUnknown,
   SUM(attendanceMale) attendanceMale,
   SUM(attendanceFemale) attendanceFemale,
   SUM(attendanceOther) attendanceOther,
-  (SUM(IFNULL(attendanceUnknown, 0)) + SUM(IFNULL(attendanceMale, 0)) + SUM(IFNULL(attendanceFemale, 0)) + SUM(IFNULL(attendanceOther, 0))) totalAttendance,
+  SUM(attendanceUnknown) attendanceUnknown,
+  (SUM(IFNULL(attendanceUnknown, 0)) +
+  SUM(IFNULL(attendanceMale, 0)) +
+  SUM(IFNULL(attendanceFemale, 0)) +
+  SUM(IFNULL(attendanceOther, 0))) totalAttendance,
   SUM(IFNULL(eventMaterials.quantityDistributed, 0)) materialsDistributed
 FROM
   events
