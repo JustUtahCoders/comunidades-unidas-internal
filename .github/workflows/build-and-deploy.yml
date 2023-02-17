@@ -13,9 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [14.x]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
       - name: Cache node modules
         uses: actions/cache@v2
         env:
@@ -68,12 +68,12 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.repository_owner == 'JustUtahCoders'
     needs: [build]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         with:
           name: static-assets
           path: static
-      - uses: hmanzur/actions-aws-eb@v1.0.0
+      - uses: joeldenning/actions-aws-eb@master
         with:
           command: "deploy newprod"
         env:
