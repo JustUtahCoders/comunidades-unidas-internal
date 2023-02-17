@@ -91,7 +91,7 @@ export default function ViewClient(props: ViewClientProps) {
                 <img src={historyImgUrl} alt="Notepad icon" title="History" />
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link
                 to={`/clients/${clientId}/integrations`}
                 getProps={getLinkProps}
@@ -102,7 +102,7 @@ export default function ViewClient(props: ViewClientProps) {
                   title="Integrations"
                 />
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link to={`/clients/${clientId}/files`} getProps={getLinkProps}>
                 <img src={filesUrl} alt="Files icon" title="Client Files" />
@@ -140,7 +140,7 @@ export default function ViewClient(props: ViewClientProps) {
         <ClientAddNewInfo path="add-info" {...childProps} />
         <AddCaseNote path="add-case-note" {...childProps} />
         <AddClientInteraction path="add-client-interaction" {...childProps} />
-        <Integrations path="integrations" {...childProps} />
+        {/* <Integrations path="integrations" {...childProps} /> */}
         <ClientFiles path="files" {...childProps} />
         <ClientInvoices path="invoices" {...childProps} />
       </Router>
