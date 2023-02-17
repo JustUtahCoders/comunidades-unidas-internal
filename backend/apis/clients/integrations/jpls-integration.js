@@ -1,6 +1,12 @@
 const { upsertClient } = require("juntos-por-la-salud-node-client");
 
+const JPLS_ENABLED = false;
+
 module.exports = function juntosPorLaSalud(integration, client) {
+  if (!JPLS_ENABLED) {
+    return Promise.resolve();
+  }
+
   return upsertClient({
     client,
     participantId: integration.externalId,

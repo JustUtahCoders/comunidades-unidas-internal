@@ -26,12 +26,7 @@ module.exports = (env, argv) => ({
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
-        use: [
-          {
-            loader: "file-loader",
-            options: {},
-          },
-        ],
+        type: "asset/resource",
       },
       {
         test: /\.css$/,
