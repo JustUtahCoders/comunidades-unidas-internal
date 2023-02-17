@@ -13,9 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache node modules
         uses: actions/cache@v2
         env:
@@ -32,9 +32,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - uses: pnpm/action-setup@v1.2.1
+      - uses: pnpm/action-setup@v2
         with:
-          version: 5.14.1
+          version: 7.27.0
           dest: ~/.pnpm-store
       - run: pnpm install
       - run: pnpm run typescript
@@ -68,7 +68,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.repository_owner == 'JustUtahCoders'
     needs: [build]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/download-artifact@v2
         with:
           name: static-assets
