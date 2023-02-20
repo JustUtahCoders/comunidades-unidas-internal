@@ -10,4 +10,5 @@ COPY package.json package.json
 COPY pnpm-lock.yaml pnpm-lock.yaml
 RUN npm pkg delete scripts.prepare
 RUN pnpm install --production
+EXPOSE 8080
 ENTRYPOINT pnpm start
