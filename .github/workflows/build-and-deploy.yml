@@ -75,7 +75,7 @@ jobs:
           path: static
       - uses: joeldenning/actions-aws-eb@master
         with:
-          command: "deploy newprod"
+          command: "deploy dockerized"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
