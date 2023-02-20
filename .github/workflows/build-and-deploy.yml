@@ -73,6 +73,7 @@ jobs:
         with:
           name: static-assets
           path: static
+      - run: rm docker-compose.yml
       - uses: joeldenning/actions-aws-eb@master
         with:
           command: "deploy dockerized"
