@@ -19,3 +19,6 @@ migrations
 pnpm-lock.yaml
 *.sh
 .pnpm-debug.log
+static
+.husky/pre-commit
+Dockerfile
