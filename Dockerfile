@@ -6,6 +6,7 @@ RUN npm install -g pnpm
 RUN mkdir /app
 WORKDIR /app
 COPY backend backend
+COPY static/manifest.json static/manifest.json
 COPY package.json package.json
 COPY pnpm-lock.yaml pnpm-lock.yaml
 RUN npm pkg delete scripts.prepare
