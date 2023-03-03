@@ -26,7 +26,7 @@ specifiers:
   clean-webpack-plugin: ^3.0.0
   concurrently: ^5.3.0
   cookie-parser: ^1.4.5
-  cookie-session: github:joeldenning/cookie-session#secure-fix
+  cookie-session: ^2.0.0
   copyfiles: ^2.4.1
   cross-env: ^7.0.3
   dateformat: ^3.0.3
@@ -95,7 +95,7 @@ dependencies:
   body-parser: 1.19.0
   btoa: 1.2.1
   cookie-parser: 1.4.5
-  cookie-session: github.com/joeldenning/cookie-session/c96303a9d47ea3ebf6304b90e03f3c26a9153a62
+  cookie-session: 2.0.0
   dateformat: 3.0.3
   dayjs: 1.10.4
   dompurify: 2.2.6
@@ -3551,6 +3551,18 @@ packages:
       cookie-signature: 1.0.6
     dev: false
 
+  /cookie-session/2.0.0:
+    resolution: {integrity: sha512-hKvgoThbw00zQOleSlUr2qpvuNweoqBtxrmx0UFosx6AGi9lYtLoA+RbsvknrEX8Pr6MDbdWAb2j6SnMn+lPsg==}
+    engines: {node: '>= 0.10'}
+    dependencies:
+      cookies: 0.8.0
+      debug: 3.2.7
+      on-headers: 1.0.2
+      safe-buffer: 5.2.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /cookie-signature/1.0.6:
     resolution: {integrity: sha1-4wOogrNCzD7oylE6eZmXNNqzriw=}
 
@@ -3558,12 +3570,12 @@ packages:
     resolution: {integrity: sha512-+Hp8fLp57wnUSt0tY0tHEXh4voZRDnoIrZPqlo3DPiI4y9lwg/jqx+1Om94/W6ZaPDOUbnjOt/99w66zk+l1Xg==}
     engines: {node: '>= 0.6'}
 
-  /cookies/0.7.3:
-    resolution: {integrity: sha512-+gixgxYSgQLTaTIilDHAdlNPZDENDQernEMiIcZpYYP14zgHsCt4Ce1FEjFtcp6GefhozebB6orvhAAWx/IS0A==}
+  /cookies/0.8.0:
+    resolution: {integrity: sha512-8aPsApQfebXnuI+537McwYsDtjVxGm8gTIzQI3FDW6t5t/DAhERxtnbEPN/8RX+uZthoz4eCOgloXaE5cYyNow==}
     engines: {node: '>= 0.8'}
     dependencies:
-      depd: 1.1.2
-      keygrip: 1.0.3
+      depd: 2.0.0
+      keygrip: 1.1.0
     dev: false
 
   /copy-descriptor/0.1.1:
@@ -3824,17 +3836,6 @@ packages:
       ms: 2.0.0
       supports-color: 5.5.0
     dev: true
-
-  /debug/3.1.0:
-    resolution: {integrity: sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-    dependencies:
-      ms: 2.0.0
-    dev: false
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -6611,11 +6612,6 @@ packages:
     dependencies:
       jwa: 1.4.1
       safe-buffer: 5.2.1
-    dev: false
-
-  /keygrip/1.0.3:
-    resolution: {integrity: sha512-/PpesirAIfaklxUzp4Yb7xBper9MwP6hNRA6BGGUFCgbJ+BM5CKBtsoxinNXkLHAr+GXS1/lSlF2rP7cv5Fl+g==}
-    engines: {node: '>= 0.6'}
     dev: false
 
   /keygrip/1.1.0:
@@ -10354,17 +10350,3 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
-
-  github.com/joeldenning/cookie-session/c96303a9d47ea3ebf6304b90e03f3c26a9153a62:
-    resolution: {tarball: https://codeload.github.com/joeldenning/cookie-session/tar.gz/c96303a9d47ea3ebf6304b90e03f3c26a9153a62}
-    name: cookie-session
-    version: 2.0.0-beta.3
-    engines: {node: '>= 0.10'}
-    dependencies:
-      cookies: 0.7.3
-      debug: 3.1.0
-      on-headers: 1.0.2
-      safe-buffer: 5.1.2
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
