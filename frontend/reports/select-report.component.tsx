@@ -11,7 +11,9 @@ export default function SelectReport(props: SelectReportProps) {
         <div className="select-report" {...scope}>
           <label id="select-report-label">Report: </label>
           <select
-            onChange={(evt) => navigate(`/reports/${evt.target.value}`)}
+            onChange={(evt) =>
+              navigate(`/reports/${evt.target.value}${window.location.search}`)
+            }
             value={
               window.location.pathname.slice("/reports/".length) ||
               "interaction-hours-by-client"

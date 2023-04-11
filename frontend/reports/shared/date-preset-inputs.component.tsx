@@ -15,6 +15,7 @@ export default function DatePresetInputs(props: DatePresetInputsProps) {
   const endParam = props.endDateQueryParamName || "end";
   const [startDate, setStartDate] = useQueryParamState(startParam, "");
   const [endDate, setEndDate] = useQueryParamState(endParam, "");
+  const [allDates, setAllDates] = useQueryParamState("allDates", "");
   const [dateRange, setDateRange] = useState(getInitialDateRange);
 
   useEffect(() => {
@@ -205,6 +206,12 @@ export default function DatePresetInputs(props: DatePresetInputsProps) {
     } else {
       setEndDate("");
     }
+
+    if (!start && !end) {
+      setAllDates("true");
+    } else {
+      setAllDates("false");
+    }
   }
 
   function getInitialDateRange() {
@@ -215,7 +222,11 @@ export default function DatePresetInputs(props: DatePresetInputsProps) {
     const defaultRange = "this-quarter";
 
     if (!start && !end) {
-      return defaultRange;
+      if (queryParams.allDates === "true") {
+        return "all-dates";
+      } else {
+        return defaultRange;
+      }
     } else {
       const range = [
         "today",
