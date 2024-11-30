@@ -43,7 +43,7 @@
     "@types/react": "^17.0.1",
     "abortcontroller-polyfill": "^1.7.1",
     "aws-sdk": "^2.839.0",
-    "axios": "^0.21.1",
+    "axios": "^1.6.0",
     "bandicoot": "^4.5.1",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
