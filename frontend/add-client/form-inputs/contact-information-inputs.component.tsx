@@ -175,6 +175,7 @@ export default React.forwardRef(function ContactInformationInputs(
           <input
             ref={zipRef}
             type="text"
+            minLength={5}
             value={zip}
             onChange={(evt) => setZip(evt.target.value)}
             autoComplete="new-password"

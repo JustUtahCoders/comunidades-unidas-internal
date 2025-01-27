@@ -15,7 +15,7 @@ const {
   validInteger,
 } = require("../utils/validation-utils");
 const { getEventById } = require("./get-event.api");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 
 app.patch("/api/events/:eventId", (req, res) => {
   const validationErrors = [

@@ -4,7 +4,7 @@ const {
   nullableValidDate,
   nullableValidId,
 } = require("../utils/validation-utils");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const path = require("path");
 const fs = require("fs");
 const _ = require("lodash");

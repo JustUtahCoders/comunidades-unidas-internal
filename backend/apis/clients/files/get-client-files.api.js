@@ -11,7 +11,7 @@ const {
   nullableValidTags,
 } = require("../../utils/validation-utils");
 const { responseFullName } = require("../../utils/transform-utils");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const { validTagsList, sanitizeTags } = require("../../tags/tag.utils");
 
 app.get("/api/clients/:clientId/files", (req, res) => {

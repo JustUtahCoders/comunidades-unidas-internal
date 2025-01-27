@@ -4,7 +4,7 @@ const {
   nullableValidTags,
   nullableValidDate,
 } = require("../utils/validation-utils");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const path = require("path");
 const fs = require("fs");
 const { responseFullName } = require("../utils/transform-utils");

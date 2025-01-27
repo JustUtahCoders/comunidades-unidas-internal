@@ -5,7 +5,7 @@ const {
   invalidRequest,
   insufficientPrivileges,
 } = require("../../server");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const { checkValid, nonEmptyString } = require("../utils/validation-utils");
 const { checkUserRole } = require("../utils/auth-utils");
 

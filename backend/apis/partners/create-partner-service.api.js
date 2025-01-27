@@ -1,4 +1,4 @@
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const { app, pool, invalidRequest, notFound } = require("../../server");
 const { checkUserRole } = require("../utils/auth-utils");
 const {

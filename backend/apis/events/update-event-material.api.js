@@ -5,7 +5,7 @@ const {
   databaseError,
   notFound,
 } = require("../../server");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const {
   checkValid,
   nonEmptyString,

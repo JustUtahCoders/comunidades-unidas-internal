@@ -3,7 +3,7 @@ const {
   checkValid,
   nullableValidInteger,
 } = require("../utils/validation-utils");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 
 // https://aspe.hhs.gov/prior-hhs-poverty-guidelines-and-federal-register-references
 const povertyLines = {
@@ -19,6 +19,18 @@ const povertyLines = {
     firstPerson: 12880,
     additionalPerson: 4540,
   },
+  2022: {
+    firstPerson: 13590,
+    additionalPerson: 4720,
+  },
+  2023: {
+    firstPerson: 14580,
+    additionalPerson: 5140,
+  },
+  2024: {
+    firstPerson: 15060,
+    additionalPerson: 5380,
+  },
 };
 
 app.get(`/api/reports/poverty-lines`, (req, res) => {
@@ -28,7 +40,7 @@ app.get(`/api/reports/poverty-lines`, (req, res) => {
     return invalidRequest(res, validationErrors);
   }
 
-  const year = req.query.year || "2020";
+  const year = req.query.year || "2024";
 
   if (!povertyLines[year]) {
     return invalidRequest(

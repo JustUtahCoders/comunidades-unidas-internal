@@ -15,7 +15,7 @@ const {
 } = require("../../utils/validation-utils");
 const { responseFullName } = require("../../utils/transform-utils");
 const { Bucket } = require("./file-helpers");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const { insertTagsQuery, sanitizeTags } = require("../../tags/tag.utils");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 
