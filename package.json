@@ -117,5 +117,6 @@
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^4.0.0-beta.0",
     "webpack-manifest-plugin": "^3.0.0"
-  }
+  },
+  "packageManager": "pnpm@9.15.4"
 }
