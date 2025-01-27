@@ -6,7 +6,7 @@ const {
   internalError,
   notFound,
 } = require("../../server");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const { checkValid, validId } = require("../utils/validation-utils");
 const { getFullPaymentById } = require("./get-payment.api");
 

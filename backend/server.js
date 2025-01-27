@@ -6,7 +6,7 @@ const path = require("path");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 8080;
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
@@ -31,14 +31,13 @@ exports.pool.getConnection = function (errback) {
   const startTime = new Date().getTime();
   return getConnection.call(exports.pool, (err, connection) => {
     const endTime = new Date().getTime();
+    console.log("pool", exports.pool);
     console.log(
       `Getting a db connection took ${
         endTime - startTime
       } milliseconds. Connection info: ${
         exports.pool._freeConnections.length
-      } ${exports.pool._allConnections.length} ${
-        exports.pool._acquiringConnections.length
-      }`
+      } ${exports.pool._allConnections.length}`
     );
     errback(err, connection);
   });

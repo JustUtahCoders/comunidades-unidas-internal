@@ -1,5 +1,5 @@
 const { pool } = require("../../../server");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const integrateJpls = require("./jpls-integration");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 

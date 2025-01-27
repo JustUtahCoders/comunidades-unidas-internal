@@ -2,7 +2,7 @@ const {
   responseFullName,
   responseDateWithoutTime,
 } = require("../../utils/transform-utils");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const {
   pool,
   invalidRequest,

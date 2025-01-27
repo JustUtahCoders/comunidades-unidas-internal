@@ -14,7 +14,7 @@ const {
   listLeadsQuery,
 } = require("../leads/list-leads.api");
 const { checkValid, nonEmptyString } = require("../utils/validation-utils");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const { filterResultForBulkText } = require("./check-bulk-sms.api");
 const queryString = require("query-string");
 

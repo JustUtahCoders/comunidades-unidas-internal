@@ -1,4 +1,4 @@
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const { requestEnum, requestPhone } = require("../utils/transform-utils");
 const { insertActivityLogQuery } = require("./client-logs/activity-log.utils");
 

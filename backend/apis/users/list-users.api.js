@@ -4,7 +4,7 @@ const {
   pool,
   insufficientPrivileges,
 } = require("../../server");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const fs = require("fs");
 const path = require("path");
 const { checkUserRole } = require("../utils/auth-utils");

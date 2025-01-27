@@ -7,7 +7,7 @@ const {
   notFound,
   insufficientPrivileges,
 } = require("../../server");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const { getFullPaymentById } = require("./get-payment.api");
 const {
   checkValid,

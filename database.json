@@ -1,6 +1,6 @@
 {
   "dev": {
-    "driver": "mysql",
+    "driver": "mysql2",
     "host": "localhost",
     "user": "root",
     "password": "password",
@@ -8,7 +8,7 @@
     "multipleStatements": true
   },
   "prod": {
-    "driver": "mysql",
+    "driver": "mysql2",
     "host": {
       "ENV": "MYSQL_HOSTNAME"
     },

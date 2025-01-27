@@ -7,7 +7,7 @@ const {
   internalError,
   insufficientPrivileges,
 } = require("../../server");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const { getFullInvoiceById } = require("./get-invoice.api");
 const {
   checkValid,

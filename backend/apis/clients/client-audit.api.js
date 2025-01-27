@@ -1,6 +1,6 @@
 const { app, databaseError, pool } = require("../../server");
 const { responseFullName } = require("../utils/transform-utils");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const { checkValid, validId } = require("../utils/validation-utils");
 
 app.get(`/api/clients/:id/audits`, (req, res) => {

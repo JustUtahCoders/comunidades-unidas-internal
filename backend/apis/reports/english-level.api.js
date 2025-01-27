@@ -1,6 +1,6 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
 const { checkValid, nullableValidDate } = require("../utils/validation-utils");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 
 app.get(`/api/reports/english-levels`, (req, res) => {
   const validationErrors = checkValid(

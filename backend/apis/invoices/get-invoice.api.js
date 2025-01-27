@@ -5,7 +5,7 @@ const {
   invalidRequest,
   notFound,
 } = require("../../server");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const { formatResponseInvoice } = require("./invoice-utils");
 const {
   checkValid,

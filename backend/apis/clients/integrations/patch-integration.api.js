@@ -20,7 +20,7 @@ const {
   performIntegration,
   logIntegrationResult,
 } = require("./integrations-utils");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 
 app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {

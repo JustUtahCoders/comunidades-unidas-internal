@@ -1,5 +1,5 @@
 const { responseUser } = require("../utils/transform-utils");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const { pool } = require("../../server");
 const { intersection, uniqBy } = require("lodash");
 

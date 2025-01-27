@@ -8,7 +8,7 @@ const {
   pool,
 } = require("../../../server");
 const AWS = require("aws-sdk");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const {
   checkValid,
   validId,

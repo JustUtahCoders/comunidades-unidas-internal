@@ -1,6 +1,6 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
 const { checkValid, nullableValidDate } = require("../utils/validation-utils");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const _ = require("lodash");
 const { toDuration } = require("./report-helpers");
 

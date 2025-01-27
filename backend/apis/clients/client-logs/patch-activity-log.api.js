@@ -5,7 +5,7 @@ const {
   nullableValidTags,
   nullableNonEmptyString,
 } = require("../../utils/validation-utils");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const {
   modifiableLogTypes,
   insertActivityLogQuery,

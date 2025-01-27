@@ -1,5 +1,5 @@
 const { pool, app, invalidRequest, databaseError } = require("../../server");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const { checkValid, nonEmptyString } = require("../utils/validation-utils");
 const fs = require("fs");
 const path = require("path");

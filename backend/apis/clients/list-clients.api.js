@@ -1,5 +1,5 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const {
   checkValid,
   nullableValidInteger,

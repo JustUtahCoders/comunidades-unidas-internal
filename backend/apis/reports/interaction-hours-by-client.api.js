@@ -6,7 +6,7 @@ const {
   nullableValidDate,
 } = require("../utils/validation-utils");
 const { responseFullName } = require("../utils/transform-utils");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const { toDuration } = require("./report-helpers");
 
 const pageSize = 100;

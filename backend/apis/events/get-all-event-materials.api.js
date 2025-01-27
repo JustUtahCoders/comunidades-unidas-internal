@@ -1,5 +1,5 @@
 const { pool, app, databaseError } = require("../../server");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const path = require("path");
 const fs = require("fs");
 
