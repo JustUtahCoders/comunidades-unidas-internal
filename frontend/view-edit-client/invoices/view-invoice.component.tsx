@@ -75,7 +75,7 @@ export default function ViewInvoice(props: ViewInvoiceProps) {
         ac.abort();
       };
     }
-  }, [props.client]);
+  }, [props.client, invoice.clients]);
 
   if (invoice.redacted) {
     return (
