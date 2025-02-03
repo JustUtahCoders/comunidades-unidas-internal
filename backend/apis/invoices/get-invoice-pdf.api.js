@@ -237,7 +237,7 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
           );
 
           const amount = `$${
-            invoice.totalCharged ? invoice.totalCharged.toFixed(2) : "0.00"
+            invoice.totalCharged ? invoice.totalCharged : "0.00"
           }`;
           doc.text(
             amount,
@@ -303,11 +303,7 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
                 width: descriptionWidth,
               });
               doc.text(` ${lineItem.quantity.toLocaleString()}`, col3Left, top);
-              doc.text(
-                "$" + lineItem.rate.toFixed(2).toLocaleString(),
-                col4Left,
-                top
-              );
+              doc.text("$" + lineItem.rate.toLocaleString(), col4Left, top);
               doc.text(
                 ` $${(lineItem.quantity * lineItem.rate)
                   .toFixed(2)
@@ -363,7 +359,7 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
           );
           const discount = subtotal - invoice.totalCharged;
           const totalPaid = sumBy(invoice.payments, "amountTowardsInvoice");
-          const balance = invoice.totalCharged - totalPaid;
+          const balance = Number(invoice.totalCharged) - totalPaid;
 
           doc.text(
             ` $${subtotal.toFixed(2).toLocaleString()}`,
@@ -376,12 +372,12 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
             otherTop + lineHeight
           );
           doc.text(
-            ` $${(invoice.totalCharged || 0).toFixed(2).toLocaleString()}`,
+            ` $${(invoice.totalCharged || "0.00").toLocaleString()}`,
             col5Left,
             otherTop + lineHeight * 2
           );
           doc.text(
-            ` $${totalPaid.toFixed(2).toLocaleString()}`,
+            ` $${totalPaid.toLocaleString()}`,
             col5Left,
             otherTop + lineHeight * 3
           );

@@ -173,7 +173,7 @@ app.get("/api/payments/:paymentId/receipts", (req, res) => {
           }
         );
 
-        const paymentAmount = `$${payment.paymentAmount.toFixed(2)}`;
+        const paymentAmount = `$${payment.paymentAmount}`;
         doc.text(
           paymentAmount,
           pageWidth - pageMargin - doc.widthOfString(paymentAmount),
@@ -267,9 +267,9 @@ app.get("/api/payments/:paymentId/receipts", (req, res) => {
           payment.invoices.forEach((invoice, i) => {
             const top = invoiceTop + lineHeight * i;
             doc.text(`  ${invoice.invoiceNumber}`, col1Left, top);
-            doc.text(` $${invoice.totalCharged.toFixed(2)}`, col2Left, top);
+            doc.text(` $${invoice.totalCharged}`, col2Left, top);
             doc.text(` ${capitalize(invoice.status)}`, col3Left, top);
-            doc.text(` $${invoice.amount.toFixed(2)}`, col4Left, top);
+            doc.text(` $${invoice.amount}`, col4Left, top);
           });
           tableFooterLineTop =
             invoiceTop + lineHeight * payment.invoices.length - 6;
@@ -301,14 +301,14 @@ app.get("/api/payments/:paymentId/receipts", (req, res) => {
         const invoiceTotal = sumBy(payment.invoices, "amount");
 
         const donation = payment.donationAmount || 0;
-        doc.text(` $${donation.toFixed(2)}`, col4Left, otherTop);
+        doc.text(` $${donation}`, col4Left, otherTop);
         doc.text(
           ` $${(payment.paymentAmount - invoiceTotal - donation).toFixed(2)}`,
           col4Left,
           otherTop + lineHeight
         );
         doc.text(
-          ` $${payment.paymentAmount.toFixed(2)}`,
+          ` $${payment.paymentAmount}`,
           col4Left,
           otherTop + lineHeight * 2
         );

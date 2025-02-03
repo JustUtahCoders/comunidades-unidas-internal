@@ -31,7 +31,6 @@ exports.pool.getConnection = function (errback) {
   const startTime = new Date().getTime();
   return getConnection.call(exports.pool, (err, connection) => {
     const endTime = new Date().getTime();
-    console.log("pool", exports.pool);
     console.log(
       `Getting a db connection took ${
         endTime - startTime

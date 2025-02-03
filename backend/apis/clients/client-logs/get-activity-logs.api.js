@@ -49,7 +49,7 @@ app.get("/api/clients/:clientId/logs", (req, res, next) => {
     }
 
     logs.forEach((log) => {
-      log.tags = JSON.parse(log.tags)
+      log.tags = log.tags
         .filter((t) => t.foreignTable === "clientLogs")
         .map((t) => t.tag);
     });

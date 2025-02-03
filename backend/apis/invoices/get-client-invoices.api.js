@@ -53,12 +53,10 @@ app.get("/api/clients/:clientId/invoices", async (req, res) => {
             firstName: invoice.modifiedUserFirstName,
             lastName: invoice.modifiedUserLastName,
           },
-          invoiceLineItems: JSON.parse(invoice.lineItems),
-          invoicePayments: JSON.parse(invoice.payments),
-          invoiceClients: JSON.parse(invoice.clients),
-          invoiceTags: JSON.parse(invoice.tags)
-            .map((t) => t.tag)
-            .filter(Boolean),
+          invoiceLineItems: invoice.lineItems,
+          invoicePayments: invoice.payments,
+          invoiceClients: invoice.clients,
+          invoiceTags: invoice.tags.map((t) => t.tag).filter(Boolean),
           redactedTags,
         })
       ),

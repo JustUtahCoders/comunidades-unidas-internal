@@ -14,11 +14,7 @@ const {
 const { atLeastOne } = require("../../utils/patch-utils");
 const { getInteraction } = require("./client-interaction.utils");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
-const {
-  sanitizeTags,
-  insertTags,
-  insertTagsQuery,
-} = require("../../tags/tag.utils");
+const { sanitizeTags, insertTagsQuery } = require("../../tags/tag.utils");
 const _ = require("lodash");
 
 app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {

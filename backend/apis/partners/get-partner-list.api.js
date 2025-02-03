@@ -37,7 +37,7 @@ app.get("/api/partners", (req, res) => {
           name: r.name,
           isActive: Boolean(r.isActive),
           phone: r.phone,
-          services: JSON.parse(r.services)
+          services: r.services
             .filter((s) => s.id !== null)
             .map((s) => {
               return {

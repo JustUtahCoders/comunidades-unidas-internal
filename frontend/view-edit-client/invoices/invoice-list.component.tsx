@@ -53,7 +53,7 @@ function amount(invoice: FullInvoice) {
   } else if (invoice.redacted) {
     return <>(Redacted)</>;
   } else {
-    return <>${invoice.totalCharged.toFixed(2)}</>;
+    return <>${invoice.totalCharged}</>;
   }
 }
 

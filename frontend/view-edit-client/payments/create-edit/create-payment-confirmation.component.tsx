@@ -51,7 +51,7 @@ export default function CreatePaymentConfirmation(
           <>
             <tr>
               <th>Amount</th>
-              <td>${props.payment.paymentAmount.toFixed(2)}</td>
+              <td>${props.payment.paymentAmount}</td>
             </tr>
           </>
         }

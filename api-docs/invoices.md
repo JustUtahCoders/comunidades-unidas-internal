@@ -25,7 +25,7 @@ GET /api/invoices/:invoiceId?tags=immigration
     }
   ],
   "clientNote": "Client note",
-  "totalCharged": 30,
+  "totalCharged": "30.00",
   "totalPaid": 12.55,
   "billTo": "Other Name to Bill To",
   "status": "draft|open|completed|closed",
@@ -83,7 +83,7 @@ GET /api/clients/:clientId/invoices?tags=immigration
       }
     ],
     "clientNote": "Client note",
-    "totalCharged": 30,
+    "totalCharged": "30.00",
     "totalPaid": 12.55,
     "billTo": "Other Name to Bill To",
     "status": "draft|open|completed|closed",
@@ -142,7 +142,7 @@ GET /api/detached-invoices
       }
     ],
     "clientNote": "Client note",
-    "totalCharged": 30,
+    "totalCharged": "30.00",
     "totalPaid": 12.55,
     "billTo": "Other Name to Bill To",
     "status": "draft|open|completed|closed",
@@ -192,7 +192,7 @@ POST /api/invoices?tags=immigration
   "invoiceDate": "2020-10-01",
   "lineItems": [],
   "clientNote": "",
-  "totalCharged": 0,
+  "totalCharged": "0.00",
   "totalPaid": 0,
   "billTo": null,
   "status": "draft",
@@ -240,7 +240,7 @@ PATCH /api/invoices/:invoiceId?tags=immigration
     }
   ],
   "clientNote": "",
-  "totalCharged": 0,
+  "totalCharged": "0.00",
   "billTo": "Other Bill To Name",
   "status": "draft",
   "payments": [
