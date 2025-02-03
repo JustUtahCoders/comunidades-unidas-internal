@@ -41,7 +41,7 @@ app.get("/api/detached-payments", async (req, res) => {
       payments: result.map((payment) =>
         formatResponsePayment({
           payment,
-          invoices: JSON.parse(payment.invoices),
+          invoices: payment.invoices,
           createdBy: {
             id: payment.addedUserId,
             firstName: payment.addedFirstName,
@@ -52,7 +52,7 @@ app.get("/api/detached-payments", async (req, res) => {
             firstName: payment.modifiedFirstName,
             lastName: payment.modifiedLastName,
           },
-          paymentTags: JSON.parse(payment.paymentTags)
+          paymentTags: payment.paymentTags
             .filter((t) => t.foreignTable === "payments")
             .map((t) => t.tag)
             .filter(Boolean),
