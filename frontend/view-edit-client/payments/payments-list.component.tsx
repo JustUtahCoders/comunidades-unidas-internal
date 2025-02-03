@@ -41,7 +41,7 @@ function PaymentsList(props: ClientPaymentsListProps) {
     if (payment.redacted) {
       return "(Redacted)";
     } else {
-      return `$${payment.paymentAmount.toFixed(2)}`;
+      return `$${payment.paymentAmount}`;
     }
   }
 }

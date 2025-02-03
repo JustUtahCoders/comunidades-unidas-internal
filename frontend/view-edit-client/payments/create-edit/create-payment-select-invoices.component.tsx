@@ -4,7 +4,7 @@ import { CreatePaymentStepProps } from "../create-payment.component";
 import { useCss, always } from "kremling";
 import { InvoiceSummary } from "../edit-payment.component";
 import { InvoiceStatus } from "../../invoices/client-invoices.component";
-import { sumBy, intersectionBy, isEmpty } from "lodash-es";
+import { sumBy, intersectionBy } from "lodash-es";
 import { FullInvoice } from "../../invoices/edit-invoice.component";
 
 export default function CreatePaymentSelectInvoices(
@@ -90,7 +90,7 @@ export default function CreatePaymentSelectInvoices(
                           />
                         </td>
                         <td>{invoice.invoiceNumber}</td>
-                        <td>${invoice.totalCharged.toFixed(2)}</td>
+                        <td>${invoice.totalCharged}</td>
                         <td>
                           $
                           {(
