@@ -67,7 +67,7 @@ app.get("/api/leads", (req, res, next) => {
         zip: lead.zip,
         age: lead.age,
         gender: lead.gender,
-        leadServices: lead.services ? JSON.parse(lead.services) : [],
+        leadServices: lead.services ?? [],
         clientId: lead.clientId,
         isDeleted: responseBoolean(lead.isDeleted),
         createdBy: {
