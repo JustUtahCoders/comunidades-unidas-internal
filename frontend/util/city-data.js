@@ -2676,7 +2676,7 @@ export const citiesForStates = groupBy(
     { city: "Kirkwood", state: "Missouri" },
     { city: "Kirtland", state: "New Mexico" },
     { city: "Kirtland", state: "Ohio" },
-    { city: "Kiryas Jolyn", state: "New York" },
+    { city: "Kiryas Joel", state: "New York" },
     { city: "Kissimmee", state: "Florida" },
     { city: "Kittery", state: "Maine" },
     { city: "Klamath Falls", state: "Oregon" },
