@@ -33,7 +33,6 @@ app.get("/api/users", (req, res) => {
 
     res.send({
       users: users.map((u) => {
-        const perms = JSON.parse(u.permissions);
         return {
           id: u.id,
           firstName: u.firstName,
@@ -42,7 +41,7 @@ app.get("/api/users", (req, res) => {
           email: u.email,
           accessLevel: u.accessLevel,
           permissions: allPermissionNames.reduce((result, permName) => {
-            result[permName] = perms.includes(permName);
+            result[permName] = u.permissions.includes(permName);
             return result;
           }, {}),
         };

@@ -37,16 +37,16 @@ GET /api/clients/:id/interactions/:id?tags=immigration
   ],
   "createdBy": {
     "userId": 1,
-    "firstName": "Joel",
+    "firstName": "Jolyn",
     "lastName": "Denning",
-    "fullName": "Joel Denning",
+    "fullName": "Jolyn Denning",
     "timestamp": "2019-05-06T06:00:00.000Z"
   },
   "lastUpdatedBy": {
     "userId": 1,
-    "firstName": "Joel",
+    "firstName": "Jolyn",
     "lastName": "Denning",
-    "fullName": "Joel Denning",
+    "fullName": "Jolyn Denning",
     "timestamp": "2019-05-06T06:00:00.000Z"
   }
 }
@@ -109,16 +109,16 @@ POST /api/clients/:id/interactions?tags=immigration
   ],
   "createdBy": {
     "userId": 1,
-    "firstName": "Joel",
+    "firstName": "Jolyn",
     "lastName": "Denning",
-    "fullName": "Joel Denning",
+    "fullName": "Jolyn Denning",
     "timestamp": "2019-05-06T06:00:00.000Z"
   },
   "lastUpdatedBy": {
     "userId": 1,
-    "firstName": "Joel",
+    "firstName": "Jolyn",
     "lastName": "Denning",
-    "fullName": "Joel Denning",
+    "fullName": "Jolyn Denning",
     "timestamp": "2019-05-06T06:00:00.000Z"
   }
 }

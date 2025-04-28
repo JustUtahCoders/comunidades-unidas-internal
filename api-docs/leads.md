@@ -31,9 +31,9 @@ GET /api/leads/:id
       "eventDate": "2019-10-10"
     }
   ],
-  "firstName": "Joel",
+  "firstName": "Jolyn",
   "lastName": "Denning",
-  "fullName": "Joel Denning",
+  "fullName": "Jolyn Denning",
   "phone": "5555555555",
   "smsConsent": true,
   "zip": "84115",
@@ -51,16 +51,16 @@ GET /api/leads/:id
   "isDeleted": false,
   "createdBy": {
     "userId": 1,
-    "firstName": "Joel",
+    "firstName": "Jolyn",
     "lastName": "Denning",
-    "fullName": "Joel Denning",
+    "fullName": "Jolyn Denning",
     "timestamp": "2019-05-06T06:00:00.000Z"
   },
   "lastUpdatedBy": {
     "userId": 1,
-    "firstName": "Joel",
+    "firstName": "Jolyn",
     "lastName": "Denning",
-    "fullName": "Joel Denning",
+    "fullName": "Jolyn Denning",
     "timestamp": "2019-05-06T06:00:00.000Z"
   }
 }
@@ -116,9 +116,9 @@ GET /api/leads?name=John&page=1&programInterest=1&serviceInterest=1
         "third": null
       },
       "eventSources": [1],
-      "firstName": "Joel",
+      "firstName": "Jolyn",
       "lastName": "Denning",
-      "fullName": "Joel Denning",
+      "fullName": "Jolyn Denning",
       "phone": "5555555555",
       "smsConsent": true,
       "zip": "84115",
@@ -226,9 +226,9 @@ PATCH /api/leads/:id
     "third": null
   },
   "eventSources": [1],
-  "firstName": "Joel",
+  "firstName": "Jolyn",
   "lastName": "Denning",
-  "fullName": "Joel Denning",
+  "fullName": "Jolyn Denning",
   "phone": "5555555555",
   "smsConsent": true,
   "zip": "84115",

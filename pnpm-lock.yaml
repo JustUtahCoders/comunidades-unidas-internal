@@ -48,8 +48,8 @@ importers:
         specifier: ^1.4.5
         version: 1.4.5
       cookie-session:
-        specifier: github:joeldenning/cookie-session#secure-fix
-        version: https://codeload.github.com/joeldenning/cookie-session/tar.gz/c96303a9d47ea3ebf6304b90e03f3c26a9153a62
+        specifier: github:jolyndenning/cookie-session#secure-fix
+        version: https://codeload.github.com/jolyndenning/cookie-session/tar.gz/c96303a9d47ea3ebf6304b90e03f3c26a9153a62
       dateformat:
         specifier: ^3.0.3
         version: 3.0.3
@@ -1789,8 +1789,8 @@ packages:
     resolution: {integrity: sha512-f13bPUj/gG/5mDr+xLmSxxDsB9DQiTIfhJS/sqjrmfAWiAN+x2O4i/XguTL9yDZ+/IFDanJ+5x7hC4CXT9Tdzw==}
     engines: {node: '>= 0.8.0'}
 
-  cookie-session@https://codeload.github.com/joeldenning/cookie-session/tar.gz/c96303a9d47ea3ebf6304b90e03f3c26a9153a62:
-    resolution: {tarball: https://codeload.github.com/joeldenning/cookie-session/tar.gz/c96303a9d47ea3ebf6304b90e03f3c26a9153a62}
+  cookie-session@https://codeload.github.com/jolyndenning/cookie-session/tar.gz/c96303a9d47ea3ebf6304b90e03f3c26a9153a62:
+    resolution: {tarball: https://codeload.github.com/jolyndenning/cookie-session/tar.gz/c96303a9d47ea3ebf6304b90e03f3c26a9153a62}
     version: 2.0.0-beta.3
     engines: {node: '>= 0.10'}
 
@@ -7690,7 +7690,7 @@ snapshots:
       cookie: 0.4.0
       cookie-signature: 1.0.6
 
-  cookie-session@https://codeload.github.com/joeldenning/cookie-session/tar.gz/c96303a9d47ea3ebf6304b90e03f3c26a9153a62:
+  cookie-session@https://codeload.github.com/jolyndenning/cookie-session/tar.gz/c96303a9d47ea3ebf6304b90e03f3c26a9153a62:
     dependencies:
       cookies: 0.7.3
       debug: 3.1.0

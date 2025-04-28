@@ -53,7 +53,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: static-assets
-      - uses: joeldenning/upload-s3-action@master
+      - uses: jolyndenning/upload-s3-action@master
         with:
           aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
@@ -72,7 +72,7 @@ jobs:
           path: static
       - run: rm docker-compose.yml
       - run: find .
-      - uses: joeldenning/actions-aws-eb@master
+      - uses: jolyndenning/actions-aws-eb@master
         with:
           command: "deploy dockerized"
         env:
