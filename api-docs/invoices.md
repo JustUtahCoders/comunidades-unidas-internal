@@ -47,9 +47,9 @@ GET /api/invoices/:invoiceId?tags=immigration
   },
   "lastUpdatedBy": {
     "userId": 1,
-    "firstName": "Joel",
+    "firstName": "Jolyn",
     "lastName": "Denning",
-    "fullName": "Joel Denning",
+    "fullName": "Jolyn Denning",
     "timestamp": "2019-05-06T06:00:00.000Z"
   }
 }
@@ -105,9 +105,9 @@ GET /api/clients/:clientId/invoices?tags=immigration
     },
     "lastUpdatedBy": {
       "userId": 1,
-      "firstName": "Joel",
+      "firstName": "Jolyn",
       "lastName": "Denning",
-      "fullName": "Joel Denning",
+      "fullName": "Jolyn Denning",
       "timestamp": "2019-05-06T06:00:00.000Z"
     }
   }
@@ -164,9 +164,9 @@ GET /api/detached-invoices
     },
     "lastUpdatedBy": {
       "userId": 1,
-      "firstName": "Joel",
+      "firstName": "Jolyn",
       "lastName": "Denning",
-      "fullName": "Joel Denning",
+      "fullName": "Jolyn Denning",
       "timestamp": "2019-05-06T06:00:00.000Z"
     }
   }
@@ -310,9 +310,9 @@ GET /api/clients/:clientId/payments?tags=immigration
     },
     "lastUpdatedBy": {
       "userId": 1,
-      "firstName": "Joel",
+      "firstName": "Jolyn",
       "lastName": "Denning",
-      "fullName": "Joel Denning",
+      "fullName": "Jolyn Denning",
       "timestamp": "2019-05-06T06:00:00.000Z"
     }
   }
@@ -356,9 +356,9 @@ GET /api/invoices/:invoiceId/payments?tags=immigration
     },
     "lastUpdatedBy": {
       "userId": 1,
-      "firstName": "Joel",
+      "firstName": "Jolyn",
       "lastName": "Denning",
-      "fullName": "Joel Denning",
+      "fullName": "Jolyn Denning",
       "timestamp": "2019-05-06T06:00:00.000Z"
     }
   }
@@ -486,9 +486,9 @@ GET /api/detached-payments?tags=immigration
     },
     "lastUpdatedBy": {
       "userId": 1,
-      "firstName": "Joel",
+      "firstName": "Jolyn",
       "lastName": "Denning",
-      "fullName": "Joel Denning",
+      "fullName": "Jolyn Denning",
       "timestamp": "2019-05-06T06:00:00.000Z"
     }
   }

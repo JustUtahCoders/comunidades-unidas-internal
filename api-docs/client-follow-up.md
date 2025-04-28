@@ -38,16 +38,16 @@ POST /api/clients/:clientId/follow-ups
   "appointmentDate": "2020-08-12",
   "createdBy": {
     "userId": 1,
-    "firstName": "Joel",
+    "firstName": "Jolyn",
     "lastName": "Denning",
-    "fullName": "Joel Denning",
+    "fullName": "Jolyn Denning",
     "timestamp": "2020-07-28T06:00:00:000Z"
   },
   "lastUpdatedBy": {
     "userId": 1,
-    "firstName": "Joel",
+    "firstName": "Jolyn",
     "lastName": "Denning",
-    "fullName": "Joel Denning",
+    "fullName": "Jolyn Denning",
     "timestamp": "2020-07-28T06:00:00:000Z"
   }
 }
@@ -85,16 +85,16 @@ PATCH /api/clients/:clientId/follow-ups/:followUpId
   "appointmentDate": "2020-08-15",
   "createdBy": {
     "userId": 1,
-    "firstName": "Joel",
+    "firstName": "Jolyn",
     "lastName": "Denning",
-    "fullName": "Joel Denning",
+    "fullName": "Jolyn Denning",
     "timestamp": "2020-07-28T06:00:00:000Z"
   },
   "lastUpdateBy": {
     "userId": 1,
-    "firstName": "Joel",
+    "firstName": "Jolyn",
     "lastName": "Denning",
-    "fullName": "Joel Denning",
+    "fullName": "Jolyn Denning",
     "timestamp": "2020-08-01T06:00:00:000Z"
   }
 }

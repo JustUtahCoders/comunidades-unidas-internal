@@ -37,7 +37,7 @@ Now create a file inside of the comunidades-unidas-internal directory called `.e
 KEYGRIP_SECRET=123
 
 # Only needed if you're testing specific features
-# Ask Joel or Leonel for the values to use if you need them
+# Ask Jolyn for the values to use if you need them
 
 # USE_GOOGLE_AUTH=true
 # GOOGLE_CLIENT_ID=<insert_id_here>

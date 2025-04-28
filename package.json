@@ -2,7 +2,7 @@
   "name": "comunidades-unidas-internal",
   "description": "the code for comunidades unidas internal website",
   "repository": "git@github.com:JustUtahCoders/comunidades-unidas-internal.git",
-  "author": "Joel Denning",
+  "author": "Jolyn Denning",
   "license": "MIT",
   "scripts": {
     "fix-everything": "docker-compose down && docker-compose pull && pnpm install",
@@ -49,7 +49,7 @@
     "body-parser": "^1.19.0",
     "btoa": "^1.2.1",
     "cookie-parser": "^1.4.5",
-    "cookie-session": "github:joeldenning/cookie-session#secure-fix",
+    "cookie-session": "github:jolyndenning/cookie-session#secure-fix",
     "dateformat": "^3.0.3",
     "dayjs": "^1.10.4",
     "db-migrate-mysql2": "^1.0.0",
