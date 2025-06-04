@@ -1,5 +1,5 @@
 const { responseUser } = require("../utils/transform-utils");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const { pool } = require("../../server");
 const { intersection, uniqBy } = require("lodash");
 

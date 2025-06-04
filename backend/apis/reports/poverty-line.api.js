@@ -3,7 +3,7 @@ const {
   checkValid,
   nullableValidInteger,
 } = require("../utils/validation-utils");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 
 // https://aspe.hhs.gov/prior-hhs-poverty-guidelines-and-federal-register-references
 const povertyLines = {

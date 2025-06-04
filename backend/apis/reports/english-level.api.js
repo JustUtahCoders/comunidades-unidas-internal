@@ -1,6 +1,6 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
 const { checkValid, nullableValidDate } = require("../utils/validation-utils");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 
 app.get(`/api/reports/english-levels`, (req, res) => {
   const validationErrors = checkValid(

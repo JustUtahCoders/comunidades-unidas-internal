@@ -4,13 +4,13 @@ const path = require("path");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 8080;
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
+const ConnectionCallback = require("mariadb/lib/connection-callback.js");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 
-exports.app = app;
-exports.pool = mariadb.createPool({
+const connectionOpts = {
   connectionLimit: 40,
   host: process.env.MARIADB_HOSTNAME || "localhost",
   user: process.env.MARIADB_USERNAME || "root",
@@ -20,7 +20,15 @@ exports.pool = mariadb.createPool({
   multipleStatements: true,
   timezone: "+00:00",
   trace: true,
-});
+  bigIntAsNumber: true,
+};
+
+exports.app = app;
+exports.pool = mariadb.createPool(connectionOpts);
+
+mariadb.format = (sql, values) => {
+  return ConnectionCallback._PARAM(connectionOpts, sql, values);
+};
 
 const getConnection = exports.pool.getConnection;
 
@@ -29,11 +37,7 @@ exports.pool.getConnection = function (errback) {
   return getConnection.call(exports.pool, (err, connection) => {
     const endTime = new Date().getTime();
     console.log(
-      `Getting a db connection took ${
-        endTime - startTime
-      } milliseconds. Connection info: ${
-        exports.pool._freeConnections.length
-      } ${exports.pool._allConnections.length}`
+      `Getting a db connection took ${endTime - startTime} milliseconds.`
     );
     errback(err, connection);
   });

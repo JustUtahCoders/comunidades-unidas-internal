@@ -6,7 +6,7 @@ const {
   internalError,
   notFound,
 } = require("../../server");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const { checkValid, validId } = require("../utils/validation-utils");
 const { getFullPaymentById } = require("./get-payment.api");
 

@@ -11,7 +11,7 @@ const {
   nullableValidTags,
 } = require("../../utils/validation-utils");
 const { responseFullName } = require("../../utils/transform-utils");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const { validTagsList, sanitizeTags } = require("../../tags/tag.utils");
 
 app.get("/api/clients/:clientId/files/:fileId", (req, res) => {

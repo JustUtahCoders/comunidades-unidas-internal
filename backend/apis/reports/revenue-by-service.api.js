@@ -1,6 +1,6 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
 const { checkValid, nullableValidDate } = require("../utils/validation-utils");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const _ = require("lodash");
 const { toDuration } = require("./report-helpers");
 const fs = require("fs");

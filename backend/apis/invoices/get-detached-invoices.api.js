@@ -1,5 +1,5 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const { formatResponseInvoice } = require("./invoice-utils");
 const { checkValid, nullableValidTags } = require("../utils/validation-utils");
 const { sanitizeTags, validTagsList } = require("../tags/tag.utils");

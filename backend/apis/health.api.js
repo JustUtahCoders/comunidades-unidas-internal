@@ -5,17 +5,17 @@ app.get("/api/health", (req, res) => {
   res.send("Everything is okay.");
 });
 
-app.get("/api/db-health", async (req, res) => {
-  const connection = await pool.getConnection();
-  let dbConnectionSuccess;
-  try {
-    const result = await connection.query("SELECT 1;");
-  } catch (err) {
-    console.error(err);
-    dbConnectionSuccess = false;
-  }
-
-  res.send({
-    dbConnectionSuccess,
+app.get("/api/db-health", (req, res) => {
+  pool.query("SELECT 1", (err, result) => {
+    let dbConnectionSuccess;
+    if (err) {
+      console.error(err);
+      dbConnectionSuccess = false;
+    } else {
+      dbConnectionSuccess = true;
+    }
+    res.send({
+      dbConnectionSuccess,
+    });
   });
 });

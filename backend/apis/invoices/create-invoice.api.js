@@ -5,7 +5,7 @@ const {
   invalidRequest,
   internalError,
 } = require("../../server");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const { checkValid, nullableValidTags } = require("../utils/validation-utils");
 const { getFullInvoiceById } = require("./get-invoice.api");
 const {

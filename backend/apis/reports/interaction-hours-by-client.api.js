@@ -6,7 +6,7 @@ const {
   nullableValidDate,
 } = require("../utils/validation-utils");
 const { responseFullName } = require("../utils/transform-utils");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const { toDuration } = require("./report-helpers");
 
 const pageSize = 100;

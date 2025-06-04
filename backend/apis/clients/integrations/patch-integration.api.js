@@ -20,7 +20,7 @@ const {
   performIntegration,
   logIntegrationResult,
 } = require("./integrations-utils");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 
 app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {

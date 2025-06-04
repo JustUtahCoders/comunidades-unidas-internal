@@ -7,7 +7,7 @@ const {
 } = require("../../../server");
 const path = require("path");
 const fs = require("fs");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const { checkValid, validId } = require("../../utils/validation-utils");
 const getFollowUpSql = fs.readFileSync(
   path.resolve(__dirname, "./get-follow-up.sql"),

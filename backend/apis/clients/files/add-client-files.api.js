@@ -15,7 +15,7 @@ const {
 } = require("../../utils/validation-utils");
 const { responseFullName } = require("../../utils/transform-utils");
 const { Bucket } = require("./file-helpers");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const { insertTagsQuery, sanitizeTags } = require("../../tags/tag.utils");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 

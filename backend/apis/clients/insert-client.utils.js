@@ -1,4 +1,4 @@
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const { requestEnum, requestPhone } = require("../utils/transform-utils");
 const { insertActivityLogQuery } = require("./client-logs/activity-log.utils");
 

@@ -5,7 +5,7 @@ const {
   insufficientPrivileges,
   invalidRequest,
 } = require("../../server");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const fs = require("fs");
 const path = require("path");
 const { checkUserRole } = require("../utils/auth-utils");
