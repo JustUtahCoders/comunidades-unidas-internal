@@ -1,5 +1,5 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const {
   checkValid,
   nullableValidInteger,
@@ -16,7 +16,7 @@ const {
   responseDateWithoutTime,
 } = require("../utils/transform-utils");
 
-app.get("/api/clients", (req, res, next) => {
+app.get("/api/clients", async (req, res, next) => {
   const validationErrors = validateClientListQuery(req.query);
 
   if (validationErrors.length > 0) {

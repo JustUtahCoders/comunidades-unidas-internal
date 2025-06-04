@@ -1,5 +1,5 @@
 const { pool } = require("../../../server");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const integrateJpls = require("./jpls-integration");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 

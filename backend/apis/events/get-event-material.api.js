@@ -5,7 +5,7 @@ const {
   notFound,
   databaseError,
 } = require("../../server");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const fs = require("fs");
 const path = require("path");
 const getSql = fs.readFileSync(

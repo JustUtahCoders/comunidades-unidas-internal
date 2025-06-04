@@ -3,12 +3,11 @@ version: "3.1"
 
 services:
   db:
-    image: mysql:8.0.35
-    command: --sql-mode=NO_ENGINE_SUBSTITUTION
+    image: mariadb
     ports:
-      - ${RDS_PORT:-3306}:3306
+      - 3306:3306
     environment:
-      MYSQL_USER: webapp
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_PASSWORD: password
-      MYSQL_DATABASE: local_db
+      MARIADB_USER: webapp
+      MARIADB_ROOT_PASSWORD: password
+      MARIADB_PASSWORD: password
+      MARIADB_DATABASE: local_db

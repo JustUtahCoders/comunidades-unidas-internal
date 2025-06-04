@@ -7,7 +7,7 @@ const {
   notFound,
   insufficientPrivileges,
 } = require("../../server");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const { getFullPaymentById } = require("./get-payment.api");
 const {
   checkValid,

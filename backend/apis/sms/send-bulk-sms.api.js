@@ -14,7 +14,7 @@ const {
   listLeadsQuery,
 } = require("../leads/list-leads.api");
 const { checkValid, nonEmptyString } = require("../utils/validation-utils");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const { filterResultForBulkText } = require("./check-bulk-sms.api");
 const queryString = require("query-string");
 

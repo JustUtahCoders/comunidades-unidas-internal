@@ -15,7 +15,7 @@ const {
   validInteger,
 } = require("../utils/validation-utils");
 const { getEventById } = require("./get-event.api");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 
 app.patch("/api/events/:eventId", (req, res) => {
   const validationErrors = [

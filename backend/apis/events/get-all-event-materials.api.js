@@ -1,5 +1,5 @@
 const { pool, app, databaseError } = require("../../server");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const path = require("path");
 const fs = require("fs");
 

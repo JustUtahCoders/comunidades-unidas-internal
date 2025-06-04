@@ -1,5 +1,5 @@
 const { app, pool, invalidRequest, databaseError } = require("../../server");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const { checkValid, validId } = require("../utils/validation-utils");
 const { getClientById } = require("./get-client.api");
 const { insertActivityLogQuery } = require("./client-logs/activity-log.utils");

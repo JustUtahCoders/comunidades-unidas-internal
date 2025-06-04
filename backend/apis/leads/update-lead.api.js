@@ -1,4 +1,4 @@
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const _ = require("lodash");
 const {
   app,

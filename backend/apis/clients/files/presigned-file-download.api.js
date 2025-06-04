@@ -8,7 +8,7 @@ const {
   pool,
 } = require("../../../server");
 const AWS = require("aws-sdk");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const {
   checkValid,
   validId,

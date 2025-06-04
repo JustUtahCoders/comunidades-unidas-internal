@@ -4,7 +4,7 @@ const {
   nullableValidTags,
   nullableValidDate,
 } = require("../utils/validation-utils");
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const path = require("path");
 const fs = require("fs");
 const { responseFullName } = require("../utils/transform-utils");

@@ -1,4 +1,4 @@
-const mariadb = require("mariadb");
+const mariadb = require("mariadb/callback.js");
 const { app, pool, invalidRequest } = require("../../server");
 const { checkUserRole } = require("../utils/auth-utils");
 const {
