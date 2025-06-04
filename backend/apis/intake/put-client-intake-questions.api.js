@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   app,
   databaseError,
@@ -70,7 +70,7 @@ app.put("/api/client-intake-questions", (req, res) => {
   for (let section in req.body.sections) {
     const questions = req.body.sections[section];
     questions.forEach((question, i) => {
-      sql += mysql.format(
+      sql += mariadb.format(
         `UPDATE clientIntakeQuestions set label = ?, placeholder = ?, required = ?, disabled = ?, sectionOrder = ? where id = ?;\n`,
         [
           question.label,

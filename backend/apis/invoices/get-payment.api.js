@@ -5,7 +5,7 @@ const {
   invalidRequest,
   notFound,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   validId,
@@ -54,7 +54,7 @@ function getFullPaymentById({ paymentId, redactedTags }, errBack) {
     return errBack(`Invalid payment id`);
   }
 
-  const getPaymentSql = mysql.format(
+  const getPaymentSql = mariadb.format(
     `
     SELECT
       payments.id, payments.paymentDate, payments.paymentAmount, payments.paymentType,

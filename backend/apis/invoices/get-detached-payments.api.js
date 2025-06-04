@@ -1,5 +1,5 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   validId,
@@ -30,7 +30,7 @@ app.get("/api/detached-payments", async (req, res) => {
   const tags = sanitizeTags(req.query.tags);
   const redactedTags = validTagsList.filter((t) => !tags.includes(t));
 
-  const getSql = mysql.format(rawGetSql, []);
+  const getSql = mariadb.format(rawGetSql, []);
 
   pool.query(getSql, (err, result) => {
     if (err) {

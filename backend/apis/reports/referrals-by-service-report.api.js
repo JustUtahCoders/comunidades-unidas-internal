@@ -1,6 +1,6 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
 const { checkValid, nullableValidDate } = require("../utils/validation-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const fs = require("fs");
 const path = require("path");
 const _ = require("lodash");
@@ -27,7 +27,7 @@ app.get(`/api/reports/referrals-by-service`, (req, res) => {
   const startDate = req.query.start || defaultStart;
   const endDate = req.query.end || defaultEnd;
 
-  const query = mysql.format(sql, [startDate, endDate, startDate, endDate]);
+  const query = mariadb.format(sql, [startDate, endDate, startDate, endDate]);
 
   pool.query(query, (err, result) => {
     if (err) {

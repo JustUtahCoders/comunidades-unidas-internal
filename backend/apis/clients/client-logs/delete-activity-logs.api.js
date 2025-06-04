@@ -5,7 +5,7 @@ const {
   invalidRequest,
   notFound,
 } = require("../../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { checkValid, validId } = require("../../utils/validation-utils");
 const { modifiableLogTypes } = require("./activity-log.utils");
 
@@ -23,7 +23,7 @@ app.delete("/api/clients/:clientId/logs/:logId", (req, res) => {
     .map((logType) => `'${logType}'`)
     .join(", ");
 
-  const deleteLogsQuery = mysql.format(
+  const deleteLogsQuery = mariadb.format(
     `
     WITH RECURSIVE allConnectedLogs (id, idOfUpdatedLog) AS (
       SELECT id, idOfUpdatedLog
@@ -53,7 +53,7 @@ app.delete("/api/clients/:clientId/logs/:logId", (req, res) => {
     if (result.affectedRows > 0) {
       res.status(204).end();
     } else {
-      const getLogQuery = mysql.format(
+      const getLogQuery = mariadb.format(
         `
         SELECT * FROM clientLogs WHERE id = ? AND clientId = ?;
         `,

@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   app,
   pool,
@@ -90,7 +90,7 @@ app.patch("/api/custom-service-questions/:questionId", (req, res, next) => {
 
     const queries = [];
 
-    const updateQuery = mysql.format(updateSql, [
+    const updateQuery = mariadb.format(updateSql, [
       finalQuestion.label,
       finalQuestion.type,
       finalQuestion.serviceId,
@@ -99,10 +99,10 @@ app.patch("/api/custom-service-questions/:questionId", (req, res, next) => {
 
     queries.push(updateQuery);
     if (req.body.type === "select") {
-      const deleteQuery = mysql.format(deleteOptionSql, [questionId]);
+      const deleteQuery = mariadb.format(deleteOptionSql, [questionId]);
       queries.push(deleteQuery);
       const createOptionQueries = req.body.options.map((option) =>
-        mysql.format(createOptionSql, [option.name, option.value, questionId])
+        mariadb.format(createOptionSql, [option.name, option.value, questionId])
       );
       queries.push(...createOptionQueries);
       finalQuestion.options = req.body.options;

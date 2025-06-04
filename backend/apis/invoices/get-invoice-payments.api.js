@@ -1,5 +1,5 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { checkValid, validId } = require("../utils/validation-utils");
 const { formatResponsePayment } = require("./payment-utils");
 
@@ -12,7 +12,7 @@ app.get("/api/invoices/:invoiceId/payments", (req, res) => {
     return invalidRequest(res, validationErrors);
   }
 
-  const getSql = mysql.format(
+  const getSql = mariadb.format(
     `
     SELECT
       payments.id, payments.paymentDate, payments.paymentAmount, payments.paymentType,

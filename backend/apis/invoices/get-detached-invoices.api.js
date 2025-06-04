@@ -1,5 +1,5 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { formatResponseInvoice } = require("./invoice-utils");
 const { checkValid, nullableValidTags } = require("../utils/validation-utils");
 const { sanitizeTags, validTagsList } = require("../tags/tag.utils");
@@ -26,7 +26,7 @@ app.get("/api/detached-invoices", async (req, res) => {
   const redactedTags = validTagsList.filter((t) => !tags.includes(t));
 
   const rawGetSql = await rawGetSqlPromise;
-  const getSql = mysql.format(rawGetSql, []);
+  const getSql = mariadb.format(rawGetSql, []);
 
   pool.query(getSql, (err, result) => {
     if (err) {

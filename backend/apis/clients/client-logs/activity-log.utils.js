@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   responseFullName,
   responseDateWithoutTime,
@@ -31,7 +31,7 @@ exports.insertActivityLogQuery = function (params) {
       data.push(params.dateAdded);
     }
 
-    return mysql.format(
+    return mariadb.format(
       `
       INSERT INTO clientLogs (clientId, title, description, logType, addedBy, detailId${
         params.dateAdded ? ", dateAdded" : ""
@@ -69,7 +69,7 @@ exports.insertActivityLogQuery = function (params) {
       detailIdSql += params.detailId.rawValue || "?";
     }
 
-    return mysql.format(
+    return mariadb.format(
       `
       INSERT INTO clientLogs (clientId, title, description, logType, addedBy${
         params.detailId ? ", detailId" : ""

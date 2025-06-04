@@ -5,7 +5,7 @@ const {
   invalidRequest,
   insufficientPrivileges,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   validId,
@@ -41,7 +41,7 @@ app.patch("/api/programs/:programId", (req, res, next) => {
     );
   }
 
-  const getProgram = mysql.format(
+  const getProgram = mariadb.format(
     `
     SELECT * FROM programs WHERE id = ?;
     `,
@@ -69,7 +69,7 @@ app.patch("/api/programs/:programId", (req, res, next) => {
         req.body.programDescription || originalProgram.programDescription,
     };
 
-    const updateProgram = mysql.format(
+    const updateProgram = mariadb.format(
       `
       UPDATE programs SET programName = ?, programDescription = ? WHERE id = ?;
       `,

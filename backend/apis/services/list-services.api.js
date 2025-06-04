@@ -1,5 +1,5 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   nullableValidBoolean,
@@ -18,7 +18,7 @@ app.get("/api/services", (req, res, next) => {
 
   const includeInactive = req.query.includeInactive === "true";
 
-  const getServices = mysql.format(`
+  const getServices = mariadb.format(`
     SELECT * FROM services;
 
     SELECT * FROM customServiceQuestions where isDeleted = false;

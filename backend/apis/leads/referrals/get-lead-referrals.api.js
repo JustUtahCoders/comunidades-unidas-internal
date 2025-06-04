@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   app,
   pool,
@@ -31,7 +31,7 @@ app.get("/api/leads/:leadId/referrals", (req, res) => {
     }
 
     if (lead) {
-      const query = mysql.format(getReferralsSql, [leadId]);
+      const query = mariadb.format(getReferralsSql, [leadId]);
       pool.query(query, (err, result) => {
         if (err) {
           return databaseError(req, res, err);

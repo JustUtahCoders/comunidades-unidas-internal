@@ -1,5 +1,5 @@
 const { pool, app, invalidRequest, databaseError } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { checkValid, nonEmptyString } = require("../utils/validation-utils");
 const fs = require("fs");
 const path = require("path");
@@ -17,7 +17,7 @@ app.post("/api/materials", (req, res) => {
     return invalidRequest(res, validationErrors);
   }
 
-  const sql = mysql.format(insertSql, [req.body.name]);
+  const sql = mariadb.format(insertSql, [req.body.name]);
 
   pool.query(sql, (err, result) => {
     if (err) {

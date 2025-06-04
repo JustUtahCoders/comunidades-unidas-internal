@@ -8,7 +8,7 @@ const {
   pool,
 } = require("../../../server");
 const AWS = require("aws-sdk");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   validId,
@@ -38,7 +38,7 @@ app.get("/api/clients/:clientId/files/:fileId/signed-downloads", (req, res) => {
   const tags = sanitizeTags(req.query.tags);
   const redactedTags = validTagsList.filter((t) => !tags.includes(t));
 
-  const getSql = mysql.format(
+  const getSql = mariadb.format(
     `
     SELECT isDeleted FROM clients WHERE id = ? AND isDeleted = false;
 

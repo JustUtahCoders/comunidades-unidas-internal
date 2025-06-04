@@ -5,7 +5,7 @@ const {
   invalidRequest,
   internalError,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { checkValid, nullableValidTags } = require("../utils/validation-utils");
 const { getFullInvoiceById } = require("./get-invoice.api");
 const {
@@ -26,7 +26,7 @@ app.post("/api/invoices", (req, res) => {
     return invalidRequest(res, validationErrors);
   }
 
-  const getInvoiceNumberSql = mysql.format(`
+  const getInvoiceNumberSql = mariadb.format(`
     SELECT id lastInvoiceId FROM invoices ORDER BY id DESC LIMIT 1;
   `);
 
@@ -45,7 +45,7 @@ app.post("/api/invoices", (req, res) => {
     const tags = sanitizeTags(req.query.tags);
     const redactedTags = validTagsList.filter((t) => !tags.includes(t));
 
-    const insertSql = mysql.format(
+    const insertSql = mariadb.format(
       `
       INSERT INTO invoices (invoiceNumber, invoiceDate, addedBy, modifiedBy, status)
       VALUES (?, ?, ?, ?, 'draft');

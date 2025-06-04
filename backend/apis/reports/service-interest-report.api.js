@@ -1,6 +1,6 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
 const { checkValid, nullableValidDate } = require("../utils/validation-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const _ = require("lodash");
 
 app.get(`/api/reports/service-interests`, (req, res) => {
@@ -17,7 +17,7 @@ app.get(`/api/reports/service-interests`, (req, res) => {
   const startDate = req.query.start || "2000-01-01T0";
   const endDate = req.query.end || "3000-01-01T0";
 
-  const sql = mysql.format(
+  const sql = mariadb.format(
     `
       -- all services
       SELECT services.id serviceId, services.serviceName, programs.programName, services.programId FROM services JOIN programs ON programs.id = services.programId;

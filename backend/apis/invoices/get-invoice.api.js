@@ -5,7 +5,7 @@ const {
   invalidRequest,
   notFound,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { formatResponseInvoice } = require("./invoice-utils");
 const {
   checkValid,
@@ -61,7 +61,7 @@ function getFullInvoiceById({ id, redactedTags }, errBack) {
     return errBack(Error(`invoice id must be provided`), null);
   }
 
-  const getInvoiceSql = mysql.format(getInvoiceSqlStr, [id, id, id, id, id]);
+  const getInvoiceSql = mariadb.format(getInvoiceSqlStr, [id, id, id, id, id]);
 
   pool.query(getInvoiceSql, (err, result) => {
     if (err) {

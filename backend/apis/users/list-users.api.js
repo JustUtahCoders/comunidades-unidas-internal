@@ -4,7 +4,7 @@ const {
   pool,
   insufficientPrivileges,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const fs = require("fs");
 const path = require("path");
 const { checkUserRole } = require("../utils/auth-utils");
@@ -24,7 +24,7 @@ app.get("/api/users", (req, res) => {
     return insufficientPrivileges(res, authError);
   }
 
-  const query = mysql.format(sql, []);
+  const query = mariadb.format(sql, []);
 
   pool.query(query, (err, users) => {
     if (err) {

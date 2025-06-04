@@ -5,7 +5,7 @@ const {
   databaseError,
   notFound,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   nonEmptyString,
@@ -37,7 +37,7 @@ app.delete("/api/custom-service-questions/:questionId", (req, res) => {
     if (question === 404) {
       return notFound(res, `No question found with id ${questionId}`);
     }
-    const sql = mysql.format(deleteSql, [questionId]);
+    const sql = mariadb.format(deleteSql, [questionId]);
 
     pool.query(sql, (err, result) => {
       if (err) {

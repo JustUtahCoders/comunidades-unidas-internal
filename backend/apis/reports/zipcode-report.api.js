@@ -1,6 +1,6 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
 const { checkValid, nullableValidDate } = require("../utils/validation-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const _ = require("lodash");
 
 let zipToCounty = null;
@@ -19,7 +19,7 @@ app.get(`/api/reports/client-zipcodes`, (req, res) => {
   const startDate = (req.query.start || "2000-01-01") + "T00:00:00";
   const endDate = (req.query.end || "3000-01-01") + "T11:59:00";
 
-  const sql = mysql.format(
+  const sql = mariadb.format(
     `
       SELECT contactInformation.zip, COUNT(*) clientCount
       FROM

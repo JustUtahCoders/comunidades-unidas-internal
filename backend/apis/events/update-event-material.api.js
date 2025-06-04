@@ -5,7 +5,7 @@ const {
   databaseError,
   notFound,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   nonEmptyString,
@@ -41,7 +41,7 @@ app.patch("/api/materials/:materialId", (req, res) => {
       return databaseError(req, res, err);
     }
 
-    const sql = mysql.format(updateSql, [req.body.name, materialId]);
+    const sql = mariadb.format(updateSql, [req.body.name, materialId]);
 
     pool.query(sql, (err, result) => {
       if (err) {

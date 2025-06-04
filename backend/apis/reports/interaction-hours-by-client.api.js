@@ -6,7 +6,7 @@ const {
   nullableValidDate,
 } = require("../utils/validation-utils");
 const { responseFullName } = require("../utils/transform-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { toDuration } = require("./report-helpers");
 
 const pageSize = 100;
@@ -30,7 +30,7 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
 
   const oneBasedPage = Number(req.query.page) || 1;
   const zeroBasedPage = oneBasedPage - 1;
-  const mysqlOffset = zeroBasedPage * pageSize;
+  const mariadbOffset = zeroBasedPage * pageSize;
   const minInclusive = req.query.minInclusive === "true";
   const maxInclusive = req.query.maxInclusive === "true";
 
@@ -42,7 +42,7 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
   const startDate = req.query.start || "2000-01-01T0";
   const endDate = req.query.end || "3000-01-01T0";
 
-  const sql = mysql.format(
+  const sql = mariadb.format(
     `
       SELECT SQL_CALC_FOUND_ROWS clients.id, clients.firstName, clients.lastName, clients.gender, clients.birthday, clientHours.totalInteractionSeconds, clientHours.numInteractions, contactInfo.primaryPhone
       FROM
@@ -74,7 +74,7 @@ app.get(`/api/reports/interaction-hours-by-client`, (req, res) => {
       endDate,
       minInteractionSeconds,
       maxInteractionSeconds,
-      mysqlOffset,
+      mariadbOffset,
       pageSize,
     ]
   );

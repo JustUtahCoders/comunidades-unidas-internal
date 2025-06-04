@@ -5,7 +5,7 @@ const {
   invalidRequest,
   internalError,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { getFullPaymentById } = require("./get-payment.api");
 const {
   checkValid,
@@ -72,7 +72,7 @@ app.post("/api/payments", (req, res) => {
       let insertSql = "";
 
       if (req.body.donationAmount) {
-        insertSql += mysql.format(
+        insertSql += mariadb.format(
           `
           INSERT INTO donations
           (donationAmount, donationDate, addedBy, modifiedBy)
@@ -88,7 +88,7 @@ app.post("/api/payments", (req, res) => {
         `;
       }
 
-      insertSql += mysql.format(
+      insertSql += mariadb.format(
         `
       INSERT INTO payments
       (paymentDate, paymentAmount, paymentType, payerName, addedBy, modifiedBy, donationId)
@@ -99,7 +99,7 @@ app.post("/api/payments", (req, res) => {
 
       ${req.body.invoices
         .map((i) =>
-          mysql.format(
+          mariadb.format(
             `
         INSERT INTO invoicePayments
         (paymentId, invoiceId, amount)
@@ -123,7 +123,7 @@ app.post("/api/payments", (req, res) => {
 
       ${req.body.payerClientIds
         .map((c) =>
-          mysql.format(
+          mariadb.format(
             `
         INSERT INTO paymentClients (paymentId, clientId)
         VALUES (@paymentId, ?);

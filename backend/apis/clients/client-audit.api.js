@@ -1,6 +1,6 @@
 const { app, databaseError, pool } = require("../../server");
 const { responseFullName } = require("../utils/transform-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { checkValid, validId } = require("../utils/validation-utils");
 
 app.get(`/api/clients/:id/audits`, (req, res) => {
@@ -12,7 +12,7 @@ app.get(`/api/clients/:id/audits`, (req, res) => {
 
   const clientId = Number(req.params.id);
 
-  const query = mysql.format(
+  const query = mariadb.format(
     `
     # 1) last time core contact was updated
     SELECT clients.dateAdded, users.firstName, users.lastName, users.id

@@ -5,7 +5,7 @@ const {
   invalidRequest,
   notFound,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   validId,
@@ -54,7 +54,7 @@ exports.getAllClientsById = getAllClientsById;
 
 function getAllClientsById(clients, cbk, connection) {
   clients = clients.map(Number);
-  const getClient = mysql.format(rawGetSql, [clients, clients]);
+  const getClient = mariadb.format(rawGetSql, [clients, clients]);
 
   pool.query(getClient, (err, data, fields) => {
     if (err) {

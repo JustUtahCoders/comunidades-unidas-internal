@@ -5,7 +5,7 @@ const {
   invalidRequest,
   insufficientPrivileges,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   validId,
@@ -33,7 +33,7 @@ app.post("/api/services", (req, res, next) => {
     return invalidRequest(res, validationErrors);
   }
 
-  const verifyValid = mysql.format(
+  const verifyValid = mariadb.format(
     `
     SELECT * FROM programs WHERE id = ?
     ;
@@ -60,7 +60,7 @@ app.post("/api/services", (req, res, next) => {
       isActive: req.body.hasOwnProperty("isActive") ? req.body.isActive : true,
     };
 
-    const updateService = mysql.format(
+    const updateService = mariadb.format(
       `
       INSERT INTO services (serviceName, serviceDesc, programId, isActive)
       VALUES (?, ?, ?, ?);

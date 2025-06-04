@@ -1,5 +1,5 @@
 const { app, pool, invalidRequest, databaseError } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { checkValid, validId } = require("../utils/validation-utils");
 const { getLeadById } = require("./get-lead.api");
 
@@ -23,7 +23,7 @@ app.delete("/api/leads/:leadId", (req, res) => {
       return invalidRequest(res, `Lead ${leadId} does not exist`);
     }
 
-    const sql = mysql.format(
+    const sql = mariadb.format(
       `
         UPDATE leads
         SET isDeleted = true, modifiedBy = ?

@@ -1,5 +1,5 @@
 const { app, pool, invalidRequest, databaseError } = require("../../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { checkValid, validId } = require("../../utils/validation-utils");
 const { getInteraction } = require("./client-interaction.utils");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
@@ -24,7 +24,7 @@ app.delete("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
       return err(req, res);
     }
 
-    const sql = mysql.format(
+    const sql = mariadb.format(
       `
         UPDATE clientInteractions
         SET isDeleted = true

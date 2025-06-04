@@ -1,5 +1,5 @@
 const { responseUser } = require("../utils/transform-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { pool } = require("../../server");
 const { intersection, uniqBy } = require("lodash");
 
@@ -69,7 +69,7 @@ exports.checkValidPaymentRequestIds = function checkValidPaymentRequestIds(
 
   let checkExistenceSql = invoiceIds
     .map((invoiceId) =>
-      mysql.format(
+      mariadb.format(
         `
     SELECT COUNT(*) cnt FROM invoices WHERE id = ?;
   `,
@@ -80,7 +80,7 @@ exports.checkValidPaymentRequestIds = function checkValidPaymentRequestIds(
 
   checkExistenceSql += payerClientIds
     .map((clientId) =>
-      mysql.format(
+      mariadb.format(
         `
     SELECT COUNT(*) cnt FROM clients WHERE id = ? AND isDeleted = false;
   `,

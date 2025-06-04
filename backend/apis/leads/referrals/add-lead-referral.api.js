@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   app,
   pool,
@@ -81,7 +81,7 @@ app.post("/api/leads/:leadId/referrals", (req, res) => {
               );
             }
 
-            const query = mysql.format(insertReferralSql, [
+            const query = mariadb.format(insertReferralSql, [
               leadId,
               partnerServiceId,
               req.body.referralDate,

@@ -4,7 +4,7 @@ const {
   nullableValidDate,
   nullableValidId,
 } = require("../utils/validation-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const path = require("path");
 const fs = require("fs");
 const _ = require("lodash");
@@ -37,7 +37,7 @@ app.get("/api/reports/custom-interaction-questions", (req, res) => {
   const startDate = req.query.start || defaultStart;
   const endDate = req.query.end || defaultEnd;
 
-  const formattedSql = mysql.format(sql, [
+  const formattedSql = mariadb.format(sql, [
     req.query.questionId,
     req.query.questionId,
     req.query.questionId,

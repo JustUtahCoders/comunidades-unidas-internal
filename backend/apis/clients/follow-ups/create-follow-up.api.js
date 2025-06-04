@@ -1,5 +1,5 @@
 const { app, databaseError, pool, invalidRequest } = require("../../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   validId,
@@ -49,7 +49,7 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
     return invalidRequest(res, validationErrors);
   }
 
-  const insertFollowUpSql = mysql.format(followUpsSql, [
+  const insertFollowUpSql = mariadb.format(followUpsSql, [
     clientId,
     title,
     description,
@@ -68,14 +68,14 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
     let query = "";
 
     serviceIds.forEach((id) => {
-      query += mysql.format(
+      query += mariadb.format(
         `INSERT INTO followUpServices (serviceId, followUpId) VALUES (?, ?);
         `,
         [id, insertResult.insertId]
       );
     });
 
-    query += mysql.format(
+    query += mariadb.format(
       `SELECT GROUP_CONCAT(services.serviceName SEPARATOR ', ') services FROM services WHERE id IN (?);`,
       [serviceIds.length > 0 ? serviceIds : null]
     );
@@ -120,7 +120,7 @@ app.post("/api/clients/:clientId/follow-ups", (req, res) => {
 });
 
 function formattedFollowUpResponse(id, errBack) {
-  const query = mysql.format(getFollowUpSql, [id, id]);
+  const query = mariadb.format(getFollowUpSql, [id, id]);
   pool.query(query, (err, followUpResult) => {
     if (err) {
       return errBack(err, null);

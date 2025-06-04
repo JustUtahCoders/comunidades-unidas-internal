@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const _ = require("lodash");
 const {
   app,
@@ -239,7 +239,7 @@ app.patch("/api/leads/:id", (req, res, next) => {
       queryString = queries.join(" ");
     }
 
-    const mySqlQuery = mysql.format(queryString, queryData);
+    const mySqlQuery = mariadb.format(queryString, queryData);
 
     pool.query(mySqlQuery, (patchErr, result) => {
       if (patchErr) {

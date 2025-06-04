@@ -3,7 +3,7 @@ const {
   checkValid,
   nullableValidInteger,
 } = require("../utils/validation-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 
 // https://aspe.hhs.gov/prior-hhs-poverty-guidelines-and-federal-register-references
 const povertyLines = {
@@ -51,7 +51,7 @@ app.get(`/api/reports/poverty-lines`, (req, res) => {
 
   const { firstPerson, additionalPerson } = povertyLines[year];
 
-  const sql = mysql.format(
+  const sql = mariadb.format(
     `
       SELECT COUNT(*) numClients from clients WHERE isDeleted = false;
 

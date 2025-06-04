@@ -1,5 +1,5 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   nullableValidDate,
   checkValid,
@@ -129,7 +129,7 @@ app.post("/api/clients", (req, res, next) => {
         return databaseError(req, res, err, connection);
       }
 
-      const insertClient = mysql.format(
+      const insertClient = mariadb.format(
         `
         INSERT INTO clients
         (
@@ -174,7 +174,7 @@ app.post("/api/clients", (req, res, next) => {
             return databaseError(req, res, err, connection);
           }
 
-          const insertOther = mysql.format(`
+          const insertOther = mariadb.format(`
             ${insertContactInformationQuery(
               clientId,
               req.body,
@@ -234,7 +234,7 @@ app.post("/api/clients", (req, res, next) => {
               )
               .join("");
 
-            const insertIntakeServices = mysql.format(
+            const insertIntakeServices = mariadb.format(
               insertIntakeServicesQuery,
               intakeServicesValues
             );
