@@ -1,5 +1,5 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   nullableValidInteger,
@@ -137,7 +137,7 @@ function clientListQuery(query, pageNum, pageSize) {
       ? query.programInteraction
       : query.serviceInteraction;
 
-    joinInteractions = mysql.format(
+    joinInteractions = mariadb.format(
       `
       JOIN (
         SELECT clientId, COUNT(*) numInteractions
@@ -194,15 +194,15 @@ function clientListQuery(query, pageNum, pageSize) {
     SELECT FOUND_ROWS();
   `;
 
-  const mysqlValues = [...whereClauseValues];
+  const mariadbValues = [...whereClauseValues];
 
   if (pageNum) {
     const zeroBasedPage = pageNum ? pageNum - 1 : 0;
-    const mysqlOffset = zeroBasedPage * pageSize;
-    mysqlValues.push(mysqlOffset, pageSize);
+    const mariadbOffset = zeroBasedPage * pageSize;
+    mariadbValues.push(mariadbOffset, pageSize);
   }
 
-  return mysql.format(queryString, mysqlValues);
+  return mariadb.format(queryString, mariadbValues);
 }
 
 function validateClientListQuery(query) {

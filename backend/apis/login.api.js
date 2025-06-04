@@ -3,13 +3,12 @@ const CustomStrategy = require("passport-custom").Strategy;
 const { app, pool, databaseError } = require("../server");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { responseFullName } = require("./utils/transform-utils");
 const { BasicStrategy } = require("passport-http");
 const bcrypt = require("bcrypt");
 
-const useGoogleAuth =
-  !process.env.RUNNING_LOCALLY || process.env.USE_GOOGLE_AUTH;
+const useGoogleAuth = false;
 
 passport.serializeUser((user, done) => {
   done(null, user);
@@ -21,7 +20,7 @@ passport.deserializeUser((user, done) => {
 
 passport.use(
   new BasicStrategy((username, password, done) => {
-    const getUser = mysql.format(
+    const getUser = mariadb.format(
       `SELECT users.id, users.firstName, users.lastName, users.email, users.accessLevel, userPermissions.permission, programmaticUsers.password FROM
         users JOIN programmaticUsers ON programmaticUsers.userId = users.id
         LEFT JOIN userPermissions ON users.id = userPermissions.userId
@@ -82,7 +81,7 @@ if (useGoogleAuth) {
       },
       (token, refreshToken, profile, done) => {
         pool.query(
-          mysql.format(
+          mariadb.format(
             `
           INSERT IGNORE INTO users (googleId, firstName, lastName, email, accessLevel)
           VALUES(?, ?, ?, ?, ?)
@@ -99,7 +98,7 @@ if (useGoogleAuth) {
             if (err) {
               done(err);
             } else {
-              const getUserQuery = mysql.format(
+              const getUserQuery = mariadb.format(
                 `
               SELECT * FROM users LEFT JOIN userPermissions ON users.id = userPermissions.userId WHERE users.googleId = ?;
             `,

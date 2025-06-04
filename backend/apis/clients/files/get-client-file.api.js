@@ -11,7 +11,7 @@ const {
   nullableValidTags,
 } = require("../../utils/validation-utils");
 const { responseFullName } = require("../../utils/transform-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { validTagsList, sanitizeTags } = require("../../tags/tag.utils");
 
 app.get("/api/clients/:clientId/files/:fileId", (req, res) => {
@@ -32,7 +32,7 @@ app.get("/api/clients/:clientId/files/:fileId", (req, res) => {
   const tags = sanitizeTags(req.query.tags);
   const redactedTags = validTagsList.filter((t) => !tags.includes(t));
 
-  const checkClientSql = mysql.format(
+  const checkClientSql = mariadb.format(
     `
     SELECT isDeleted FROM clients WHERE id = ?
   `,
@@ -50,7 +50,7 @@ app.get("/api/clients/:clientId/files/:fileId", (req, res) => {
         .send({ errors: ["No such client with id " + clientId] });
     }
 
-    const getFileSql = mysql.format(
+    const getFileSql = mariadb.format(
       `
       SELECT clientFiles.id, clientFiles.fileName, clientFiles.fileSize, clientFiles.fileExtension,
         clientFiles.dateAdded, users.firstName, users.lastName, JSON_ARRAYAGG(tags.tag) tags

@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { requestEnum, requestPhone } = require("../utils/transform-utils");
 const { insertActivityLogQuery } = require("./client-logs/activity-log.utils");
 
@@ -8,7 +8,7 @@ exports.insertContactInformationQuery = function insertContactInformationQuery(
   userId,
   insertLogEntry = false
 ) {
-  return mysql.format(
+  return mariadb.format(
     `
     INSERT INTO contactInformation (
       clientId,
@@ -58,7 +58,7 @@ exports.insertDemographicsInformationQuery = function insertDemographicsInformat
   userId,
   insertLogEntry = false
 ) {
-  return mysql.format(
+  return mariadb.format(
     `
     INSERT INTO demographics (
       clientId,
@@ -120,7 +120,7 @@ exports.insertIntakeDataQuery = function insertIntakeDataQuery(
   data,
   userId
 ) {
-  return mysql.format(
+  return mariadb.format(
     `
     INSERT INTO intakeData (
       clientId,
@@ -144,7 +144,7 @@ exports.insertIntakeServicesQuery = function insertIntakeServicesQuery(
   data,
   insertLogEntry = false
 ) {
-  return mysql.format(
+  return mariadb.format(
     `
       SET @intakeDataId = LAST_INSERT_ID();
 
@@ -173,7 +173,7 @@ exports.insertIntakeServicesQuery = function insertIntakeServicesQuery(
 };
 
 exports.convertLeadToClient = function (leadId, clientId, userId) {
-  return mysql.format(
+  return mariadb.format(
     "UPDATE leads SET leadStatus = ?, clientId = ?, modifiedBy = ? WHERE leads.id = ?;",
     ["convertedToClient", clientId, userId, leadId]
   );

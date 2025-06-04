@@ -5,7 +5,7 @@ const {
   invalidRequest,
   notFound,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   validId,
@@ -135,7 +135,7 @@ app.patch("/api/clients/:id", (req, res, next) => {
 
     if (clientChanged) {
       queries.push(
-        mysql.format(
+        mariadb.format(
           `
         UPDATE clients
         SET

@@ -1,5 +1,5 @@
 const { pool } = require("../../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const integrateJpls = require("./jpls-integration");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 
@@ -26,7 +26,7 @@ exports.performAnyIntegrations = function performAnyIntegrations(
   // These are done in the background and are not part of the synchronous HTTP request.
   // If they fail, we note this in the client log and by changing the integration's status to 'broken'
 
-  const getActiveIntegrationsSql = mysql.format(
+  const getActiveIntegrationsSql = mariadb.format(
     `SELECT * FROM integrations WHERE clientId = ? AND status = 'enabled'`,
     [clientId]
   );

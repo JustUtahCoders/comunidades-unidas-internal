@@ -7,7 +7,7 @@ const {
 } = require("../../../server");
 const path = require("path");
 const fs = require("fs");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { checkValid, validId } = require("../../utils/validation-utils");
 const getFollowUpSql = fs.readFileSync(
   path.resolve(__dirname, "./get-follow-up.sql"),
@@ -28,7 +28,7 @@ app.get("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
   clientId = Number(clientId);
   followUpId = Number(followUpId);
 
-  const query = mysql.format(getFollowUpSql, [followUpId, followUpId]);
+  const query = mariadb.format(getFollowUpSql, [followUpId, followUpId]);
   pool.query(query, (err, result) => {
     if (err) {
       return databaseError(req, res, err);

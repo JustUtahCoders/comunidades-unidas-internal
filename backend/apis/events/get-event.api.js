@@ -5,7 +5,7 @@ const {
   invalidRequest,
   notFound,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { checkValid, validId } = require("../utils/validation-utils");
 const {
   responseFullName,
@@ -40,7 +40,7 @@ exports.getEventById = getEventById;
 function getEventById(eventId, cbk, connection) {
   eventId = Number(eventId);
 
-  const getEvent = mysql.format(
+  const getEvent = mariadb.format(
     `
       SELECT
         events.id AS eventId,

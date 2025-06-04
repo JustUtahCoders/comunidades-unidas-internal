@@ -6,7 +6,7 @@ const {
   internalError,
   notFound,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { checkValid, validId } = require("../utils/validation-utils");
 const { getFullPaymentById } = require("./get-payment.api");
 
@@ -25,7 +25,7 @@ app.delete("/api/payments/:paymentId", (req, res) => {
     } else if (payment === 404) {
       notFound(res, `No payment found with id ${req.params.paymentId}`);
     } else {
-      const deleteSql = mysql.format(
+      const deleteSql = mariadb.format(
         `
         UPDATE payments SET isDeleted = true WHERE id = ?;
 

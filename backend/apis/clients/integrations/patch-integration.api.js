@@ -20,7 +20,7 @@ const {
   performIntegration,
   logIntegrationResult,
 } = require("./integrations-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 
 app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
@@ -54,7 +54,7 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
       return notFound(res, `Could not find client with id ${clientId}`);
     }
 
-    const getExistingSql = mysql.format(
+    const getExistingSql = mariadb.format(
       `SELECT * FROM integrations WHERE clientId = ? AND integrationType = ?`,
       [clientId, integrationId]
     );
@@ -93,7 +93,7 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
 
           let upsertSql;
           if (existingIntegration) {
-            upsertSql = mysql.format(
+            upsertSql = mariadb.format(
               `
             UPDATE integrations SET status = ?, lastSync = CURRENT_TIMESTAMP(), externalId = ? WHERE clientId = ? AND integrationType = ?;
           `,
@@ -105,7 +105,7 @@ app.patch("/api/clients/:clientId/integrations/:integrationId", (req, res) => {
               ]
             );
           } else {
-            upsertSql = mysql.format(
+            upsertSql = mariadb.format(
               `
             INSERT INTO integrations (clientId, integrationType, status, externalId, lastSync) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP());
           `,

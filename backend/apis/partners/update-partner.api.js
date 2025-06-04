@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   app,
   pool,
@@ -68,7 +68,7 @@ app.patch("/api/partners/:partnerId", (req, res) => {
         : partner.phone,
     };
 
-    const updateQuery = mysql.format(updateSql, [
+    const updateQuery = mariadb.format(updateSql, [
       finalPartner.name,
       finalPartner.isActive,
       finalPartner.phone,

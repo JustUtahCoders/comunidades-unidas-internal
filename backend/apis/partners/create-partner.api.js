@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { app, pool, invalidRequest } = require("../../server");
 const { checkUserRole } = require("../utils/auth-utils");
 const {
@@ -35,7 +35,7 @@ app.post("/api/partners", (req, res, next) => {
   }
 
   const user = req.session.passport.user;
-  const query = mysql.format(insertSql, [
+  const query = mariadb.format(insertSql, [
     req.body.name,
     req.body.isActive,
     requestPhone(req.body.phone),
@@ -62,7 +62,7 @@ app.post("/api/partners", (req, res, next) => {
 });
 
 function getPartner({ id, includeInactive = false }, errBack) {
-  const query = mysql.format(getSql, [id, true, !includeInactive]);
+  const query = mariadb.format(getSql, [id, true, !includeInactive]);
   pool.query(query, (err, result) => {
     if (err) {
       return errBack(err, null);

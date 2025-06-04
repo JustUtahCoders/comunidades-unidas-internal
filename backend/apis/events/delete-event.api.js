@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { app, databaseError, pool, invalidRequest } = require("../../server");
 const { checkValid, validId } = require("../utils/validation-utils");
 
@@ -9,7 +9,7 @@ app.delete("/api/events/:eventId", (req, res) => {
     return invalidRequest(res, validationErrors);
   }
 
-  const sql = mysql.format(
+  const sql = mariadb.format(
     `UPDATE events SET isDeleted = true WHERE id = ? AND isDeleted = false;`,
     [Number(req.params.eventId)]
   );

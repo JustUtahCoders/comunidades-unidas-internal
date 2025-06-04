@@ -1,5 +1,5 @@
 const { app, databaseError, pool, invalidRequest } = require("../../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   validId,
@@ -53,7 +53,7 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
     return invalidRequest(res, validationErrors);
   }
 
-  const getServiceSql = mysql.format(
+  const getServiceSql = mariadb.format(
     `SELECT serviceName FROM services WHERE id = ?`,
     [req.body.serviceId]
   );
@@ -74,7 +74,7 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
 
     const tags = sanitizeTags(req.query.tags);
 
-    const insertSql = mysql.format(
+    const insertSql = mariadb.format(
       `
         INSERT INTO clientInteractions
         (clientId, serviceId, interactionType, dateOfInteraction, duration, location, addedBy, modifiedBy)
@@ -85,7 +85,7 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
 
         ${(req.body.customQuestions || [])
           .map((i) =>
-            mysql.format(
+            mariadb.format(
               `
             INSERT INTO clientInteractionCustomAnswers
             (questionId, answer, interactionId)

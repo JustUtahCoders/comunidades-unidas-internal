@@ -1,5 +1,5 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   responseFullName,
   responseBoolean,
@@ -58,7 +58,7 @@ app.get("/api/events", (req, res, next) => {
     columnsToOrder = `${fieldPrefix}${req.query.sortField} ${sortOrder}`;
   }
 
-  const mysqlQuery = `
+  const mariadbQuery = `
     SELECT SQL_CALC_FOUND_ROWS
       events.id AS eventId,
       events.eventName,
@@ -88,10 +88,10 @@ app.get("/api/events", (req, res, next) => {
   `;
 
   const zeroBasedPage = req.query.page ? requestPage - 1 : 0;
-  const mysqlOffset = zeroBasedPage * pageSize;
-  const getEvents = mysql.format(mysqlQuery, [
+  const mariadbOffset = zeroBasedPage * pageSize;
+  const getEvents = mariadb.format(mariadbQuery, [
     ...whereClauseValues,
-    mysqlOffset,
+    mariadbOffset,
     pageSize,
   ]);
 

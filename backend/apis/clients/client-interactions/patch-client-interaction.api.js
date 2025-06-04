@@ -1,5 +1,5 @@
 const { app, pool, invalidRequest, databaseError } = require("../../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   validId,
@@ -96,7 +96,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
 
         if (shouldUpdateInteraction) {
           queries.push(
-            mysql.format(
+            mariadb.format(
               `
             UPDATE clientInteractions
             SET serviceId = ?,
@@ -147,7 +147,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
           );
 
           queries.push(
-            mysql.format(
+            mariadb.format(
               `
             WITH oldLog AS (
               SELECT id FROM clientLogs
@@ -180,7 +180,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
           );
 
           queries.push(
-            mysql.format(
+            mariadb.format(
               `
             WITH oldLog AS (
               SELECT id FROM clientLogs
@@ -200,7 +200,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
         }
 
         if (req.body.hasOwnProperty("customQuestions")) {
-          const deleteQuery = mysql.format(
+          const deleteQuery = mariadb.format(
             `
             DELETE from clientInteractionCustomAnswers where interactionId = ?;
             `,
@@ -209,7 +209,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
           queries.push(deleteQuery);
           const createCustomAnswerQueries = req.body.customQuestions.map(
             (question) =>
-              mysql.format(
+              mariadb.format(
                 `
                   INSERT INTO clientInteractionCustomAnswers (questionId, answer, interactionId) 
                   VALUES(?,?,?);
@@ -247,7 +247,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
 
   function getServiceName(existingServiceName, callback) {
     if (req.body.serviceId) {
-      const sql = mysql.format(
+      const sql = mariadb.format(
         `SELECT serviceName FROM services WHERE id = ?`,
         [req.body.serviceId]
       );

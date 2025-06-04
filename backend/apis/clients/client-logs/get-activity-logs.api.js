@@ -5,7 +5,7 @@ const {
   invalidRequest,
   notFound,
 } = require("../../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   validId,
@@ -27,7 +27,7 @@ app.get("/api/clients/:clientId/logs", (req, res, next) => {
     return invalidRequest(res, validationErrors);
   }
 
-  const getLogsQuery = mysql.format(
+  const getLogsQuery = mariadb.format(
     `
     SELECT
       clientLogs.id, clientLogs.title, clientLogs.description, clientLogs.logType, clientLogs.dateAdded, clientLogs.detailId, clientLogs.idOfUpdatedLog,

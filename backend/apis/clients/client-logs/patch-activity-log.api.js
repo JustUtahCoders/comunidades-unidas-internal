@@ -5,7 +5,7 @@ const {
   nullableValidTags,
   nullableNonEmptyString,
 } = require("../../utils/validation-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   modifiableLogTypes,
   insertActivityLogQuery,
@@ -35,7 +35,7 @@ app.patch(`/api/clients/:clientId/logs/:logId`, (req, res) => {
 
   const tags = sanitizeTags(req.query.tags);
 
-  const selectSql = mysql.format(
+  const selectSql = mariadb.format(
     `SELECT * FROM clientLogs WHERE clientId = ? AND id = ?`,
     [req.params.clientId, req.params.logId]
   );
@@ -80,7 +80,7 @@ app.patch(`/api/clients/:clientId/logs/:logId`, (req, res) => {
         return invalidRequest(res, `You may not modify an outdated client log`);
       }
 
-      const updateSql = mysql.format(
+      const updateSql = mariadb.format(
         `
         ${insertActivityLogQuery({
           clientId: req.params.clientId,

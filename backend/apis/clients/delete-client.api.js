@@ -1,5 +1,5 @@
 const { app, pool, invalidRequest, databaseError } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { checkValid, validId } = require("../utils/validation-utils");
 const { getClientById } = require("./get-client.api");
 const { insertActivityLogQuery } = require("./client-logs/activity-log.utils");
@@ -24,7 +24,7 @@ app.delete("/api/clients/:clientId", (req, res) => {
       return invalidRequest(res, `Client ${clientId} does not exist`);
     }
 
-    const sql = mysql.format(
+    const sql = mariadb.format(
       `
         UPDATE clients
         SET isDeleted = true

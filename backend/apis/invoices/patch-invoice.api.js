@@ -7,7 +7,7 @@ const {
   internalError,
   insufficientPrivileges,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { getFullInvoiceById } = require("./get-invoice.api");
 const {
   checkValid,
@@ -115,7 +115,7 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
       newInvoice.status = "open";
     }
 
-    let updateSql = mysql.format(
+    let updateSql = mariadb.format(
       `
       UPDATE invoices
       SET
@@ -136,13 +136,13 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
     );
 
     if (req.body.clients) {
-      updateSql += mysql.format(
+      updateSql += mariadb.format(
         `
         DELETE FROM invoiceClients WHERE invoiceId = ?;
 
         ${req.body.clients
           .map((clientId) =>
-            mysql.format(
+            mariadb.format(
               `
           INSERT INTO invoiceClients (clientId, invoiceId)
           VALUES (?, ?);
@@ -157,13 +157,13 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
     }
 
     if (req.body.lineItems) {
-      updateSql += mysql.format(
+      updateSql += mariadb.format(
         `
         DELETE FROM invoiceLineItems WHERE invoiceId = ?;
 
         ${req.body.lineItems
           .map((li) =>
-            mysql.format(
+            mariadb.format(
               `
           INSERT INTO invoiceLineItems
           (invoiceId, serviceId, name, description, quantity, rate)

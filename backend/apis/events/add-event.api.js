@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { app, databaseError, pool, invalidRequest } = require("../../server");
 const {
   checkValid,
@@ -38,7 +38,7 @@ app.post("/api/events", (req, res) => {
 
   const user = req.session.passport.user;
 
-  let newEvent = mysql.format(
+  let newEvent = mariadb.format(
     `
       INSERT INTO events (
         eventName,
@@ -71,7 +71,7 @@ app.post("/api/events", (req, res) => {
   const materialsDistributed = req.body.materialsDistributed || [];
 
   materialsDistributed.forEach((r) => {
-    newEvent += mysql.format(
+    newEvent += mariadb.format(
       `
       INSERT INTO eventMaterials (eventId, materialId, quantityDistributed)
       VALUES (@idOfEvent, ?, ?);

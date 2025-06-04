@@ -5,7 +5,7 @@ const {
   invalidRequest,
   insufficientPrivileges,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { checkValid, nonEmptyString } = require("../utils/validation-utils");
 const { checkUserRole } = require("../utils/auth-utils");
 
@@ -26,7 +26,7 @@ app.post("/api/programs", (req, res, next) => {
     return invalidRequest(res, validationErrors);
   }
 
-  const insertProgram = mysql.format(
+  const insertProgram = mariadb.format(
     `
     INSERT INTO programs (programName, programDescription)
     VALUES (?, ?);

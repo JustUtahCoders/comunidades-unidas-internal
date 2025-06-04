@@ -5,7 +5,7 @@ const {
   notFound,
   databaseError,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const fs = require("fs");
 const path = require("path");
 const getSql = fs.readFileSync(
@@ -38,7 +38,7 @@ app.get("/api/materials/:materialId", (req, res) => {
 exports.getMaterial = getMaterial;
 
 function getMaterial(id, errBack) {
-  const sql = mysql.format(getSql, [id]);
+  const sql = mariadb.format(getSql, [id]);
 
   pool.query(sql, (err, result) => {
     if (err) {

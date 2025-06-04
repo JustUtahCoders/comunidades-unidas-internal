@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 
 exports.validTagsList = ["immigration"];
 
@@ -10,7 +10,7 @@ exports.insertTagsQuery = function insertTags(foreignId, foreignTable, tags) {
   } else {
     return tags
       .map((tag) =>
-        mysql.format(
+        mariadb.format(
           `
       INSERT IGNORE INTO tags (foreignId, foreignTable, tag) VALUES (${
         foreignId.rawValue || "?"

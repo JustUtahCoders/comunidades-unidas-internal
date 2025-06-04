@@ -6,11 +6,13 @@
   "license": "MIT",
   "scripts": {
     "fix-everything": "docker-compose down && docker-compose pull && pnpm install",
-    "start": "node backend/server.js",
+    "start": "concurrently -n w: pnpm:start:*",
+    "start:frontend": "http-server static -p 9018",
+    "start:backend": "node backend/server.js",
     "develop": "concurrently -n w: pnpm:develop-*",
     "develop-frontend": "cross-env PUBLIC_PATH='http://localhost:9018/' RUNNING_LOCALLY='true' webpack-dev-server --mode=development",
     "develop-backend": "cross-env RUNNING_LOCALLY='true' nodemon backend/server.js --watch backend --ext js,sql",
-    "develop-database": "docker-compose up",
+    "develop2-database": "docker-compose up",
     "build": "webpack --mode=production --env prod",
     "analyze-frontend-build": "webpack --mode=production --env analyze",
     "nuke-database": "docker-compose down -v",
@@ -49,7 +51,7 @@
     "body-parser": "^1.19.0",
     "btoa": "^1.2.1",
     "cookie-parser": "^1.4.5",
-    "cookie-session": "github:jolyndenning/cookie-session#secure-fix",
+    "cookie-session": "^2.1.0",
     "dateformat": "^3.0.3",
     "dayjs": "^1.10.4",
     "db-migrate-mysql2": "^1.0.0",
@@ -60,14 +62,15 @@
     "express": "^4.17.1",
     "ext-name": "^5.0.0",
     "fuzzy-search": "^3.2.1",
+    "http-server": "^14.1.1",
     "js-cookie": "^2.2.1",
     "juntos-por-la-salud-node-client": "^1.2.0",
     "keygrip": "^1.1.0",
     "kremling": "^2.0.4",
     "lodash": "^4.17.20",
     "lodash-es": "^4.17.20",
+    "mariadb": "^3.4.2",
     "morgan": "^1.10.0",
-    "mysql2": "^3.12.0",
     "passport": "^0.4.1",
     "passport-custom": "^1.1.1",
     "passport-google-oauth20": "^2.0.0",
@@ -118,5 +121,5 @@
     "webpack-dev-server": "^4.0.0-beta.0",
     "webpack-manifest-plugin": "^3.0.0"
   },
-  "packageManager": "pnpm@9.15.4"
+  "packageManager": "pnpm@10.11.1"
 }

@@ -1,5 +1,5 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   nullableValidInteger,
@@ -14,7 +14,7 @@ const {
   responseBoolean,
   responseDateWithoutTime,
 } = require("../utils/transform-utils");
-const { mysqlArrToJs } = require("../utils/mysql-utils");
+const { mariadbArrToJs } = require("../utils/mariadb-utils");
 
 const pageSize = 100;
 
@@ -58,7 +58,7 @@ app.get("/api/leads", (req, res, next) => {
           third: lead.thirdContactAttempt,
         },
         inactivityReason: lead.inactivityReason,
-        eventSources: mysqlArrToJs(lead.eventSources),
+        eventSources: mariadbArrToJs(lead.eventSources),
         firstName: lead.firstName,
         lastName: lead.lastName,
         fullName: responseFullName(lead.firstName, lead.lastName),
@@ -244,11 +244,11 @@ function listLeadsQuery(query, pageNum) {
 
   if (paginated) {
     const zeroBasedPage = pageNum ? pageNum - 1 : 0;
-    const mysqlOffset = zeroBasedPage * pageSize;
-    whereClauseValues.push(mysqlOffset, pageSize);
+    const mariadbOffset = zeroBasedPage * pageSize;
+    whereClauseValues.push(mariadbOffset, pageSize);
   }
 
-  let mysqlQuery = `
+  let mariadbQuery = `
     SELECT SQL_CALC_FOUND_ROWS
       leads.id AS leadId,
       leads.dateOfSignUp,
@@ -304,7 +304,7 @@ function listLeadsQuery(query, pageNum) {
     SELECT FOUND_ROWS();
   `;
 
-  const getLeads = mysql.format(mysqlQuery, whereClauseValues);
+  const getLeads = mariadb.format(mariadbQuery, whereClauseValues);
 
   return getLeads;
 }

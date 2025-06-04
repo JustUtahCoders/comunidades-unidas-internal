@@ -58,6 +58,12 @@ Now run the following command:
 pnpm run develop
 ```
 
+Once the database is ready to accept connections, run the following in a separate terminal tab:
+
+```sh
+pnpm exec db-migrate up -e dev
+```
+
 Now go to http://localhost:8080 in a browser.
 
 ## DB Migrate errors

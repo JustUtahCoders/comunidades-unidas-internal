@@ -5,7 +5,7 @@ const {
   invalidRequest,
   notFound,
 } = require("../../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   validId,
@@ -43,7 +43,7 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
 
   const { serviceIds } = req.body;
 
-  const getFollowUpByIdSql = mysql.format(getFollowUpSql, [
+  const getFollowUpByIdSql = mariadb.format(getFollowUpSql, [
     followUpId,
     followUpId,
   ]);
@@ -56,7 +56,7 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
     const newFollowUpInfo = { ...req.body };
     const newFollowUp = Object.assign({}, followUpResult[0], newFollowUpInfo);
 
-    let updateFollowUpSql = mysql.format(
+    let updateFollowUpSql = mariadb.format(
       `UPDATE followUps SET
           title = ?,
           description = ?,
@@ -78,19 +78,19 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
     );
 
     updateFollowUpSql =
-      mysql.format(`DELETE FROM followUpServices WHERE followUpId = ?;`, [
+      mariadb.format(`DELETE FROM followUpServices WHERE followUpId = ?;`, [
         newFollowUp.id,
       ]) + updateFollowUpSql;
 
     newFollowUp.serviceIds.forEach((id) => {
-      updateFollowUpSql += mysql.format(
+      updateFollowUpSql += mariadb.format(
         `INSERT INTO followUpServices (serviceId, followUpId) VALUES (?, ?);
         `,
         [id, newFollowUp.id]
       );
     });
 
-    updateFollowUpSql += mysql.format(
+    updateFollowUpSql += mariadb.format(
       `SELECT GROUP_CONCAT(services.serviceName SEPARATOR ', ') services FROM services WHERE id IN (?);`,
       [serviceIds.length > 0 ? serviceIds : null]
     );
@@ -117,7 +117,7 @@ app.patch("/api/clients/:clientId/follow-ups/:followUpId", (req, res) => {
         dateAdded: newFollowUp.dateOfContact,
       });
 
-      clientLogUpdate += mysql.format(
+      clientLogUpdate += mariadb.format(
         `
         UPDATE clientLogs
         SET idOfUpdatedLog = @logId

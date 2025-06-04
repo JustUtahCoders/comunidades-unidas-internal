@@ -10,16 +10,16 @@
   "prod": {
     "driver": "mysql2",
     "host": {
-      "ENV": "MYSQL_HOSTNAME"
+      "ENV": "MARIADB_HOSTNAME"
     },
     "user": {
-      "ENV": "MYSQL_USERNAME"
+      "ENV": "MARIADB_USERNAME"
     },
     "password": {
-      "ENV": "MYSQL_PASSWORD"
+      "ENV": "MARIADB_PASSWORD"
     },
     "database": {
-      "ENV": "MYSQL_DB_NAME"
+      "ENV": "MARIADB_NAME"
     },
     "multipleStatements": true
   }

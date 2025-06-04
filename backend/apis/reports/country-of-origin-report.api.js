@@ -1,6 +1,6 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
 const { checkValid, nullableValidDate } = require("../utils/validation-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 
 app.get(`/api/reports/countries-of-origin`, (req, res) => {
   const validationErrors = checkValid(
@@ -16,7 +16,7 @@ app.get(`/api/reports/countries-of-origin`, (req, res) => {
   const startDate = req.query.start || "2000-01-01T0";
   const endDate = req.query.end || "3000-01-01T0";
 
-  const sql = mysql.format(
+  const sql = mariadb.format(
     `
       SELECT COUNT(*) total, latestDemographics.countryOfOrigin
       FROM

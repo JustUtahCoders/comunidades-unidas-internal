@@ -7,7 +7,7 @@ const {
   insufficientPrivileges,
   pool,
 } = require("../../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   validId,
@@ -32,7 +32,7 @@ app.delete("/api/clients/:clientId/files/:fileId", (req, res) => {
   const tags = sanitizeTags(req.query.tags);
   const redactedTags = validTagsList.filter((t) => !tags.includes(t));
 
-  const getSql = mysql.format(
+  const getSql = mariadb.format(
     `
     SELECT isDeleted FROM clients WHERE id = ? AND isDeleted = false;
 
@@ -76,7 +76,7 @@ app.delete("/api/clients/:clientId/files/:fileId", (req, res) => {
       );
     }
 
-    const deleteSql = mysql.format(
+    const deleteSql = mariadb.format(
       `
       UPDATE clientFiles SET isDeleted = true WHERE id = ?;
 

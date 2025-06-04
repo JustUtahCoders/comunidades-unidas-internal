@@ -15,7 +15,7 @@ const {
   validInteger,
 } = require("../utils/validation-utils");
 const { getEventById } = require("./get-event.api");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 
 app.patch("/api/events/:eventId", (req, res) => {
   const validationErrors = [
@@ -55,7 +55,7 @@ app.patch("/api/events/:eventId", (req, res) => {
 
     const updatedEvent = Object.assign({}, event, req.body);
 
-    let updateSql = mysql.format(
+    let updateSql = mariadb.format(
       `
       UPDATE events
       SET eventName = ?, eventDate = ?, eventLocation = ?, attendanceMale = ?, attendanceFemale = ?, attendanceOther = ?, attendanceUnknown = ?
@@ -74,7 +74,7 @@ app.patch("/api/events/:eventId", (req, res) => {
     );
 
     if (req.body.materialsDistributed) {
-      updateSql += mysql.format(
+      updateSql += mariadb.format(
         `
         DELETE FROM eventMaterials WHERE eventId = ?;
         `,
@@ -82,7 +82,7 @@ app.patch("/api/events/:eventId", (req, res) => {
       );
 
       req.body.materialsDistributed.forEach((r) => {
-        updateSql += mysql.format(
+        updateSql += mariadb.format(
           `
           INSERT INTO eventMaterials (eventId, materialId, quantityDistributed)
           VALUES (?, ?, ?);

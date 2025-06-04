@@ -14,7 +14,7 @@ const {
   listLeadsQuery,
 } = require("../leads/list-leads.api");
 const { checkValid, nonEmptyString } = require("../utils/validation-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { filterResultForBulkText } = require("./check-bulk-sms.api");
 const queryString = require("query-string");
 
@@ -144,7 +144,7 @@ function insertBulkSmsQuery(totals, data, twilioSid, userId, smsBody, query) {
     values.push(l.phone, l.leadId, null);
   });
 
-  return mysql.format(
+  return mariadb.format(
     `
     INSERT INTO bulkSms
       (twilioSid, smsBody, clientsMatched, clientsWithPhone, clientRecipients, leadsMatched, leadsWithPhone, leadRecipients, uniquePhoneNumbers, query, addedBy)

@@ -5,7 +5,7 @@ const {
   insufficientPrivileges,
   invalidRequest,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const fs = require("fs");
 const path = require("path");
 const { checkUserRole } = require("../utils/auth-utils");
@@ -53,7 +53,7 @@ app.patch("/api/users/:userId", (req, res) => {
 
   const userId = Number(req.params.userId);
 
-  const getQuery = mysql.format(getSql, [userId]);
+  const getQuery = mariadb.format(getSql, [userId]);
 
   pool.query(getQuery, (err, getResult) => {
     if (err) {
@@ -62,7 +62,7 @@ app.patch("/api/users/:userId", (req, res) => {
 
     const finalUser = { ...getResult[0], ...req.body };
 
-    const insertQuery = mysql.format(insertSql, [
+    const insertQuery = mariadb.format(insertSql, [
       finalUser.accessLevel,
       userId,
       userId,

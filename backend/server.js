@@ -1,28 +1,25 @@
-if (process.env.RUNNING_LOCALLY) {
-  require("dotenv").config();
-}
+require("dotenv").config();
 
 const path = require("path");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 8080;
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 
-require("./run-database-migrations");
-
 exports.app = app;
-exports.pool = mysql.createPool({
+exports.pool = mariadb.createPool({
   connectionLimit: 40,
-  host: process.env.MYSQL_HOSTNAME || "localhost",
-  user: process.env.MYSQL_USERNAME || "root",
-  password: process.env.MYSQL_PASSWORD || "password",
-  database: process.env.MYSQL_DB_NAME || "local_db",
-  port: process.env.MYSQL_PORT || "3306",
+  host: process.env.MARIADB_HOSTNAME || "localhost",
+  user: process.env.MARIADB_USERNAME || "root",
+  password: process.env.MARIADB_PASSWORD || "password",
+  database: process.env.MARIADB_NAME || "local_db",
+  port: process.env.MARIADB_PORT || "3306",
   multipleStatements: true,
   timezone: "+00:00",
+  trace: true,
 });
 
 const getConnection = exports.pool.getConnection;

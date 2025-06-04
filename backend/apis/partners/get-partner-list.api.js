@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { app, pool, invalidRequest, databaseError } = require("../../server");
 const {
   checkValid,
@@ -23,7 +23,7 @@ app.get("/api/partners", (req, res) => {
   }
 
   const includeInactive = req.query.includeInactive === "true";
-  const query = mysql.format(sql, [!includeInactive, !includeInactive]);
+  const query = mariadb.format(sql, [!includeInactive, !includeInactive]);
 
   pool.query(query, (err, result) => {
     if (err) {

@@ -1,6 +1,6 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
 const { checkValid, nullableValidDate } = require("../utils/validation-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const _ = require("lodash");
 
 app.get(`/api/reports/ages-and-genders`, (req, res) => {
@@ -17,7 +17,7 @@ app.get(`/api/reports/ages-and-genders`, (req, res) => {
   const startDate = req.query.start || "2000-01-01T0";
   const endDate = req.query.end || "3000-01-01T0";
 
-  const sql = mysql.format(
+  const sql = mariadb.format(
     `
       SELECT COUNT(*) total, gender, CASE
         WHEN age between 0 and 17 then '0-17'

@@ -15,7 +15,7 @@ const {
 } = require("../../utils/validation-utils");
 const { responseFullName } = require("../../utils/transform-utils");
 const { Bucket } = require("./file-helpers");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { insertTagsQuery, sanitizeTags } = require("../../tags/tag.utils");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 
@@ -41,7 +41,7 @@ app.post("/api/clients/:clientId/files", (req, res) => {
   const clientId = req.params.clientId;
   const tags = sanitizeTags(req.query.tags);
 
-  const checkClientSql = mysql.format(
+  const checkClientSql = mariadb.format(
     `
     SELECT isDeleted FROM clients WHERE id = ?;
   `,
@@ -75,7 +75,7 @@ app.post("/api/clients/:clientId/files", (req, res) => {
             return internalError(req, res, err);
           }
 
-          const insertSql = mysql.format(
+          const insertSql = mariadb.format(
             `
           INSERT INTO clientFiles (s3Key, fileName, fileSize, fileExtension, addedBy, clientId)
           VALUES (?, ?, ?, ?, ?, ?);

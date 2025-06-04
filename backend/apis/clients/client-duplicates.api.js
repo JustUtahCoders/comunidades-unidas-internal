@@ -1,5 +1,5 @@
 const { app, databaseError, pool, invalidRequest } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   nonEmptyString,
@@ -29,7 +29,7 @@ app.get("/api/client-duplicates", (req, res, next) => {
 
   values.push(req.query.firstName, req.query.lastName);
 
-  const query = mysql.format(
+  const query = mariadb.format(
     `
     SELECT id, firstName, lastName, date_format(birthday,'%Y/%m/%d') as birthday, gender
     FROM clients

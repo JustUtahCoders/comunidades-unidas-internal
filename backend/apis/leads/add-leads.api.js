@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { app, databaseError, pool, invalidRequest } = require("../../server");
 const {
   checkValid,
@@ -121,7 +121,7 @@ app.post("/api/leads", (req, res) => {
       };
       leadReferralsQuery += referrals
         .map((referral) =>
-          mysql.format(insertReferralSql, [
+          mariadb.format(insertReferralSql, [
             leadId,
             referral.partnerServiceId,
             referral.referralDate,
@@ -167,7 +167,7 @@ app.post("/api/leads", (req, res) => {
     DROP TEMPORARY TABLE newLeadIds;
   `;
 
-  let newLeadsData = mysql.format(leadQuery, leadDataArray);
+  let newLeadsData = mariadb.format(leadQuery, leadDataArray);
 
   pool.query(newLeadsData, (err, result) => {
     if (err) {

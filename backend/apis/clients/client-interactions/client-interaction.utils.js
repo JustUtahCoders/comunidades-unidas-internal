@@ -2,7 +2,7 @@ const {
   responseFullName,
   responseDateWithoutTime,
 } = require("../../utils/transform-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   pool,
   invalidRequest,
@@ -54,7 +54,7 @@ exports.getInteraction = function getInteraction(
   errBack,
   redactedTags = []
 ) {
-  const sql = mysql.format(
+  const sql = mariadb.format(
     `
       SELECT l.description, l.id logId, i.id, i.clientId, i.serviceId, s.serviceName,
         i.interactionType, i.dateOfInteraction, i.duration,

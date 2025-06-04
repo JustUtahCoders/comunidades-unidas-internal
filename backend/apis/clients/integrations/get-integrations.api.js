@@ -5,7 +5,7 @@ const {
   invalidRequest,
   notFound,
 } = require("../../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { checkValid, validId } = require("../../utils/validation-utils");
 const {
   getIntegrationTypes,
@@ -31,7 +31,7 @@ app.get(`/api/clients/:clientId/integrations`, (req, res) => {
       return notFound(res, `Could not find client with id ${clientId}`);
     }
 
-    const sql = mysql.format(
+    const sql = mariadb.format(
       `
       SELECT * FROM integrations WHERE clientId = ?;
     `,

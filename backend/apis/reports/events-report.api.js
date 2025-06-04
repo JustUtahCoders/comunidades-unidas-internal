@@ -4,7 +4,7 @@ const {
   nullableValidDate,
   nullableNonEmptyString,
 } = require("../utils/validation-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const path = require("path");
 const fs = require("fs");
 const _ = require("lodash");
@@ -34,7 +34,7 @@ app.get("/api/reports/events", (req, res) => {
   const eventName = req.query.eventName || "";
   const eventLocation = req.query.eventLocation || "";
 
-  const formattedSql = mysql.format(sql, [
+  const formattedSql = mariadb.format(sql, [
     startDate,
     endDate,
     `%${eventName}${eventName.length > 0 ? "%" : ""}`,

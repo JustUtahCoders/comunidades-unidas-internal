@@ -1,5 +1,5 @@
 const { pool, app, databaseError } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const path = require("path");
 const fs = require("fs");
 
@@ -9,7 +9,7 @@ const getSql = fs.readFileSync(
 );
 
 app.get("/api/materials", (req, res) => {
-  const sql = mysql.format(getSql, []);
+  const sql = mariadb.format(getSql, []);
 
   pool.query(sql, (err, rows) => {
     if (err) {

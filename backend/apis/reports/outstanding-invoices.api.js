@@ -4,7 +4,7 @@ const {
   nullableValidTags,
   nullableValidDate,
 } = require("../utils/validation-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const path = require("path");
 const fs = require("fs");
 const { responseFullName } = require("../utils/transform-utils");
@@ -39,7 +39,7 @@ app.get(`/api/reports/outstanding-invoices`, (req, res) => {
 
   const start = req.query.start || defaultStart;
   const end = req.query.end || defaultEnd;
-  const sqlQuery = mysql.format(sql, [start, end]);
+  const sqlQuery = mariadb.format(sql, [start, end]);
 
   pool.query(sqlQuery, (err, result) => {
     if (err) {

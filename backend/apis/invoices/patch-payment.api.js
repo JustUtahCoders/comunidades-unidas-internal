@@ -7,7 +7,7 @@ const {
   notFound,
   insufficientPrivileges,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { getFullPaymentById } = require("./get-payment.api");
 const {
   checkValid,
@@ -113,7 +113,7 @@ app.patch("/api/payments/:paymentId", (req, res) => {
           );
         }
 
-        let insertSql = mysql.format(
+        let insertSql = mariadb.format(
           `
         UPDATE payments SET
           paymentDate = ?, paymentAmount = ?, paymentType = ?, payerName = ?, modifiedBy = ?
@@ -135,7 +135,7 @@ app.patch("/api/payments/:paymentId", (req, res) => {
         if (newPayment.donationAmount !== oldPayment.donationAmount) {
           if (oldPayment.donationId) {
             if (newPayment.donationAmount === 0) {
-              insertSql += mysql.format(
+              insertSql += mariadb.format(
                 `
                 UPDATE payments SET donationId = NULL WHERE id = ?;
 
@@ -144,7 +144,7 @@ app.patch("/api/payments/:paymentId", (req, res) => {
                 [newPayment.id, oldPayment.donationId]
               );
             } else {
-              insertSql += mysql.format(
+              insertSql += mariadb.format(
                 `
                 UPDATE donations SET donationAmount = ?
                 WHERE id = ?;
@@ -153,7 +153,7 @@ app.patch("/api/payments/:paymentId", (req, res) => {
               );
             }
           } else {
-            insertSql += mysql.format(
+            insertSql += mariadb.format(
               `
               INSERT INTO donations (donationAmount, donationDate, addedBy, modifiedBy)
               VALUES (?, ?, ?, ?);
@@ -172,7 +172,7 @@ app.patch("/api/payments/:paymentId", (req, res) => {
         }
 
         if (req.body.invoices) {
-          insertSql += mysql.format(
+          insertSql += mariadb.format(
             `
               UPDATE invoices SET status = 'open' WHERE id IN (
                 SELECT invoiceId FROM invoicePayments WHERE paymentId = ?
@@ -185,7 +185,7 @@ app.patch("/api/payments/:paymentId", (req, res) => {
 
           insertSql += req.body.invoices
             .map((i) =>
-              mysql.format(
+              mariadb.format(
                 `
                 INSERT INTO invoicePayments
                 (paymentId, invoiceId, amount)
@@ -209,7 +209,7 @@ app.patch("/api/payments/:paymentId", (req, res) => {
         }
 
         if (req.body.payerClientIds) {
-          insertSql += mysql.format(
+          insertSql += mariadb.format(
             `
           DELETE FROM paymentClients WHERE paymentId = ?;
         `,
@@ -218,7 +218,7 @@ app.patch("/api/payments/:paymentId", (req, res) => {
 
           insertSql += req.body.payerClientIds
             .map((c) =>
-              mysql.format(
+              mariadb.format(
                 `
           INSERT INTO paymentClients (paymentId, clientId)
           VALUES (?, ?);

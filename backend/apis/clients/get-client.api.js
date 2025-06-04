@@ -5,7 +5,7 @@ const {
   invalidRequest,
   notFound,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { checkValid, validId } = require("../utils/validation-utils");
 const {
   responseFullName,
@@ -40,7 +40,7 @@ exports.getClientById = getClientById;
 function getClientById(clientId, cbk, connection) {
   clientId = Number(clientId);
 
-  const getClient = mysql.format(
+  const getClient = mariadb.format(
     `
     SELECT
       clients.id as clientId,

@@ -1,6 +1,6 @@
 const { app, invalidRequest, pool, databaseError } = require("../../server");
 const { checkValid, nullableValidDate } = require("../utils/validation-utils");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const _ = require("lodash");
 const { toDuration } = require("./report-helpers");
 
@@ -18,7 +18,7 @@ app.get(`/api/reports/interactions-by-service`, (req, res) => {
   const startDate = req.query.start || "2000-01-01T0";
   const endDate = req.query.end || "3000-01-01T0";
 
-  const sql = mysql.format(
+  const sql = mariadb.format(
     `
       -- num interactions per service
       SELECT totalInteractions, services.id serviceId, services.serviceName, programs.id programId, programs.programName

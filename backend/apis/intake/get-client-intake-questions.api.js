@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   app,
   databaseError,
@@ -16,7 +16,7 @@ const sql = fs.readFileSync(
 );
 
 app.get("/api/client-intake-questions", (req, res, next) => {
-  pool.query(mysql.format(sql, []), (err, result) => {
+  pool.query(mariadb.format(sql, []), (err, result) => {
     if (err) {
       return databaseError(req, res, err);
     }

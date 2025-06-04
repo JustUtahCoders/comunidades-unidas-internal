@@ -5,7 +5,7 @@ const {
   invalidRequest,
   insufficientPrivileges,
 } = require("../../server");
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const {
   checkValid,
   validId,
@@ -80,7 +80,7 @@ app.patch("/api/services/:serviceId", (req, res, next) => {
     );
   }
 
-  const verifyValid = mysql.format(
+  const verifyValid = mariadb.format(
     `
     SELECT * FROM services WHERE id = ?;
     ${req.body.programId ? "SELECT * FROM programs WHERE id = ?" : ""}
@@ -143,7 +143,7 @@ app.patch("/api/services/:serviceId", (req, res, next) => {
         : Boolean(service.isActive),
     };
 
-    const updateService = mysql.format(
+    const updateService = mariadb.format(
       `
       UPDATE services
       SET serviceName = ?, serviceDesc = ?, programId = ?, isActive = ?, defaultLineItemName = ?,

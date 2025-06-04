@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mariadb = require("mariadb");
 const { app, pool, invalidRequest, databaseError } = require("../../server");
 const { checkUserRole } = require("../utils/auth-utils");
 const {
@@ -54,7 +54,7 @@ app.post("/api/custom-service-questions", (req, res, next) => {
     return invalidRequest(res, validationErrors);
   }
 
-  const query = mysql.format(
+  const query = mariadb.format(
     `
       INSERT INTO customServiceQuestions 
       ( serviceId, label, type ) 
@@ -64,7 +64,7 @@ app.post("/api/custom-service-questions", (req, res, next) => {
 
       ${(req.body.options || [])
         .map((i) =>
-          mysql.format(
+          mariadb.format(
             `
             INSERT INTO customServiceQuestionOptions
             (name, value, questionId)
@@ -94,7 +94,7 @@ app.post("/api/custom-service-questions", (req, res, next) => {
 });
 
 function getServiceQuestion({ id, isDeleted = false }, errBack) {
-  const query = mysql.format(getSql, [id, isDeleted, id]);
+  const query = mariadb.format(getSql, [id, isDeleted, id]);
   pool.query(query, (err, result) => {
     const questionResult = result[0];
     const optionResult = result[1];
