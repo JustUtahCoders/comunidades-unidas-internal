@@ -8,8 +8,9 @@ exports.insertContactInformationQuery = function insertContactInformationQuery(
   userId,
   insertLogEntry = false
 ) {
-  return mariadb.format(
-    `
+  const result = [
+    mariadb.format(
+      `
     INSERT INTO contactInformation (
       clientId,
       primaryPhone,
@@ -22,34 +23,36 @@ exports.insertContactInformationQuery = function insertContactInformationQuery(
       housingStatus,
       addedBy
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-
-    ${
-      insertLogEntry
-        ? insertActivityLogQuery({
-            clientId,
-            title: "Contact information was updated",
-            description: null,
-            logType: "clientUpdated:contactInformation",
-            addedBy: userId,
-            detailIdIsLastInsertId: true,
-          })
-        : ""
-    }
-
   `,
-    [
-      clientId,
-      requestPhone(data.phone),
-      data.smsConsent,
-      data.email,
-      data.homeAddress.street,
-      data.homeAddress.city,
-      data.homeAddress.state,
-      data.homeAddress.zip,
-      requestEnum(data.housingStatus),
-      userId,
-    ]
-  );
+      [
+        clientId,
+        requestPhone(data.phone),
+        data.smsConsent,
+        data.email,
+        data.homeAddress.street,
+        data.homeAddress.city,
+        data.homeAddress.state,
+        data.homeAddress.zip,
+        requestEnum(data.housingStatus),
+        userId,
+      ]
+    ),
+  ];
+
+  if (insertLogEntry) {
+    result.push(
+      insertActivityLogQuery({
+        clientId,
+        title: "Contact information was updated",
+        description: null,
+        logType: "clientUpdated:contactInformation",
+        addedBy: userId,
+        detailIdIsLastInsertId: true,
+      })
+    );
+  }
+
+  return result;
 };
 
 exports.insertDemographicsInformationQuery = function insertDemographicsInformationQuery(
@@ -58,8 +61,9 @@ exports.insertDemographicsInformationQuery = function insertDemographicsInformat
   userId,
   insertLogEntry = false
 ) {
-  return mariadb.format(
-    `
+  const result = [
+    mariadb.format(
+      `
     INSERT INTO demographics (
       clientId,
       countryOfOrigin,
@@ -79,40 +83,43 @@ exports.insertDemographicsInformationQuery = function insertDemographicsInformat
       isStudent,
       addedBy
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-
-    ${
-      insertLogEntry
-        ? insertActivityLogQuery({
-            clientId,
-            title: "Demographics information was updated",
-            description: null,
-            logType: "clientUpdated:demographics",
-            addedBy: userId,
-            detailIdIsLastInsertId: true,
-          })
-        : ""
-    }
   `,
-    [
-      clientId,
-      data.countryOfOrigin ? data.countryOfOrigin.toUpperCase() : null,
-      requestEnum(data.homeLanguage),
-      data.englishProficiency,
-      data.dateOfUSArrival,
-      requestEnum(data.currentlyEmployed),
-      data.employmentSector,
-      data.payInterval,
-      data.weeklyEmployedHours,
-      data.householdSize,
-      data.dependents,
-      data.civilStatus,
-      data.householdIncome,
-      data.eligibleToVote,
-      data.registeredToVote,
-      data.isStudent,
-      userId,
-    ]
-  );
+      [
+        clientId,
+        data.countryOfOrigin ? data.countryOfOrigin.toUpperCase() : null,
+        requestEnum(data.homeLanguage),
+        data.englishProficiency,
+        data.dateOfUSArrival,
+        requestEnum(data.currentlyEmployed),
+        data.employmentSector,
+        data.payInterval,
+        data.weeklyEmployedHours,
+        data.householdSize,
+        data.dependents,
+        data.civilStatus,
+        data.householdIncome,
+        data.eligibleToVote,
+        data.registeredToVote,
+        data.isStudent,
+        userId,
+      ]
+    ),
+  ];
+
+  if (insertLogEntry) {
+    result.push(
+      insertActivityLogQuery({
+        clientId,
+        title: "Demographics information was updated",
+        description: null,
+        logType: "clientUpdated:demographics",
+        addedBy: userId,
+        detailIdIsLastInsertId: true,
+      })
+    );
+  }
+
+  return result;
 };
 
 exports.insertIntakeDataQuery = function insertIntakeDataQuery(
@@ -144,22 +151,10 @@ exports.insertIntakeServicesQuery = function insertIntakeServicesQuery(
   data,
   insertLogEntry = false
 ) {
-  return mariadb.format(
-    `
+  const result = [
+    mariadb.format(
+      `
       SET @intakeDataId = LAST_INSERT_ID();
-
-      ${
-        insertLogEntry
-          ? insertActivityLogQuery({
-              clientId: data.clientId,
-              title: "Intake data was updated",
-              description: null,
-              logType: "clientUpdated:intakeData",
-              addedBy: data.userId,
-              detailIdIsLastInsertId: true,
-            })
-          : ""
-      }
 
       ${data.intakeServices
         .map(
@@ -168,8 +163,24 @@ exports.insertIntakeServicesQuery = function insertIntakeServicesQuery(
         )
         .join("")}
     `,
-    data.intakeServices
-  );
+      data.intakeServices
+    ),
+  ];
+
+  if (insertLogEntry) {
+    result.push(
+      insertActivityLogQuery({
+        clientId: data.clientId,
+        title: "Intake data was updated",
+        description: null,
+        logType: "clientUpdated:intakeData",
+        addedBy: data.userId,
+        detailId: "@intakeDataId",
+      })
+    );
+  }
+
+  return result;
 };
 
 exports.convertLeadToClient = function (leadId, clientId, userId) {

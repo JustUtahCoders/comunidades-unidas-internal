@@ -145,13 +145,6 @@ app.patch("/api/clients/:id", (req, res, next) => {
           gender = ?,
           modifiedBy = ?
         WHERE id = ?;
-
-        ${insertActivityLogQuery({
-          clientId,
-          title: "Basic information was updated",
-          logType: "clientUpdated:basicInformation",
-          addedBy: req.session.passport.user.id,
-        })}
       `,
           [
             fullClient.firstName,
@@ -162,6 +155,15 @@ app.patch("/api/clients/:id", (req, res, next) => {
             clientId,
           ]
         )
+      );
+
+      queries.push(
+        insertActivityLogQuery({
+          clientId,
+          title: "Basic information was updated",
+          logType: "clientUpdated:basicInformation",
+          addedBy: req.session.passport.user.id,
+        })
       );
     }
 
@@ -179,7 +181,7 @@ app.patch("/api/clients/:id", (req, res, next) => {
 
     if (contactInfoChanged) {
       queries.push(
-        insertContactInformationQuery(
+        ...insertContactInformationQuery(
           clientId,
           fullClient,
           req.session.passport.user.id,
@@ -209,7 +211,7 @@ app.patch("/api/clients/:id", (req, res, next) => {
 
     if (demographicsInfoChanged) {
       queries.push(
-        insertDemographicsInformationQuery(
+        ...insertDemographicsInformationQuery(
           clientId,
           fullClient,
           req.session.passport.user.id,
@@ -236,7 +238,7 @@ app.patch("/api/clients/:id", (req, res, next) => {
       );
 
       queries.push(
-        insertIntakeServicesQuery(
+        ...insertIntakeServicesQuery(
           {
             clientId: clientId,
             intakeServices: fullClient.intakeServices,
@@ -255,21 +257,45 @@ app.patch("/api/clients/:id", (req, res, next) => {
       return;
     }
 
-    pool.query(queries.join("\n"), (patchErr, result) => {
-      if (patchErr) {
-        return databaseError(req, res, patchErr);
+    pool.getConnection((err, connection) => {
+      if (err) {
+        return databaseError(req, res, err, connection);
       }
 
-      getClientById(req.params.id, (selectErr, client) => {
-        if (selectErr) {
-          return databaseError(req, res, selectErr, connection);
+      connection.beginTransaction((err) => {
+        if (err) {
+          return databaseError(req, res, err, connection);
         }
 
-        performAnyIntegrations(client, req.session.passport.user.id);
+        runQuery(0);
 
-        res.send({
-          client,
-        });
+        function runQuery(index) {
+          connection.query(queries[index], (patchErr) => {
+            if (patchErr) {
+              connection.rollback();
+              return databaseError(req, res, patchErr, connection);
+            }
+
+            if (index === queries.length - 1) {
+              connection.commit();
+              connection.release();
+
+              getClientById(req.params.id, (selectErr, client) => {
+                if (selectErr) {
+                  return databaseError(req, res, selectErr, connection);
+                }
+
+                performAnyIntegrations(client, req.session.passport.user.id);
+
+                res.send({
+                  client,
+                });
+              });
+            } else {
+              runQuery(index + 1);
+            }
+          });
+        }
       });
     });
   });
