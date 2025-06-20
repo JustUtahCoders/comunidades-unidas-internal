@@ -13,6 +13,7 @@ const {
   insertTagsQuery,
   validTagsList,
 } = require("../tags/tag.utils");
+const { runQueriesArray } = require("../utils/mariadb-utils.js");
 
 app.post("/api/invoices", (req, res) => {
   const user = req.session.passport.user;
@@ -45,30 +46,33 @@ app.post("/api/invoices", (req, res) => {
     const tags = sanitizeTags(req.query.tags);
     const redactedTags = validTagsList.filter((t) => !tags.includes(t));
 
-    const insertSql = mariadb.format(
-      `
-      INSERT INTO invoices (invoiceNumber, invoiceDate, addedBy, modifiedBy, status)
-      VALUES (?, ?, ?, ?, 'draft');
+    const insertQueries = [
+      mariadb.format(
+        `
+        INSERT INTO invoices (invoiceNumber, invoiceDate, addedBy, modifiedBy, status)
+        VALUES (?, NOW(), ?, ?, 'draft');
 
-      SET @invoiceId := LAST_INSERT_ID();
+        SET @invoiceId := LAST_INSERT_ID();
 
-      SELECT @invoiceId invoiceId;
-
-      ${insertTagsQuery(
+        SELECT @invoiceId invoiceId;
+      `,
+        [invoiceNumber, user.id, user.id]
+      ),
+      ...insertTagsQuery(
         {
           rawValue: "@invoiceId",
         },
         "invoices",
         tags
-      )}
-    `,
-      [invoiceNumber, new Date(), user.id, user.id]
-    );
+      ),
+    ];
 
-    pool.query(insertSql, (err, insertResult) => {
+    runQueriesArray(insertQueries, (err, results) => {
       if (err) {
         return databaseError(req, res, err);
       }
+
+      const [insertResult] = results;
 
       getFullInvoiceById(
         { id: insertResult[2][0].invoiceId, redactedTags },

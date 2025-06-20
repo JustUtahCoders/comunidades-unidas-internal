@@ -11,6 +11,7 @@ const {
   insertActivityLogQuery,
 } = require("./activity-log.utils");
 const { sanitizeTags } = require("../../tags/tag.utils");
+const { runQueriesArray } = require("../../utils/mariadb-utils.js");
 
 app.patch(`/api/clients/:clientId/logs/:logId`, (req, res) => {
   const user = req.session.passport.user;
@@ -80,23 +81,22 @@ app.patch(`/api/clients/:clientId/logs/:logId`, (req, res) => {
         return invalidRequest(res, `You may not modify an outdated client log`);
       }
 
-      const updateSql = mariadb.format(
-        `
-        ${insertActivityLogQuery({
+      const updateQueries = [
+        ...insertActivityLogQuery({
           clientId: req.params.clientId,
           title: req.body.title || existingLog.title,
           description: req.body.description || existingLog.description,
           logType: existingLog.logType,
           addedBy: user.id,
           tags,
-        })}
+        }),
+        mariadb.format(
+          `UPDATE clientLogs SET idOfUpdatedLog = LAST_INSERT_ID() WHERE id = ?`,
+          [existingLog.id]
+        ),
+      ];
 
-        UPDATE clientLogs SET idOfUpdatedLog = LAST_INSERT_ID() WHERE id = ?;
-      `,
-        [existingLog.id]
-      );
-
-      pool.query(updateSql, (err, result) => {
+      runQueriesArray(updateQueries, (err, result) => {
         if (err) {
           return databaseError(req, res, err);
         }

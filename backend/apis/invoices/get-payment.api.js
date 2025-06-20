@@ -12,11 +12,7 @@ const {
   nullableValidTags,
 } = require("../utils/validation-utils");
 const { formatResponsePayment } = require("./payment-utils");
-const {
-  sanitizeTags,
-  validTagsList,
-  insertTagsQuery,
-} = require("../tags/tag.utils");
+const { sanitizeTags, validTagsList } = require("../tags/tag.utils");
 
 app.get("/api/payments/:paymentId", (req, res) => {
   const user = req.session.passport.user;

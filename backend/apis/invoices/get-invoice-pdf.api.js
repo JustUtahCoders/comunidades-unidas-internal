@@ -57,6 +57,7 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
         return insufficientPrivileges(res, `Invoice is redacted`);
       } else {
         const clientErrBack = (err, client) => {
+          console.log("clientErrBack", err, client);
           if (err) {
             return databaseError(err);
           }
@@ -401,6 +402,8 @@ app.get("/api/invoices/:invoiceId/pdfs", (req, res) => {
 
           doc.end();
         };
+
+        console.log("here1");
 
         if (invoice.clients.length > 0) {
           getAllClientsById(invoice.clients, clientErrBack);

@@ -157,14 +157,14 @@ app.patch("/api/clients/:id", (req, res, next) => {
         )
       );
 
-      queries.push(
-        insertActivityLogQuery({
-          clientId,
-          title: "Basic information was updated",
-          logType: "clientUpdated:basicInformation",
-          addedBy: req.session.passport.user.id,
-        })
-      );
+      const activityLogQueries = insertActivityLogQuery({
+        clientId,
+        title: "Basic information was updated",
+        logType: "clientUpdated:basicInformation",
+        addedBy: req.session.passport.user.id,
+      });
+
+      queries.push(...activityLogQueries);
     }
 
     const contactInfoChanged = atLeastOne(

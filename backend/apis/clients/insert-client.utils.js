@@ -169,13 +169,13 @@ exports.insertIntakeServicesQuery = function insertIntakeServicesQuery(
 
   if (insertLogEntry) {
     result.push(
-      insertActivityLogQuery({
+      ...insertActivityLogQuery({
         clientId: data.clientId,
         title: "Intake data was updated",
         description: null,
         logType: "clientUpdated:intakeData",
         addedBy: data.userId,
-        detailId: "@intakeDataId",
+        detailId: { rawValue: "@intakeDataId" },
       })
     );
   }

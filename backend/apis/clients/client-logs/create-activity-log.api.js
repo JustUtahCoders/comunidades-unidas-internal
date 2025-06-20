@@ -12,6 +12,7 @@ const {
   insertActivityLogQuery,
 } = require("./activity-log.utils");
 const { sanitizeTags } = require("../../tags/tag.utils");
+const { runQueriesArray } = require("../../utils/mariadb-utils.js");
 
 app.post("/api/clients/:clientId/logs", (req, res) => {
   const user = req.session.passport.user;
@@ -33,7 +34,7 @@ app.post("/api/clients/:clientId/logs", (req, res) => {
 
   const tags = sanitizeTags(req.query.tags);
 
-  const sql = insertActivityLogQuery({
+  const queries = insertActivityLogQuery({
     clientId: req.params.clientId,
     title: req.body.title,
     description: req.body.description,
@@ -42,10 +43,14 @@ app.post("/api/clients/:clientId/logs", (req, res) => {
     tags,
   });
 
-  pool.query(sql, (err, result) => {
+  console.log("queries", queries);
+
+  runQueriesArray(queries, (err, results) => {
     if (err) {
       return databaseError(req, res, err);
     }
+
+    const [result] = results;
 
     res.send(
       createResponseLogObject({

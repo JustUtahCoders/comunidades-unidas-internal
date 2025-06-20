@@ -2,6 +2,7 @@ const { responseUser } = require("../utils/transform-utils");
 const mariadb = require("mariadb/callback.js");
 const { pool } = require("../../server");
 const { intersection, uniqBy } = require("lodash");
+const { runQueriesArray } = require("../utils/mariadb-utils.js");
 
 exports.formatResponsePayment = function formatResponsePayment({
   payment,
@@ -67,19 +68,17 @@ exports.checkValidPaymentRequestIds = function checkValidPaymentRequestIds(
     return errBack(null, null);
   }
 
-  let checkExistenceSql = invoiceIds
-    .map((invoiceId) =>
-      mariadb.format(
-        `
+  const checkExistenceQueries = invoiceIds.map((invoiceId) =>
+    mariadb.format(
+      `
     SELECT COUNT(*) cnt FROM invoices WHERE id = ?;
   `,
-        [invoiceId]
-      )
+      [invoiceId]
     )
-    .join("\n");
+  );
 
-  checkExistenceSql += payerClientIds
-    .map((clientId) =>
+  checkExistenceQueries.push(
+    ...payerClientIds.map((clientId) =>
       mariadb.format(
         `
     SELECT COUNT(*) cnt FROM clients WHERE id = ? AND isDeleted = false;
@@ -87,9 +86,9 @@ exports.checkValidPaymentRequestIds = function checkValidPaymentRequestIds(
         [clientId]
       )
     )
-    .join("\n");
+  );
 
-  pool.query(checkExistenceSql, (err, result) => {
+  runQueriesArray(checkExistenceQueries, (err, result) => {
     if (err) {
       return errBack(err, null);
     } else {

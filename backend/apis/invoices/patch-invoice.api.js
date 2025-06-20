@@ -33,6 +33,7 @@ const {
 const {
   insertActivityLogQuery,
 } = require("../clients/client-logs/activity-log.utils");
+const { runQueriesArray } = require("../utils/mariadb-utils.js");
 
 app.patch("/api/invoices/:invoiceId", (req, res) => {
   const user = req.session.passport.user;
@@ -115,94 +116,104 @@ app.patch("/api/invoices/:invoiceId", (req, res) => {
       newInvoice.status = "open";
     }
 
-    let updateSql = mariadb.format(
-      `
+    const updateQueries = [];
+
+    updateQueries.push(
+      mariadb.format(
+        `
       UPDATE invoices
       SET
         invoiceNumber = ?, invoiceDate = ?, clientNote = ?, totalCharged = ?,
         status = ?, billTo = ?, modifiedBy = ?
       WHERE id = ?;
     `,
-      [
-        newInvoice.invoiceNumber,
-        newInvoice.invoiceDate,
-        newInvoice.clientNote,
-        newInvoice.totalCharged,
-        newInvoice.status,
-        newInvoice.billTo,
-        user.id,
-        invoiceId,
-      ]
+        [
+          newInvoice.invoiceNumber,
+          newInvoice.invoiceDate,
+          newInvoice.clientNote,
+          newInvoice.totalCharged,
+          newInvoice.status,
+          newInvoice.billTo,
+          user.id,
+          invoiceId,
+        ]
+      )
     );
 
     if (req.body.clients) {
-      updateSql += mariadb.format(
-        `
+      updateQueries.push(
+        mariadb.format(
+          `
         DELETE FROM invoiceClients WHERE invoiceId = ?;
+      `,
+          [invoiceId]
+        )
+      );
 
-        ${req.body.clients
-          .map((clientId) =>
-            mariadb.format(
-              `
+      updateQueries.push(
+        ...req.body.clients.map((clientId) =>
+          mariadb.format(
+            `
           INSERT INTO invoiceClients (clientId, invoiceId)
           VALUES (?, ?);
         `,
-              [clientId, invoiceId]
-            )
+            [clientId, invoiceId]
           )
-          .join("\n")}
-      `,
-        [invoiceId]
+        )
       );
     }
 
     if (req.body.lineItems) {
-      updateSql += mariadb.format(
-        `
+      updateQueries.push(
+        mariadb.format(
+          `
         DELETE FROM invoiceLineItems WHERE invoiceId = ?;
-
-        ${req.body.lineItems
-          .map((li) =>
-            mariadb.format(
-              `
-          INSERT INTO invoiceLineItems
-          (invoiceId, serviceId, name, description, quantity, rate)
-          VALUES (?, ?, ?, ?, ?, ?);
-        `,
-              [
-                invoiceId,
-                li.serviceId,
-                li.name,
-                li.description,
-                li.quantity,
-                li.rate,
-              ]
-            )
-          )
-          .join("\n")}
       `,
-        [invoiceId]
+          [invoiceId]
+        )
+      );
+
+      updateQueries.push(
+        ...req.body.lineItems.map((li) =>
+          mariadb.format(
+            `
+        INSERT INTO invoiceLineItems
+        (invoiceId, serviceId, name, description, quantity, rate)
+        VALUES (?, ?, ?, ?, ?, ?);
+      `,
+            [
+              invoiceId,
+              li.serviceId,
+              li.name,
+              li.description,
+              li.quantity,
+              li.rate,
+            ]
+          )
+        )
       );
     }
 
     if (tags.length > 0) {
-      updateSql += insertTagsQuery(invoiceId, "invoices", tags);
+      updateQueries.push(...insertTagsQuery(invoiceId, "invoices", tags));
     }
 
     req.body.clients.forEach((clientId) => {
-      updateSql += insertActivityLogQuery({
-        clientId,
-        title: `Invoice #${newInvoice.invoiceNumber} was ${
-          statusChange && newInvoice.status === "open" ? "created" : "updated"
-        }`,
-        description: null,
-        logType: "invoice:updated",
-        addedBy: user.id,
-        detailId: invoiceId,
-      });
+      updateQueries.push(
+        ...insertActivityLogQuery({
+          clientId,
+          title: `Invoice #${newInvoice.invoiceNumber} was ${
+            statusChange && newInvoice.status === "open" ? "created" : "updated"
+          }`,
+          description: null,
+          logType: "invoice:updated",
+          addedBy: user.id,
+          detailId: invoiceId,
+        })
+      );
     });
 
-    pool.query(updateSql, (err, updateResult) => {
+    runQueriesArray(updateQueries, (err, updateResult) => {
       if (err) {
         if (err.code === "ER_DUP_ENTRY") {
           return invalidRequest(res, {

@@ -6,22 +6,20 @@ exports.insertTagsQuery = function insertTags(foreignId, foreignTable, tags) {
   tags = sanitizeTags(tags);
 
   if (tags.length === 0) {
-    return "";
+    return [];
   } else {
-    return tags
-      .map((tag) =>
-        mariadb.format(
-          `
+    return tags.map((tag) =>
+      mariadb.format(
+        `
       INSERT IGNORE INTO tags (foreignId, foreignTable, tag) VALUES (${
         foreignId.rawValue || "?"
       }, ?, ?);
     `,
-          [foreignId.rawValue ? false : foreignId, foreignTable, tag].filter(
-            Boolean
-          )
+        [foreignId.rawValue ? false : foreignId, foreignTable, tag].filter(
+          Boolean
         )
       )
-      .join("\n");
+    );
   }
 };
 

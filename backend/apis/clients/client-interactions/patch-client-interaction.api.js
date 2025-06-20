@@ -16,6 +16,7 @@ const { getInteraction } = require("./client-interaction.utils");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 const { sanitizeTags, insertTagsQuery } = require("../../tags/tag.utils");
 const _ = require("lodash");
+const { runQueriesArray } = require("../../utils/mariadb-utils.js");
 
 app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
   const validationErrors = [
@@ -123,7 +124,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
 
           if (tags.length > 0) {
             queries.push(
-              insertTagsQuery(
+              ...insertTagsQuery(
                 existingInteraction.id,
                 "clientInteractions",
                 tags
@@ -134,7 +135,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
 
         if (shouldUpdateLog) {
           queries.push(
-            insertActivityLogQuery({
+            ...insertActivityLogQuery({
               clientId,
               title: `${serviceName} service added`,
               description:
@@ -149,17 +150,15 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
           queries.push(
             mariadb.format(
               `
-            WITH oldLog AS (
+            UPDATE clientLogs
+            SET idOfUpdatedLog = @logId
+            WHERE id = (
               SELECT id FROM clientLogs
               WHERE logType IN ("clientInteraction:created", "clientInteraction:updated")
                 AND detailId = ?
               ORDER BY dateAdded DESC
               LIMIT 1, 1
-            )
-
-            UPDATE clientLogs
-            SET idOfUpdatedLog = @logId
-            WHERE id = (SELECT id FROM oldLog);
+            );
           `,
               [existingInteraction.id]
             )
@@ -168,7 +167,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
 
         if (req.body.dateOfInteraction) {
           queries.push(
-            insertActivityLogQuery({
+            ...insertActivityLogQuery({
               clientId,
               title: `${serviceName} service was provided`,
               description: null,
@@ -182,17 +181,15 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
           queries.push(
             mariadb.format(
               `
-            WITH oldLog AS (
+            UPDATE clientLogs
+            SET idOfUpdatedLog = @logId
+            WHERE id = (
               SELECT id FROM clientLogs
               WHERE logType = 'clientInteraction:serviceProvided'
                 AND detailId = ?
               ORDER BY id DESC
-              LIMIT 1, 1
-            )
-
-            UPDATE clientLogs
-            SET idOfUpdatedLog = @logId
-            WHERE id = (SELECT id FROM oldLog);
+              LIMIT 1
+            );
           `,
               [existingInteraction.id]
             )
@@ -226,9 +223,7 @@ app.patch("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
           queries.push(...createCustomAnswerQueries);
         }
 
-        const sql = queries.join("\n");
-
-        pool.query(sql, (err, result) => {
+        runQueriesArray(queries, (err, result) => {
           if (err) {
             return databaseError(req, res, err);
           }

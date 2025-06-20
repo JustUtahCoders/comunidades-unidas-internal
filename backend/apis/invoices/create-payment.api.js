@@ -26,6 +26,8 @@ const {
 const {
   insertActivityLogQuery,
 } = require("../clients/client-logs/activity-log.utils");
+const { runQueriesArray } = require("../utils/mariadb-utils.js");
+const { flattenDeep } = require("lodash-es");
 
 app.post("/api/payments", (req, res) => {
   const user = req.session.passport.user;
@@ -69,36 +71,52 @@ app.post("/api/payments", (req, res) => {
         return invalidRequest(res, invalidMsg);
       }
 
-      let insertSql = "";
+      let insertQueries = [];
 
       if (req.body.donationAmount) {
-        insertSql += mariadb.format(
-          `
+        insertQueries.push(
+          mariadb.format(
+            `
           INSERT INTO donations
           (donationAmount, donationDate, addedBy, modifiedBy)
           VALUES (?, ?, ?, ?);
 
           SET @donationId := LAST_INSERT_ID();
         `,
-          [req.body.donationAmount, req.body.paymentDate, user.id, user.id]
+            [req.body.donationAmount, req.body.paymentDate, user.id, user.id]
+          )
         );
       } else {
-        insertSql += `
-          SET @donationId := NULL;
-        `;
+        insertQueries.push(
+          mariadb.format(`
+            SET @donationId := NULL;
+          `)
+        );
       }
 
-      insertSql += mariadb.format(
-        `
-      INSERT INTO payments
-      (paymentDate, paymentAmount, paymentType, payerName, addedBy, modifiedBy, donationId)
-      VALUES
-      (?, ?, ?, ?, ?, ?, @donationId);
+      insertQueries.push(
+        mariadb.format(
+          `
+          INSERT INTO payments
+          (paymentDate, paymentAmount, paymentType, payerName, addedBy, modifiedBy, donationId)
+          VALUES
+          (?, ?, ?, ?, ?, ?, @donationId);
 
-      SET @paymentId := LAST_INSERT_ID();
+          SET @paymentId := LAST_INSERT_ID();
+        `,
+          [
+            req.body.paymentDate,
+            req.body.paymentAmount,
+            req.body.paymentType,
+            req.body.payerName || null,
+            user.id,
+            user.id,
+          ]
+        )
+      );
 
-      ${req.body.invoices
-        .map((i) =>
+      insertQueries.push(
+        ...req.body.invoices.map((i) =>
           mariadb.format(
             `
         INSERT INTO invoicePayments
@@ -119,10 +137,10 @@ app.post("/api/payments", (req, res) => {
             [i.invoiceId, i.amount, i.invoiceId, i.invoiceId]
           )
         )
-        .join("\n")}
+      );
 
-      ${req.body.payerClientIds
-        .map((c) =>
+      insertQueries.push(
+        ...req.body.payerClientIds.map((c) =>
           mariadb.format(
             `
         INSERT INTO paymentClients (paymentId, clientId)
@@ -131,41 +149,37 @@ app.post("/api/payments", (req, res) => {
             [c]
           )
         )
-        .join("\n")}
-
-      ${insertTagsQuery({ rawValue: "@paymentId" }, "payments", tags)}
-    `,
-        [
-          req.body.paymentDate,
-          req.body.paymentAmount,
-          req.body.paymentType,
-          req.body.payerName || null,
-          user.id,
-          user.id,
-        ]
       );
 
-      req.body.payerClientIds.forEach((clientId) => {
-        insertSql += insertActivityLogQuery({
-          clientId,
-          title: {
-            rawValue: `CONCAT('Client payment #', (SELECT LPAD(@paymentId, 4, '0')), ' was created')`,
-          },
-          description: null,
-          logType: "payment:created",
-          addedBy: user.id,
-          detailId: { rawValue: "@paymentId" },
-        });
-      });
+      insertQueries.push(
+        ...insertTagsQuery({ rawValue: "@paymentId" }, "payments", tags)
+      );
 
-      insertSql += `SELECT @paymentId paymentId;`;
+      insertQueries.push(
+        ...flattenDeep(
+          req.body.payerClientIds.map((clientId) =>
+            insertActivityLogQuery({
+              clientId,
+              title: {
+                rawValue: `CONCAT('Client payment #', (SELECT LPAD(@paymentId, 4, '0')), ' was created')`,
+              },
+              description: null,
+              logType: "payment:created",
+              addedBy: user.id,
+              detailId: { rawValue: "@paymentId" },
+            })
+          )
+        )
+      );
 
-      pool.query(insertSql, (err, result) => {
+      insertQueries.push(`SELECT @paymentId paymentId;`);
+
+      runQueriesArray(insertQueries, (err, result) => {
         if (err) {
           return databaseError(req, res, err);
         }
 
-        const paymentId = result[result.length - 1][0].paymentId;
+        const paymentId = Number(result[1][0].insertId);
 
         getFullPaymentById({ paymentId, redactedTags }, (err, payment) => {
           if (err) {
