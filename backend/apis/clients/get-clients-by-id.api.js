@@ -19,7 +19,8 @@ const {
 const path = require("path");
 const fs = require("fs");
 const rawGetSql = fs.readFileSync(
-  path.join(__dirname, "./get-clients-by-id.sql")
+  path.join(__dirname, "./get-clients-by-id.sql"),
+  "utf-8"
 );
 
 app.get("/api/clients-by-id", (req, res) => {

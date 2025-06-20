@@ -3,7 +3,7 @@ SELECT
   payments.donationId, payments.dateAdded, payments.dateModified, payments.payerName,
   addedUser.firstName addedFirstName, addedUser.lastName addedLastName,
   modifiedUser.firstName modifiedFirstName, modifiedUser.lastName modifiedLastName,
-  donations.id donationId, donations.donationAmount donationAmount,
+  donations.donationAmount donationAmount,
   JSON_ARRAYAGG(JSON_OBJECT(
     'invoiceId', invoicePayments.invoiceId,
     'amount', invoicePayments.amount,

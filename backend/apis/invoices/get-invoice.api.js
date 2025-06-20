@@ -17,7 +17,8 @@ const path = require("path");
 const { validTagsList, sanitizeTags } = require("../tags/tag.utils");
 
 const getInvoiceSqlStr = fs.readFileSync(
-  path.resolve(__dirname, "./get-invoice.sql")
+  path.resolve(__dirname, "./get-invoice.sql"),
+  "utf-8"
 );
 
 app.get("/api/invoices/:invoiceId", (req, res) => {

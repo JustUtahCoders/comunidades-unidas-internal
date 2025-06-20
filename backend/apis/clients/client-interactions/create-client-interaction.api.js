@@ -15,6 +15,7 @@ const { getInteraction } = require("./client-interaction.utils");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
 const { insertTagsQuery, sanitizeTags } = require("../../tags/tag.utils.js");
 const _ = require("lodash");
+const { runQueriesArray } = require("../../utils/mariadb-utils.js");
 
 app.post("/api/clients/:clientId/interactions", (req, res) => {
   const user = req.session.passport.user;
@@ -74,8 +75,9 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
 
     const tags = sanitizeTags(req.query.tags);
 
-    const insertSql = mariadb.format(
-      `
+    const insertQueries = [
+      mariadb.format(
+        `
         INSERT INTO clientInteractions
         (clientId, serviceId, interactionType, dateOfInteraction, duration, location, addedBy, modifiedBy)
         VALUES
@@ -83,69 +85,77 @@ app.post("/api/clients/:clientId/interactions", (req, res) => {
 
         SET @interactionId := LAST_INSERT_ID();
 
-        ${(req.body.customQuestions || [])
-          .map((i) =>
-            mariadb.format(
-              `
+      `,
+        [
+          req.params.clientId,
+          req.body.serviceId,
+          req.body.interactionType,
+          req.body.dateOfInteraction,
+          req.body.duration,
+          req.body.location,
+          user.id,
+          user.id,
+        ]
+      ),
+    ];
+
+    insertQueries.push(
+      ...(req.body.customQuestions || []).map((i) =>
+        mariadb.format(
+          `
             INSERT INTO clientInteractionCustomAnswers
             (questionId, answer, interactionId)
             VALUES
             (?,?, @interactionId);
       `,
-              [
-                i.questionId,
-                _.isNumber(i.answer) ? i.answer : JSON.stringify(i.answer),
-              ]
-            )
-          )
-          .join("\n")}
-
-        ${insertActivityLogQuery({
-          clientId: req.params.clientId,
-          title: `${serviceName} service was added to the database`,
-          description: req.body.description,
-          logType: "clientInteraction:created",
-          addedBy: user.id,
-          detailId: { rawValue: "@interactionId" },
-          tags,
-        })}
-
-        ${insertActivityLogQuery({
-          clientId: req.params.clientId,
-          title: `${serviceName} was provided to the client`,
-          description: null,
-          logType: "clientInteraction:serviceProvided",
-          addedBy: user.id,
-          dateAdded: req.body.dateOfInteraction,
-          detailId: { rawValue: "@interactionId" },
-          tags,
-        })}
-
-        ${insertTagsQuery(
-          { rawValue: "@interactionId" },
-          "clientInteractions",
-          tags
-        )}
-      `,
-      [
-        req.params.clientId,
-        req.body.serviceId,
-        req.body.interactionType,
-        req.body.dateOfInteraction,
-        req.body.duration,
-        req.body.location,
-        user.id,
-        user.id,
-      ]
+          [
+            i.questionId,
+            _.isNumber(i.answer) ? i.answer : JSON.stringify(i.answer),
+          ]
+        )
+      )
     );
 
-    pool.query(insertSql, (err, result) => {
+    insertQueries.push(
+      ...insertActivityLogQuery({
+        clientId: req.params.clientId,
+        title: `${serviceName} service was added to the database`,
+        description: req.body.description,
+        logType: "clientInteraction:created",
+        addedBy: user.id,
+        detailId: { rawValue: "@interactionId" },
+        tags,
+      })
+    );
+
+    insertQueries.push(
+      ...insertActivityLogQuery({
+        clientId: req.params.clientId,
+        title: `${serviceName} was provided to the client`,
+        description: null,
+        logType: "clientInteraction:serviceProvided",
+        addedBy: user.id,
+        dateAdded: req.body.dateOfInteraction,
+        detailId: { rawValue: "@interactionId" },
+        tags,
+      })
+    );
+
+    insertQueries.push(
+      ...insertTagsQuery(
+        { rawValue: "@interactionId" },
+        "clientInteractions",
+        tags
+      )
+    );
+
+    runQueriesArray(insertQueries, (err, result) => {
       if (err) {
         return databaseError(req, res, err);
       }
 
       getInteraction(
-        result[0].insertId,
+        Number(result[0][0].insertId),
         Number(req.params.clientId),
         (err, interaction) => {
           if (err) {

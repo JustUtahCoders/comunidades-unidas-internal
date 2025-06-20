@@ -31,21 +31,22 @@ exports.insertActivityLogQuery = function (params) {
       data.push(params.dateAdded);
     }
 
-    return mariadb.format(
-      `
+    return [
+      mariadb.format(
+        `
       INSERT INTO clientLogs (clientId, title, description, logType, addedBy, detailId${
         params.dateAdded ? ", dateAdded" : ""
       })
       VALUES (?, ${params.title.rawValue || "?"}, ?, ?, ?, LAST_INSERT_ID()${
-        params.dateAdded ? ", ?" : ""
-      });
+          params.dateAdded ? ", ?" : ""
+        });
 
       SET @logId := LAST_INSERT_ID();
-      
-      ${insertTagsQuery({ rawValue: "@logId" }, "clientLogs", params.tags)}
     `,
-      data
-    );
+        data
+      ),
+      ...insertTagsQuery({ rawValue: "@logId" }, "clientLogs", params.tags),
+    ];
   } else {
     const data = [
       Number(params.clientId),
@@ -69,21 +70,22 @@ exports.insertActivityLogQuery = function (params) {
       detailIdSql += params.detailId.rawValue || "?";
     }
 
-    return mariadb.format(
-      `
+    return [
+      mariadb.format(
+        `
       INSERT INTO clientLogs (clientId, title, description, logType, addedBy${
         params.detailId ? ", detailId" : ""
       }${params.dateAdded ? ", dateAdded" : ""})
       VALUES (?, ${params.title.rawValue || "?"}, ?, ?, ?${detailIdSql} ${
-        params.dateAdded ? ", ?" : ""
-      });
+          params.dateAdded ? ", ?" : ""
+        });
 
       SET @logId := LAST_INSERT_ID();
-
-      ${insertTagsQuery({ rawValue: "@logId" }, "clientLogs", params.tags)}
     `,
-      data
-    );
+        data
+      ),
+      ...insertTagsQuery({ rawValue: "@logId" }, "clientLogs", params.tags),
+    ];
   }
 };
 

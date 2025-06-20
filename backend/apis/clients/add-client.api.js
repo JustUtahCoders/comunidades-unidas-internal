@@ -174,80 +174,103 @@ app.post("/api/clients", (req, res, next) => {
             return databaseError(req, res, err, connection);
           }
 
-          const insertOther = mariadb.format(`
-            ${insertContactInformationQuery(
+          connection.query(
+            insertContactInformationQuery(
               clientId,
               req.body,
               req.session.passport.user.id
-            )}
-
-            ${insertDemographicsInformationQuery(
-              clientId,
-              req.body,
-              req.session.passport.user.id
-            )}
-
-            ${insertIntakeDataQuery(
-              clientId,
-              req.body,
-              req.session.passport.user.id
-            )}
-
-            ${
-              req.body.leadId
-                ? convertLeadToClient(
-                    req.body.leadId,
-                    clientId,
-                    req.session.passport.user.id
-                  )
-                : ""
-            }
-          `);
-
-          connection.query(insertOther, (err, results, fields) => {
-            if (err) {
-              connection.rollback();
-              return databaseError(req, res, err, connection);
-            }
-
-            const intakeDataResult = results[2];
-            const intakeDataId = intakeDataResult.insertId;
-
-            if (intakeServices.length === 0) {
-              returnTheClient();
-
-              return;
-            }
-
-            const intakeServicesValues = intakeServices.reduce(
-              (acc, intakeService) => {
-                return [...acc, intakeDataId, intakeService];
-              },
-              []
-            );
-
-            const insertIntakeServicesQuery = intakeServices
-              .map(
-                (intakeService) => `
-              INSERT INTO intakeServices (intakeDataId, serviceId) VALUES (?, ?);
-            `
-              )
-              .join("");
-
-            const insertIntakeServices = mariadb.format(
-              insertIntakeServicesQuery,
-              intakeServicesValues
-            );
-
-            connection.query(insertIntakeServices, (err, result, fields) => {
+            )[0],
+            (err) => {
               if (err) {
                 connection.rollback();
                 return databaseError(req, res, err, connection);
               }
 
-              returnTheClient();
-            });
-          });
+              connection.query(
+                insertDemographicsInformationQuery(
+                  clientId,
+                  req.body,
+                  req.session.passport.user.id
+                )[0],
+                (err) => {
+                  if (err) {
+                    connection.rollback();
+                    return databaseError(req, res, err, connection);
+                  }
+
+                  connection.query(
+                    req.body.leadId
+                      ? convertLeadToClient(
+                          req.body.leadId,
+                          clientId,
+                          req.session.passport.user.id
+                        )
+                      : "SELECT 1;",
+                    (err) => {
+                      if (err) {
+                        connection.rollback();
+                        return databaseError(req, res, err, connection);
+                      }
+
+                      connection.query(
+                        insertIntakeDataQuery(
+                          clientId,
+                          req.body,
+                          req.session.passport.user.id
+                        ),
+                        (err, intakeDataResult) => {
+                          if (err) {
+                            connection.rollback();
+                            return databaseError(req, res, err, connection);
+                          }
+
+                          const intakeDataId = intakeDataResult.insertId;
+
+                          if (intakeServices.length === 0) {
+                            returnTheClient();
+
+                            return;
+                          }
+
+                          const intakeServicesValues = intakeServices.reduce(
+                            (acc, intakeService) => {
+                              return [...acc, intakeDataId, intakeService];
+                            },
+                            []
+                          );
+
+                          const insertIntakeServicesQuery = intakeServices
+                            .map(
+                              (intakeService) => `
+                      INSERT INTO intakeServices (intakeDataId, serviceId) VALUES (?, ?);
+                    `
+                            )
+                            .join("");
+
+                          const insertIntakeServices = mariadb.format(
+                            insertIntakeServicesQuery,
+                            intakeServicesValues
+                          );
+
+                          connection.query(
+                            insertIntakeServices[0],
+                            (err, result, fields) => {
+                              if (err) {
+                                connection.rollback();
+                                return databaseError(req, res, err, connection);
+                              }
+
+                              returnTheClient();
+                            }
+                          );
+                        }
+                      );
+                    }
+                  );
+                }
+              );
+            }
+          );
         });
 
         function returnTheClient() {
