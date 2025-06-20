@@ -30,9 +30,7 @@ exports.runQueriesArray = function runQueriesArray(queries, errBack) {
         connection.release();
         errBack(null, results);
       } else {
-        console.log(queries[index]);
         connection.query(queries[index++], (err, result) => {
-          console.log("finished query");
           if (err) {
             errBack(err, result);
           } else {
