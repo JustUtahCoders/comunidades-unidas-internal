@@ -57,8 +57,6 @@ function getAllClientsById(clients, cbk, connection) {
   clients = clients.map(Number);
   const getClient = mariadb.format(rawGetSql, [clients, clients]);
 
-  console.log("getClient", getClient);
-
   pool.query(getClient, (err, data, fields) => {
     if (err) {
       return cbk(err, data, fields);
