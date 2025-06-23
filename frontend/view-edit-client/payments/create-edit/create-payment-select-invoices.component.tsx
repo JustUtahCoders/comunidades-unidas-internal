@@ -227,7 +227,7 @@ export default function CreatePaymentSelectInvoices(
           if (i.invoiceId === invoice.id) {
             return {
               invoiceId: invoice.id,
-              amount: (restOfInvoice(invoice).toFixed(2) as unknown) as number,
+              amount: restOfInvoice(invoice).toFixed(2) as unknown as number,
             };
           } else {
             return i;

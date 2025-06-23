@@ -7,21 +7,27 @@ exports.checkValid = function (obj, ...rules) {
   return result;
 };
 
-const checkDefined = (cbk) => (propertyName, ...args) => (obj) => {
-  return typeof get(obj, propertyName) !== "undefined" &&
-    get(obj, propertyName) !== null
-    ? cbk(propertyName, ...args)(get(obj, propertyName), obj)
-    : `Property ${propertyName} must be provided. Got '${get(
-        obj,
-        propertyName
-      )}'`;
-};
+const checkDefined =
+  (cbk) =>
+  (propertyName, ...args) =>
+  (obj) => {
+    return typeof get(obj, propertyName) !== "undefined" &&
+      get(obj, propertyName) !== null
+      ? cbk(propertyName, ...args)(get(obj, propertyName), obj)
+      : `Property ${propertyName} must be provided. Got '${get(
+          obj,
+          propertyName
+        )}'`;
+  };
 
-const nullable = (cbk) => (propertyName, ...args) => (obj) =>
-  get(obj, propertyName) === null ||
-  typeof get(obj, propertyName) === "undefined"
-    ? null
-    : cbk(propertyName, ...args)(get(obj, propertyName));
+const nullable =
+  (cbk) =>
+  (propertyName, ...args) =>
+  (obj) =>
+    get(obj, propertyName) === null ||
+    typeof get(obj, propertyName) === "undefined"
+      ? null
+      : cbk(propertyName, ...args)(get(obj, propertyName));
 
 exports.nullableValidString = nullable(_string);
 exports.validString = checkDefined(_string);
@@ -101,10 +107,11 @@ function _validTime(propertyName) {
 }
 
 function _nonEmptyString(propertyName) {
-  return (val) =>
-    typeof val === "string" && val.trim().length > 0
+  return (val) => {
+    return typeof val === "string" && val.trim().length > 0
       ? null
       : `Property ${propertyName} must be a non-whitespace, non-empty string. Received '${val}'`;
+  };
 }
 
 function _string(propertyName) {

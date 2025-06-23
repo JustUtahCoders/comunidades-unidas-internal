@@ -26,9 +26,8 @@ export default function AddEventStep(props: AddEventStepProps) {
   const [attendanceOther, setAttendanceOther] = React.useState(0);
   const [attendanceUnknown, setAttendanceUnknown] = React.useState(0);
   const [createNewEvent, setCreateNewEvent] = React.useState(false);
-  const [existingEventId, setExistingEventId] = React.useState<ExistingEventId>(
-    ""
-  );
+  const [existingEventId, setExistingEventId] =
+    React.useState<ExistingEventId>("");
   const [materials, setMaterials] = React.useState([]);
   const [materialDistributed, setMaterialDistributed] = React.useState([]);
   const [showMaterials, setShowMaterials] = React.useState(false);

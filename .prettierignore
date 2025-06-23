@@ -22,3 +22,4 @@ pnpm-lock.yaml
 static
 .husky/pre-commit
 Dockerfile
+file-store

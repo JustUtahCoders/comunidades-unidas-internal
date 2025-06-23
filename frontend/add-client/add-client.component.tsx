@@ -31,9 +31,8 @@ export default function AddClient(props: AddClientProps) {
   const [clientState, setClientState] = useState<ClientState>(
     props.initialClientState || {}
   );
-  const [duplicateWarning, setDuplicateWarning] = useState<DuplicateWarning>(
-    null
-  );
+  const [duplicateWarning, setDuplicateWarning] =
+    useState<DuplicateWarning>(null);
   const [clientIntakeSettings, setClientIntakeSettings] = React.useState(null);
   const StepComponent = stepComponents[step];
 

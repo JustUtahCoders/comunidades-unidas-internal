@@ -24,8 +24,7 @@ app.post("/api/github-issues", (req, res, next) => {
 
   axios({
     method: "post",
-    url:
-      "https://api.github.com/repos/JustUtahCoders/comunidades-unidas-internal/issues",
+    url: "https://api.github.com/repos/JustUtahCoders/comunidades-unidas-internal/issues",
     headers: {
       Authorization: `token ${process.env.GUEST_GITHUB_KEY}`,
     },

@@ -18,14 +18,12 @@ export default function CUServiceInputs(props: CUServiceInputsProps) {
       ? props.service.defaultLineItemRate.toFixed(2)
       : ""
   );
-  const [
-    defaultInteractionDuration,
-    setDefaultInteractionDuration,
-  ] = React.useState<TimeDuration>({
-    stringValue: props.service.defaultInteractionDuration,
-    hours: null,
-    minutes: null,
-  });
+  const [defaultInteractionDuration, setDefaultInteractionDuration] =
+    React.useState<TimeDuration>({
+      stringValue: props.service.defaultInteractionDuration,
+      hours: null,
+      minutes: null,
+    });
 
   React.useEffect(() => {
     if (

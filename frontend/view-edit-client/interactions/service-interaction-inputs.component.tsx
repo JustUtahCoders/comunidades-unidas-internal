@@ -41,14 +41,12 @@ const ServiceInteractionInputs = React.forwardRef<
   const [selectedService, setSelectedService] = React.useState<CUService>(null);
   let services = props.servicesResponse ? props.servicesResponse.services : [];
   const groupedServices = groupBy(services, "programName");
-  const [
-    selectedInteractionType,
-    setSelectedInteractionType,
-  ] = React.useState<string>(
-    props.initialInteraction
-      ? props.initialInteraction.interactionType
-      : "inPerson"
-  );
+  const [selectedInteractionType, setSelectedInteractionType] =
+    React.useState<string>(
+      props.initialInteraction
+        ? props.initialInteraction.interactionType
+        : "inPerson"
+    );
   const [dateOfInteraction, setDateOfInteraction] = React.useState(
     (props.initialInteraction
       ? dayjs(props.initialInteraction.dateOfInteraction)

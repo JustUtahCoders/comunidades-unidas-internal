@@ -12,9 +12,8 @@ const ReferralInteractionInputs = React.forwardRef<
   InteractionInputsRef,
   InteractionInputsProps
 >((props, ref) => {
-  const [partnerService, setPartnerService] = React.useState<PartnerService>(
-    null
-  );
+  const [partnerService, setPartnerService] =
+    React.useState<PartnerService>(null);
   const [referralDate, setReferralDate] = React.useState(
     dayjs().format("YYYY-MM-DD")
   );

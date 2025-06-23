@@ -1,7 +1,7 @@
 const CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin;
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
-  .BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin =
+  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");

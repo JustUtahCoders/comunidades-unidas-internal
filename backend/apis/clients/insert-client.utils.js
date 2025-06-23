@@ -55,15 +55,16 @@ exports.insertContactInformationQuery = function insertContactInformationQuery(
   return result;
 };
 
-exports.insertDemographicsInformationQuery = function insertDemographicsInformationQuery(
-  clientId,
-  data,
-  userId,
-  insertLogEntry = false
-) {
-  const result = [
-    mariadb.format(
-      `
+exports.insertDemographicsInformationQuery =
+  function insertDemographicsInformationQuery(
+    clientId,
+    data,
+    userId,
+    insertLogEntry = false
+  ) {
+    const result = [
+      mariadb.format(
+        `
     INSERT INTO demographics (
       clientId,
       countryOfOrigin,
@@ -84,43 +85,43 @@ exports.insertDemographicsInformationQuery = function insertDemographicsInformat
       addedBy
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
   `,
-      [
-        clientId,
-        data.countryOfOrigin ? data.countryOfOrigin.toUpperCase() : null,
-        requestEnum(data.homeLanguage),
-        data.englishProficiency,
-        data.dateOfUSArrival,
-        requestEnum(data.currentlyEmployed),
-        data.employmentSector,
-        data.payInterval,
-        data.weeklyEmployedHours,
-        data.householdSize,
-        data.dependents,
-        data.civilStatus,
-        data.householdIncome,
-        data.eligibleToVote,
-        data.registeredToVote,
-        data.isStudent,
-        userId,
-      ]
-    ),
-  ];
+        [
+          clientId,
+          data.countryOfOrigin ? data.countryOfOrigin.toUpperCase() : null,
+          requestEnum(data.homeLanguage),
+          data.englishProficiency,
+          data.dateOfUSArrival,
+          requestEnum(data.currentlyEmployed),
+          data.employmentSector,
+          data.payInterval,
+          data.weeklyEmployedHours,
+          data.householdSize,
+          data.dependents,
+          data.civilStatus,
+          data.householdIncome,
+          data.eligibleToVote,
+          data.registeredToVote,
+          data.isStudent,
+          userId,
+        ]
+      ),
+    ];
 
-  if (insertLogEntry) {
-    result.push(
-      insertActivityLogQuery({
-        clientId,
-        title: "Demographics information was updated",
-        description: null,
-        logType: "clientUpdated:demographics",
-        addedBy: userId,
-        detailIdIsLastInsertId: true,
-      })
-    );
-  }
+    if (insertLogEntry) {
+      result.push(
+        insertActivityLogQuery({
+          clientId,
+          title: "Demographics information was updated",
+          description: null,
+          logType: "clientUpdated:demographics",
+          addedBy: userId,
+          detailIdIsLastInsertId: true,
+        })
+      );
+    }
 
-  return result;
-};
+    return result;
+  };
 
 exports.insertIntakeDataQuery = function insertIntakeDataQuery(
   clientId,

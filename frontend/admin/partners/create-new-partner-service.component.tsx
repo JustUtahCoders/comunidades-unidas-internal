@@ -11,9 +11,8 @@ export default function CreateNewPartnerService(
   const formRef = React.useRef<HTMLFormElement>();
   const [isSaving, setIsSaving] = React.useState(false);
   const [partnerId, setPartnerId] = React.useState<number>(null);
-  const [partnerService, setPartnerService] = React.useState(
-    emptyPartnerService
-  );
+  const [partnerService, setPartnerService] =
+    React.useState(emptyPartnerService);
 
   React.useEffect(() => {
     if (isSaving) {

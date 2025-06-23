@@ -16,9 +16,8 @@ const EditComps = {
 export default function Integrations(props: IntegrationsProps) {
   const scope = useCss(css);
   const [integrations, setIntegrations] = React.useState<Integration[]>([]);
-  const [integrationToEdit, setIntegrationToEdit] = React.useState<Integration>(
-    null
-  );
+  const [integrationToEdit, setIntegrationToEdit] =
+    React.useState<Integration>(null);
 
   React.useEffect(() => {
     const abortController = new AbortController();

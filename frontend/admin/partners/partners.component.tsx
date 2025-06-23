@@ -21,9 +21,8 @@ import css from "./partners.css";
 export default function Partners(props) {
   const [showNewPartnerModal, setShowNewPartnerModal] = React.useState(false);
   const [showNewServiceModal, setShowNewServiceModal] = React.useState(false);
-  const [shouldRefetchPartners, setShouldRefetchPartners] = React.useState(
-    true
-  );
+  const [shouldRefetchPartners, setShouldRefetchPartners] =
+    React.useState(true);
   const [partners, setPartners] = React.useState<FullPartner[]>([]);
   const user = React.useContext<LoggedInUser>(UserContext);
   const canEdit = user.accessLevel === UserAccessLevel.Administrator;

@@ -59,7 +59,6 @@ export default function ClientFilePreviewModal(
     tagsQuery,
     isAttachment: false,
     action(url) {
-      console.log("printing");
       const win = window.open(url, "_blank");
       win.focus();
     },
@@ -126,8 +125,6 @@ function useDownloadUrl({
 }) {
   React.useEffect(() => {
     if (isPerformingAction) {
-      const abortController = new AbortController();
-
       const contentDisposition = isAttachment
         ? `contentDisposition=${encodeURIComponent(
             `attachment; filename="${file.fileName}"`
@@ -137,27 +134,11 @@ function useDownloadUrl({
         ? ""
         : getContentTypeQuery(file.fileName);
 
-      easyFetch(
-        `/api/clients/${clientId}/files/${file.id}/signed-downloads?${contentType}${contentDisposition}${tagsQuery}`,
-        {
-          signal: abortController.signal,
-        }
-      )
-        .then((response) => {
-          action(response.downloadUrl);
-        })
-        .catch((err) => {
-          setTimeout(() => {
-            throw err;
-          });
-        })
-        .finally(() => {
-          setIsPerformingAction(false);
-        });
+      action(
+        `/api/file-download/${file.id}${contentType}${contentDisposition}${tagsQuery}`
+      );
 
-      return () => {
-        abortController.abort();
-      };
+      setIsPerformingAction(false);
     }
   }, [isPerformingAction, tagsQuery, file.fileName, clientId]);
 }
