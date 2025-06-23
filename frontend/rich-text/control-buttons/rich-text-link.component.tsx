@@ -10,12 +10,8 @@ export default function RichTextLink(props: RichTextLinkProps) {
   const [linkUrl, setLinkUrl] = React.useState("");
   const [anchorForPopup, setAnchorForPopup] = React.useState(null);
   const displayedTextRef = React.useRef(null);
-  const {
-    insertLink,
-    selectEntireLink,
-    getTextFromBeforeBlur,
-    unlink,
-  } = useLink({ processAnchorElement });
+  const { insertLink, selectEntireLink, getTextFromBeforeBlur, unlink } =
+    useLink({ processAnchorElement });
   const scope = useCss(css);
 
   React.useEffect(() => {

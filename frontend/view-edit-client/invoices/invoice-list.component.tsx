@@ -11,10 +11,8 @@ import queryString from "query-string";
 
 export default function InvoiceList(props: InvoiceListProps) {
   const query = queryString.parse(window.location.search);
-  const [
-    initialInvoicePreview,
-    setInitialInvoicePreview,
-  ] = React.useState<String>(query.invoice as string);
+  const [initialInvoicePreview, setInitialInvoicePreview] =
+    React.useState<String>(query.invoice as string);
 
   return (
     <>

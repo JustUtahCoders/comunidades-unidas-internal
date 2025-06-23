@@ -95,11 +95,8 @@ exports.getInteraction = function getInteraction(
       return;
     }
 
-    const [
-      interactionResult,
-      clientInteractionCustomAnswers,
-      tagResult,
-    ] = result;
+    const [interactionResult, clientInteractionCustomAnswers, tagResult] =
+      result;
 
     if (interactionResult.length === 0) {
       errBack((req, res) => {

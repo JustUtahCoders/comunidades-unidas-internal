@@ -10,10 +10,8 @@ import { useCss } from "kremling";
 import Modal from "../../util/modal.component";
 
 export default function IntakeSetting(props: IntakeSettingProps) {
-  const [
-    questionBeingEdited,
-    setQuestionBeingEdited,
-  ] = React.useState<QuestionBeingEdited>(null);
+  const [questionBeingEdited, setQuestionBeingEdited] =
+    React.useState<QuestionBeingEdited>(null);
 
   const scope = useCss(css);
   return (

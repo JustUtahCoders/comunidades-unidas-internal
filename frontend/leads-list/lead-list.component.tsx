@@ -12,9 +12,8 @@ export default function LeadList(props: LeadListProps) {
   const [selectedLeads, setSelectedLeads] = React.useState<SelectedLeads>({});
   const [programData, setProgramData] = React.useState([]);
   const [events, setEvents] = React.useState([]);
-  const [showingAdvancedSearch, setShowingAdvancedSearch] = React.useState(
-    false
-  );
+  const [showingAdvancedSearch, setShowingAdvancedSearch] =
+    React.useState(false);
 
   useFullWidth(true);
 

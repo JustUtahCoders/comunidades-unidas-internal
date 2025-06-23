@@ -295,7 +295,7 @@ const EditInvoice = React.forwardRef(function (props: EditInvoiceProps, ref) {
             type="number"
             value={totalOwed}
             onChange={({ target: { value } }) =>
-              setTotalOwed((value as unknown) as number)
+              setTotalOwed(value as unknown as number)
             }
           />
         </td>

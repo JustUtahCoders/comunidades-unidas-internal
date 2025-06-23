@@ -24,14 +24,10 @@ export default function ProgramsAndServices(props) {
   const [programs, setPrograms] = React.useState<CUProgram[]>([]);
   const user = React.useContext<LoggedInUser>(UserContext);
   const scope = useCss(css);
-  const [
-    showingCreateNewServiceModal,
-    setShowingCreateNewServiceModal,
-  ] = React.useState(false);
-  const [
-    showingCreateNewProgramModal,
-    setShowingCreateNewProgramModal,
-  ] = React.useState(false);
+  const [showingCreateNewServiceModal, setShowingCreateNewServiceModal] =
+    React.useState(false);
+  const [showingCreateNewProgramModal, setShowingCreateNewProgramModal] =
+    React.useState(false);
 
   const canEdit = user.accessLevel === UserAccessLevel.Administrator;
 

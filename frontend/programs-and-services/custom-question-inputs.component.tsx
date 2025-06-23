@@ -53,7 +53,7 @@ export default function CustomQuestionInputs(props: CustomQuestionInputsProps) {
     props.setQuestions([
       ...props.questions,
       {
-        id: (`new-${newId++}` as unknown) as number,
+        id: `new-${newId++}` as unknown as number,
         label: "",
         options: null,
         type: CUCustomQuestionType.text,

@@ -182,7 +182,8 @@ export default function InteractionsByService(props) {
       "Client Count": "---",
       "Interaction Count": "---",
       "Interaction Hours": "---",
-      "Follow-up Count": data.unspecifiedFollowUpTotals.numFollowUps.toLocaleString(),
+      "Follow-up Count":
+        data.unspecifiedFollowUpTotals.numFollowUps.toLocaleString(),
       "Follow-up Hours": formatDuration(
         data.unspecifiedFollowUpTotals.totalDuration
       ),
