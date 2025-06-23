@@ -1,7 +1,6 @@
 import React from "react";
 import { ClientFile } from "./client-files.component";
 import { UserMode, UserModeContext } from "../util/user-mode.context";
-import easyFetch from "../util/easy-fetch";
 import { useCss } from "kremling";
 import extName from "ext-name";
 
@@ -29,31 +28,11 @@ export default function FilePreview({ file, clientId }: FilePreviewProps) {
 
   React.useEffect(() => {
     if (fetchingPreviewUrl) {
-      const abortController = new AbortController();
-
-      easyFetch(
-        `/api/clients/${clientId}/files/${
-          file.id
-        }/signed-downloads?${getContentTypeQuery(file.fileName)}${tagsQuery}`,
-        {
-          signal: abortController.signal,
-        }
-      )
-        .then((response) => {
-          setPreviewUrl(response.downloadUrl);
-        })
-        .catch((err) => {
-          setTimeout(() => {
-            throw err;
-          });
-        })
-        .finally(() => {
-          setFetchingPreviewUrl(false);
-        });
-
-      return () => {
-        abortController.abort();
-      };
+      setPreviewUrl(
+        `/api/file-download/${file.id}?${getContentTypeQuery(
+          file.fileName
+        )}${tagsQuery}`
+      );
     }
   }, [fetchingPreviewUrl, file.fileExtension]);
 
@@ -107,8 +86,8 @@ export default function FilePreview({ file, clientId }: FilePreviewProps) {
 
 export function getContentTypeQuery(fileName) {
   const mimeType = extName(fileName);
-  if (mimeType) {
-    return `contentType=${encodeURIComponent(mimeType)}&`;
+  if (mimeType && mimeType.length > 0) {
+    return `contentType=${encodeURIComponent(mimeType[0].ext)}&`;
   } else {
     return "";
   }

@@ -76,3 +76,5 @@ static
 .markdownlint.json
 
 .DS_Store
+
+file-store

@@ -169,12 +169,12 @@ require("./apis/reports/referrals-by-service-report.api");
 require("./apis/reports/custom-interaction-questions-report.api");
 require("./apis/reports/events-report.api");
 
-require("./apis/clients/files/presigned-file-upload.api");
 require("./apis/clients/files/add-client-files.api");
 require("./apis/clients/files/get-client-files.api");
 require("./apis/clients/files/get-client-file.api");
 require("./apis/clients/files/delete-client-files.api");
-require("./apis/clients/files/presigned-file-download.api");
+require("./apis/clients/files/file-upload.api.js");
+require("./apis/clients/files/file-download.api.js");
 
 require("./apis/invoices/create-invoice.api");
 require("./apis/invoices/get-invoice.api");
