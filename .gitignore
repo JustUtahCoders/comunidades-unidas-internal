@@ -78,3 +78,7 @@ static
 .DS_Store
 
 file-store
+
+cert.pem
+key.pem
+csr.pem
