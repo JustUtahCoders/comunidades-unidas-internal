@@ -24,5 +24,6 @@ app.use("*", (req, res) => {
     jsMainFile: process.env.RUNNING_LOCALLY
       ? "http://localhost:9018/comunidades-unidas-internal.js"
       : require("../static/manifest.json")["comunidades-unidas-internal.js"],
+    navigatorCredentialsOptions: null,
   });
 });
