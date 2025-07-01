@@ -222,8 +222,8 @@ app.use(
   cookieSession({
     name: "session",
     keys: require("keygrip")([process.env.KEYGRIP_SECRET], "sha256"),
-    maxAge: 144 * 60 * 60 * 1000, // 144 hours
-    secure: process.env.RUNNING_LOCALLY ? false : true,
+    maxAge: 144 * 60 * 60 * 1000, // 8 hours
+    secure: true,
   })
 );
 
