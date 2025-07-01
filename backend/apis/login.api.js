@@ -76,90 +76,133 @@ passport.use(
   })
 );
 
-passport.use(
-  new CustomStrategy(async (req, done) => {
-    const validationErrors = checkValid(
-      req.body,
-      validId("userId"),
-      validString("challenge")
-    );
-
-    if (validationErrors.length > 0) {
-      console.error(validationErrors);
-      done(new Error(`Invalid request`));
-      return;
-    }
-
-    pool.query(
-      mariadb.format(
+if (process.env.NO_AUTH) {
+  passport.use(
+    new CustomStrategy((req, done) => {
+      pool.query(
         `
+      INSERT IGNORE INTO users
+        (id, googleId, firstName, lastName, email, accessLevel)
+      VALUES
+        (1, 'fakegoogleid', 'Local', 'User', 'localuser@example.com', 'Administrator');
+      
+      INSERT IGNORE INTO userPermissions
+        (userId, permission)
+      VALUES
+        (1, 'immigration');
+      
+      SELECT id, firstName, lastName, email, accessLevel FROM users WHERE id = 1;
+    `,
+        (err, results) => {
+          if (err) {
+            done(err);
+          } else {
+            const user = results[2][0];
+            done(null, {
+              id: user.id,
+              googleProfile: null,
+              fullName: responseFullName(user.firstName, user.lastName),
+              firstName: user.firstName,
+              lastName: user.lastName,
+              accessLevel: user.accessLevel,
+              permissions: {
+                immigration: true,
+              },
+              email: user.email,
+            });
+          }
+        }
+      );
+    })
+  );
+} else {
+  passport.use(
+    new CustomStrategy(async (req, done) => {
+      const validationErrors = checkValid(
+        req.body,
+        validId("userId"),
+        validString("challenge")
+      );
+
+      if (validationErrors.length > 0) {
+        console.error(validationErrors);
+        done(new Error(`Invalid request`));
+        return;
+      }
+
+      pool.query(
+        mariadb.format(
+          `
       SELECT * FROM users
       WHERE id = ? LIMIT 1;
     `,
-        [req.body.userId]
-      ),
-      async (err, data) => {
-        if (err) {
-          console.error(err);
-          done(new Error(`Error retrieving users`));
-          return;
-        }
+          [req.body.userId]
+        ),
+        async (err, data) => {
+          if (err) {
+            console.error(err);
+            done(new Error(`Error retrieving users`));
+            return;
+          }
 
-        if (data.length === 0) {
-          done(new Error(`No user found with id '${req.body.userId}'`));
-          return;
-        }
+          if (data.length === 0) {
+            done(new Error(`No user found with id '${req.body.userId}'`));
+            return;
+          }
 
-        const [user] = data;
+          const [user] = data;
 
-        const attestationExpectations = {
-          origin: process.env.SERVER_ORIGIN,
-          challenge: base64url.decode(req.body.challenge),
-          factor: "either",
-          publicKey: user.email,
-          prevCounter: Number(user.googleId),
-          userHandle: base64url.encode(new TextEncoder().encode("123")),
-        };
-        const clientData = {
-          ...req.body.credential,
-          rawId: base64url.decode(req.body.credential.rawId),
-          response: {
-            clientDataJSON: base64url.decode(
-              req.body.credential.response.clientDataJSON
-            ),
-            authenticatorData: base64url.decode(
-              req.body.credential.response.authenticatorData
-            ),
-            signature: base64url.decode(req.body.credential.response.signature),
-            userHandle: base64url.decode(
-              req.body.credential.response.userHandle
-            ),
-          },
-        };
-
-        try {
-          await f2l.assertionResult(clientData, attestationExpectations);
-          done(null, {
-            id: user.id,
-            googleProfile: null,
-            fullName: responseFullName(user.firstName, user.lastName),
-            firstName: user.firstName,
-            lastName: user.lastName,
-            accessLevel: user.accessLevel,
-            permissions: {
-              immigration: true,
+          const attestationExpectations = {
+            origin: process.env.SERVER_ORIGIN,
+            challenge: base64url.decode(req.body.challenge),
+            factor: "either",
+            publicKey: user.email,
+            prevCounter: Number(user.googleId),
+            userHandle: base64url.encode(new TextEncoder().encode("123")),
+          };
+          const clientData = {
+            ...req.body.credential,
+            rawId: base64url.decode(req.body.credential.rawId),
+            response: {
+              clientDataJSON: base64url.decode(
+                req.body.credential.response.clientDataJSON
+              ),
+              authenticatorData: base64url.decode(
+                req.body.credential.response.authenticatorData
+              ),
+              signature: base64url.decode(
+                req.body.credential.response.signature
+              ),
+              userHandle: base64url.decode(
+                req.body.credential.response.userHandle
+              ),
             },
-            email: user.email,
-          });
-          return;
-        } catch (err) {
-          console.error(err);
-          done(new Error(`Failed to authenticate`));
+          };
+
+          try {
+            await f2l.assertionResult(clientData, attestationExpectations);
+            done(null, {
+              id: user.id,
+              googleProfile: null,
+              fullName: responseFullName(user.firstName, user.lastName),
+              firstName: user.firstName,
+              lastName: user.lastName,
+              accessLevel: user.accessLevel,
+              permissions: {
+                immigration: true,
+              },
+              email: user.email,
+            });
+            return;
+          } catch (err) {
+            console.error(err);
+            done(new Error(`Failed to authenticate`));
+          }
         }
-      }
-    );
-  })
-);
+      );
+    })
+  );
+}
 
 app.get(`/login`, async (req, res) => {
   const navigatorCredentialsOptions = await f2l.assertionOptions();
