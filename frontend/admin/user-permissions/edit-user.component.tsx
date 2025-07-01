@@ -7,7 +7,6 @@ import css from "./edit-user.css";
 import { useCss } from "kremling";
 import { capitalize } from "../../reports/shared/report.helpers";
 import { GrowlType, showGrowl } from "../../growls/growls.component";
-import { method } from "lodash-es";
 
 export default function EditUser(props: EditUserProps) {
   const [isSaving, setIsSaving] = React.useState(false);
