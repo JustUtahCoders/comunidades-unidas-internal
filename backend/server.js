@@ -9,6 +9,8 @@ const ConnectionCallback = require("mariadb/lib/connection-callback.js");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
+const https = require("https");
+const fs = require("fs");
 
 const connectionOpts = {
   connectionLimit: 40,
@@ -218,6 +220,14 @@ process.on("uncaughtException", function (err) {
   console.error(err);
 });
 
-app.listen(port, () => {
-  console.log("Node Express server listening on port", port);
-});
+https
+  .createServer(
+    {
+      key: fs.readFileSync(process.env.KEY_PATH),
+      cert: fs.readFileSync(process.env.CRT_PATH),
+    },
+    app
+  )
+  .listen(port, () => {
+    console.log("Node Express server listening on port", port);
+  });

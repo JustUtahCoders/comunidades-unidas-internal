@@ -43,6 +43,13 @@ module.exports = (env, argv) => ({
   devServer: {
     historyApiFallback: true,
     port: 9018,
+    server: {
+      type: "https",
+      options: {
+        key: "./server.key",
+        cert: "./server.crt",
+      },
+    },
   },
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js"],

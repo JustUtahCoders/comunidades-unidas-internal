@@ -12,11 +12,11 @@ const path = require("path");
 const { getLeadById } = require("../get-lead.api");
 
 const getReferralsSql = fs.readFileSync(
-  path.resolve(__dirname, "./get-lead-referrals.sql")
+  path.resolve(__dirname, "./get-lead-referrals.sql"),
+  "utf-8"
 );
 
 app.get("/api/leads/:leadId/referrals", (req, res) => {
-  const user = req.session.passport.user;
   const leadId = Number(req.params.leadId);
 
   const validationErrors = checkValid(req.params, validId("leadId"));

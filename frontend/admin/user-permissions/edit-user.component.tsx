@@ -16,6 +16,7 @@ export default function EditUser(props: EditUserProps) {
   const [permissions, setPermissions] = React.useState<UserPermissions>(
     props.user.permissions
   );
+  const [deleting, setDeleting] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (isSaving) {
@@ -42,6 +43,31 @@ export default function EditUser(props: EditUserProps) {
     }
   }, [isSaving]);
 
+  React.useEffect(() => {
+    if (deleting) {
+      const ac = new AbortController();
+
+      easyFetch(`/api/users/${props.user.id}`, {
+        method: "DELETE",
+        signal: ac.signal,
+      })
+        .then(() => {
+          showGrowl({
+            type: GrowlType.success,
+            message: "User was updated",
+          });
+          props.close(true);
+        })
+        .finally(() => {
+          setDeleting(false);
+        });
+
+      return () => {
+        ac.abort();
+      };
+    }
+  });
+
   return (
     <Modal
       headerText="Edit User"
@@ -51,6 +77,8 @@ export default function EditUser(props: EditUserProps) {
       secondaryAction={props.close}
       close={props.close}
       primarySubmit
+      tertiaryAction={() => setDeleting(true)}
+      tertiaryText="Delete"
     >
       <div {...useCss(css)}>
         <div>{props.user.fullName}</div>

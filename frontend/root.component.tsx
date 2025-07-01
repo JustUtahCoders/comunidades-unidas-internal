@@ -1,5 +1,5 @@
 import React from "react";
-import { Router } from "@reach/router";
+import { Router, useLocation } from "@reach/router";
 import AddClient from "./add-client/add-client.component";
 import Navbars from "./navbar/navbars.component";
 import Styleguide from "./styleguide.component";
@@ -8,6 +8,7 @@ import UserContext from "./util/user.context";
 import "form-request-submit-polyfill";
 import UserModeContext from "./util/user-mode.context";
 import Growls from "./growls/growls.component";
+import Login from "./login.component";
 
 const Home = React.lazy(() => import("./home/home.component"));
 const ReportIssue = React.lazy(
@@ -63,6 +64,10 @@ const ClientIntakeSettings = React.lazy(
 );
 
 export default function Root() {
+  if (window.location.pathname === "/login") {
+    return <Login />;
+  }
+
   return (
     <UserContext>
       <UserModeContext>
