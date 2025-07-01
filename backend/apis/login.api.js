@@ -170,7 +170,7 @@ app.get(`/login`, async (req, res) => {
   res.render("index", {
     jsMainFile: process.env.RUNNING_LOCALLY
       ? `${process.env.PUBLIC_PATH}comunidades-unidas-internal.js`
-      : require("../static/manifest.json")["comunidades-unidas-internal.js"],
+      : require("../../static/manifest.json")["comunidades-unidas-internal.js"],
     navigatorCredentialsOptions: JSON.stringify(navigatorCredentialsOptions),
   });
 });

@@ -6,9 +6,7 @@
   "license": "MIT",
   "scripts": {
     "fix-everything": "docker-compose down && docker-compose pull && pnpm install",
-    "start": "concurrently -n w: pnpm:start:*",
-    "start:frontend": "http-server static -p 9018 --tls --cert server.crt --key server.key",
-    "start:backend": "node backend/server.js",
+    "start": "node backend/server.js",
     "develop": "concurrently -n w: pnpm:develop-*",
     "develop-frontend": "cross-env PUBLIC_PATH='https://localhost:9018/' RUNNING_LOCALLY='true' webpack-dev-server --mode=development",
     "develop-backend": "cross-env RUNNING_LOCALLY='true' PUBLIC_PATH='https://localhost:9018/' nodemon backend/server.js --watch backend --ext js,sql",
