@@ -141,7 +141,7 @@ if (process.env.NO_AUTH) {
         mariadb.format(
           `
       SELECT * FROM users
-      WHERE id = ? LIMIT 1;
+      WHERE id = ? AND isDeleted = false LIMIT 1;
     `,
           [req.body.userId]
         ),
@@ -357,7 +357,7 @@ app.get(`/api/users/:userId/hardware-security-key-attestation`, (req, res) => {
   }
 
   pool.query(
-    `SELECT id, firstName, lastName FROM users WHERE id = ?`,
+    `SELECT id, firstName, lastName FROM users WHERE id = ? AND isDeleted = false`,
     [req.params.userId],
     async (err, data) => {
       if (err) {
@@ -464,6 +464,7 @@ app.get("/api/user-select", (req, res) => {
     mariadb.format(`
     SELECT id, firstName, lastName
     FROM users
+    WHERE isDeleted = false
     ORDER BY id DESC
   `),
     (err, data) => {
@@ -488,7 +489,7 @@ app.delete("/api/users/:userId", (req, res) => {
   pool.query(
     mariadb.format(
       `
-    DELETE FROM users WHERE id = ?
+      UPDATE users SET isDeleted = true WHERE Id = ?
   `,
       [req.params.userId]
     ),

@@ -29,43 +29,50 @@ export default function EditUser(props: EditUserProps) {
         {
           signal: ac.signal,
         }
-      ).then((attestationOptions) => {
-        attestationOptions.user.id = base64ArrayBuffer.decode(
-          attestationOptions.user.id
-        );
-        attestationOptions.challenge = base64ArrayBuffer.decode(
-          attestationOptions.challenge
-        );
+      )
+        .then((attestationOptions) => {
+          attestationOptions.user.id = base64ArrayBuffer.decode(
+            attestationOptions.user.id
+          );
+          attestationOptions.challenge = base64ArrayBuffer.decode(
+            attestationOptions.challenge
+          );
 
-        return navigator.credentials
-          .create({ publicKey: attestationOptions })
-          .then((credential) => {
-            return easyFetch(
-              `/api/users/${props.user.id}/hardware-security-key`,
-              {
-                method: "PATCH",
-                body: {
-                  credential: {
-                    id: credential.id,
-                    // @ts-expect-error
-                    rawId: base64ArrayBuffer.encode(credential.rawId),
-                    response: {
-                      clientDataJSON: base64ArrayBuffer.encode(
-                        // @ts-expect-error
-                        credential.response.clientDataJSON
-                      ),
-                      attestationObject: base64ArrayBuffer.encode(
-                        // @ts-expect-error
-                        credential.response.attestationObject
-                      ),
+          return navigator.credentials
+            .create({ publicKey: attestationOptions })
+            .then((credential) => {
+              return easyFetch(
+                `/api/users/${props.user.id}/hardware-security-key`,
+                {
+                  method: "PATCH",
+                  body: {
+                    credential: {
+                      id: credential.id,
+                      // @ts-expect-error
+                      rawId: base64ArrayBuffer.encode(credential.rawId),
+                      response: {
+                        clientDataJSON: base64ArrayBuffer.encode(
+                          // @ts-expect-error
+                          credential.response.clientDataJSON
+                        ),
+                        attestationObject: base64ArrayBuffer.encode(
+                          // @ts-expect-error
+                          credential.response.attestationObject
+                        ),
+                      },
+                      type: credential.type,
                     },
-                    type: credential.type,
                   },
-                },
-              }
-            );
+                }
+              );
+            });
+        })
+        .then(() => {
+          showGrowl({
+            type: GrowlType.success,
+            message: "Updated Hardware Security key for user",
           });
-      });
+        });
 
       return () => {
         ac.abort();

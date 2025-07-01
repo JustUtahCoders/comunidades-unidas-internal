@@ -3,6 +3,6 @@ FROM
   users
   LEFT JOIN
   userPermissions ON userPermissions.userId = users.id
-WHERE id = ?
+WHERE id = ? AND isDeleted = false
 GROUP BY users.id
 ;
