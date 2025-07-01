@@ -82,3 +82,7 @@ file-store
 cert.pem
 key.pem
 csr.pem
+certificate.cer
+certificate.p12
+server.crt
+server.key

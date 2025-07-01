@@ -223,8 +223,8 @@ process.on("uncaughtException", function (err) {
 https
   .createServer(
     {
-      key: fs.readFileSync("key.pem"),
-      cert: fs.readFileSync("cert.pem"),
+      key: fs.readFileSync(process.env.KEY_PATH),
+      cert: fs.readFileSync(process.env.CRT_PATH),
     },
     app
   )

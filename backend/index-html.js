@@ -22,7 +22,7 @@ app.use("*", (req, res) => {
   res.setHeader("cache-control", "no-store");
   res.render("index", {
     jsMainFile: process.env.RUNNING_LOCALLY
-      ? "http://localhost:9018/comunidades-unidas-internal.js"
+      ? `${process.env.PUBLIC_PATH}comunidades-unidas-internal.js`
       : require("../static/manifest.json")["comunidades-unidas-internal.js"],
     navigatorCredentialsOptions: null,
   });

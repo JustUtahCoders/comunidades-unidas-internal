@@ -28,10 +28,6 @@ export default function Login() {
 
   React.useEffect(() => {
     if (selectedUser) {
-      window["navigatorCredentialsOptions"].allowCredentials[0].id =
-        base64ArrayBuffer.decode(
-          window["navigatorCredentialsOptions"].allowCredentials[0].id
-        );
       window["navigatorCredentialsOptions"].challenge =
         base64ArrayBuffer.decode(
           window["navigatorCredentialsOptions"].challenge
@@ -52,25 +48,30 @@ export default function Login() {
                 // @ts-expect-error
                 rawId: base64ArrayBuffer.encode(credential.rawId),
                 response: {
+                  authenticatorData: base64ArrayBuffer.encode(
+                    // @ts-expect-error
+                    credential.response.authenticatorData
+                  ),
                   clientDataJSON: base64ArrayBuffer.encode(
                     // @ts-expect-error
                     credential.response.clientDataJSON
                   ),
-                  attestationObject: base64ArrayBuffer.encode(
+                  signature: base64ArrayBuffer.encode(
                     // @ts-expect-error
-                    credential.response.attestationObject
+                    credential.response.signature
                   ),
-                  authenticatorData: base64ArrayBuffer.encode(
+                  userHandle: base64ArrayBuffer.encode(
                     // @ts-expect-error
-                    credential.response.getAuthenticatorData()
+                    credential.response.userHandle
                   ),
-                  // @ts-expect-error
-                  signature: credential.response.signature,
                 },
                 type: credential.type,
               },
             },
           });
+        })
+        .then(() => {
+          window.location.assign("/");
         })
         .catch((err) => {
           console.error(err);

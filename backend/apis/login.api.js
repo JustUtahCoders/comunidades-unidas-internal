@@ -1,4 +1,3 @@
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const CustomStrategy = require("passport-custom").Strategy;
 const { app, pool, databaseError, invalidRequest } = require("../server");
 const passport = require("passport");
@@ -77,138 +76,100 @@ passport.use(
   })
 );
 
-if (process.env.RUNNING_LOCALLY) {
-  passport.use(
-    new CustomStrategy((req, done) => {
-      pool.query(
+passport.use(
+  new CustomStrategy(async (req, done) => {
+    const validationErrors = checkValid(
+      req.body,
+      validId("userId"),
+      validString("challenge")
+    );
+
+    if (validationErrors.length > 0) {
+      console.error(validationErrors);
+      done(new Error(`Invalid request`));
+      return;
+    }
+
+    pool.query(
+      mariadb.format(
         `
-      INSERT IGNORE INTO users
-        (id, googleId, firstName, lastName, email, accessLevel)
-      VALUES
-        (1, 'fakegoogleid', 'Local', 'User', 'localuser@example.com', 'Administrator');
-      
-      INSERT IGNORE INTO userPermissions
-        (userId, permission)
-      VALUES
-        (1, 'immigration');
-      
-      SELECT id, firstName, lastName, email, accessLevel FROM users WHERE id = 1;
+      SELECT * FROM users
+      WHERE id = ? LIMIT 1;
     `,
-        (err, results) => {
-          if (err) {
-            done(err);
-          } else {
-            const user = results[2][0];
-            done(null, {
-              id: user.id,
-              googleProfile: null,
-              fullName: responseFullName(user.firstName, user.lastName),
-              firstName: user.firstName,
-              lastName: user.lastName,
-              accessLevel: user.accessLevel,
-              permissions: {
-                immigration: true,
-              },
-              email: user.email,
-            });
-          }
+        [req.body.userId]
+      ),
+      async (err, data) => {
+        if (err) {
+          console.error(err);
+          done(new Error(`Error retrieving users`));
+          return;
         }
-      );
-    })
-  );
-} else {
-  passport.use(
-    new CustomStrategy(async (req, done) => {
-      const validationErrors = checkValid(
-        req.body,
-        validId("userId"),
-        validString("challenge")
-      );
 
-      if (validationErrors.length > 0) {
-        console.error(validationErrors);
-        done(new Error(`Invalid request`));
-        return;
+        if (data.length === 0) {
+          done(new Error(`No user found with id '${req.body.userId}'`));
+          return;
+        }
+
+        const [user] = data;
+
+        const attestationExpectations = {
+          origin: process.env.SERVER_ORIGIN,
+          challenge: base64url.decode(req.body.challenge),
+          factor: "either",
+          publicKey: user.email,
+          prevCounter: Number(user.googleId),
+          userHandle: base64url.encode(new TextEncoder().encode("123")),
+        };
+        const clientData = {
+          ...req.body.credential,
+          rawId: base64url.decode(req.body.credential.rawId),
+          response: {
+            clientDataJSON: base64url.decode(
+              req.body.credential.response.clientDataJSON
+            ),
+            authenticatorData: base64url.decode(
+              req.body.credential.response.authenticatorData
+            ),
+            signature: base64url.decode(req.body.credential.response.signature),
+            userHandle: base64url.decode(
+              req.body.credential.response.userHandle
+            ),
+          },
+        };
+
+        try {
+          await f2l.assertionResult(clientData, attestationExpectations);
+          done(null, {
+            id: user.id,
+            googleProfile: null,
+            fullName: responseFullName(user.firstName, user.lastName),
+            firstName: user.firstName,
+            lastName: user.lastName,
+            accessLevel: user.accessLevel,
+            permissions: {
+              immigration: true,
+            },
+            email: user.email,
+          });
+          return;
+        } catch (err) {
+          console.error(err);
+          done(new Error(`Failed to authenticate`));
+        }
       }
-
-      pool.query(
-        mariadb.format(
-          `
-        SELECT * FROM users
-        WHERE id = ? LIMIT 1;
-      `,
-          [req.body.userId]
-        ),
-        async (err, data) => {
-          if (err) {
-            console.error(err);
-            done(new Error(`Error retrieving users`));
-            return;
-          }
-
-          if (data.length === 0) {
-            done(new Error(`No user found with id '${req.body.userId}'`));
-            return;
-          }
-
-          const [user] = data;
-
-          const attestationExpectations = {
-            origin: process.env.SERVER_ORIGIN,
-            challenge: base64url.decode(req.body.challenge),
-            factor: "either",
-            publicKey: user.email,
-            prevCounter: Number(user.googleId),
-            userHandle: base64url.encode(new TextEncoder().encode("123")),
-          };
-          const clientData = {
-            ...req.body.credential,
-            rawId: base64url.decode(req.body.credential.rawId),
-          };
-
-          try {
-            const authnResult = await f2l.assertionResult(
-              clientData,
-              attestationExpectations
-            );
-            console.log(authnResult);
-            done(null, {
-              id: user.id,
-              googleProfile: null,
-              fullName: responseFullName(user.firstName, user.lastName),
-              firstName: user.firstName,
-              lastName: user.lastName,
-              accessLevel: user.accessLevel,
-              permissions: {
-                immigration: true,
-              },
-              email: user.email,
-            });
-          } catch (err) {
-            console.error(err);
-            done(new Error(`Failed to authenticate`));
-          }
-        }
-      );
-    })
-  );
-}
+    );
+  })
+);
 
 app.get(`/login`, async (req, res) => {
   const navigatorCredentialsOptions = await f2l.assertionOptions();
   navigatorCredentialsOptions.challenge = base64url.encode(
     navigatorCredentialsOptions.challenge
   );
-  navigatorCredentialsOptions.allowCredentials = [
-    {
-      id: base64url.encode(new TextEncoder().encode("123")),
-      type: "public-key",
-    },
-  ];
 
   res.render("index", {
     jsMainFile: process.env.RUNNING_LOCALLY
-      ? "http://localhost:9018/comunidades-unidas-internal.js"
+      ? `${process.env.PUBLIC_PATH}comunidades-unidas-internal.js`
       : require("../static/manifest.json")["comunidades-unidas-internal.js"],
     navigatorCredentialsOptions: JSON.stringify(navigatorCredentialsOptions),
   });
@@ -225,12 +186,9 @@ app.use(
 
 app.use(passport.initialize());
 
-app.post(
-  "/login",
-  passport.authenticate("custom", {
-    successRedirect: "/",
-  })
-);
+app.post("/login", passport.authenticate("custom"), (req, res) => {
+  res.status(204).end();
+});
 
 app.get("/logout", (req, res) => {
   req.logout();
@@ -244,12 +202,13 @@ const f2l = new Fido2Lib({
   rpId: "localhost",
   rpName: "Comunidades Unidas",
   challengeSize: 128,
-  attestation: "none",
+  attestation: "direct",
   cryptoParams: [-7, -257],
+  authenticatorAttachment: "cross-platform",
+  authenticatorRequireResidentKey: true,
+  authenticatorUserVerification: "required",
   authenticatorSelection: {
-    requireResidentKey: true,
     residentKey: "required",
-    userVerification: "discouraged",
   },
 });
 
@@ -272,7 +231,6 @@ app.get("/register-user", async (req, res) => {
   );
   attestationOptions.user.displayName = req.query.name;
   attestationOptions.user.name = req.query.name;
-  attestationOptions.hints = ["security-key"];
 
   res.status(200).json(attestationOptions).end();
 });
@@ -337,6 +295,7 @@ app.get("/api/user-select", (req, res) => {
     mariadb.format(`
     SELECT id, firstName, lastName
     FROM users
+    ORDER BY id DESC
   `),
     (err, data) => {
       if (err) {

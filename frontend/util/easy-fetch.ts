@@ -33,7 +33,7 @@ export default function easyFetch(url: string, opts?: any) {
       } else {
         return response.json();
       }
-    } else {
+    } else if (response.headers["content-type"] === "application/json") {
       return response
         .json()
         .then((json) => {
@@ -47,6 +47,8 @@ export default function easyFetch(url: string, opts?: any) {
         .catch((err) => {
           throw err;
         });
+    } else {
+      return "";
     }
   });
 }

@@ -125,6 +125,7 @@ export default function UserPermissions(props: UserPermissionsProps) {
           <label>
             <div>User's name</div>
             <input
+              autoFocus
               type="text"
               value={newUserName}
               onChange={(evt) => setNewUserName(evt.target.value)}

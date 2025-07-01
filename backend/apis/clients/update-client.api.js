@@ -32,6 +32,7 @@ const {
 } = require("./insert-client.utils");
 const { insertActivityLogQuery } = require("./client-logs/activity-log.utils");
 const { performAnyIntegrations } = require("./integrations/integrations-utils");
+const { runQueriesArray } = require("../utils/mariadb-utils.js");
 
 app.patch("/api/clients/:id", (req, res, next) => {
   const paramValidationErrors = checkValid(req.params, validId("id"));
@@ -257,45 +258,17 @@ app.patch("/api/clients/:id", (req, res, next) => {
       return;
     }
 
-    pool.getConnection((err, connection) => {
-      if (err) {
-        return databaseError(req, res, err, connection);
-      }
-
-      connection.beginTransaction((err) => {
-        if (err) {
-          return databaseError(req, res, err, connection);
+    runQueriesArray(queries, (err, data) => {
+      getClientById(req.params.id, (selectErr, client) => {
+        if (selectErr) {
+          return databaseError(req, res, selectErr, connection);
         }
 
-        runQuery(0);
+        performAnyIntegrations(client, req.session.passport.user.id);
 
-        function runQuery(index) {
-          connection.query(queries[index], (patchErr) => {
-            if (patchErr) {
-              connection.rollback();
-              return databaseError(req, res, patchErr, connection);
-            }
-
-            if (index === queries.length - 1) {
-              connection.commit();
-              connection.release();
-
-              getClientById(req.params.id, (selectErr, client) => {
-                if (selectErr) {
-                  return databaseError(req, res, selectErr, connection);
-                }
-
-                performAnyIntegrations(client, req.session.passport.user.id);
-
-                res.send({
-                  client,
-                });
-              });
-            } else {
-              runQuery(index + 1);
-            }
-          });
-        }
+        res.send({
+          client,
+        });
       });
     });
   });
