@@ -7,6 +7,7 @@ import css from "./edit-user.css";
 import { useCss } from "kremling";
 import { capitalize } from "../../reports/shared/report.helpers";
 import { GrowlType, showGrowl } from "../../growls/growls.component";
+import * as base64ArrayBuffer from "base64-arraybuffer";
 
 export default function EditUser(props: EditUserProps) {
   const [isSaving, setIsSaving] = React.useState(false);
@@ -17,6 +18,67 @@ export default function EditUser(props: EditUserProps) {
     props.user.permissions
   );
   const [deleting, setDeleting] = React.useState<boolean>(false);
+  const [isUpdatingHardwareKey, setIsUpdatingHardwareKey] =
+    React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (isUpdatingHardwareKey) {
+      const ac = new AbortController();
+      easyFetch(
+        `/api/users/${props.user.id}/hardware-security-key-attestation`,
+        {
+          signal: ac.signal,
+        }
+      )
+        .then((attestationOptions) => {
+          attestationOptions.user.id = base64ArrayBuffer.decode(
+            attestationOptions.user.id
+          );
+          attestationOptions.challenge = base64ArrayBuffer.decode(
+            attestationOptions.challenge
+          );
+
+          return navigator.credentials
+            .create({ publicKey: attestationOptions })
+            .then((credential) => {
+              return easyFetch(
+                `/api/users/${props.user.id}/hardware-security-key`,
+                {
+                  method: "PATCH",
+                  body: {
+                    credential: {
+                      id: credential.id,
+                      // @ts-expect-error
+                      rawId: base64ArrayBuffer.encode(credential.rawId),
+                      response: {
+                        clientDataJSON: base64ArrayBuffer.encode(
+                          // @ts-expect-error
+                          credential.response.clientDataJSON
+                        ),
+                        attestationObject: base64ArrayBuffer.encode(
+                          // @ts-expect-error
+                          credential.response.attestationObject
+                        ),
+                      },
+                      type: credential.type,
+                    },
+                  },
+                }
+              );
+            });
+        })
+        .then(() => {
+          showGrowl({
+            type: GrowlType.success,
+            message: "Updated Hardware Security key for user",
+          });
+        });
+
+      return () => {
+        ac.abort();
+      };
+    }
+  }, [isUpdatingHardwareKey]);
 
   React.useEffect(() => {
     if (isSaving) {
@@ -117,6 +179,11 @@ export default function EditUser(props: EditUserProps) {
             />
           </div>
         ))}
+        <div className="form-group">
+          <button onClick={() => setIsUpdatingHardwareKey(true)}>
+            Set Hardware Key
+          </button>
+        </div>
       </div>
     </Modal>
   );

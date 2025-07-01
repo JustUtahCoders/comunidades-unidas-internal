@@ -1,5 +1,11 @@
 const CustomStrategy = require("passport-custom").Strategy;
-const { app, pool, databaseError, invalidRequest } = require("../server");
+const {
+  app,
+  pool,
+  databaseError,
+  invalidRequest,
+  notFound,
+} = require("../server");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
 const mariadb = require("mariadb/callback.js");
@@ -13,6 +19,7 @@ const {
   checkValid,
   validId,
   validString,
+  nonEmptyString,
 } = require("./utils/validation-utils.js");
 
 passport.serializeUser((user, done) => {
@@ -134,7 +141,7 @@ if (process.env.NO_AUTH) {
         mariadb.format(
           `
       SELECT * FROM users
-      WHERE id = ? LIMIT 1;
+      WHERE id = ? AND isDeleted = false LIMIT 1;
     `,
           [req.body.userId]
         ),
@@ -255,6 +262,8 @@ const f2l = new Fido2Lib({
   },
 });
 
+let mostRecentAttestationChallenge;
+
 app.get("/register-user", async (req, res) => {
   const authError = checkUserRole(req, "Administrator");
 
@@ -267,7 +276,7 @@ app.get("/register-user", async (req, res) => {
   }
 
   const attestationOptions = await f2l.attestationOptions();
-  attestationChallenge = attestationOptions.challenge;
+  mostRecentAttestationChallenge = attestationOptions.challenge;
   attestationOptions.challenge = base64url.encode(attestationOptions.challenge);
   attestationOptions.user.id = base64url.encode(
     new TextEncoder().encode("123")
@@ -287,7 +296,7 @@ app.post("/register-user", async (req, res) => {
 
   const attestationExpectations = {
     origin: process.env.SERVER_ORIGIN,
-    challenge: base64url.decode(req.body.challenge),
+    challenge: mostRecentAttestationChallenge,
     factor: "either",
   };
 
@@ -333,11 +342,129 @@ app.post("/register-user", async (req, res) => {
   );
 });
 
+const userAttestations = {};
+
+app.get(`/api/users/:userId/hardware-security-key-attestation`, (req, res) => {
+  const authError = checkUserRole(req, "Administrator");
+
+  if (authError) {
+    return insufficientPrivileges(res, authError);
+  }
+
+  const validationErrors = checkValid(req.params, validId("userId"));
+  if (validationErrors.length > 0) {
+    return invalidRequest(res, validationErrors);
+  }
+
+  pool.query(
+    `SELECT id, firstName, lastName FROM users WHERE id = ? AND isDeleted = false`,
+    [req.params.userId],
+    async (err, data) => {
+      if (err) {
+        return databaseError(err);
+      }
+
+      if (!data || data.length === 0) {
+        return notFound(res, `No such user with id '${req.params.userId}'`);
+      }
+
+      const [user] = data;
+
+      const attestationOptions = await f2l.attestationOptions();
+      userAttestations[req.params.userId] = attestationOptions.challenge;
+      attestationOptions.challenge = base64url.encode(
+        attestationOptions.challenge
+      );
+      attestationOptions.user.id = base64url.encode(
+        new TextEncoder().encode(user.id)
+      );
+      const name = `${user.firstName} ${user.lastName}`;
+      attestationOptions.user.displayName = name;
+      attestationOptions.user.name = name;
+
+      res.status(200).json(attestationOptions).end();
+    }
+  );
+});
+
+app.patch(`/api/users/:userId/hardware-security-key`, async (req, res) => {
+  const authError = checkUserRole(req, "Administrator");
+
+  if (authError) {
+    return insufficientPrivileges(res, authError);
+  }
+
+  const validationErrors = [
+    ...checkValid(req.params, validId("userId")),
+    ...checkValid(
+      req.body,
+      nonEmptyString("credential.id"),
+      nonEmptyString("credential.rawId"),
+      nonEmptyString("credential.type"),
+      nonEmptyString("credential.response.clientDataJSON"),
+      nonEmptyString("credential.response.attestationObject")
+    ),
+  ];
+
+  if (validationErrors.length > 0) {
+    return invalidRequest(res, validationErrors);
+  }
+
+  const userId = Number(req.params.userId);
+  const challenge = userAttestations[userId];
+
+  if (!challenge) {
+    return invalidRequest(
+      res,
+      `User has not requested a hardware security key attestation`
+    );
+  }
+
+  const attestationExpectations = {
+    origin: process.env.SERVER_ORIGIN,
+    challenge,
+    factor: "either",
+  };
+
+  const clientData = {
+    ...req.body.credential,
+    rawId: base64url.decode(req.body.credential.rawId),
+  };
+
+  let registrationResult;
+
+  try {
+    registrationResult = await f2l.attestationResult(
+      clientData,
+      attestationExpectations
+    );
+  } catch (err) {
+    return invalidRequest(res, err);
+  }
+
+  pool.query(
+    `UPDATE users SET googleId = ?, email = ? WHERE id = ?;`,
+    [
+      registrationResult.authnrData.get("counter"),
+      registrationResult.authnrData.get("credentialPublicKeyPem"),
+      userId,
+    ],
+    (err, data) => {
+      if (err) {
+        return databaseError(req, res, err);
+      }
+
+      res.status(204).end();
+    }
+  );
+});
+
 app.get("/api/user-select", (req, res) => {
   pool.query(
     mariadb.format(`
     SELECT id, firstName, lastName
     FROM users
+    WHERE isDeleted = false
     ORDER BY id DESC
   `),
     (err, data) => {
@@ -362,7 +489,7 @@ app.delete("/api/users/:userId", (req, res) => {
   pool.query(
     mariadb.format(
       `
-    DELETE FROM users WHERE id = ?
+      UPDATE users SET isDeleted = true WHERE Id = ?
   `,
       [req.params.userId]
     ),

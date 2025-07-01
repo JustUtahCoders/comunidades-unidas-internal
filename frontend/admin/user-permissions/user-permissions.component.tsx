@@ -55,7 +55,7 @@ export default function UserPermissions(props: UserPermissionsProps) {
           attestationOptions.challenge
         );
         const name = newUserName.split(" ");
-        navigator.credentials
+        return navigator.credentials
           .create({ publicKey: attestationOptions })
           .then((credential) => {
             return easyFetch(`/register-user`, {
@@ -63,9 +63,6 @@ export default function UserPermissions(props: UserPermissionsProps) {
               body: {
                 firstName: name[0],
                 lastName: name.length > 1 ? name[1] : "",
-                challenge: base64ArrayBuffer.encode(
-                  attestationOptions.challenge
-                ),
                 credential: {
                   id: credential.id,
                   // @ts-expect-error

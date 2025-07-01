@@ -1,4 +1,4 @@
-UPDATE users SET accessLevel = ? WHERE id = ?;
+UPDATE users SET accessLevel = ? WHERE id = ? AND isDeleted = false;
 
 INSERT IGNORE INTO
   userPermissions (userId, permission)
