@@ -65,7 +65,12 @@ const ClientIntakeSettings = React.lazy(
 
 export default function Root() {
   if (window.location.pathname === "/login") {
-    return <Login />;
+    return (
+      <Styleguide>
+        <Growls />
+        <Login />
+      </Styleguide>
+    );
   }
 
   return (

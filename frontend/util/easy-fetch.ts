@@ -48,7 +48,9 @@ export default function easyFetch(url: string, opts?: any) {
           throw err;
         });
     } else {
-      return "";
+      throw Error(
+        `CU API responded with HTTP status '${response.status}' for URL ${url}`
+      );
     }
   });
 }
