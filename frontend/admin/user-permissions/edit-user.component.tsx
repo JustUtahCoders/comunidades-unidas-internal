@@ -20,6 +20,31 @@ export default function EditUser(props: EditUserProps) {
   const [deleting, setDeleting] = React.useState<boolean>(false);
   const [isUpdatingHardwareKey, setIsUpdatingHardwareKey] =
     React.useState<boolean>(false);
+  const [isDeletingHardwareKey, setIsDeletingHardwareKey] =
+    React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (isDeletingHardwareKey) {
+      const ac = new AbortController();
+      easyFetch(`/api/users/${props.user.id}/hardware-security-key`, {
+        method: "DELETE",
+        signal: ac.signal,
+      })
+        .then(() => {
+          showGrowl({
+            type: GrowlType.success,
+            message: "Removed security key",
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+          showGrowl({
+            type: GrowlType.error,
+            message: `Failed to delete hardware security key`,
+          });
+        });
+    }
+  }, [isDeletingHardwareKey]);
 
   React.useEffect(() => {
     if (isUpdatingHardwareKey) {
@@ -184,6 +209,13 @@ export default function EditUser(props: EditUserProps) {
             Set Hardware Key
           </button>
         </div>
+        {props.user.email && (
+          <div className="form-group">
+            <button onClick={() => setIsDeletingHardwareKey(true)}>
+              Delete Hardware Key
+            </button>
+          </div>
+        )}
       </div>
     </Modal>
   );
