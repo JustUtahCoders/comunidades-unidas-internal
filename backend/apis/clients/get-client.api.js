@@ -95,7 +95,7 @@ function getClientById(clientId, cbk, connection) {
       INNER JOIN latestIntakeData intake ON intake.clientId = clients.id
       INNER JOIN users created ON created.id = clients.addedBy
       INNER JOIN users modified ON modified.id = clients.modifiedBy
-      WHERE clients.id = ? AND isDeleted = false;
+      WHERE clients.id = ? AND clients.isDeleted = false;
 
     SELECT serviceId, serviceName
     FROM
