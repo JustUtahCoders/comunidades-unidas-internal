@@ -249,7 +249,7 @@ app.get("/logout", (req, res) => {
 
 const f2l = new Fido2Lib({
   timeout: 42,
-  rpId: "localhost",
+  rpId: process.env.SERVER_ORIGIN,
   rpName: "Comunidades Unidas",
   challengeSize: 128,
   attestation: "direct",
