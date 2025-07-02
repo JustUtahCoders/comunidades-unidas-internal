@@ -479,6 +479,36 @@ app.get("/api/user-select", (req, res) => {
   );
 });
 
+app.delete("/api/users/:userId/hardware-security-key", (req, res) => {
+  const authError = checkUserRole(req, "Administrator");
+
+  if (authError) {
+    return insufficientPrivileges(res, authError);
+  }
+
+  const validationErrors = checkValid(req.params, validId("userId"));
+
+  if (validationErrors.length > 0) {
+    return invalidRequest(res, validationErrors);
+  }
+
+  pool.query(
+    mariadb.format(
+      `
+    UPDATE users SET email = 'None' WHERE id = ?;
+  `,
+      [req.params.userId]
+    ),
+    (err, data) => {
+      if (err) {
+        return databaseError(req, res, err);
+      }
+
+      res.status(204).end();
+    }
+  );
+});
+
 app.delete("/api/users/:userId", (req, res) => {
   const authError = checkUserRole(req, "Administrator");
 
@@ -489,7 +519,7 @@ app.delete("/api/users/:userId", (req, res) => {
   pool.query(
     mariadb.format(
       `
-      UPDATE users SET isDeleted = true WHERE Id = ?
+      UPDATE users SET isDeleted = true WHERE id = ?
   `,
       [req.params.userId]
     ),
