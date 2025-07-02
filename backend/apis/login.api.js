@@ -160,7 +160,7 @@ if (process.env.NO_AUTH) {
           const [user] = data;
 
           const attestationExpectations = {
-            origin: process.env.SERVER_ORIGIN,
+            origin: process.env.SERVER_HOSTNAME,
             challenge: base64url.decode(req.body.challenge),
             factor: "either",
             publicKey: user.email,
@@ -295,7 +295,7 @@ app.post("/register-user", async (req, res) => {
   }
 
   const attestationExpectations = {
-    origin: process.env.SERVER_ORIGIN,
+    origin: process.env.SERVER_HOSTNAME,
     challenge: mostRecentAttestationChallenge,
     factor: "either",
   };
@@ -421,7 +421,7 @@ app.patch(`/api/users/:userId/hardware-security-key`, async (req, res) => {
   }
 
   const attestationExpectations = {
-    origin: process.env.SERVER_ORIGIN,
+    origin: process.env.SERVER_HOSTNAME,
     challenge,
     factor: "either",
   };
