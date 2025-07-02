@@ -229,8 +229,8 @@ app.use(
   cookieSession({
     name: "session",
     keys: require("keygrip")([process.env.KEYGRIP_SECRET], "sha256"),
-    maxAge: 144 * 60 * 60 * 1000, // 144 hours
-    secure: process.env.RUNNING_LOCALLY ? false : true,
+    maxAge: 144 * 60 * 60 * 1000, // 8 hours
+    secure: true,
   })
 );
 
@@ -249,7 +249,7 @@ app.get("/logout", (req, res) => {
 
 const f2l = new Fido2Lib({
   timeout: 42,
-  rpId: process.env.SERVER_HOSTNAME,
+  rpId: process.env.SERVER_ORIGIN,
   rpName: "Comunidades Unidas",
   challengeSize: 128,
   attestation: "direct",
