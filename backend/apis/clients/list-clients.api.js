@@ -81,7 +81,7 @@ exports.clientListQuery = clientListQuery;
 exports.validateClientListQuery = validateClientListQuery;
 
 function clientListQuery(query, pageNum, pageSize) {
-  let whereClause = `WHERE isDeleted = false `;
+  let whereClause = `WHERE cl.isDeleted = false `;
   let whereClauseValues = [];
 
   if (query.name) {

@@ -77,9 +77,13 @@ export default function Login() {
           console.error(err);
           showGrowl({
             type: GrowlType.error,
-            message: "Error",
+            message:
+              "Hardware key authentication not successful. Wrong key or user?",
           });
           setSelectedUser(null);
+          setTimeout(() => {
+            location.reload();
+          }, 3000);
         });
     }
   }, [selectedUser]);
