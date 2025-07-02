@@ -57,7 +57,7 @@ app.get("/api/clients/:clientId/files", (req, res) => {
         clientFiles
         JOIN users ON users.id = clientFiles.addedBy
         LEFT JOIN tags on tags.foreignId = clientFiles.id AND (tags.foreignTable = 'clientFiles' OR tags.foreignTable IS NULL)
-      WHERE isDeleted = false AND clientId = ?
+      WHERE clientFiles.isDeleted = false AND clientId = ?
       GROUP BY clientFiles.id
       ORDER BY clientFiles.dateAdded ASC
       ;
@@ -67,7 +67,7 @@ app.get("/api/clients/:clientId/files", (req, res) => {
 
     pool.query(getFilesSql, (err, result) => {
       if (err) {
-        return databaseError(err);
+        return databaseError(req, res, err);
       }
 
       res.send({

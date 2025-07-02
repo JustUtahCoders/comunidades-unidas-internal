@@ -60,7 +60,7 @@ export default function ClientFilePreviewModal(
     isAttachment: false,
     action(url) {
       const win = window.open(url, "_blank");
-      win.focus();
+      // win.focus();
     },
   });
 
@@ -135,7 +135,7 @@ function useDownloadUrl({
         : getContentTypeQuery(file.fileName);
 
       action(
-        `/api/file-download/${file.id}${contentType}${contentDisposition}${tagsQuery}`
+        `/api/file-download/${file.id}?${contentType}${contentDisposition}${tagsQuery}`
       );
 
       setIsPerformingAction(false);
