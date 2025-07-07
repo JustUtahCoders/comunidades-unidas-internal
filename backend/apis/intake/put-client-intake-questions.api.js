@@ -87,8 +87,6 @@ app.put("/api/client-intake-questions", (req, res) => {
     );
   }
 
-  console.log("queries", queries);
-
   runQueriesArray(queries, (err, result) => {
     if (err) {
       return databaseError(req, res, err);
