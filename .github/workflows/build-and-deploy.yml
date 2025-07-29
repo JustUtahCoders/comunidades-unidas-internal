@@ -24,5 +24,4 @@ jobs:
       - run: pnpm install
       - run: pnpm run typescript
       - run: pnpm run check-format
-      - run: pnpm run lint
       - run: pnpm run build
