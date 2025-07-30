@@ -5,14 +5,15 @@ const BundleAnalyzerPlugin =
 const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
+const dotEnv = require("dotenv");
+dotEnv.config();
 
 module.exports = (env, argv) => ({
   entry: {
     "comunidades-unidas-internal": "./frontend/comunidades-unidas-internal.tsx",
   },
   output: {
-    filename:
-      process.env.RUNNING_LOCALLY === "true" ? "[name].js" : "[name].[hash].js",
+    filename: process.env.PUBLIC_PATH ? "[name].js" : "[name].[hash].js",
     path: __dirname + "/static",
     publicPath: process.env.PUBLIC_PATH || "/static/",
   },
@@ -46,8 +47,8 @@ module.exports = (env, argv) => ({
     server: {
       type: "https",
       options: {
-        key: "./server.key",
-        cert: "./server.crt",
+        key: process.env.KEY_PATH,
+        cert: process.env.CERT_PATH,
       },
     },
   },

@@ -83,133 +83,87 @@ passport.use(
   })
 );
 
-if (process.env.NO_AUTH) {
-  passport.use(
-    new CustomStrategy((req, done) => {
-      pool.query(
+passport.use(
+  new CustomStrategy(async (req, done) => {
+    const validationErrors = checkValid(
+      req.body,
+      validId("userId"),
+      validString("challenge")
+    );
+
+    if (validationErrors.length > 0) {
+      console.error(validationErrors);
+      done(new Error(`Invalid request`));
+      return;
+    }
+
+    pool.query(
+      mariadb.format(
         `
-      INSERT IGNORE INTO users
-        (id, googleId, firstName, lastName, email, accessLevel)
-      VALUES
-        (1, 'fakegoogleid', 'Local', 'User', 'localuser@example.com', 'Administrator');
-      
-      INSERT IGNORE INTO userPermissions
-        (userId, permission)
-      VALUES
-        (1, 'immigration');
-      
-      SELECT id, firstName, lastName, email, accessLevel FROM users WHERE id = 1;
-    `,
-        (err, results) => {
-          if (err) {
-            done(err);
-          } else {
-            const user = results[2][0];
-            done(null, {
-              id: user.id,
-              googleProfile: null,
-              fullName: responseFullName(user.firstName, user.lastName),
-              firstName: user.firstName,
-              lastName: user.lastName,
-              accessLevel: user.accessLevel,
-              permissions: {
-                immigration: true,
-              },
-              email: user.email,
-            });
-          }
+    SELECT * FROM users
+    WHERE id = ? AND isDeleted = false LIMIT 1;
+  `,
+        [req.body.userId]
+      ),
+      async (err, data) => {
+        if (err) {
+          console.error(err);
+          done(new Error(`Error retrieving users`));
+          return;
         }
-      );
-    })
-  );
-} else {
-  passport.use(
-    new CustomStrategy(async (req, done) => {
-      const validationErrors = checkValid(
-        req.body,
-        validId("userId"),
-        validString("challenge")
-      );
 
-      if (validationErrors.length > 0) {
-        console.error(validationErrors);
-        done(new Error(`Invalid request`));
-        return;
+        if (data.length === 0) {
+          done(new Error(`No user found with id '${req.body.userId}'`));
+          return;
+        }
+
+        const [user] = data;
+
+        const attestationExpectations = {
+          origin: `https://${process.env.SERVER_HOST}`,
+          challenge: base64url.decode(req.body.challenge),
+          factor: "either",
+          publicKey: user.email,
+          prevCounter: Number(user.googleId),
+          userHandle: base64url.encode(new TextEncoder().encode(user.id)),
+        };
+        const clientData = {
+          ...req.body.credential,
+          rawId: base64url.decode(req.body.credential.rawId),
+          response: {
+            clientDataJSON: base64url.decode(
+              req.body.credential.response.clientDataJSON
+            ),
+            authenticatorData: base64url.decode(
+              req.body.credential.response.authenticatorData
+            ),
+            signature: base64url.decode(req.body.credential.response.signature),
+            userHandle: base64url.decode(
+              req.body.credential.response.userHandle
+            ),
+          },
+        };
+
+        try {
+          await f2l.assertionResult(clientData, attestationExpectations);
+          done(null, {
+            id: user.id,
+            googleProfile: null,
+            fullName: responseFullName(user.firstName, user.lastName),
+            firstName: user.firstName,
+            lastName: user.lastName,
+            accessLevel: user.accessLevel,
+            email: user.email,
+          });
+          return;
+        } catch (err) {
+          console.error(err);
+          done(new Error(`Failed to authenticate`));
+        }
       }
-
-      pool.query(
-        mariadb.format(
-          `
-      SELECT * FROM users
-      WHERE id = ? AND isDeleted = false LIMIT 1;
-    `,
-          [req.body.userId]
-        ),
-        async (err, data) => {
-          if (err) {
-            console.error(err);
-            done(new Error(`Error retrieving users`));
-            return;
-          }
-
-          if (data.length === 0) {
-            done(new Error(`No user found with id '${req.body.userId}'`));
-            return;
-          }
-
-          const [user] = data;
-
-          const attestationExpectations = {
-            origin: "https://" + process.env.SERVER_HOSTNAME,
-            challenge: base64url.decode(req.body.challenge),
-            factor: "either",
-            publicKey: user.email,
-            prevCounter: Number(user.googleId),
-            userHandle: base64url.encode(new TextEncoder().encode(user.id)),
-          };
-          const clientData = {
-            ...req.body.credential,
-            rawId: base64url.decode(req.body.credential.rawId),
-            response: {
-              clientDataJSON: base64url.decode(
-                req.body.credential.response.clientDataJSON
-              ),
-              authenticatorData: base64url.decode(
-                req.body.credential.response.authenticatorData
-              ),
-              signature: base64url.decode(
-                req.body.credential.response.signature
-              ),
-              userHandle: base64url.decode(
-                req.body.credential.response.userHandle
-              ),
-            },
-          };
-
-          try {
-            await f2l.assertionResult(clientData, attestationExpectations);
-            done(null, {
-              id: user.id,
-              googleProfile: null,
-              fullName: responseFullName(user.firstName, user.lastName),
-              firstName: user.firstName,
-              lastName: user.lastName,
-              accessLevel: user.accessLevel,
-              permissions: {
-                immigration: true,
-              },
-              email: user.email,
-            });
-            return;
-          } catch (err) {
-            console.error(err);
-            done(new Error(`Failed to authenticate`));
-          }
-        }
-      );
-    })
-  );
-}
+    );
+  })
+);
 
 app.get(`/login`, async (req, res) => {
   const navigatorCredentialsOptions = await f2l.assertionOptions();
@@ -218,7 +172,7 @@ app.get(`/login`, async (req, res) => {
   );
 
   res.render("index", {
-    jsMainFile: process.env.RUNNING_LOCALLY
+    jsMainFile: process.env.PUBLIC_PATH
       ? `${process.env.PUBLIC_PATH}comunidades-unidas-internal.js`
       : require("../../static/manifest.json")["comunidades-unidas-internal.js"],
     navigatorCredentialsOptions: JSON.stringify(navigatorCredentialsOptions),
@@ -249,7 +203,7 @@ app.get("/logout", (req, res) => {
 
 const f2l = new Fido2Lib({
   timeout: 42,
-  rpId: process.env.SERVER_ORIGIN,
+  rpId: process.env.SERVER_HOST,
   rpName: "Comunidades Unidas",
   challengeSize: 128,
   attestation: "direct",
@@ -265,81 +219,104 @@ const f2l = new Fido2Lib({
 let mostRecentAttestationChallenge;
 
 app.get("/register-user", async (req, res) => {
-  const authError = checkUserRole(req, "Administrator");
+  pool.query("SELECT COUNT(*) numUsers FROM users", (err, data) => {
+    if (!err && data[0].numUsers === 0) {
+      // Allow first user to self-register
+    } else {
+      const authError = checkUserRole(req, "Administrator");
 
-  if (authError) {
-    return insufficientPrivileges(res, authError);
-  }
+      if (authError) {
+        return insufficientPrivileges(res, authError);
+      }
+    }
 
-  if (!req.query.name) {
-    return invalidRequest(res, `name query param required`);
-  }
+    if (!req.query.name) {
+      return invalidRequest(res, `name query param required`);
+    }
 
-  const attestationOptions = await f2l.attestationOptions();
-  mostRecentAttestationChallenge = attestationOptions.challenge;
-  attestationOptions.challenge = base64url.encode(attestationOptions.challenge);
-  attestationOptions.user.id = base64url.encode(
-    new TextEncoder().encode("123")
-  );
-  attestationOptions.user.displayName = req.query.name;
-  attestationOptions.user.name = req.query.name;
-
-  res.status(200).json(attestationOptions).end();
-});
-
-app.post("/register-user", async (req, res) => {
-  const authError = checkUserRole(req, "Administrator");
-
-  if (authError) {
-    return insufficientPrivileges(res, authError);
-  }
-
-  const attestationExpectations = {
-    origin: "https://" + process.env.SERVER_HOSTNAME,
-    challenge: mostRecentAttestationChallenge,
-    factor: "either",
-  };
-
-  const clientData = {
-    ...req.body.credential,
-    rawId: base64url.decode(req.body.credential.rawId),
-  };
-
-  let registrationResult;
-
-  try {
-    registrationResult = await f2l.attestationResult(
-      clientData,
-      attestationExpectations
-    );
-  } catch (err) {
-    console.error(err);
-    invalidRequest(res, `Error processing hardware security key registration`);
-  }
-
-  // Didn't migrate the database tables for easier transfer
-  // email = publicKey from fido2
-  // googleId = counter from fido2
-  pool.query(
-    mariadb.format(`
-    INSERT INTO users (googleId, firstName, lastName, email, accessLevel)
-    VALUES (?, ?, ?, ?, ?);
-  `),
-    [
-      registrationResult.authnrData.get("counter"),
-      req.body.firstName,
-      req.body.lastName,
-      registrationResult.authnrData.get("credentialPublicKeyPem"),
-      "Staff",
-    ],
-    (err, data) => {
+    pool.query("SHOW TABLE STATUS LIKE 'users';", async (err, data) => {
       if (err) {
         return databaseError(req, res, err);
       }
 
-      res.status(204).end();
+      const attestationOptions = await f2l.attestationOptions();
+      mostRecentAttestationChallenge = attestationOptions.challenge;
+      attestationOptions.challenge = base64url.encode(
+        attestationOptions.challenge
+      );
+      attestationOptions.user.id = base64url.encode(
+        new TextEncoder().encode(data[0]["Auto_increment"])
+      );
+      attestationOptions.user.displayName = req.query.name;
+      attestationOptions.user.name = req.query.name;
+
+      res.status(200).json(attestationOptions).end();
+    });
+  });
+});
+
+app.post("/register-user", async (req, res) => {
+  pool.query("SELECT COUNT(*) numUsers FROM users", async (err, data) => {
+    if (!err && data[0].numUsers === 0) {
+      // Allow first user to self-register
+    } else {
+      const authError = checkUserRole(req, "Administrator");
+
+      if (authError) {
+        return insufficientPrivileges(res, authError);
+      }
     }
-  );
+
+    const attestationExpectations = {
+      origin: `https://${process.env.SERVER_HOST}`,
+      challenge: mostRecentAttestationChallenge,
+      factor: "either",
+    };
+
+    const clientData = {
+      ...req.body.credential,
+      rawId: base64url.decode(req.body.credential.rawId),
+    };
+
+    let registrationResult;
+
+    try {
+      registrationResult = await f2l.attestationResult(
+        clientData,
+        attestationExpectations
+      );
+    } catch (err) {
+      console.error(err);
+      return invalidRequest(
+        res,
+        `Error processing hardware security key registration`
+      );
+    }
+
+    // Didn't migrate the database tables for easier transfer
+    // email = publicKey from fido2
+    // googleId = counter from fido2
+    pool.query(
+      mariadb.format(`
+      INSERT INTO users (googleId, firstName, lastName, email, accessLevel)
+      VALUES (?, ?, ?, ?, ?);
+    `),
+      [
+        registrationResult.authnrData.get("counter"),
+        req.body.firstName,
+        req.body.lastName,
+        registrationResult.authnrData.get("credentialPublicKeyPem"),
+        "Staff",
+      ],
+      (err, data) => {
+        if (err) {
+          return databaseError(req, res, err);
+        }
+
+        res.status(204).end();
+      }
+    );
+  });
 });
 
 const userAttestations = {};
@@ -421,7 +398,7 @@ app.patch(`/api/users/:userId/hardware-security-key`, async (req, res) => {
   }
 
   const attestationExpectations = {
-    origin: "https://" + process.env.SERVER_HOSTNAME,
+    origin: `https://${process.env.SERVER_HOST}`,
     challenge,
     factor: "either",
   };

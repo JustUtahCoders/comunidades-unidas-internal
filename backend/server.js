@@ -3,7 +3,7 @@ require("dotenv").config();
 const path = require("path");
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 8080;
+const port = 443;
 const mariadb = require("mariadb/callback.js");
 const ConnectionCallback = require("mariadb/lib/connection-callback.js");
 const bodyParser = require("body-parser");
@@ -66,17 +66,13 @@ exports.databaseError = function databaseError(req, res, err, connection) {
   if (connection) {
     connection.release();
   }
-  const msg = process.env.RUNNING_LOCALLY
-    ? `Database Error for backend endpoint '${req.url}'. ${err}`
-    : `Database error. Run 'eb logs' for more detail`;
+  const msg = `Database Error for backend endpoint '${req.url}'. ${err}`;
   console.error(err);
   res.status(500).send({ error: msg });
 };
 
 exports.internalError = function internalError(req, res, err) {
-  const msg = process.env.RUNNING_LOCALLY
-    ? `Internal Server Error for backend endpoint '${req.url}'. ${err}`
-    : `Internal Server Error. Run 'eb logs' for more detail`;
+  const msg = `Internal Server Error for backend endpoint '${req.url}'. ${err}`;
   console.error(err);
   res.status(500).send({ error: msg });
 };
@@ -223,8 +219,9 @@ process.on("uncaughtException", function (err) {
 https
   .createServer(
     {
-      key: fs.readFileSync(process.env.KEY_PATH),
-      cert: fs.readFileSync(process.env.CRT_PATH),
+      key: fs.readFileSync(process.env.KEY_PATH, "utf-8"),
+      cert: fs.readFileSync(process.env.CERT_PATH, "utf-8"),
+      passphrase: process.env.PASSPHRASE,
     },
     app
   )
