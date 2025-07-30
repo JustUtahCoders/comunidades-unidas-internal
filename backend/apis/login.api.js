@@ -120,7 +120,7 @@ passport.use(
         const [user] = data;
 
         const attestationExpectations = {
-          origin: "https://" + process.env.SERVER_HOST,
+          origin: `https://${process.env.SERVER_HOST}`,
           challenge: base64url.decode(req.body.challenge),
           factor: "either",
           publicKey: user.email,
@@ -146,7 +146,6 @@ passport.use(
 
         try {
           await f2l.assertionResult(clientData, attestationExpectations);
-          console.log("here1");
           done(null, {
             id: user.id,
             googleProfile: null,
@@ -204,7 +203,7 @@ app.get("/logout", (req, res) => {
 
 const f2l = new Fido2Lib({
   timeout: 42,
-  rpId: "https://" + process.env.SERVER_HOST,
+  rpId: process.env.SERVER_HOST,
   rpName: "Comunidades Unidas",
   challengeSize: 128,
   attestation: "direct",
@@ -271,7 +270,7 @@ app.post("/register-user", async (req, res) => {
     }
 
     const attestationExpectations = {
-      origin: "https://" + process.env.SERVER_HOST,
+      origin: `https://${process.env.SERVER_HOST}`,
       challenge: mostRecentAttestationChallenge,
       factor: "either",
     };
@@ -401,7 +400,7 @@ app.patch(`/api/users/:userId/hardware-security-key`, async (req, res) => {
   }
 
   const attestationExpectations = {
-    origin: "https://" + process.env.SERVER_HOST,
+    origin: `https://${process.env.SERVER_HOST}`,
     challenge,
     factor: "either",
   };

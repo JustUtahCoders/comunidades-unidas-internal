@@ -9,7 +9,7 @@
     "start": "node backend/server.js",
     "develop": "concurrently -n w: pnpm:develop-*",
     "develop-frontend": "cross-env PUBLIC_PATH='https://localhost:9018/' webpack-dev-server --mode=development",
-    "develop-backend": "cross-env PUBLIC_PATH='https://localhost:9018/' SERVER_HOST=localhost:8080 nodemon backend/server.js --watch backend --ext js,sql",
+    "develop-backend": "cross-env PUBLIC_PATH='https://localhost:9018/' SERVER_HOSTNAME='localhost' nodemon backend/server.js --watch backend --ext js,sql",
     "develop-database": "docker-compose up",
     "build": "webpack --mode=production --env prod",
     "analyze-frontend-build": "webpack --mode=production --env analyze",

@@ -3,7 +3,7 @@ require("dotenv").config();
 const path = require("path");
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 8080;
+const port = 443;
 const mariadb = require("mariadb/callback.js");
 const ConnectionCallback = require("mariadb/lib/connection-callback.js");
 const bodyParser = require("body-parser");

@@ -78,9 +78,9 @@ export default function Login() {
               message: "User created",
               type: GrowlType.success,
             });
-            // setTimeout(() => {
-            //   window.location.reload();
-            // });
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
           })
           .catch((err) => {
             console.error(err);
@@ -104,7 +104,6 @@ export default function Login() {
       navigator.credentials
         .get({ publicKey: window["navigatorCredentialsOptions"] })
         .then((credential) => {
-          console.log("userHandle", credential);
           return easyFetch(`/login`, {
             method: "POST",
             body: {
@@ -140,9 +139,9 @@ export default function Login() {
           });
         })
         .then(() => {
-          // setTimeout(() => {
-          //   location.reload();
-          // }, 3000);
+          setTimeout(() => {
+            location.assign("/client-list");
+          });
         })
         .catch((err) => {
           console.error(err);
