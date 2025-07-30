@@ -92,7 +92,7 @@ export default function Login() {
           });
       });
     }
-  });
+  }, [registeringUser]);
 
   React.useEffect(() => {
     if (selectedUser) {
@@ -151,6 +151,9 @@ export default function Login() {
               "Hardware key authentication not successful. Wrong key or user?",
           });
           setSelectedUser(null);
+          setTimeout(() => {
+            location.reload();
+          }, 3000);
         });
     }
   }, [selectedUser]);

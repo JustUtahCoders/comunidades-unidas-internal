@@ -239,8 +239,6 @@ app.get("/register-user", async (req, res) => {
         return databaseError(req, res, err);
       }
 
-      console.log("data", data);
-
       const attestationOptions = await f2l.attestationOptions();
       mostRecentAttestationChallenge = attestationOptions.challenge;
       attestationOptions.challenge = base64url.encode(
