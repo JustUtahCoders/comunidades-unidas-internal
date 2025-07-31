@@ -25,13 +25,15 @@ exports.runQueriesArray = function runQueriesArray(queries, errBack) {
     runQuery();
 
     function runQuery() {
-      if (index === queries.length - 1) {
+      if (index === queries.length) {
         connection.commit();
         connection.release();
         errBack(null, results);
       } else {
         connection.query(queries[index++], (err, result) => {
           if (err) {
+            connection.rollback();
+            connection.release();
             errBack(err, result);
           } else {
             results.push(result);

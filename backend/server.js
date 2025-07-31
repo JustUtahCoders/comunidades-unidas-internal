@@ -12,6 +12,10 @@ const morgan = require("morgan");
 const https = require("https");
 const fs = require("fs");
 
+// mariadb package doesn't support time zones
+// Workaround from https://github.com/mariadb-corporation/mariadb-connector-nodejs/issues/301#issuecomment-2917266845
+process.env.TZ = "UTC";
+
 const connectionOpts = {
   connectionLimit: 40,
   host: process.env.MARIADB_HOSTNAME || "localhost",
@@ -20,7 +24,6 @@ const connectionOpts = {
   database: process.env.MARIADB_NAME || "local_db",
   port: process.env.MARIADB_PORT || "3306",
   multipleStatements: true,
-  timezone: "+00:00",
   trace: true,
   bigIntAsNumber: true,
 };

@@ -31,59 +31,6 @@ passport.deserializeUser((user, done) => {
 });
 
 passport.use(
-  new BasicStrategy((username, password, done) => {
-    const getUser = mariadb.format(
-      `SELECT users.id, users.firstName, users.lastName, users.email, users.accessLevel, userPermissions.permission, programmaticUsers.password FROM
-        users JOIN programmaticUsers ON programmaticUsers.userId = users.id
-        LEFT JOIN userPermissions ON users.id = userPermissions.userId
-        WHERE programmaticUsers.username = ? AND programmaticUsers.expirationDate > NOW()
-        ;`,
-      [username]
-    );
-
-    pool.query(getUser, (err, rows) => {
-      if (err) {
-        return done(err);
-      }
-
-      if (!rows || rows.length === 0) {
-        return done("Unauthorized");
-      }
-
-      const userRows = rows.filter((row) =>
-        bcrypt.compareSync(password, row.password)
-      );
-
-      if (userRows.length === 0) {
-        return done("Unauthorized");
-      }
-
-      const permissions = {
-        immigration: false,
-      };
-
-      userRows.forEach((r) => {
-        if (r.permission) {
-          permissions[r.permission] = true;
-        }
-      });
-
-      done(null, {
-        id: userRows[0].id,
-        googleProfile: null,
-        fullName: responseFullName(userRows[0].firstName, userRows[0].lastName),
-        firstName: userRows[0].firstName,
-        lastName: userRows[0].lastName,
-        email: userRows[0].email,
-        accessLevel: userRows[0].accessLevel,
-        permissions,
-        token: null,
-      });
-    });
-  })
-);
-
-passport.use(
   new CustomStrategy(async (req, done) => {
     const validationErrors = checkValid(
       req.body,
@@ -146,20 +93,36 @@ passport.use(
 
         try {
           await f2l.assertionResult(clientData, attestationExpectations);
-          done(null, {
-            id: user.id,
-            googleProfile: null,
-            fullName: responseFullName(user.firstName, user.lastName),
-            firstName: user.firstName,
-            lastName: user.lastName,
-            accessLevel: user.accessLevel,
-            email: user.email,
-          });
-          return;
         } catch (err) {
           console.error(err);
           done(new Error(`Failed to authenticate`));
         }
+
+        pool.query(
+          mariadb.format(
+            `SELECT permission FROM userPermissions WHERE userId = ? AND permission = 'immigration';`,
+            [req.body.userId]
+          ),
+          (err, data) => {
+            if (err) {
+              console.error(err);
+              done(new Error(`Failed to retrieve user permissions`));
+            } else {
+              done(null, {
+                id: user.id,
+                googleProfile: null,
+                fullName: responseFullName(user.firstName, user.lastName),
+                firstName: user.firstName,
+                lastName: user.lastName,
+                accessLevel: user.accessLevel,
+                email: user.email,
+                permissions: {
+                  immigration: data.length > 0,
+                },
+              });
+            }
+          }
+        );
       }
     );
   })

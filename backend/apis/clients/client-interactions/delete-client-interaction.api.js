@@ -3,6 +3,7 @@ const mariadb = require("mariadb/callback.js");
 const { checkValid, validId } = require("../../utils/validation-utils");
 const { getInteraction } = require("./client-interaction.utils");
 const { insertActivityLogQuery } = require("../client-logs/activity-log.utils");
+const { runQueriesArray } = require("../../utils/mariadb-utils");
 
 app.delete("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
   const validationErrors = checkValid(
@@ -24,8 +25,11 @@ app.delete("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
       return err(req, res);
     }
 
-    const sql = mariadb.format(
-      `
+    const queries = [];
+
+    queries.push(
+      mariadb.format(
+        `
         UPDATE clientInteractions
         SET isDeleted = true
         WHERE id = ?;
@@ -34,19 +38,22 @@ app.delete("/api/clients/:clientId/interactions/:interactionId", (req, res) => {
         SET isDeleted = true
         WHERE detailId = ?
           AND logType IN ("clientInteraction:created", "clientInteraction:updated", "clientInteraction:serviceProvided");
-
-        ${insertActivityLogQuery({
-          clientId,
-          title: `Client interaction for service ${serviceName} was deleted`,
-          description: null,
-          logType: "clientInteraction:deleted",
-          addedBy: userId,
-        })}
       `,
-      [interactionId, interactionId]
+        [interactionId, interactionId]
+      )
     );
 
-    pool.query(sql, (err, result) => {
+    queries.push(
+      ...insertActivityLogQuery({
+        clientId,
+        title: `Client interaction for service ${serviceName} was deleted`,
+        description: null,
+        logType: "clientInteraction:deleted",
+        addedBy: userId,
+      })
+    );
+
+    runQueriesArray(queries, (err, result) => {
       if (err) {
         return databaseError(req, res, err);
       }
