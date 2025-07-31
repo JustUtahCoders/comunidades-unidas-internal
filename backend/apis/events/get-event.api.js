@@ -63,7 +63,7 @@ function getEventById(eventId, cbk, connection) {
       FROM events
       INNER JOIN users created ON created.id = events.addedBy
       INNER JOIN users modified ON modified.id = events.modifiedBy
-      WHERE events.id = ? AND isDeleted = false;
+      WHERE events.id = ? AND events.isDeleted = false;
 
       SELECT
         leadEvents.leadId, leads.gender, leads.leadStatus, leads.firstName, leads.lastName

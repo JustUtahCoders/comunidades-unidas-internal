@@ -33,6 +33,7 @@ const {
   convertLeadToClient,
 } = require("./insert-client.utils");
 const { insertActivityLogQuery } = require("./client-logs/activity-log.utils");
+const { runQueriesArray } = require("../utils/mariadb-utils");
 
 app.post("/api/clients", (req, res, next) => {
   pool.getConnection((err, connection) => {
@@ -168,7 +169,7 @@ app.post("/api/clients", (req, res, next) => {
           addedBy: req.session.passport.user.id,
         });
 
-        connection.query(insertActivityLog, (err, results) => {
+        runQueriesArray(insertActivityLog, (err, results) => {
           if (err) {
             connection.rollback();
             return databaseError(req, res, err, connection);

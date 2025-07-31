@@ -12,10 +12,12 @@ const path = require("path");
 const { getPartner } = require("./create-partner.api");
 
 const insertSql = fs.readFileSync(
-  path.resolve(__dirname, "./create-partner-service.sql")
+  path.resolve(__dirname, "./create-partner-service.sql"),
+  "utf-8"
 );
 const getSql = fs.readFileSync(
-  path.resolve(__dirname, "./get-partner-service.sql")
+  path.resolve(__dirname, "./get-partner-service.sql"),
+  "utf-8"
 );
 
 app.post("/api/partners/:partnerId/services", (req, res) => {

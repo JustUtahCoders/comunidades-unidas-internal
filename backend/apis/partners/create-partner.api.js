@@ -12,9 +12,13 @@ const fs = require("fs");
 const path = require("path");
 
 const insertSql = fs.readFileSync(
-  path.resolve(__dirname, "./create-partner.sql")
+  path.resolve(__dirname, "./create-partner.sql"),
+  "utf-8"
 );
-const getSql = fs.readFileSync(path.resolve(__dirname, "./get-partner.sql"));
+const getSql = fs.readFileSync(
+  path.resolve(__dirname, "./get-partner.sql"),
+  "utf-8"
+);
 
 app.post("/api/partners", (req, res, next) => {
   const authError = checkUserRole(req, "Administrator");
