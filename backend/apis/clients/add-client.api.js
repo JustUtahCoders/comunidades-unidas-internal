@@ -169,110 +169,119 @@ app.post("/api/clients", (req, res, next) => {
           addedBy: req.session.passport.user.id,
         });
 
-        runQueriesArray(insertActivityLog, (err, results) => {
-          if (err) {
-            connection.rollback();
-            return databaseError(req, res, err, connection);
-          }
+        runQueriesArray(
+          insertActivityLog,
+          (err, results) => {
+            if (err) {
+              connection.rollback();
+              return databaseError(req, res, err, connection);
+            }
 
-          connection.query(
-            insertContactInformationQuery(
-              clientId,
-              req.body,
-              req.session.passport.user.id
-            )[0],
-            (err) => {
-              if (err) {
-                connection.rollback();
-                return databaseError(req, res, err, connection);
-              }
+            connection.query(
+              insertContactInformationQuery(
+                clientId,
+                req.body,
+                req.session.passport.user.id
+              )[0],
+              (err) => {
+                if (err) {
+                  connection.rollback();
+                  return databaseError(req, res, err, connection);
+                }
 
-              connection.query(
-                insertDemographicsInformationQuery(
-                  clientId,
-                  req.body,
-                  req.session.passport.user.id
-                )[0],
-                (err) => {
-                  if (err) {
-                    connection.rollback();
-                    return databaseError(req, res, err, connection);
-                  }
+                connection.query(
+                  insertDemographicsInformationQuery(
+                    clientId,
+                    req.body,
+                    req.session.passport.user.id
+                  )[0],
+                  (err) => {
+                    if (err) {
+                      connection.rollback();
+                      return databaseError(req, res, err, connection);
+                    }
 
-                  connection.query(
-                    req.body.leadId
-                      ? convertLeadToClient(
-                          req.body.leadId,
-                          clientId,
-                          req.session.passport.user.id
-                        )
-                      : "SELECT 1;",
-                    (err) => {
-                      if (err) {
-                        connection.rollback();
-                        return databaseError(req, res, err, connection);
-                      }
+                    connection.query(
+                      req.body.leadId
+                        ? convertLeadToClient(
+                            req.body.leadId,
+                            clientId,
+                            req.session.passport.user.id
+                          )
+                        : "SELECT 1;",
+                      (err) => {
+                        if (err) {
+                          connection.rollback();
+                          return databaseError(req, res, err, connection);
+                        }
 
-                      connection.query(
-                        insertIntakeDataQuery(
-                          clientId,
-                          req.body,
-                          req.session.passport.user.id
-                        ),
-                        (err, intakeDataResult) => {
-                          if (err) {
-                            connection.rollback();
-                            return databaseError(req, res, err, connection);
-                          }
+                        connection.query(
+                          insertIntakeDataQuery(
+                            clientId,
+                            req.body,
+                            req.session.passport.user.id
+                          ),
+                          (err, intakeDataResult) => {
+                            if (err) {
+                              connection.rollback();
+                              return databaseError(req, res, err, connection);
+                            }
 
-                          const intakeDataId = intakeDataResult.insertId;
+                            const intakeDataId = intakeDataResult.insertId;
 
-                          if (intakeServices.length === 0) {
-                            returnTheClient();
+                            if (intakeServices.length === 0) {
+                              returnTheClient();
 
-                            return;
-                          }
+                              return;
+                            }
 
-                          const intakeServicesValues = intakeServices.reduce(
-                            (acc, intakeService) => {
-                              return [...acc, intakeDataId, intakeService];
-                            },
-                            []
-                          );
+                            const intakeServicesValues = intakeServices.reduce(
+                              (acc, intakeService) => {
+                                return [...acc, intakeDataId, intakeService];
+                              },
+                              []
+                            );
 
-                          const insertIntakeServicesQuery = intakeServices
-                            .map(
-                              (intakeService) => `
+                            const insertIntakeServicesQuery = intakeServices
+                              .map(
+                                (intakeService) => `
                       INSERT INTO intakeServices (intakeDataId, serviceId) VALUES (?, ?);
                     `
-                            )
-                            .join("");
+                              )
+                              .join("");
 
-                          const insertIntakeServices = mariadb.format(
-                            insertIntakeServicesQuery,
-                            intakeServicesValues
-                          );
+                            const insertIntakeServices = mariadb.format(
+                              insertIntakeServicesQuery,
+                              intakeServicesValues
+                            );
 
-                          connection.query(
-                            insertIntakeServices[0],
-                            (err, result, fields) => {
-                              if (err) {
-                                connection.rollback();
-                                return databaseError(req, res, err, connection);
+                            connection.query(
+                              insertIntakeServices[0],
+                              (err, result, fields) => {
+                                if (err) {
+                                  connection.rollback();
+                                  return databaseError(
+                                    req,
+                                    res,
+                                    err,
+                                    connection
+                                  );
+                                }
+
+                                returnTheClient();
                               }
-
-                              returnTheClient();
-                            }
-                          );
-                        }
-                      );
-                    }
-                  );
-                }
-              );
-            }
-          );
-        });
+                            );
+                          }
+                        );
+                      }
+                    );
+                  }
+                );
+              }
+            );
+          },
+          connection
+        );
 
         function returnTheClient() {
           getClientById(
