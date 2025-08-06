@@ -13,11 +13,23 @@ exports.mariadbArrToJs = function mariadbArrToJs(mariadbArr) {
   }
 };
 
-exports.runQueriesArray = function runQueriesArray(queries, errBack) {
+exports.runQueriesArray = function runQueriesArray(
+  queries,
+  errBack,
+  connection
+) {
   let index = 0,
     results = [];
 
-  pool.getConnection((err, connection) => {
+  const connectionGetter = connection
+    ? (errback) => {
+        errback(null, connection);
+      }
+    : (errback) => {
+        pool.getConnection(errback);
+      };
+
+  connectionGetter((err, connection) => {
     if (err) {
       errBack(err);
     }
