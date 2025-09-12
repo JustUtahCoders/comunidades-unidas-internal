@@ -198,21 +198,6 @@ export default function Sidebar(props: SidebarProps) {
               <div className="expanded">Reports</div>
             </Link>
           </li>
-          <li title="File an issue">
-            <Link
-              to="report-issue"
-              className="nav-link"
-              onClick={maybeHideSidebar}
-              getProps={maybeActiveLink}
-            >
-              <img
-                className="collapsed"
-                src={reportIssueUrl}
-                alt="File an issue"
-              />
-              <div className="expanded">File an issue</div>
-            </Link>
-          </li>
         </ul>
         <ul>
           <li title={collapsed ? "Expand" : "Collapse"}>
