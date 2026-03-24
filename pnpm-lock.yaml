@@ -78,8 +78,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       fido2-lib:
-        specifier: ^3.5.3
-        version: 3.5.3
+        specifier: ^3.5.8
+        version: 3.5.8
       fuzzy-search:
         specifier: ^3.2.1
         version: 3.2.1
@@ -883,33 +883,33 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@cbor-extract/cbor-extract-darwin-arm64@2.2.0':
-    resolution: {integrity: sha512-P7swiOAdF7aSi0H+tHtHtr6zrpF3aAq/W9FXx5HektRvLTM2O89xCyXF3pk7pLc7QpaY7AoaE8UowVf9QBdh3w==}
+  '@cbor-extract/cbor-extract-darwin-arm64@2.2.2':
+    resolution: {integrity: sha512-ZKZ/F8US7JR92J4DMct6cLW/Y66o2K576+zjlEN/MevH70bFIsB10wkZEQPLzl2oNh2SMGy55xpJ9JoBRl5DOA==}
     cpu: [arm64]
     os: [darwin]
 
-  '@cbor-extract/cbor-extract-darwin-x64@2.2.0':
-    resolution: {integrity: sha512-1liF6fgowph0JxBbYnAS7ZlqNYLf000Qnj4KjqPNW4GViKrEql2MgZnAsExhY9LSy8dnvA4C0qHEBgPrll0z0w==}
+  '@cbor-extract/cbor-extract-darwin-x64@2.2.2':
+    resolution: {integrity: sha512-32b1mgc+P61Js+KW9VZv/c+xRw5EfmOcPx990JbCBSkYJFY0l25VinvyyWfl+3KjibQmAcYwmyzKF9J4DyKP/Q==}
     cpu: [x64]
     os: [darwin]
 
-  '@cbor-extract/cbor-extract-linux-arm64@2.2.0':
-    resolution: {integrity: sha512-rQvhNmDuhjTVXSPFLolmQ47/ydGOFXtbR7+wgkSY0bdOxCFept1hvg59uiLPT2fVDuJFuEy16EImo5tE2x3RsQ==}
+  '@cbor-extract/cbor-extract-linux-arm64@2.2.2':
+    resolution: {integrity: sha512-wfqgzqCAy/Vn8i6WVIh7qZd0DdBFaWBjPdB6ma+Wihcjv0gHqD/mw3ouVv7kbbUNrab6dKEx/w3xQZEdeXIlzg==}
     cpu: [arm64]
     os: [linux]
 
-  '@cbor-extract/cbor-extract-linux-arm@2.2.0':
-    resolution: {integrity: sha512-QeBcBXk964zOytiedMPQNZr7sg0TNavZeuUCD6ON4vEOU/25+pLhNN6EDIKJ9VLTKaZ7K7EaAriyYQ1NQ05s/Q==}
+  '@cbor-extract/cbor-extract-linux-arm@2.2.2':
+    resolution: {integrity: sha512-tNg0za41TpQfkhWjptD+0gSD2fggMiDCSacuIeELyb2xZhr7PrhPe5h66Jc67B/5dmpIhI2QOUtv4SBsricyYQ==}
     cpu: [arm]
     os: [linux]
 
-  '@cbor-extract/cbor-extract-linux-x64@2.2.0':
-    resolution: {integrity: sha512-cWLAWtT3kNLHSvP4RKDzSTX9o0wvQEEAj4SKvhWuOVZxiDAeQazr9A+PSiRILK1VYMLeDml89ohxCnUNQNQNCw==}
+  '@cbor-extract/cbor-extract-linux-x64@2.2.2':
+    resolution: {integrity: sha512-rpiLnVEsqtPJ+mXTdx1rfz4RtUGYIUg2rUAZgd1KjiC1SehYUSkJN7Yh+aVfSjvCGtVP0/bfkQkXpPXKbmSUaA==}
     cpu: [x64]
     os: [linux]
 
-  '@cbor-extract/cbor-extract-win32-x64@2.2.0':
-    resolution: {integrity: sha512-l2M+Z8DO2vbvADOBNLbbh9y5ST1RY5sqkWOg/58GkUPBYou/cuNZ68SGQ644f1CvZ8kcOxyZtw06+dxWHIoN/w==}
+  '@cbor-extract/cbor-extract-win32-x64@2.2.2':
+    resolution: {integrity: sha512-dI+9P7cfWxkTQ+oE+7Aa6onEn92PHgfWXZivjNheCRmTBDBf2fx6RyTi0cmgpYLnD1KLZK9ZYrMxaPZ4oiXhGA==}
     cpu: [x64]
     os: [win32]
 
@@ -926,8 +926,8 @@ packages:
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
     engines: {node: '>=10.0.0'}
 
-  '@hexagon/base64@1.1.28':
-    resolution: {integrity: sha512-lhqDEAvWixy3bZ+UOYbPwUbBkwBq5C1LAJ/xPC8Oi+lL54oyakv/npbA0aU2hgCsx/1NUd4IBvV03+aUBWxerw==}
+  '@hexagon/base64@2.0.4':
+    resolution: {integrity: sha512-H/ZY6rGyaEuk0mwQgZ3BVi9hMjFTYpBNFbmtOuec/pPibuGhCMXd8fGtwBaO0h44FkWMurysMsDrpkJsBRmoWQ==}
 
   '@isaacs/balanced-match@4.0.1':
     resolution: {integrity: sha512-yzMTt9lEb8Gv7zRioUilSglI0c0smZ9k5D65677DLWLtWJaXIS3CqcGyUFByYKlnUj6TkjLVs54fBl6+TiGQDQ==}
@@ -1012,15 +1012,19 @@ packages:
     resolution: {integrity: sha512-Yhlar6v9WQgUp/He7BdgzOz8lqMQ8sU+jkCq7Wx8Myc5YFJLbEe7lgui/V7G1qB1DJykHSGwreceSaD60Y0PUQ==}
     hasBin: true
 
-  '@peculiar/asn1-schema@2.4.0':
-    resolution: {integrity: sha512-umbembjIWOrPSOzEGG5vxFLkeM8kzIhLkgigtsOrfLKnuzxWxejAcUX+q/SoZCdemlODOcr5WiYa7+dIEzBXZQ==}
+  '@noble/hashes@1.4.0':
+    resolution: {integrity: sha512-V1JJ1WTRUqHHrOSh597hURcMqVKVGL/ea3kv0gSnEdsEZ0/+VyPghM1lMNGc00z7CIQorSvbKpuJkxvuHbvdbg==}
+    engines: {node: '>= 16'}
+
+  '@peculiar/asn1-schema@2.6.0':
+    resolution: {integrity: sha512-xNLYLBFTBKkCzEZIw842BxytQQATQv+lDTCEMZ8C196iJcJJMBUZxrhSTxLaohMyKK8QlzRNTRkUmanucnDSqg==}
 
   '@peculiar/json-schema@1.1.12':
     resolution: {integrity: sha512-coUfuoMeIB7B8/NMekxaDzLhaYmp0HZNPEjYRm9goRou8UZIC3z21s0sL9AWoCw4EG876QyO3kYrc61WNF9B/w==}
     engines: {node: '>=8.0.0'}
 
-  '@peculiar/webcrypto@1.4.6':
-    resolution: {integrity: sha512-YBcMfqNSwn3SujUJvAaySy5tlYbYm6tVt9SKoXu8BaTdKGROiJDgPR3TXpZdAKUfklzm3lRapJEAltiMQtBgZg==}
+  '@peculiar/webcrypto@1.5.0':
+    resolution: {integrity: sha512-BRs5XUAwiyCDQMsVA9IDvDa7UBR9gAvPHgugOeGng3YN6vJ9JYonyDc0lNczErgtCWtucjR5N7VtaonboD/ezg==}
     engines: {node: '>=10.12.0'}
 
   '@polka/url@1.0.0-next.29':
@@ -1439,8 +1443,8 @@ packages:
   asn1@0.2.6:
     resolution: {integrity: sha512-ix/FxPn0MDjeyJ7i/yoHGFt/EX6LyNbxSEhPPXODPL+KB0VPk86UYfL0lMdy+KCnv+fmvIzySwaK5COwqVbWTQ==}
 
-  asn1js@3.0.6:
-    resolution: {integrity: sha512-UOCGPYbl0tv8+006qks/dTgV9ajs97X2p0FAbyS2iyCRrmLSRolDaHdp+v/CLgnzHc3fVB+CwYiUmei7ndFcgA==}
+  asn1js@3.0.7:
+    resolution: {integrity: sha512-uLvq6KJu04qoQM6gvBfKFjlh6Gl0vOKQuR5cJMDHQkmwfMOQeN3F3SHCv9SNYSL+CRoHvOGFfllDlVz03GQjvQ==}
     engines: {node: '>=12.0.0'}
 
   assign-symbols@1.0.0:
@@ -1674,12 +1678,12 @@ packages:
     resolution: {integrity: sha512-PiT/hQmTonHhl/HFGN+Lx3JJUznrVYJ3+AQsnthneZbvW7x+f08Tk7yLJTLEOUvBTbduLeeBkxEaYXUOUrRq6g==}
     engines: {node: 6.* || 8.* || >= 10.*}
 
-  cbor-extract@2.2.0:
-    resolution: {integrity: sha512-Ig1zM66BjLfTXpNgKpvBePq271BPOvu8MR0Jl080yG7Jsl+wAZunfrwiwA+9ruzm/WEdIV5QF/bjDZTqyAIVHA==}
+  cbor-extract@2.2.2:
+    resolution: {integrity: sha512-hlSxxI9XO2yQfe9g6msd3g4xCfDqK5T5P0fRMLuaLHhxn4ViPrm+a+MUfhrvH2W962RGxcBwEGzLQyjbDG1gng==}
     hasBin: true
 
-  cbor-x@1.5.9:
-    resolution: {integrity: sha512-OEI5rEu3MeR0WWNUXuIGkxmbXVhABP+VtgAXzm48c9ulkrsvxshjjk94XSOGphyAKeNGLPfAxxzEtgQ6rEVpYQ==}
+  cbor-x@1.6.4:
+    resolution: {integrity: sha512-UGKHjp6RHC6QuZ2yy5LCKm7MojM4716DwoSaqwQpaH4DvZvbBTGcoDNTiG9Y2lByXZYFEs9WRkS5tLl96IrF1Q==}
 
   chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -2075,6 +2079,10 @@ packages:
     resolution: {integrity: sha512-3UDv+G9CsCKO1WKMGw9fwq/SWJYbI0c5Y7LU1AXYoDdbhE2AHQ6N6Nb34sG8Fj7T5APy8qXDCKuuIHd1BR0tVA==}
     engines: {node: '>=8'}
 
+  detect-libc@2.1.2:
+    resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
+    engines: {node: '>=8'}
+
   detect-newline@3.1.0:
     resolution: {integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==}
     engines: {node: '>=8'}
@@ -2352,8 +2360,8 @@ packages:
   fb-watchman@2.0.2:
     resolution: {integrity: sha512-p5161BqbuCaSnB8jIbzQHOlpgsPmK5rJVDfDKO91Axs5NC1uu3HRQm6wt9cd9/+GtQQIO53JdGXXoyDpTAsgYA==}
 
-  fido2-lib@3.5.3:
-    resolution: {integrity: sha512-IwDuTvCcTpD6rhZkCr1MTp5oZkLUanuWr9xoSvLgc33VdFHl/hc/hkh9L/YzejoY18tP6mkXRkDWfFQMJ69ZfQ==}
+  fido2-lib@3.5.8:
+    resolution: {integrity: sha512-6aEl1n6vIVx5b/I/27JH1EjsZMNwyVKJcpVsXbuuA5tbs5qelKs8ATdDgNrw2pi5I2wSipJNcoFswqaJ3YL29A==}
     engines: {node: '>=10'}
 
   file-selector@0.4.0:
@@ -2536,7 +2544,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   globby@6.1.0:
     resolution: {integrity: sha512-KVbFv2TQtbzCoxAnfD6JcHZTYCzyliEaaeM/gH8qQdkKr5s0OP9scEgvdcngyk7AVdY6YVW/TJHd+lQ/Df3Daw==}
@@ -3131,8 +3139,8 @@ packages:
     engines: {node: '>= 10.14.2'}
     hasBin: true
 
-  jose@4.15.9:
-    resolution: {integrity: sha512-1vUQX+IdDMVPj4k8kOxgUqlcK518yluMuGZwqlr44FS1ppZB/5GWh4rZG89erpOBOJjU/OBsnCVFfapsRz6nEA==}
+  jose@6.2.2:
+    resolution: {integrity: sha512-d7kPDd34KO/YnzaDOlikGpOurfF0ByC2sEV4cANCtdqLlTfBlw2p14O/5d/zv40gJPbIQxfES3nSx1/oYNyuZQ==}
 
   js-cookie@2.2.1:
     resolution: {integrity: sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==}
@@ -3813,9 +3821,9 @@ packages:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
     engines: {node: '>=8'}
 
-  pkijs@3.0.16:
-    resolution: {integrity: sha512-iDUm90wfgtfd1PDV1oEnQj/4jBIU9hCSJeV0kQKThwDpbseFxC4TdpoMYlwE9maol5u0wMGZX9cNG2h1/0Lhww==}
-    engines: {node: '>=12.0.0'}
+  pkijs@3.3.3:
+    resolution: {integrity: sha512-+KD8hJtqQMYoTuL1bbGOqxb4z+nZkTAwVdNtWwe8Tc2xNbEmdJYIYoc6Qt0uF55e6YW6KuTHw1DjQ18gMhzepw==}
+    engines: {node: '>=16.0.0'}
 
   png-js@1.0.0:
     resolution: {integrity: sha512-k+YsbhpA9e+EFfKjTCH3VW6aoKlyNYI6NYdTfDL4CIvFnvsuO84ttonmZE7rc+v23SLTH8XX+5w/Ak9v0xGY4g==}
@@ -3897,9 +3905,9 @@ packages:
   pvtsutils@1.3.6:
     resolution: {integrity: sha512-PLgQXQ6H2FWCaeRak8vvk1GW462lMxB5s3Jm673N82zI4vqtVUPuZdffdZbPDFRoU8kAhItWFtPCWiPpp4/EDg==}
 
-  pvutils@1.1.3:
-    resolution: {integrity: sha512-pMpnA0qRdFp32b1sJl1wOJNxZLQ2cbQx+k6tjNtZ8CpvVhNqEPRgivZ2WOUev2YMajecdH7ctUPDvEe87nariQ==}
-    engines: {node: '>=6.0.0'}
+  pvutils@1.1.5:
+    resolution: {integrity: sha512-KTqnxsgGiQ6ZAzZCVlJH5eOjSnvlyEgx1m8bkRJfOhmGRqfo5KLvmAlACQkrjEtOQ4B7wF9TdSLIs9O90MX9xA==}
+    engines: {node: '>=16.0.0'}
 
   q@2.0.3:
     resolution: {integrity: sha512-gv6vLGcmAOg96/fgo3d9tvA4dJNZL3fMyBqVRrGxQ+Q/o4k9QzbJ3NQF9cOO/71wRodoXhaPgphvMFU68qVAJQ==}
@@ -4183,6 +4191,7 @@ packages:
 
   scmp@2.1.0:
     resolution: {integrity: sha512-o/mRQGk9Rcer/jEEw/yw4mwo3EU/NvYvp577/Btqrym9Qy5/MdWGBqipbALgd2lrdWTJ5/gqDusxfnQBxOxT2Q==}
+    deprecated: Just use Node.js's crypto.timingSafeEqual()
 
   secure-compare@3.0.1:
     resolution: {integrity: sha512-AckIIV90rPDcBcglUwXPF3kg0P0qmPsPXAj6BBEENQE1p5yA1xfmDJzfi1Tappj37Pv2mVbKpL3Z1T+Nn7k1Qw==}
@@ -4511,6 +4520,7 @@ packages:
   tar@6.2.1:
     resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
     engines: {node: '>=10'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   terminal-link@2.1.1:
     resolution: {integrity: sha512-un0FmiRUQNr5PJqy9kP7c40F5BOfpGlYTrxonDChEZB7pzZxRNp/bt+ymiy9/npwXya9KH99nJ/GXFIiUkYGFQ==}
@@ -4559,11 +4569,11 @@ packages:
   tiny-invariant@1.3.3:
     resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
 
-  tldts-core@6.1.86:
-    resolution: {integrity: sha512-Je6p7pkk+KMzMv2XXKmAE3McmolOQFdxkKw0R8EYNr7sELW46JqnNeTX8ybPiQgvg1ymCoF8LXs5fzFaZvJPTA==}
+  tldts-core@7.0.27:
+    resolution: {integrity: sha512-YQ7uPjgWUibIK6DW5lrKujGwUKhLevU4hcGbP5O6TcIUb+oTjJYJVWPS4nZsIHrEEEG6myk/oqAJUEQmpZrHsg==}
 
-  tldts@6.1.86:
-    resolution: {integrity: sha512-WMi/OQ2axVTf/ykqCQgXiIct+mSQDFdH2fkwhPwgEwvJ1kSzZRiinb0zF2Xb8u4+OqPChmyI6MEu4EezNJz+FQ==}
+  tldts@7.0.27:
+    resolution: {integrity: sha512-I4FZcVFcqCRuT0ph6dCDpPuO4Xgzvh+spkcTr1gK7peIvxWauoloVO0vuy1FQnijT63ss6AsHB6+OIM4aXHbPg==}
     hasBin: true
 
   tmpl@1.0.5:
@@ -4904,14 +4914,17 @@ packages:
 
   whatwg-encoding@1.0.5:
     resolution: {integrity: sha512-b5lim54JOPN9HtzvK9HFXvBma/rnfFeqsic0hSpjtDbVxR3dJKLc+KB4V6GgiGOvl7CY/KNh8rxSo9DKQrnUEw==}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-encoding@2.0.0:
     resolution: {integrity: sha512-p41ogyeMUrw3jWclHWTQg1k05DSVXPLcVxRTYsXUk+ZooOCZLcoYgPZ/HL/D/N+uQPOtcp1me1WhBEaX02mhWg==}
     engines: {node: '>=12'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-mimetype@2.3.0:
     resolution: {integrity: sha512-M4yMwr6mAnQz76TbJm914+gPpB/nCwvZbJU28cUD6dR004SAxDLOOSUaB1JDRqLtaOV/vi0IC5lEAGFgrjGv/g==}
@@ -5870,22 +5883,22 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@cbor-extract/cbor-extract-darwin-arm64@2.2.0':
+  '@cbor-extract/cbor-extract-darwin-arm64@2.2.2':
     optional: true
 
-  '@cbor-extract/cbor-extract-darwin-x64@2.2.0':
+  '@cbor-extract/cbor-extract-darwin-x64@2.2.2':
     optional: true
 
-  '@cbor-extract/cbor-extract-linux-arm64@2.2.0':
+  '@cbor-extract/cbor-extract-linux-arm64@2.2.2':
     optional: true
 
-  '@cbor-extract/cbor-extract-linux-arm@2.2.0':
+  '@cbor-extract/cbor-extract-linux-arm@2.2.2':
     optional: true
 
-  '@cbor-extract/cbor-extract-linux-x64@2.2.0':
+  '@cbor-extract/cbor-extract-linux-x64@2.2.2':
     optional: true
 
-  '@cbor-extract/cbor-extract-win32-x64@2.2.0':
+  '@cbor-extract/cbor-extract-win32-x64@2.2.2':
     optional: true
 
   '@cnakazawa/watch@1.0.4':
@@ -5897,7 +5910,7 @@ snapshots:
 
   '@discoveryjs/json-ext@0.5.7': {}
 
-  '@hexagon/base64@1.1.28': {}
+  '@hexagon/base64@2.0.4': {}
 
   '@isaacs/balanced-match@4.0.1': {}
 
@@ -6035,11 +6048,7 @@ snapshots:
       jest-runner: 26.6.3
       jest-runtime: 26.6.3
     transitivePeerDependencies:
-      - bufferutil
-      - canvas
       - supports-color
-      - ts-node
-      - utf-8-validate
 
   '@jest/transform@26.6.2':
     dependencies:
@@ -6105,9 +6114,11 @@ snapshots:
       - encoding
       - supports-color
 
-  '@peculiar/asn1-schema@2.4.0':
+  '@noble/hashes@1.4.0': {}
+
+  '@peculiar/asn1-schema@2.6.0':
     dependencies:
-      asn1js: 3.0.6
+      asn1js: 3.0.7
       pvtsutils: 1.3.6
       tslib: 2.8.1
 
@@ -6115,9 +6126,9 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@peculiar/webcrypto@1.4.6':
+  '@peculiar/webcrypto@1.5.0':
     dependencies:
-      '@peculiar/asn1-schema': 2.4.0
+      '@peculiar/asn1-schema': 2.6.0
       '@peculiar/json-schema': 1.1.12
       pvtsutils: 1.3.6
       tslib: 2.8.1
@@ -6606,10 +6617,10 @@ snapshots:
     dependencies:
       safer-buffer: 2.1.2
 
-  asn1js@3.0.6:
+  asn1js@3.0.7:
     dependencies:
       pvtsutils: 1.3.6
-      pvutils: 1.1.3
+      pvutils: 1.1.5
       tslib: 2.8.1
 
   assign-symbols@1.0.0: {}
@@ -6901,21 +6912,21 @@ snapshots:
     dependencies:
       rsvp: 4.8.5
 
-  cbor-extract@2.2.0:
+  cbor-extract@2.2.2:
     dependencies:
       node-gyp-build-optional-packages: 5.1.1
     optionalDependencies:
-      '@cbor-extract/cbor-extract-darwin-arm64': 2.2.0
-      '@cbor-extract/cbor-extract-darwin-x64': 2.2.0
-      '@cbor-extract/cbor-extract-linux-arm': 2.2.0
-      '@cbor-extract/cbor-extract-linux-arm64': 2.2.0
-      '@cbor-extract/cbor-extract-linux-x64': 2.2.0
-      '@cbor-extract/cbor-extract-win32-x64': 2.2.0
+      '@cbor-extract/cbor-extract-darwin-arm64': 2.2.2
+      '@cbor-extract/cbor-extract-darwin-x64': 2.2.2
+      '@cbor-extract/cbor-extract-linux-arm': 2.2.2
+      '@cbor-extract/cbor-extract-linux-arm64': 2.2.2
+      '@cbor-extract/cbor-extract-linux-x64': 2.2.2
+      '@cbor-extract/cbor-extract-win32-x64': 2.2.2
     optional: true
 
-  cbor-x@1.5.9:
+  cbor-x@1.6.4:
     optionalDependencies:
-      cbor-extract: 2.2.0
+      cbor-extract: 2.2.2
 
   chalk@2.4.2:
     dependencies:
@@ -7357,6 +7368,9 @@ snapshots:
 
   detect-libc@2.0.4: {}
 
+  detect-libc@2.1.2:
+    optional: true
+
   detect-newline@3.1.0: {}
 
   detect-node@2.1.0: {}
@@ -7669,16 +7683,16 @@ snapshots:
     dependencies:
       bser: 2.1.1
 
-  fido2-lib@3.5.3:
+  fido2-lib@3.5.8:
     dependencies:
-      '@hexagon/base64': 1.1.28
-      '@peculiar/webcrypto': 1.4.6
-      asn1js: 3.0.6
-      cbor-x: 1.5.9
-      jose: 4.15.9
-      pkijs: 3.0.16
+      '@hexagon/base64': 2.0.4
+      '@peculiar/webcrypto': 1.5.0
+      asn1js: 3.0.7
+      cbor-x: 1.6.4
+      jose: 6.2.2
+      pkijs: 3.3.3
       punycode.js: 2.3.1
-      tldts: 6.1.86
+      tldts: 7.0.27
 
   file-selector@0.4.0:
     dependencies:
@@ -8691,7 +8705,7 @@ snapshots:
       - ts-node
       - utf-8-validate
 
-  jose@4.15.9: {}
+  jose@6.2.2: {}
 
   js-cookie@2.2.1: {}
 
@@ -9107,7 +9121,7 @@ snapshots:
 
   node-gyp-build-optional-packages@5.1.1:
     dependencies:
-      detect-libc: 2.0.4
+      detect-libc: 2.1.2
     optional: true
 
   node-int64@0.4.0: {}
@@ -9376,12 +9390,13 @@ snapshots:
     dependencies:
       find-up: 4.1.0
 
-  pkijs@3.0.16:
+  pkijs@3.3.3:
     dependencies:
-      asn1js: 3.0.6
+      '@noble/hashes': 1.4.0
+      asn1js: 3.0.7
       bytestreamjs: 2.0.1
       pvtsutils: 1.3.6
-      pvutils: 1.1.3
+      pvutils: 1.1.5
       tslib: 2.8.1
 
   png-js@1.0.0: {}
@@ -9475,7 +9490,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  pvutils@1.1.3: {}
+  pvutils@1.1.5: {}
 
   q@2.0.3:
     dependencies:
@@ -10205,11 +10220,11 @@ snapshots:
 
   tiny-invariant@1.3.3: {}
 
-  tldts-core@6.1.86: {}
+  tldts-core@7.0.27: {}
 
-  tldts@6.1.86:
+  tldts@7.0.27:
     dependencies:
-      tldts-core: 6.1.86
+      tldts-core: 7.0.27
 
   tmpl@1.0.5: {}
 
@@ -10442,9 +10457,9 @@ snapshots:
 
   webcrypto-core@1.8.1:
     dependencies:
-      '@peculiar/asn1-schema': 2.4.0
+      '@peculiar/asn1-schema': 2.6.0
       '@peculiar/json-schema': 1.1.12
-      asn1js: 3.0.6
+      asn1js: 3.0.7
       pvtsutils: 1.3.6
       tslib: 2.8.1
 
